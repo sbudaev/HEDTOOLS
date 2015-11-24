@@ -1,9 +1,11 @@
 ! Test program for module CSV_IO
-! VERSION AND DATE: 1.2, 2015/11/22
+! VERSION AND DATE: 1.3, 2015/11/24
 ! Compile for test this way
-! include "../HED24_CHECK/BASE_CSV_IO.f90"
-! gfortran -g -c ../HED24_CHECK/BASE_CSV_IO.f90
-! gfortran -g -o ZZZ test_CSV_IO.f90 ../HED24_CHECK/BASE_CSV_IO.f90 && ./ZZZ
+! include "../BASE_CSV_IO.f90"
+!-------------------------------------------------------------------------------
+! Compile the module and the test binary, and run the binary:
+! gfortran -g -c ../BASE_CSV_IO.f90
+! gfortran -g -o ZZZ test_CSV_IO.f90 ../BASE_CSV_IO.f90 && ./ZZZ
 
 program TEST_CSV_IO
 
@@ -50,12 +52,16 @@ program TEST_CSV_IO
  FILE_UNIT_CSV1 = -1                      ! We use invalid file unit, so it is
                                           ! initially generated automatically
                                           ! by the CSV_FILE_OPEN_WRITE sub.
+ !******************************************************************************
+
  ! Open CSV fie for writing, This opens the output file physically.
+ ! Note that  if file exists it will be overwritten...
  call CSV_FILE_OPEN_WRITE (FILE_NAME_CSV1, FILE_UNIT_CSV1, FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
 
  ! we can get the file unit from the file name; most CSV IO routines accept
- ! either csv_file_name or csv_file_unit optional parameters
+ ! either csv_file_name or csv_file_unit optional parameters. If both
+ ! are included, unit has precedence.
  i=GET_FILE_UNIT(csv_file_name="ZZZ_FILE_TEST_1.csv", csv_file_status=FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
 
@@ -88,11 +94,16 @@ program TEST_CSV_IO
  ! Add final column header for the last text column
  call CSV_RECORD_APPEND(RECORD_CSV, "Final text column")
 
- ! print the size of this record...
+ ! Print the size of this record. We use dedicated function for this...
  print *, "The size of this record is: ", CSV_RECORD_SIZE (RECORD_CSV), "columns"
 
  ! -----------------[ Writing File header at the first row ]--------------------
- ! Write CSV file header, if file exists it will be overwritten
+ ! Write CSV file header. We postponed the file header after the column names
+ ! to illustrate how we could count the number of CSV fields...
+ ! So we (1) make column headers (but don't write them physically to the file);
+ ! (2) count how many columns we got; (3) physically write header containing
+ ! the number of columns; (4) physically write the column headers produced
+ ! at (1).
  call CSV_FILE_HEADER_WRITE(csv_file_name=FILE_NAME_CSV1, &
       header="Example header; full timestamp: " // TIMESTAMP_FULL() // &
       ". Total " // STR_ITOA(CSV_RECORD_SIZE (RECORD_CSV)) // " columns.", &
@@ -145,6 +156,7 @@ program TEST_CSV_IO
  print *, "Check file: ", CSV_FILE_LINES_COUNT (FILE_NAME_CSV1, &
             FSTAT_CSV), "lns; status:", FSTAT_CSV
 
+ !******************************************************************************
  !---------------[Write another file, without clutter of comments]--------------
 
  FILE_NAME_CSV2 = "ZZZ_FILE_TEST_2.csv"
@@ -178,6 +190,7 @@ program TEST_CSV_IO
  call CSV_FILE_CLOSE(csv_file_name=FILE_NAME_CSV2, csv_file_status=FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
 
+ !******************************************************************************
  !------------[ Now use the higher level sub to write whole matrix ]------------
 
  ! Construct matrix, the matrix can be integer, real, double or character
@@ -188,9 +201,10 @@ program TEST_CSV_IO
  end do
 
  ! Save matrix
- call CSV_MATRIX_WRITE ( MATRIX, "ZZZ_MAT.CSV", FSTAT_CSV)
+ call CSV_MATRIX_WRITE ( MATRIX, "ZZZ_FILE_TEST_3.csv", FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
 
+ !******************************************************************************
  !-------------[ We can write 1-d arrays too ]----------------------------------
 
  do i=lbound(ARRAY_Z, 1), ubound(ARRAY_Z, 1)
@@ -198,7 +212,7 @@ program TEST_CSV_IO
  end do
 
  ! save array
- call CSV_MATRIX_WRITE ( ARRAY_Z, "ZZZ_MAT_2.CSV", FSTAT_CSV)
+ call CSV_MATRIX_WRITE ( ARRAY_Z, "ZZZ_FILE_TEST_4.csv", FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
 
  !--------------------------[ End of program ]----------------------------------
@@ -206,7 +220,7 @@ program TEST_CSV_IO
  print *, TIMESTAMP_FULL()
  stop 0
 
-1000 print *, "ERROR"
+1000 print *, "FILE ERROR"
      stop 1
 
 contains
