@@ -4,9 +4,12 @@
 ! include "../BASE_CSV_IO.f90"
 !-------------------------------------------------------------------------------
 ! Compile the module and the test binary, and run the binary:
-! gfortran -g -c ../BASE_CSV_IO.f90
-! gfortran -g -c ../BASE_UTILS.f90
-! gfortran -g -o ZZZ test_CSV_IO.f90 ../BASE_CSV_IO.f90 && ./ZZZ
+! ** for GNU platform
+! gfortran -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
+! gfortran -g -o ZZZ test_CSV_IO.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 && ./ZZZ
+! ** for Oracle platform
+! f95 -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
+! f95 -g -o ZZZ test_CSV_IO.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 && ./ZZZ
 
 program TEST_CSV_IO
 
@@ -87,9 +90,9 @@ program TEST_CSV_IO
  ! Append numbered column names - construct variable names. Note that
  ! string values to append may contain numbers, but these should be converted
  ! to string type and appended using standard // operator, in this case
- ! "VAR_" // STR_ITOA(i)) converts to VAR_1, VAR_2 ...
+ ! "VAR_" // NUMTOSTR(i)) converts to VAR_1, VAR_2 ...
  do i=1, 5
-   call CSV_RECORD_APPEND(RECORD_CSV, "VAR_" // STR_ITOA(i))
+   call CSV_RECORD_APPEND(RECORD_CSV, "VAR_" // NUMTOSTR(i))
  end do
  !And append an additional arbitrary column header
  call CSV_RECORD_APPEND(RECORD_CSV, "INTEGER")
@@ -109,7 +112,7 @@ program TEST_CSV_IO
  ! at (1).
  call CSV_FILE_HEADER_WRITE(csv_file_name=FILE_NAME_CSV1, &
       header="Example header; full timestamp: " // TIMESTAMP_FULL() // &
-      ". Total " // STR_ITOA(CSV_RECORD_SIZE (RECORD_CSV)) // " columns.", &
+      ". Total " // NUMTOSTR(CSV_RECORD_SIZE (RECORD_CSV)) // " columns.", &
       csv_file_status=FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
 
@@ -127,7 +130,7 @@ program TEST_CSV_IO
    ! Initialise the first column of each record
    RECORD_CSV=""
    ! and construct row names for this record subsequently
-   call CSV_RECORD_APPEND( RECORD_CSV, "ROW_" // STR_ITOA(i) )
+   call CSV_RECORD_APPEND( RECORD_CSV, "ROW_" // NUMTOSTR(i) )
    ! Now we are ready to fill the rest of the record
    ! it will contain our variables by rows (reverse from Fortran convention)...
    do j=1, 5
@@ -138,7 +141,7 @@ program TEST_CSV_IO
     call CSV_RECORD_APPEND( RECORD_CSV, 122 )
 
     ! And finally append another text field
-    call CSV_RECORD_APPEND( RECORD_CSV, "Final txt string row=" // STR_ITOA(i) )
+    call CSV_RECORD_APPEND( RECORD_CSV, "Final txt string row=" // NUMTOSTR(i) )
 
    ! We are now ready to write the complete record to the file and loop
    ! to the next row (record) of data values, note that either file unit or
@@ -171,7 +174,7 @@ program TEST_CSV_IO
 
  RECORD_CSV='"ROWS"' ! If first string is manually set, don't forget to quote it
  do i=1, 20          ! or first initialise as "" and then do CSV_RECORD_APPEND
-   call CSV_RECORD_APPEND( RECORD_CSV, "VAR_" // STR_ITOA(i) )
+   call CSV_RECORD_APPEND( RECORD_CSV, "VAR_" // NUMTOSTR(i) )
  end do
  call CSV_FILE_RECORD_WRITE (csv_file_name=FILE_NAME_CSV2, &
         record=RECORD_CSV, csv_file_status=FSTAT_CSV)
@@ -179,7 +182,7 @@ program TEST_CSV_IO
 
  do i=1, 1000
    RECORD_CSV="" ! first element of the numeric record = case name
-   call CSV_RECORD_APPEND( RECORD_CSV, "ROW_" // STR_ITOA(i) )
+   call CSV_RECORD_APPEND( RECORD_CSV, "ROW_" // NUMTOSTR(i) )
 
    do j=1, 20
      call CSV_RECORD_APPEND( RECORD_CSV, ARRAY_Y(j) )
