@@ -13,26 +13,33 @@ module BASE_UTILS
 
 implicit none
 
-interface NUMTOSTR
-  ! Generic interface to number-to-string conversion functions.
-
-  module procedure STR_ITOA
-  module procedure STR_RTOA
+interface NUMTOSTR            ! Generic interface to number-to-string 
+                              ! conversion functions. We have two forms:
+  module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
+  module procedure STR_RTOA   ! for convenience, they 're identical
   module procedure STR_R8TOA
 
 end interface NUMTOSTR
+
+interface TOSTR               ! Generic interface to number-to-string 
+                              ! conversion functions. We have two forms:
+  module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
+  module procedure STR_RTOA   ! for convenience, they're identical
+  module procedure STR_R8TOA
+
+end interface TOSTR
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
 function STR_ITOA(i) result (ToStrA)
-!***************************************************
+!*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.
 ! CALL PARAMETERS: single integer value
 ! EXAMPLE:
 !          Str_NAME = STR_ITOA(inumber)
 !          Str_HEADER = "MODEL_" // STR_ITOA(4)
-!***************************************************
+!*******************************************************************************
 
 ! Convert INTEGER to a string type. Trivial:)
 ! *** This function requires using mandatory
@@ -60,15 +67,15 @@ end function STR_ITOA
 !-------------------------------------------------------------------------------
 
 function STR_RTOA(r,formatstr) result (ToStrA)
-!*******************************************************
+!*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
-! CALL PARAMETERS: single integer value
+! CALL PARAMETERS: single real value
 !                  optional format string
 ! EXAMPLE:
 !          Str_NAME = "Pi=" // STR_RTOA(rNumberPi)
 !          Str_NAME = "Pi=" // STR_RTOA(3.1415)
 !          Str_Header = STR_RTOA(rNumber, "(f4.2)")
-!*******************************************************
+!*******************************************************************************
 
 ! Convert REAL to a string type. Trivial:)
 ! *** This function requires using mandatory
@@ -96,24 +103,24 @@ function STR_RTOA(r,formatstr) result (ToStrA)
     tmpFormat=formatstr
     write(tmpStr,tmpFormat) r
   else
-    write(tmpStr,*) r ! ipresentf format isn't provided on call do *
+    write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
-  ToStrA = trim(adjustl(tmpStr))
+  ToStrA = trim(adjustl(tmpStr))    ! we have to remove leading/trailing blanks
 
 end function STR_RTOA
 
 !-------------------------------------------------------------------------------
 
 function STR_R8TOA(r,formatstr) result (ToStrA)
-!*******************************************************
+!*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
-! CALL PARAMETERS: single integer value
+! CALL PARAMETERS: single double precision (kind 8) value
 !                  optional format string
 ! EXAMPLE:
-!          Str_NAME = "Pi=" // STR_RTOA(rNumberPi)
-!          Str_NAME = "Pi=" // STR_RTOA(3.1415)
-!          Str_Header = STR_RTOA(rNumber, "(f4.2)")
-!*******************************************************
+!          Str_NAME = "Pi=" // STR_R8TOA(rNumberPi)
+!          Str_NAME = "Pi=" // STR_R8TOA(3.14159265359_8)
+!          Str_Header = STR_R8TOA(rNumber, "(f4.2)")
+!*******************************************************************************
 
 ! Convert REAL to a string type. Trivial:)
 ! *** This function requires using mandatory
@@ -141,11 +148,21 @@ function STR_R8TOA(r,formatstr) result (ToStrA)
     tmpFormat=formatstr
     write(tmpStr,tmpFormat) r
   else
-    write(tmpStr,*) r ! ipresentf format isn't provided on call do *
+    write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
-  ToStrA = trim(adjustl(tmpStr))
+  ToStrA = trim(adjustl(tmpStr))    ! we have to remove leading/trailing blanks
 
 end function STR_R8TOA
+
+!-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 
