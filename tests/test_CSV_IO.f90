@@ -5,14 +5,15 @@
 !-------------------------------------------------------------------------------
 ! Compile the module and the test binary, and run the binary:
 ! gfortran -g -c ../BASE_CSV_IO.f90
+! gfortran -g -c ../BASE_UTILS.f90
 ! gfortran -g -o ZZZ test_CSV_IO.f90 ../BASE_CSV_IO.f90 && ./ZZZ
 
 program TEST_CSV_IO
 
  ! --------------------------[ Initialisations etc...]--------------------------
 
- !use, intrinsic :: ISO_FORTRAN_ENV
- use CSV_IO
+ use CSV_IO                   ! for CSV output
+ use BASE_UTILS               ! for string conversion
 
  implicit none
 
@@ -52,6 +53,8 @@ program TEST_CSV_IO
  FILE_UNIT_CSV1 = -1                      ! We use invalid file unit, so it is
                                           ! initially generated automatically
                                           ! by the CSV_FILE_OPEN_WRITE sub.
+                                          ! Had we used valid unit, it were used
+                                          ! instead of generated one...
  !******************************************************************************
 
  ! Open CSV fie for writing, This opens the output file physically.
@@ -223,41 +226,41 @@ program TEST_CSV_IO
 1000 print *, "FILE ERROR"
      stop 1
 
-contains
+!contains
 
-function STR_ITOA(i) result (ToStrA)
-!***************************************************
-! PURPOSE: Convert INTEGER to a string type.
-! CALL PARAMETERS: single integer value
-! EXAMPLE:
-!          Str_NAME = STR_ITOA(inumber)
-!          Str_HEADER = "MODEL_" // STR_ITOA(4)
-! NOTE: This function is from another module being
-!       developed for the AHA! project
-!***************************************************
+!function STR_ITOA(i) result (ToStrA)
+!!***************************************************
+!! PURPOSE: Convert INTEGER to a string type.
+!! CALL PARAMETERS: single integer value
+!! EXAMPLE:
+!!          Str_NAME = STR_ITOA(inumber)
+!!          Str_HEADER = "MODEL_" // STR_ITOA(4)
+!! NOTE: This function is from another module being
+!!       developed for the AHA! project
+!!***************************************************
 
-! Convert INTEGER to a string type. Trivial:)
-! *** This function requires using mandatory
-! interface. In such a case STR_ITOA should not
-! be declared separately  (e.g. with variables)
+!! Convert INTEGER to a string type. Trivial:)
+!! *** This function requires using mandatory
+!! interface. In such a case STR_ITOA should not
+!! be declared separately  (e.g. with variables)
 
-  implicit none
+!  implicit none
 
-  ! Function value
-  character(len=:), allocatable  :: ToStrA
+!  ! Function value
+!  character(len=:), allocatable  :: ToStrA
 
-  ! Calling parameters
-  integer, intent(in) :: i
+!  ! Calling parameters
+!  integer, intent(in) :: i
 
-  ! Local variables
-  character(range(i)+2) :: tmpStr
+!  ! Local variables
+!  character(range(i)+2) :: tmpStr
 
-  !--------------------------------------------------
+!  !--------------------------------------------------
 
-  write(tmpStr,'(i0)') i
-  ToStrA = trim(tmpStr)
+!  write(tmpStr,'(i0)') i
+!  ToStrA = trim(tmpStr)
 
-end function STR_ITOA
+!end function STR_ITOA
 
 
 end program TEST_CSV_IO
