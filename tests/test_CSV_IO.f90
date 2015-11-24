@@ -16,7 +16,7 @@ program TEST_CSV_IO
  ! --------------------------[ Initialisations etc...]--------------------------
 
  use CSV_IO                   ! for CSV output
- use BASE_UTILS               ! for string conversion
+ use BASE_UTILS               ! for string conversion, here NUMTOSTR
 
  implicit none
 
@@ -222,48 +222,12 @@ program TEST_CSV_IO
  if (.not. FSTAT_CSV) goto 1000
 
  !--------------------------[ End of program ]----------------------------------
-
+  
  print *, TIMESTAMP_FULL()
  stop 0
 
 1000 print *, "FILE ERROR"
      stop 1
-
-!contains
-
-!function STR_ITOA(i) result (ToStrA)
-!!***************************************************
-!! PURPOSE: Convert INTEGER to a string type.
-!! CALL PARAMETERS: single integer value
-!! EXAMPLE:
-!!          Str_NAME = STR_ITOA(inumber)
-!!          Str_HEADER = "MODEL_" // STR_ITOA(4)
-!! NOTE: This function is from another module being
-!!       developed for the AHA! project
-!!***************************************************
-
-!! Convert INTEGER to a string type. Trivial:)
-!! *** This function requires using mandatory
-!! interface. In such a case STR_ITOA should not
-!! be declared separately  (e.g. with variables)
-
-!  implicit none
-
-!  ! Function value
-!  character(len=:), allocatable  :: ToStrA
-
-!  ! Calling parameters
-!  integer, intent(in) :: i
-
-!  ! Local variables
-!  character(range(i)+2) :: tmpStr
-
-!  !--------------------------------------------------
-
-!  write(tmpStr,'(i0)') i
-!  ToStrA = trim(tmpStr)
-
-!end function STR_ITOA
 
 
 end program TEST_CSV_IO

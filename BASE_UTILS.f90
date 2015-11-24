@@ -18,6 +18,7 @@ interface NUMTOSTR
 
   module procedure STR_ITOA
   module procedure STR_RTOA
+  module procedure STR_R8TOA
 
 end interface NUMTOSTR
 
@@ -52,7 +53,7 @@ function STR_ITOA(i) result (ToStrA)
   !--------------------------------------------------
 
   write(tmpStr,'(i0)') i
-  ToStrA = trim(tmpStr)
+  ToStrA = trim(tmpStr) ! We don't need to adjustl here, with INT, unlike REAL
 
 end function STR_ITOA
 
@@ -97,12 +98,54 @@ function STR_RTOA(r,formatstr) result (ToStrA)
   else
     write(tmpStr,*) r ! ipresentf format isn't provided on call do *
   endif
-  ToStrA = trim(tmpStr)
+  ToStrA = trim(adjustl(tmpStr))
 
 end function STR_RTOA
 
 !-------------------------------------------------------------------------------
 
+function STR_R8TOA(r,formatstr) result (ToStrA)
+!*******************************************************
+! PURPOSE: Convert REAL to a string type.
+! CALL PARAMETERS: single integer value
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "Pi=" // STR_RTOA(rNumberPi)
+!          Str_NAME = "Pi=" // STR_RTOA(3.1415)
+!          Str_Header = STR_RTOA(rNumber, "(f4.2)")
+!*******************************************************
+
+! Convert REAL to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+! as used to be in old fortran.
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  real (kind=8), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character(len=68) :: tmpStr ! quick and dirty, with allowance for a big float
+  character(len=:), allocatable :: tmpFormat
+
+  !-------------------------------------------------------
+
+  ! we use the present() function to check for optional arguments
+  if (present(formatstr))  then
+    tmpFormat=formatstr
+    write(tmpStr,tmpFormat) r
+  else
+    write(tmpStr,*) r ! ipresentf format isn't provided on call do *
+  endif
+  ToStrA = trim(adjustl(tmpStr))
+
+end function STR_R8TOA
 
 
 
