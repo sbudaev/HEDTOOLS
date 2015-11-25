@@ -13,7 +13,7 @@ module BASE_UTILS
 
 implicit none
 
-interface NUMTOSTR            ! Generic interface to number-to-string 
+interface NUMTOSTR            ! Generic interface to number-to-string
                               ! conversion functions. We have two forms:
   module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
   module procedure STR_RTOA   ! for convenience, they 're identical
@@ -21,7 +21,7 @@ interface NUMTOSTR            ! Generic interface to number-to-string
 
 end interface NUMTOSTR
 
-interface TOSTR               ! Generic interface to number-to-string 
+interface TOSTR               ! Generic interface to number-to-string
                               ! conversion functions. We have two forms:
   module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
   module procedure STR_RTOA   ! for convenience, they're identical
@@ -105,7 +105,23 @@ function STR_RTOA(r,formatstr) result (ToStrA)
   else
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
-  ToStrA = trim(adjustl(tmpStr))    ! we have to remove leading/trailing blanks
+
+  tmpStr = trim(adjustl(tmpStr))    ! we have to remove leading/trailing blanks
+  ToStrA = tmpStr
+  ! Portability note: direct assignment
+  !   ToStrA = trim(adjustl(tmpStr))
+  ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
+  ! and Solaris OS) ::
+  ! <---cut--->
+  ! ../BASE_UTILS.f90:
+  ! f90comp: /scratch/bldmstr/hudson_prod/workspace/z-trunk-lang/label/ &
+  ! intel-Linux-5/f90/fe/srcme/compiler/phases/concretize/concretize_&
+  ! intrinsic.cpp:231: Assertion `assign' failed.
+  ! f90: Fatal error in /home/budaev/bin/solarisstudio12.4/lib/compilers/ &
+  ! f90comp : Signal number = 6
+  ! <---end cut--->
+  ! There seems to be a compiler bug for trim(adjustl(XXX)). Therefore, now
+  ! used a two stages, with self-change first tmpstr=trim(adjustl(tmpstr))
 
 end function STR_RTOA
 
@@ -150,7 +166,23 @@ function STR_R8TOA(r,formatstr) result (ToStrA)
   else
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
-  ToStrA = trim(adjustl(tmpStr))    ! we have to remove leading/trailing blanks
+
+  tmpStr = trim(adjustl(tmpStr))    ! we have to remove leading/trailing blanks
+  ToStrA = tmpStr
+  ! Portability note: direct assignment
+  !   ToStrA = trim(adjustl(tmpStr))
+  ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
+  ! and Solaris OS) ::
+  ! <---cut--->
+  ! ../BASE_UTILS.f90:
+  ! f90comp: /scratch/bldmstr/hudson_prod/workspace/z-trunk-lang/label/ &
+  ! intel-Linux-5/f90/fe/srcme/compiler/phases/concretize/concretize_&
+  ! intrinsic.cpp:231: Assertion `assign' failed.
+  ! f90: Fatal error in /home/budaev/bin/solarisstudio12.4/lib/compilers/ &
+  ! f90comp : Signal number = 6
+  ! <---end cut--->
+  ! There seems to be a compiler bug for trim(adjustl(XXX)). Therefore, now
+  ! used a two stages, with self-change first tmpstr=trim(adjustl(tmpstr))
 
 end function STR_R8TOA
 
