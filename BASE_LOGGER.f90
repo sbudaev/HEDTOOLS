@@ -1,4 +1,6 @@
-! m_logger.f90 --
+!*******************************************************************************
+! m_logger.f90 -- modified from flibs:: http://flibs.sourceforge.net/
+!*******************************************************************************
 !
 !   The module m_logger provides static methods to manage a log file, 
 !   which is an execution report of the program.
@@ -55,8 +57,13 @@
 !
 !     $Id: m_logger.f90,v 1.3 2008/06/18 08:55:45 relaxmike Exp $
 !
-module m_logger
+module M_LOGGER
+  
+  use, intrinsic :: ISO_FORTRAN_ENV   ! Portability, default units
+  use CSV_IO                          ! File operations standardised
+
   implicit none
+  
   private
   public :: log_msg
   public :: log_startup
@@ -80,10 +87,10 @@ module m_logger
   !
   ! Static fields
   !
-  ! Logical unit associated with the log file
-  integer :: log_fileunit = 6
+  ! Logical unit associated with the log file, we use MAX_UNIT from CSV_IO
+  integer :: log_fileunit = MAX_UNIT                ! to avoid collisions
   ! Logical unit associated with the standard output
-  integer :: log_stdout = -1
+  integer :: log_stdout = OUTPUT_UNIT
   ! Logical set to false if the user wants to inactivate
   ! the logger ouput to screen
   ! The default value is true (logger activated).
@@ -242,14 +249,14 @@ contains
   !     Trim the given string before writing the string.
   !
   ! Arguments:
-  !     unit             LU-number to write to (-1 is the screen)
+  !     unit             LU-number to write to (OUTPUT_UNIT is the screen)
   !     msg              Message
   !
   subroutine log_write( unit, msg )
     integer, intent(in) :: unit
     character(len=*), intent(in) :: msg
     character(len=500)           :: filename
-    if (  unit == -1 ) then
+    if (  unit == OUTPUT_UNIT ) then
        write ( *, '(a)' ) trim(msg)
     else
        write ( unit, '(a)' ) trim(msg)
@@ -300,7 +307,8 @@ contains
     unit_found = .false.
     log_get_freeunit = 0
     do iunit = 1, 100
-       if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+       if ( iunit /= INPUT_UNIT .and. iunit /= OUTPUT_UNIT .and. &
+            iunit /= ERROR_UNIT ) then
           inquire ( UNIT = iunit, opened = lopen, iostat = ios )
           if ( ios == 0 ) then
              if ( .not. lopen ) then
@@ -334,8 +342,8 @@ contains
   subroutine log_error ( message )
     implicit none
     character (len=*), intent(in) :: message
-    write ( 6, "(A)" ) "Error in m_logger."
-    write ( 6 , "(A)" ) message
+    write ( OUTPUT_UNIT , "(A)" ) "Error in M_LOGGER MODULE."
+    write ( OUTPUT_UNIT , "(A)" ) message
     call log_error_stop ( )
   end subroutine log_error
   !
@@ -626,5 +634,6 @@ contains
     integer :: logger_unit
     logger_unit = log_fileunit
   end function log_get_unit
-end module m_logger
+
+end module M_LOGGER
 
