@@ -17,7 +17,7 @@ program TEST_CSV_IO
 
  use CSV_IO                   ! for CSV output
  use BASE_UTILS               ! for string conversion, here NUMTOSTR
- use M_LOGGER                 ! Use the execution logger facility
+ use LOGGER                   ! Use the execution logger facility
 
  implicit none
 
@@ -52,12 +52,18 @@ program TEST_CSV_IO
  !==============================================================================
 
  print *, "Running program"
- 
- call log_startup ( "test_CSV_logger.log" )        ! Init. Log file
- call log_configure ( "writeonstdout" , .false. )  ! do/not write on screen
- call log_configure ( "timestamp" , .true. )       ! do write timestamps
- 
- call log_msg( "This also uses the logging utility, it can use STDOUT and FILE" )
+
+ call LOG_CONFIGURE ( "logfileunit" , 14 )
+ call LOG_STARTUP ( "test_CSV_logger.log" )        ! Init. Log file
+ call LOG_CONFIGURE ( "writeonstdout" , .true. )   ! do/not write on screen
+ call LOG_CONFIGURE ( "timestamp" , .true. )       ! do write timestamps
+ call LOG_CONFIGURE ( "level_string_volume" , "chapter" )
+ call LOG_DELIMITER ( )                             ! issue log delimiter
+ call LOG_MSG( "This also uses the logging utility" )
+ call LOG_MSG( "  Logger can use either STDOUT and FILE..." )
+
+ call LOG_CONFIGURE ( "writeonstdout" , .false. ) ! do not write on screen further
+ call LOG_DELIMITER ( )
 
  FILE_NAME_CSV1 = "ZZZ_FILE_TEST_1.csv"   ! this is our output file
  FILE_UNIT_CSV1 = -1                      ! We use invalid file unit, so it is
@@ -65,8 +71,8 @@ program TEST_CSV_IO
                                           ! by the CSV_FILE_OPEN_WRITE sub.
                                           ! Had we used valid unit, it were used
                                           ! instead of generated one...
-                                          
- call log_msg ( "Use CSV file " // FILE_NAME_CSV1 // " and unit " // & 
+
+ call LOG_MSG ( "Use CSV file " // FILE_NAME_CSV1 // " and unit " // &
       TOSTR(FILE_UNIT_CSV1) )
  !******************************************************************************
 
@@ -74,17 +80,17 @@ program TEST_CSV_IO
  ! Note that  if file exists it will be overwritten...
  call CSV_FILE_OPEN_WRITE (FILE_NAME_CSV1, FILE_UNIT_CSV1, FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
- 
- call log_msg ("Opened the output file for writing, got unit " // TOSTR(FILE_UNIT_CSV1) )
+
+ call LOG_MSG ("Opened the output file for writing, got unit " // TOSTR(FILE_UNIT_CSV1) )
 
  ! we can get the file unit from the file name; most CSV IO routines accept
  ! either csv_file_name or csv_file_unit optional parameters. If both
  ! are included, unit has precedence.
  i=GET_FILE_UNIT(csv_file_name="ZZZ_FILE_TEST_1.csv", csv_file_status=FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
- 
- call log_msg ("Run illustration of how to get a free file unit, got " // TOSTR(i) )
- 
+
+ call LOG_MSG ("Run illustration of how to get a free file unit, got " // TOSTR(i) )
+
 
  ! We can first write an optional header line for the CSV file,
  ! using
@@ -117,10 +123,10 @@ program TEST_CSV_IO
 
  ! Print the size of this record. We use dedicated function for this...
  print *, "The size of this record is: ", CSV_RECORD_SIZE (RECORD_CSV), "columns"
- 
- call log_msg ( "Created the headers for the CSV file columns, total " &
+
+ call LOG_MSG ( "Created the headers for the CSV file columns, total " &
                // TOSTR(CSV_RECORD_SIZE(RECORD_CSV)) // "Columns in this file" )
-               
+
  ! -----------------[ Writing File header at the first row ]--------------------
  ! Write CSV file header. We postponed the file header after the column names
  ! to illustrate how we could count the number of CSV fields...
@@ -169,15 +175,15 @@ program TEST_CSV_IO
    if (.not. FSTAT_CSV) goto 1000
 
  end do
- 
- call log_msg ( "File " // FILE_NAME_CSV1 // "written, but not yet closed" )
+
+ call LOG_MSG ( "File " // FILE_NAME_CSV1 // "written, but not yet closed" )
 
  ! Close CSV file
  call CSV_FILE_CLOSE(csv_file_name=FILE_NAME_CSV1, csv_file_status=FSTAT_CSV)
  if (.not. FSTAT_CSV) goto 1000
- 
- call log_msg ( "File closed" )
- call log_shutdown () 
+
+ call LOG_MSG ( "File closed" )
+ call LOG_SHUTDOWN ()
 
  ! ----------------------[Count lines of an arbitrary CSV file]-----------------
  ! Just any ine is counted, not distinguishing between header, column names etc.
@@ -245,7 +251,7 @@ program TEST_CSV_IO
  if (.not. FSTAT_CSV) goto 1000
 
  !--------------------------[ End of program ]----------------------------------
-  
+
  print *, TIMESTAMP_FULL()
  stop 0
 

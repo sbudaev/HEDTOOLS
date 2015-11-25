@@ -134,10 +134,11 @@ function GET_FREE_FUNIT (file_status, max_funit) result (file_unit)
 !*******************************************************************************
 ! GET_UNIT
 ! PURPOSE: returns the first free Fortran unit number (search in 1 to MAX_UNIT).
-! CALL PARAMETERS:
+! RETURNS:
 !    Integer unit number
-!    optional integer max_funit to search (default MAX_UNIT defined in mudule)
+! CALL PARAMETERS:
 !    optional logical execution error status (.TRUE.)
+!    optional integer max_funit to search (default MAX_UNIT defined in mudule)
 !
 ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
 ! Modified by Sergey Budaev
