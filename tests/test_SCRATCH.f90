@@ -11,15 +11,9 @@ program TEST_SCRATCH
   real(8) :: ZZ = 12.455565465654654_8
   character (len=120) :: SS
   
-  SS="111 222 333 000 dfjhvbfv df vdfjhvbdf vvdfjhvvdf vdfjfhbvdf vdfjhvb      "
-
-  print *, TOSTR(ZZ), ": - real"
-
   call STDOUT( "Output number=" // TOSTR(12) // ":" // TOSTR(2.4_8, "(f4.2)")  )
 
   call STDERR( "Error code=" // TOSTR(ZZ) // ":" )
   
-  !print *, ":", CLEANUP(SS), ":"
-
-
+  
 end program TEST_SCRATCH

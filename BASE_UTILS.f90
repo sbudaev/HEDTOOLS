@@ -41,7 +41,6 @@ interface STDERR              ! Short name for stderr-output routine
 
 end interface STDERR
 
-
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
@@ -393,6 +392,37 @@ subroutine OUT_FREE_STDERR(s01,s02,s03,s04,s05,s06,s07,s08,s09,s10, &
 end subroutine OUT_FREE_STDERR
 
 !-------------------------------------------------------------------------------
+
+subroutine RANDOM_SEED_INIT()
+!*******************************************************************************
+! RANDOM_SEED_INIT
+! PURPOSE: initialises the random seed
+! CALL PARAMETERS: none
+!*******************************************************************************
+
+  implicit none
+  integer, parameter :: STD=4   ! Here we have to use standard precision kind=4
+                                ! DOUBLE does not seem to be supported
+  integer(STD) :: i, n, clock
+  integer(STD), dimension(:), allocatable :: seed
+
+  call random_seed(size = n)
+  allocate(seed(n))
+
+  call system_clock(count=clock)
+
+  seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+  call random_seed(PUT = seed)
+
+  deallocate(seed)
+
+end subroutine RANDOM_SEED_INIT
+
+!-------------------------------------------------------------------------------
+
+
+
+
 
 
 
