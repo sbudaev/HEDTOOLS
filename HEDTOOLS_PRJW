@@ -28,10 +28,11 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=2
-FILE_NAME_0=4295;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5CBASE_CSV_IO.f90;0;2
-FILE_NAME_1=5315;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5CBASE_UTILS.f90;0;2
-FILE_NAME_2=9592;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5Ctests%5Ctest_CSV_IO.f90;0;3
+current_page=1
+FILE_NAME_0=31003;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5CBASE_CSV_IO.f90;0;2
+FILE_NAME_1=6003;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5CBASE_UTILS.f90;0;2
+FILE_NAME_2=9555;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5Ctests%5Ctest_CSV_IO.f90;0;3
+FILE_NAME_3=415;Fortran;0;EUTF-8;0;1;0;O%3A%5CWORK%5CAHA-DEV%5Cbranches%5Cbudaev%5CHEDTOOLS%5Ctests%5Ctest_SCRATCH.f90;0;2
 
 [prjorg]
 source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;*.m;

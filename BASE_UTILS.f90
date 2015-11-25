@@ -73,7 +73,7 @@ function STR_ITOA(i) result (ToStrA)
   !--------------------------------------------------
 
   write(tmpStr,'(i0)') i
-  ToStrA = trim(tmpStr) ! We don't need to adjustl here, with INT, unlike REAL
+  ToStrA = CLEANUP(tmpStr)          ! see notes on _R and _R8 versions below
 
 end function STR_ITOA
 
@@ -119,7 +119,7 @@ function STR_RTOA(r,formatstr) result (ToStrA)
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
 
-  ToStrA = adjustr(trim(tmpStr))    ! we have to remove leading/trailing blanks
+  ToStrA = CLEANUP(tmpStr)          ! we have to remove leading/trailing blanks
   ! Portability note: direct assignment
   !   ToStrA = trim(adjustl(tmpStr))
   ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
@@ -132,6 +132,7 @@ function STR_RTOA(r,formatstr) result (ToStrA)
   ! f90: Fatal error in /home/budaev/bin/solarisstudio12.4/lib/compilers/ &
   ! f90comp : Signal number = 6
   ! <---end cut--->
+  ! Therefore, we now use a portable function CLEANUP
 
 end function STR_RTOA
 
@@ -177,7 +178,7 @@ function STR_R8TOA(r,formatstr) result (ToStrA)
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
 
-  ToStrA = adjustr(trim(tmpStr))    ! we have to remove leading/trailing blanks
+  ToStrA = CLEANUP(tmpStr)          ! we have to remove leading/trailing blanks
   ! Portability note: direct assignment
   !   ToStrA = trim(adjustl(tmpStr))
   ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
@@ -190,8 +191,56 @@ function STR_R8TOA(r,formatstr) result (ToStrA)
   ! f90: Fatal error in /home/budaev/bin/solarisstudio12.4/lib/compilers/ &
   ! f90comp : Signal number = 6
   ! <---end cut--->
+  ! Therefore, we now use a portable function CLEANUP
 
 end function STR_R8TOA
+
+!-------------------------------------------------------------------------------
+
+function CLEANUP(instring) result (cleaned)
+!*******************************************************************************
+! PURPOSE: Removes spaces, tabs, and control characters in string
+! CALL PARAMETERS: Character string
+! NOTE: This is a modified version from the STRINGS module 
+! (http://www.gbenthien.net/strings/index.html)
+!*******************************************************************************
+
+! Function value
+character (len=:), allocatable :: cleaned
+
+! Calling parameters
+character(len=*), intent(in) :: instring
+
+! Copies of calling parameters
+character(len=:), allocatable :: str
+
+! Local variables
+character(len=1):: ch
+character(len=len_trim(instring))::outstr
+integer :: i, k, ich, lenstr
+
+str=instring
+
+str=adjustl(str)
+lenstr=len_trim(str)
+outstr=' '
+k=0
+
+do i=1,lenstr
+  ch=str(i:i)
+  ich=iachar(ch)
+  select case(ich)
+    case(0:32)  ! space, tab, or control character
+         cycle
+    case(33:)
+      k=k+1
+      outstr(k:k)=ch
+  end select
+end do
+
+cleaned=trim(outstr)
+
+end function CLEANUP
 
 !-------------------------------------------------------------------------------
 
