@@ -53,7 +53,6 @@ program TEST_CSV_IO
 
  print *, "Running program"
 
- call LOG_CONFIGURE ( "logfileunit" , 14 )
  call LOG_STARTUP ( "test_CSV_logger.log" )        ! Init. Log file
  call LOG_CONFIGURE ( "writeonstdout" , .true. )   ! do/not write on screen
  call LOG_CONFIGURE ( "timestamp" , .true. )       ! do write timestamps

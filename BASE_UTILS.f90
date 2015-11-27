@@ -19,6 +19,10 @@ interface NUMTOSTR            ! Generic interface to number-to-string
   module procedure STR_RTOA   ! for convenience, they 're identical
   module procedure STR_R8TOA
 
+  module procedure STR_ARRAY_ITOA
+  module procedure STR_ARRAY_RTOA
+  module procedure STR_ARRAY_R8TOA
+
 end interface NUMTOSTR
 
 interface TOSTR               ! Generic interface to number-to-string
@@ -26,6 +30,12 @@ interface TOSTR               ! Generic interface to number-to-string
   module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
   module procedure STR_RTOA   ! for convenience, they're identical
   module procedure STR_R8TOA
+  module procedure STR_LTOA
+
+  module procedure STR_ARRAY_ITOA
+  module procedure STR_ARRAY_RTOA
+  module procedure STR_ARRAY_R8TOA
+  module procedure STR_ARRAY_LTOA
 
 end interface TOSTR
 
@@ -196,11 +206,201 @@ end function STR_R8TOA
 
 !-------------------------------------------------------------------------------
 
+function STR_LTOA (L) result (ToStrA)
+
+!*******************************************************************************
+! PURPOSE: Convert LOGICAL to a string type.
+! CALL PARAMETERS: single LOGICAL value
+!
+! EXAMPLE:
+!          Str_NAME = "Status Flag = " // STR_LTOA(file_write_status)
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  logical :: L
+
+  if (L) then
+    ToStrA = "TRUE"
+  else
+    ToStrA = "FALSE"
+  end if
+
+end function STR_LTOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ARRAY_ITOA (r) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert integer array to a string type.
+! CALL PARAMETERS: integer array
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "N=" // STR_ARRAY_ITOA(iNum)
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  integer, dimension(:), intent(in) :: r
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer :: i
+
+  !-----------------------------------------------------------------------------
+
+  tmpStr=""
+
+  do i=lbound(r,1), ubound(r,1)
+    tmpStr = tmpStr // " " // STR_ITOA(r(i))
+  end do
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_ITOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ARRAY_RTOA (r,formatstr) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert REAL array to a string type.
+! CALL PARAMETERS: real array
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "Pi=" // STR_ARRAY_RTOA(rNumbers)
+!*******************************************************************************
+
+! Convert REAL to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+! as used to be in old fortran.
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  real, dimension(:), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer :: i
+
+  !-------------------------------------------------------
+  tmpStr=""
+  do i=lbound(r,1), ubound(r,1)
+    if (present(formatstr)) then
+      tmpStr=tmpStr // " " // STR_RTOA(r(i), formatstr)
+    else
+      tmpStr = tmpStr // " " // STR_RTOA(r(i))
+    end if
+  end do
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_RTOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert REAL kind 8 array to a string type.
+! CALL PARAMETERS: real kind 8 array
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "Pi=" // STR_ARRAY_RTOA(rNumbers)
+!*******************************************************************************
+
+! Convert REAL to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+! as used to be in old fortran.
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  real (kind=8), dimension(:), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer :: i
+
+  !-------------------------------------------------------
+  tmpStr=""
+  do i=lbound(r,1), ubound(r,1)
+    if (present(formatstr)) then
+      tmpStr=tmpStr // " " // STR_R8TOA(r(i), formatstr)
+    else
+      tmpStr = tmpStr // " " // STR_R8TOA(r(i))
+    end if
+  end do
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_R8TOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ARRAY_LTOA (r) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert LOGICAL array to a string type.
+! CALL PARAMETERS: Logical array
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "Pi=" // STR_ARRAY_RTOA(rNumbers)
+!*******************************************************************************
+
+! Convert REAL to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+! as used to be in old fortran.
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  logical, dimension(:), intent(in) :: r
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer :: i
+
+  !-------------------------------------------------------
+  tmpStr=""
+  do i=lbound(r,1), ubound(r,1)
+    tmpStr = tmpStr // " " // STR_LTOA(r(i))
+  end do
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_LTOA
+
+!-------------------------------------------------------------------------------
+
 function CLEANUP(instring) result (cleaned)
 !*******************************************************************************
 ! PURPOSE: Removes spaces, tabs, and control characters in string
 ! CALL PARAMETERS: Character string
-! NOTE: This is a modified version from the STRINGS module 
+! NOTE: This is a modified version from the STRINGS module
 ! (http://www.gbenthien.net/strings/index.html)
 !*******************************************************************************
 
