@@ -44,7 +44,7 @@ program TEST_CSV_IO
 
  real, dimension (100,10) :: MATRIX
 
- real, dimension(10) :: ARRAY_Z
+ character (24), dimension(10000) :: ARRAY_Z
 
  ! We need to declare the character variable to store CSV record
  character (len=255) :: RECORD_CSV
@@ -230,7 +230,7 @@ program TEST_CSV_IO
  ! Construct matrix, the matrix can be integer, real, double or character
  do j=lbound(MATRIX, 2), ubound(MATRIX, 2)      ! we first loop over rows that
    do i=lbound(MATRIX, 1), ubound(MATRIX, 1)    ! is a little faster in Fortran
-      MATRIX (i,j) = real(i)+100*real(j)+.0024
+      MATRIX (i,j) = 12.456 !real(i)+10*real(j)+.0024
    end do
  end do
 
@@ -242,7 +242,7 @@ program TEST_CSV_IO
  !-------------[ We can write 1-d arrays too ]----------------------------------
 
  do i=lbound(ARRAY_Z, 1), ubound(ARRAY_Z, 1)
-      ARRAY_Z=i+0.003
+      ARRAY_Z="1223456781236589874_8" !i+0.003
  end do
 
  ! save array

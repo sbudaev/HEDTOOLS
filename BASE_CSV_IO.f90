@@ -733,7 +733,28 @@ subroutine CSV_RECORD_APPEND_I4 (record, avalue)
 !    Character RECORD, the CSV record.
 !    Integer to be appended
 ! USES: I4_WIDTH from the same module
+!
 ! NOTES:
+!   The record parameter does not accept allocatable strings, only standard
+!   fixed length strings (e.g. character (len=255) :: RECORD_CSV). But there is
+!   a little trick to use allocatable strings:
+!
+!   (1) declare allocatable strings
+!         character (len=:), allocatable :: RECORD_CSV
+!   (2) allocate/ initialise an empty string of the necessary size for the
+!       first record using intrinsic function repeat:
+!         RECORD_CSV=repeat(" ", 255) or assess and set the maximum size
+!       of array record in advance using
+!         size_of_array * (n_characters_per_number + 1), may use len(TOSTR())
+!         from BASE_UTILS module to get the number of characters per field.
+!         RECORD_CSV=repeat( " ", max_size_record )
+!       see CSV_MATRIX_WRITE_ as a model for calculating max_size_record;
+!   (3) append numbers to this initially long empty string (NOT zero-length
+!       allocatable string "":
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(1) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(2) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(3) )
+!
 ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
 ! Modified by Sergey Budaev
 !*******************************************************************************
@@ -777,7 +798,28 @@ subroutine CSV_RECORD_APPEND_R4 (record, avalue)
 !    Character RECORD, the CSV record.
 !    real to be appended
 ! USES: I4_WIDTH from the same module
+!
 ! NOTES:
+!   The record parameter does not accept allocatable strings, only standard
+!   fixed length strings (e.g. character (len=255) :: RECORD_CSV). But there is
+!   a little trick to use allocatable strings:
+!
+!   (1) declare allocatable strings
+!         character (len=:), allocatable :: RECORD_CSV
+!   (2) allocate/ initialise an empty string of the necessary size for the
+!       first record using intrinsic function repeat:
+!         RECORD_CSV=repeat(" ", 255) or assess and set the maximum size
+!       of array record in advance using
+!         size_of_array * (n_characters_per_number + 1), may use len(TOSTR())
+!         from BASE_UTILS module to get the number of characters per field.
+!         RECORD_CSV=repeat( " ", max_size_record )
+!       see CSV_MATRIX_WRITE_ as a model for calculating max_size_record;
+!   (3) append numbers to this initially long empty string (NOT zero-length
+!       allocatable string "":
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(1) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(2) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(3) )
+!
 ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
 ! Modified by Sergey Budaev
 !*******************************************************************************
@@ -829,7 +871,28 @@ subroutine CSV_RECORD_APPEND_R8 (record, avalue)
 !    Character RECORD, the CSV record.
 !    real, kind 8, to be appended
 ! USES: I4_WIDTH from the same module
+!
 ! NOTES:
+!   The record parameter does not accept allocatable strings, only standard
+!   fixed length strings (e.g. character (len=255) :: RECORD_CSV). But there is
+!   a little trick to use allocatable strings:
+!
+!   (1) declare allocatable strings
+!         character (len=:), allocatable :: RECORD_CSV
+!   (2) allocate/ initialise an empty string of the necessary size for the
+!       first record using intrinsic function repeat:
+!         RECORD_CSV=repeat(" ", 255) or assess and set the maximum size
+!       of array record in advance using
+!         size_of_array * (n_characters_per_number + 1), may use len(TOSTR())
+!         from BASE_UTILS module to get the number of characters per field.
+!         RECORD_CSV=repeat( " ", max_size_record )
+!       see CSV_MATRIX_WRITE_ as a model for calculating max_size_record;
+!   (3) append numbers to this initially long empty string (NOT zero-length
+!       allocatable string "":
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(1) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(2) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(3) )
+!
 ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
 ! Modified by Sergey Budaev
 !*******************************************************************************
@@ -880,7 +943,28 @@ subroutine CSV_RECORD_APPEND_S (record, avalue)
 ! CALL PARAMETERS:
 !    Character RECORD, the CSV record.
 !    Character string to be appended
+!
 ! NOTES:
+!   The record parameter does not accept allocatable strings, only standard
+!   fixed length strings (e.g. character (len=255) :: RECORD_CSV). But there is
+!   a little trick to use allocatable strings:
+!
+!   (1) declare allocatable strings
+!         character (len=:), allocatable :: RECORD_CSV
+!   (2) allocate/ initialise an empty string of the necessary size for the
+!       first record using intrinsic function repeat:
+!         RECORD_CSV=repeat(" ", 255) or assess and set the maximum size
+!       of array record in advance using
+!         size_of_array * (n_characters_per_number + 1), may use len(TOSTR())
+!         from BASE_UTILS module to get the number of characters per field.
+!         RECORD_CSV=repeat( " ", max_size_record )
+!       see CSV_MATRIX_WRITE_ as a model for calculating max_size_record;
+!   (3) append numbers to this initially long empty string (NOT zero-length
+!       allocatable string "":
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(1) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(2) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(3) )
+!
 ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
 ! Modified by Sergey Budaev
 !*******************************************************************************
@@ -943,8 +1027,9 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
 
@@ -952,6 +1037,10 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(maxval(matrix))+1 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -961,7 +1050,7 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     do j=LBndj, UBndj
       call CSV_RECORD_APPEND_I4 (csv_record, matrix(i,j))
     end do
@@ -986,7 +1075,7 @@ end subroutine CSV_MATRIX_WRITE_I4
 
 subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
 !*******************************************************************************
-! CSV_MATRIX_WRITE_I4
+! CSV_MATRIX_WRITE_R4
 ! PURPOSE: Writes a matrix of real type to a CSV data file
 ! CALL PARAMETERS:
 !    Matrix, 2-dimensional, of real type
@@ -1007,8 +1096,9 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
 
@@ -1016,6 +1106,10 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+10 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -1025,7 +1119,8 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+
     do j=LBndj, UBndj
       call CSV_RECORD_APPEND_R4 (csv_record, matrix(i,j))
     end do
@@ -1050,7 +1145,7 @@ end subroutine CSV_MATRIX_WRITE_R4
 
 subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
 !*******************************************************************************
-! CSV_MATRIX_WRITE_I4
+! CSV_MATRIX_WRITE_R8
 ! PURPOSE: Writes a matrix of real (kind 8), double, to a CSV data file
 ! CALL PARAMETERS:
 !    Matrix, 2-dimensional, of reals (kind 8)
@@ -1071,8 +1166,9 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
 
@@ -1080,6 +1176,10 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+18 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -1089,7 +1189,7 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     do j=LBndj, UBndj
       call CSV_RECORD_APPEND_R8 (csv_record, matrix(i,j))
     end do
@@ -1114,7 +1214,7 @@ end subroutine CSV_MATRIX_WRITE_R8
 
 subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
 !*******************************************************************************
-! CSV_MATRIX_WRITE_I4
+! CSV_MATRIX_WRITE_S
 ! PURPOSE: Writes a matrix of character strings to a CSV data file
 ! CALL PARAMETERS:
 !    Matrix, 2-dimensional, of character strings
@@ -1135,8 +1235,9 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
+  integer :: max_size_record, max_size_record_count
 
   !-----------------------------------------------------------------------------
 
@@ -1144,6 +1245,17 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  max_size_record=0
+  max_size_record_count=0
+  do i=LBndi, UBndi
+    do j=LBndj, UBndj
+      max_size_record_count=max_size_record_count+len(matrix(i,j))+1
+    end do
+    max_size_record=max(max_size_record,max_size_record_count)
+  end do
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -1153,7 +1265,7 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     do j=LBndj, UBndj
       call CSV_RECORD_APPEND_S (csv_record, matrix(i,j))
     end do
@@ -1199,10 +1311,17 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, LBndi, Ubndi
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  ! TODO: make option to write array in a single row
+  !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+  max_size_record = ( I4_WIDTH(maxval(array))+1 )
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -1215,7 +1334,7 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     call CSV_RECORD_APPEND_I4 (csv_record, array(i))  ! write by rows (down)
 
     call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
@@ -1238,7 +1357,7 @@ end subroutine CSV_ARRAY_WRITE_I4
 
 subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
 !*******************************************************************************
-! CSV_MATRIX_WRITE_I4
+! CSV_ARRAY_WRITE_R4
 ! PURPOSE: Writes an array of integers to a CSV data file
 ! CALL PARAMETERS:
 !    Array of reals
@@ -1259,10 +1378,17 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, LBndi, Ubndi
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  ! TODO: make option to write array in a single row
+  !max_size_record = size(array) * ( I4_WIDTH(int(maxval(array)))+10 )
+  max_size_record = I4_WIDTH(int(maxval(array)))+10
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -1275,7 +1401,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     call CSV_RECORD_APPEND_R4 (csv_record, array(i))  ! write by rows (down)
 
     call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
@@ -1298,7 +1424,7 @@ end subroutine CSV_ARRAY_WRITE_R4
 
 subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
 !*******************************************************************************
-! CSV_MATRIX_WRITE_I4
+! CSV_ARRAY_WRITE_R8
 ! PURPOSE: Writes an array of integers to a CSV data file
 ! CALL PARAMETERS:
 !    Arrays of double precision reals (kind 8)
@@ -1321,8 +1447,14 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
   integer :: funit
   character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
   integer :: i, LBndi, Ubndi
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  ! TODO: make option to write array in a single row
+  max_size_record = size(array) * ( I4_WIDTH(int(maxval(array)))+1 )
+  max_size_record = I4_WIDTH(int(maxval(array)))+18
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -1335,7 +1467,7 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     call CSV_RECORD_APPEND_R8 (csv_record, array(i))  ! write by rows (down)
 
     call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
@@ -1358,7 +1490,7 @@ end subroutine CSV_ARRAY_WRITE_R8
 
 subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
 !*******************************************************************************
-! CSV_MATRIX_WRITE_I4
+! CSV_ARRAY_WRITE_S
 ! PURPOSE: Writes an array of integers to a CSV data file
 ! CALL PARAMETERS:
 !    Array of strings
@@ -1379,13 +1511,21 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, LBndi, Ubndi
+  integer :: max_size_record
 
   !-----------------------------------------------------------------------------
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
+
+  ! Assess the maximum size of the whole record in advance, we
+  ! cannot make record allocatable
+  max_size_record=0
+  do i=LBndi, UBndi
+    max_size_record=max_size_record+len(array(i))+1
+  end do
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -1395,7 +1535,7 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
 
   do i=LBndi, UBndi
 
-    csv_record=""
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
     call CSV_RECORD_APPEND_S (csv_record, array(i))  ! write by rows (down)
 
     call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
