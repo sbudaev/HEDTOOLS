@@ -1040,7 +1040,7 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
 
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
-  max_size_record = size(matrix, 2) * ( I4_WIDTH(maxval(matrix))+1 )
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(maxval(matrix))+2 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -1109,7 +1109,7 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
 
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
-  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+10 )
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+14 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -1321,7 +1321,7 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
   ! cannot make record allocatable
   ! TODO: make option to write array in a single row
   !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
-  max_size_record = ( I4_WIDTH(maxval(array))+1 )
+  max_size_record = ( I4_WIDTH(maxval(array))+2 )
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -1388,7 +1388,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
   ! cannot make record allocatable
   ! TODO: make option to write array in a single row
   !max_size_record = size(array) * ( I4_WIDTH(int(maxval(array)))+10 )
-  max_size_record = I4_WIDTH(int(maxval(array)))+10
+  max_size_record = I4_WIDTH(int(maxval(array)))+14
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)

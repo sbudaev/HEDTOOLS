@@ -199,6 +199,8 @@ program MODEL_PROTO
   character(len=:), allocatable :: name_for_csv_out
   integer :: unit_for_csv_out
 
+  real :: RANDOM_VALUE
+
   logical :: no_error_status  ! Note that we may use an error status variable to
                               ! flag file output errors, mainly in CSV_IO
 
@@ -221,19 +223,20 @@ program MODEL_PROTO
   ! STDOUT accepts optional number of string arguments, every one
   ! of it goes as a seperete line. STDOUT is intended for all routine screen
   ! output, LOGGER is for debug and service messages that are normally hidden
-  call STDOUT("----------------------------------------------------------------",&
-              " Starting running the model : " // MODEL_NAME, &
-              " Every argument goes to separate line...", &
-              " We may also output numerical data of any type", &
-              " Using conversion function TOSTR, e.g. Pi=" // TOSTR(3.1415926), &
-              " ", &
-              " Note that the above example used concatenation to attach number", &
-              " ", &
-              " We can also use optional format spec (standard Fortran rules)", &
-              " For example: Pi=" // TOSTR(3.1415926, "(f4.2)"), &
-              "   ToStr accepts any data types, e.g. integer: one=" // TOSTR(1), &
-              " ", &
-              "----------------------------------------------------------------" )
+  call STDOUT( &
+      "----------------------------------------------------------------",&
+      " Starting running the model : " // MODEL_NAME, &
+      " Every argument goes to separate line...", &
+      " We may also output numerical data of any type", &
+      " Using conversion function TOSTR, e.g. Pi=" // TOSTR(3.1415926), &
+      " ", &
+      " Note that the above example used concatenation to attach number", &
+      " ", &
+      " We can also use optional format spec (standard Fortran rules)", &
+      " For example: Pi=" // TOSTR(3.1415926, "(f4.2)"), &
+      "   ToStr accepts any data types, e.g. integer: one=" // TOSTR(1), &
+      " ", &
+      "----------------------------------------------------------------" )
 
   ! There is a similar function for producing output to stderr. It works
   ! almost identically as STDOUT, but the output is going to stderr.
@@ -251,14 +254,14 @@ program MODEL_PROTO
   ! Start some calculations ----------------------------------------------------
 
   ! But first show how we can produce debug messages
-  ! of course, we can hide this code to
-  call LOG_DBG("About to go into INIT_DATA...") ! Log only in DEDUG mode using
-                                                ! wrapper subroutine
-  ! Call some calculations...
-  call INIT_DATA()
+  ! of course, we can hide this code to a wrapper subroutine
+  call LOG_DBG("About to go into CALCULATE_RANDOM_MODEL...")
 
-  call LOG_DBG("Exited from INIT_DATA...")      ! We can Log debug messages as
-                                                ! much as possible...
+  ! Call some calculations...
+  call CALCULATE_RANDOM_MODEL()
+
+  ! We can Log debug messages as much as possible...
+  call LOG_DBG("Exited from CALCULATE_RANDOM_MODEL...")
 
   call LOG_DBG("About to Initialise random seed...") ! Log only in DEDUG mode
 
@@ -281,8 +284,8 @@ program MODEL_PROTO
 
       call random_number(RAND_A(i,j))
 
-      call LOG_DBG( "Writing" // TOSTR(i) // ", " // TOSTR(j) // "=" &
-                  // TOSTR(RAND_A(i,j)) )
+      call LOG_DBG( "Writing row " // TOSTR(i) // ", col " // TOSTR(j) // &
+                  ", Value=" // TOSTR(RAND_A(i,j)) )
 
     end do
 
@@ -307,10 +310,12 @@ program MODEL_PROTO
 
   call LOG_CONFIGURE("writeonstdout" , .true.) ! Log to screen again enabled
 
+  call LOG_CONFIGURE("timestamp", .false.)     ! config the log timestamp OFF
+
   call LOG_MSG("We are finishing our calculations now...")
 
   call STDOUT("************************************************",&
-              "           CALCULATIONS FINISHED                ",&
+              "*          CALCULATIONS FINISHED               *",&
               "************************************************")
 
   call LOG_SHUTDOWN ()  ! close logger
@@ -342,7 +347,7 @@ end program MODEL_PROTO
 ! External and other subroutines follow...
 !-------------------------------------------------------------------------------
 
-subroutine INIT_DATA ()
+subroutine CALCULATE_RANDOM_MODEL ()
 
   use COMMONDATA    ! This is to get access to the global data and objects
   use BASE_UTILS    ! for Basic utils
@@ -363,10 +368,10 @@ subroutine INIT_DATA ()
   ! it cannot be declared allocatable as it will get empty value with zero
   ! for a new record. length. Although it is possible to explicitly reallocate
   ! it with the necessary values each time
-  character (len=255) :: RECORD_CSV
+  character (len=:), allocatable :: RECORD_CSV
 
   ! Write / log what is being done to log if DEBUGging
-  call LOG_DBG("Entering subroutine INIT_DATA...")
+  call LOG_DBG("Entering subroutine CALCULATE_RANDOM_MODEL...")
 
   do i=1, Cinds     ! We will here (1) )cycle over the dimensions of
                     ! the multidimensional array; (2) set its value;
@@ -396,7 +401,7 @@ subroutine INIT_DATA ()
           ! Note: CSV block
           ! We will begin a new CSV record (row) for writing to file, so
           ! 3. Nullify current CSV record (row) to empty
-          RECORD_CSV=""
+          RECORD_CSV=repeat(" ", 255)
           ! end CSV block
 
           do m=1, CNRcomp
@@ -419,13 +424,15 @@ subroutine INIT_DATA ()
           ! Yes, TOSTR accepts vectors, here we use slices to print the first
           ! three elements of the last index calculated at previous cycle "m".
           ! Reals also accepts Fortran formats and integer array constructors
-          ! like (/(i, i=1,3, 1)/) also work:
-          call STDOUT("Data " // TOSTR( (/(o, o=1,3, 1)/) ) // " :: " &
-                      // TOSTR(genomeNR(i,j,k,l,1:3), "(f4.2)") )
+          ! like (/(i, i=1,3, 1)/) also work; char(9) is TAB:
+          call STDOUT( &
+            "Data ::" // TOSTR(i) // "," // TOSTR(j) // "," // TOSTR(k) &
+            // "," // TOSTR(l) // char(9) // TOSTR( (/(o, o=1,3, 1)/) ) // &
+            " :: " // TOSTR(genomeNR(i,j,k,l,1:3), "(f4.2)") )
                       ! This outputs such things:
-                      ! Data  1 2 3 ::  0.92 0.35 0.09
+                      ! Data ::10,10,2,20  1 2 3 ::  0.92 0.35 0.09
 
-          call LOG_DBG("About to write record " // TOSTR(m) // ", of size" &
+          call LOG_DBG("About to write record " // TOSTR(m) // ", of size " &
                         // TOSTR(CSV_RECORD_SIZE(RECORD_CSV)) )
           ! Note: CSV block
           ! 5. write l-th CSV record
@@ -456,9 +463,9 @@ subroutine INIT_DATA ()
 
   end do ! end i
 
-  call LOG_DBG("Now we are about to go out of INIT_DATA...")
+  call LOG_DBG("Now we are about to go out of CALCULATE_RANDOM_MODEL...")
 
-end subroutine INIT_DATA
+end subroutine CALCULATE_RANDOM_MODEL
 
 
 

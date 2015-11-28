@@ -35,6 +35,8 @@ program TEST_SCRATCH
 
   !print *,">>>>", RECORD_CSV,"<<<<", len(RECORD_CSV), len_trim(RECORD_CSV)
 
+  print *, ">>>", char(9), "<<<"
+
 
   print *, BBB, real(int(BBB, kind=8))
   if (  BBB == real(int(BBB, kind=8))  ) print *, "YES"
