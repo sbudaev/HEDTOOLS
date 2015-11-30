@@ -13,6 +13,23 @@ module BASE_UTILS
 
 implicit none
 
+! Module name for the DEBUG LOGGER: every function/sub must also have
+! the PROCNAME parameter referring to its name. This is done for the Debug
+! Logger module. Each module must also have a DEBUG Logger subroutine, that
+! is a wrapper to module LOGGER (or perhaps any other that is being used)
+!   procedure name PROCNAME
+character (len=*), parameter :: MODNAME = "BASE_UTILS"
+
+! Set the debug mode to ON or OFF, in the debug mode, events are written to
+! the log, determined by the LOG_DBG subroutine, normally, a wrapper to the
+! module LOGGER. May also define integer DEBUG_LEVEL parameter...
+logical, parameter :: IS_DEBUG = .TRUE.
+
+!*******************************************************************************
+! GENERIC INTERFACES
+! Generic interfaces to the modules....
+!*******************************************************************************
+
 interface NUMTOSTR            ! Generic interface to number-to-string
                               ! conversion functions. We have two forms:
   module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
@@ -54,6 +71,29 @@ end interface STDERR
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
+subroutine LOG_DBG(message_string)
+!*******************************************************************************
+! LOG_DBG
+! PURPOSE: This subroutine is a wrapper for writing debug messages. Normally it
+! should use the module LOGGER. But in the most trivial form, if LOGGER is
+! not available, may just be modified to print the debug message to the
+! standard error (or stdout, or into a file).
+!*******************************************************************************
+
+  use LOGGER      ! we need it get access to logger
+
+  implicit none
+
+  character(len=*), intent(in) :: message_string
+
+  ! TODO: need to add checking if logger is started, and if not, init it
+
+  if (IS_DEBUG) call LOG_MSG (message_string)
+
+end subroutine LOG_DBG
+
+!-------------------------------------------------------------------------------
+
 function STR_ITOA(i) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.
@@ -78,6 +118,9 @@ function STR_ITOA(i) result (ToStrA)
 
   ! Local variables
   character(range(i)+2) :: tmpStr
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ITOA"
 
   !--------------------------------------------------
 
@@ -117,6 +160,9 @@ function STR_RTOA(r,formatstr) result (ToStrA)
   ! Local variables
   character(len=24) :: tmpStr ! quick and dirty, with allowance for a big float
   character(len=:), allocatable :: tmpFormat
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_RTOA"
 
   !-------------------------------------------------------
 
@@ -177,6 +223,9 @@ function STR_R8TOA(r,formatstr) result (ToStrA)
   character(len=68) :: tmpStr ! quick and dirty, with allowance for a big float
   character(len=:), allocatable :: tmpFormat
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_R8TOA"
+
   !-------------------------------------------------------
 
   ! we use the present() function to check for optional arguments
@@ -224,6 +273,11 @@ function STR_LTOA (L) result (ToStrA)
   ! Calling parameters
   logical :: L
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_LTOA"
+
+  !-----------------------------------------------------------------------------
+
   if (L) then
     ToStrA = "TRUE"
   else
@@ -254,6 +308,9 @@ function STR_ARRAY_ITOA (r) result(ToStrA)
   ! Local variables
   character (len=:), allocatable :: tmpStr
   integer :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_ITOA"
 
   !-----------------------------------------------------------------------------
 
@@ -296,6 +353,9 @@ function STR_ARRAY_RTOA (r,formatstr) result(ToStrA)
   ! Local variables
   character (len=:), allocatable :: tmpStr
   integer :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_RTOA"
 
   !-------------------------------------------------------
   tmpStr=""
@@ -341,6 +401,9 @@ function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
   character (len=:), allocatable :: tmpStr
   integer :: i
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_R8TOA"
+
   !-------------------------------------------------------
   tmpStr=""
   do i=lbound(r,1), ubound(r,1)
@@ -384,7 +447,11 @@ function STR_ARRAY_LTOA (r) result(ToStrA)
   character (len=:), allocatable :: tmpStr
   integer :: i
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_LTOA"
+
   !-------------------------------------------------------
+
   tmpStr=""
   do i=lbound(r,1), ubound(r,1)
     tmpStr = tmpStr // " " // STR_LTOA(r(i))
@@ -404,40 +471,45 @@ function CLEANUP(instring) result (cleaned)
 ! (http://www.gbenthien.net/strings/index.html)
 !*******************************************************************************
 
-! Function value
-character (len=:), allocatable :: cleaned
+  ! Function value
+  character (len=:), allocatable :: cleaned
 
-! Calling parameters
-character(len=*), intent(in) :: instring
+  ! Calling parameters
+  character(len=*), intent(in) :: instring
 
-! Copies of calling parameters
-character(len=:), allocatable :: str
+  ! Copies of calling parameters
+  character(len=:), allocatable :: str
 
-! Local variables
-character(len=1):: ch
-character(len=len_trim(instring))::outstr
-integer :: i, k, ich, lenstr
+  ! Local variables
+  character(len=1):: ch
+  character(len=len_trim(instring))::outstr
+  integer :: i, k, ich, lenstr
 
-str=instring
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CLEANUP"
 
-str=adjustl(str)
-lenstr=len_trim(str)
-outstr=' '
-k=0
+  !-----------------------------------------------------------------------------
 
-do i=1,lenstr
-  ch=str(i:i)
-  ich=iachar(ch)
-  select case(ich)
-    case(0:32)  ! space, tab, or control character
-         cycle
-    case(33:)
-      k=k+1
-      outstr(k:k)=ch
-  end select
-end do
+  str=instring
 
-cleaned=trim(outstr)
+  str=adjustl(str)
+  lenstr=len_trim(str)
+  outstr=' '
+  k=0
+
+  do i=1,lenstr
+    ch=str(i:i)
+    ich=iachar(ch)
+    select case(ich)
+      case(0:32)  ! space, tab, or control character
+          cycle
+      case(33:)
+        k=k+1
+        outstr(k:k)=ch
+    end select
+  end do
+
+  cleaned=trim(outstr)
 
 end function CLEANUP
 
@@ -481,6 +553,9 @@ subroutine OUT_FREE_STDOUT(s01,s02,s03,s04,s05,s06,s07,s08,s09,s10, &
         :: s01,s02,s03,s04,s05,s06,s07,s08,s09,s10, &
            s11,s12,s13,s14,s15,s16,s17,s18,s19,s20, &
            s21,s22,s23,s24,s25
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "OUT_FREE_STDOUT"
 
   !-----------------------------------------------------------------------------
 
@@ -557,6 +632,9 @@ subroutine OUT_FREE_STDERR(s01,s02,s03,s04,s05,s06,s07,s08,s09,s10, &
            s11,s12,s13,s14,s15,s16,s17,s18,s19,s20, &
            s21,s22,s23,s24,s25
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "OUT_FREE_STDERR"
+
   !-----------------------------------------------------------------------------
 
   ! YES, it does trivial printing... But this way we can
@@ -606,6 +684,11 @@ subroutine RANDOM_SEED_INIT()
   integer(STD) :: i, n, clock
   integer(STD), dimension(:), allocatable :: seed
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
+
+  !-----------------------------------------------------------------------------
+
   call random_seed(size = n)
   allocate(seed(n))
 
@@ -621,14 +704,82 @@ end subroutine RANDOM_SEED_INIT
 !-------------------------------------------------------------------------------
 
 
+function TIMESTAMP_FULL() result (tstamp_string)
+!*******************************************************************************
+! TIMESTAMP
+! PURPOSE: returns the current date as a human readable time stamp, e.g.
+!          19 November 2015  11:13:43.662 PM
+! CALL PARAMETERS:
+!   None
+! RETURNS:
+!   String timestamp
+! NOTES: Useful for CSV file header
+! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+! Modified by Sergey Budaev
+!*******************************************************************************
 
+  implicit none
 
+  ! Function value
+  character (len=35) :: tstamp_string
 
+  ! Local variables
+  character (len=8) :: ampm
+  integer :: d
+  integer :: h
+  integer :: m
+  integer :: mm
+  character (len=9), parameter, dimension(12) :: month = (/ &
+    'January  ', 'February ', 'March    ', 'April    ', &
+    'May      ', 'June     ', 'July     ', 'August   ', &
+    'September', 'October  ', 'November ', 'December ' /)
+  integer :: n
+  integer :: s
+  integer :: values(8)
+  integer :: y
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "TIMESTAMP_FULL"
 
+  !-----------------------------------------------------------------------------
 
+  call date_and_time (values=values)
 
+  y = values(1)
+  m = values(2)
+  d = values(3)
+  h = values(5)
+  n = values(6)
+  s = values(7)
+  mm = values(8)
 
+  if ( h < 12 ) then
+    ampm = 'AM'
+  else if ( h == 12 ) then
+    if ( n == 0 .and. s == 0 ) then
+      ampm = 'Noon'
+    else
+      ampm = 'PM'
+    end if
+  else
+    h = h - 12
+    if ( h < 12 ) then
+      ampm = 'PM'
+    else if ( h == 12 ) then
+      if ( n == 0 .and. s == 0 ) then
+        ampm = 'Midnight'
+      else
+        ampm = 'AM'
+      end if
+    end if
+  end if
+
+  write (tstamp_string, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
+    d, trim(month(m)), y, h, ':', n, ':', s, '.', mm, trim(ampm)
+
+end function TIMESTAMP_FULL
+
+!-------------------------------------------------------------------------------
 
 
 end module BASE_UTILS

@@ -55,6 +55,18 @@ integer, public, parameter :: MAX_UNIT=99       ! Maximum unit number (in old
 !integer, public, parameter :: OUTPUT_UNIT=6     ! output, and standard
 !integer, public, parameter :: ERROR_UNIT=9      ! error units
 
+! Module name for the DEBUG LOGGER: every function/sub must also have
+! the PROCNAME parameter referring to its name. This is done for the Debug
+! Logger module. Each module must also have a DEBUG Logger subroutine, that
+! is a wrapper to module LOGGER (or perhaps any other that is being used)
+!   procedure name PROCNAME
+character (len=*), parameter :: MODNAME = "CSV_IO"
+
+! Set the debug mode to ON or OFF, in the debug mode, events are written to
+! the log, determined by the LOG_DBG subroutine, normally, a wrapper to the
+! module LOGGER. May also define integer DEBUG_LEVEL parameter...
+logical, parameter :: IS_DEBUG = .TRUE.
+
 !*******************************************************************************
 ! GENERIC INTERFACES
 ! Generic interfaces to the modules. These allow calling CSV_RECORD_APPEND
@@ -93,9 +105,31 @@ interface CSV_ARRAY_WRITE
 
 end interface CSV_ARRAY_WRITE
 
-
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
+
+subroutine LOG_DBG(message_string)
+!*******************************************************************************
+! LOG_DBG
+! PURPOSE: This subroutine is a wrapper for writing debug messages. Normally it
+! should use the module LOGGER. But in the most trivial form, if LOGGER is
+! not available, may just be modified to print the debug message to the
+! standard error (or stdout, or into a file).
+!*******************************************************************************
+
+  use LOGGER      ! we need it get access to logger
+
+  implicit none
+
+  character(len=*), intent(in) :: message_string
+
+  ! TODO: need to add checking if logger is started, and if not, init it
+
+  if (IS_DEBUG) call LOG_MSG (message_string)
+
+end subroutine LOG_DBG
+
+!-------------------------------------------------------------------------------
 
 function CHECK_UNIT_VALID (file_unit) result (file_status)
 !*******************************************************************************
@@ -117,6 +151,11 @@ function CHECK_UNIT_VALID (file_unit) result (file_status)
   integer, intent(in) :: file_unit
   logical :: file_status
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CHECK_UNIT_VALID"
+
+  !-----------------------------------------------------------------------------
+
   if (file_unit > 0 .and. file_unit < MAX_UNIT .and.  &
       file_unit /= INPUT_UNIT .and.                   &
       file_unit /= OUTPUT_UNIT .and.                  &
@@ -132,7 +171,7 @@ end function CHECK_UNIT_VALID
 
 function GET_FREE_FUNIT (file_status, max_funit) result (file_unit)
 !*******************************************************************************
-! GET_UNIT
+! GET_FREE_FUNIT
 ! PURPOSE: returns the first free Fortran unit number (search in 1 to MAX_UNIT).
 ! RETURNS:
 !    Integer unit number
@@ -162,6 +201,9 @@ function GET_FREE_FUNIT (file_status, max_funit) result (file_unit)
   integer :: i
   integer :: ios
   logical :: lopen
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "GET_FREE_FUNIT"
 
   !-----------------------------------------------------------------------------
 
@@ -228,6 +270,9 @@ function GET_FILE_UNIT (csv_file_name, csv_file_status) &
   integer :: file_error_status
   logical :: openedq
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "GET_FILE_UNIT"
+
   !-----------------------------------------------------------------------------
 
   csv_file_name_here=csv_file_name  ! copy name as it is intent-in
@@ -290,6 +335,9 @@ subroutine CSV_FILE_OPEN_READ (csv_file_name, csv_file_unit, csv_file_status)
   ! Local variables
   integer :: file_error_status
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_FILE_OPEN_READ"
+
   !-----------------------------------------------------------------------------
 
   ! First we get a free input unit if one is not provided (invalid, e.g. -1)
@@ -347,6 +395,9 @@ subroutine CSV_FILE_OPEN_WRITE (csv_file_name, csv_file_unit, csv_file_status)
   ! Local variables
   integer :: file_error_status
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_FILE_OPEN_WRITE"
+
   !-----------------------------------------------------------------------------
 
   ! First we get a free input unit if one is not provided (invalid, e.g. -1)
@@ -399,6 +450,9 @@ subroutine CSV_FILE_CLOSE (csv_file_name, csv_file_unit, csv_file_status)
 
   ! Local variables
   integer :: file_error_status
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_FILE_CLOSE"
 
   !-----------------------------------------------------------------------------
 
@@ -466,6 +520,9 @@ subroutine CSV_FILE_HEADER_WRITE (csv_file_name, csv_file_unit, header, &
 
   ! Local variables
   integer :: file_error_status
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_FILE_HEADER_WRITE"
 
   !-----------------------------------------------------------------------------
 
@@ -538,6 +595,9 @@ function CSV_FILE_LINES_COUNT (csv_file_name, csv_file_status) &
   integer :: input_unit
   character (len=:), allocatable :: line
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_FILE_LINES_COUNT"
+
   !-----------------------------------------------------------------------------
 
   line_num = -1
@@ -605,6 +665,9 @@ subroutine CSV_FILE_RECORD_WRITE (csv_file_name, csv_file_unit, record, &
 
   ! Local variables
   integer :: file_error_status
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_FILE_RECORD_WRITE"
 
   !-----------------------------------------------------------------------------
 
@@ -675,6 +738,9 @@ function CSV_RECORD_SIZE (record, csv_record_status) result (value_count)
   integer :: csv_loc
   character :: TAB=achar(9)
   integer :: word_length
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_RECORD_SIZE"
 
   !-----------------------------------------------------------------------------
 
@@ -770,6 +836,9 @@ subroutine CSV_RECORD_APPEND_I4 (record, avalue)
   integer :: i
   integer :: i4_len
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_RECORD_APPEND_I4"
+
   !-----------------------------------------------------------------------------
 
   ! TODO: Check unallocated/uninitialised records
@@ -835,6 +904,9 @@ subroutine CSV_RECORD_APPEND_R4 (record, avalue)
   integer :: i
   integer :: i4
   integer :: i4_len
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_RECORD_APPEND_R4"
 
   !-----------------------------------------------------------------------------
 
@@ -909,6 +981,9 @@ subroutine CSV_RECORD_APPEND_R8 (record, avalue)
   integer :: i4
   integer :: i4_len
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_RECORD_APPEND_R8"
+
   !-----------------------------------------------------------------------------
 
   ! TODO: check for unallocated/uninitialised records
@@ -979,6 +1054,9 @@ subroutine CSV_RECORD_APPEND_S (record, avalue)
   integer :: i
   integer :: s_len
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_RECORD_APPEND_S"
+
   !-----------------------------------------------------------------------------
 
   ! TODO: Check unallocated/uninitialised records
@@ -1030,6 +1108,9 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
   integer :: max_size_record
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_MATRIX_WRITE_I4"
 
   !-----------------------------------------------------------------------------
 
@@ -1099,6 +1180,9 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
   integer :: max_size_record
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_MATRIX_WRITE_R4"
 
   !-----------------------------------------------------------------------------
 
@@ -1170,6 +1254,9 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
   integer :: max_size_record
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_MATRIX_WRITE_R8"
+
   !-----------------------------------------------------------------------------
 
   LBndi=lbound(matrix, 1)   ! Determining bounds for out matrix
@@ -1238,6 +1325,9 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
   integer :: max_size_record, max_size_record_count
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_MATRIX_WRITE_S"
 
   !-----------------------------------------------------------------------------
 
@@ -1315,6 +1405,9 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
   integer :: i, LBndi, Ubndi
   integer :: max_size_record
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_I4"
+
   !-----------------------------------------------------------------------------
 
   ! Assess the maximum size of the whole record in advance, we
@@ -1381,6 +1474,9 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
   character (len=:), allocatable :: csv_record
   integer :: i, LBndi, Ubndi
   integer :: max_size_record
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_R4"
 
   !-----------------------------------------------------------------------------
 
@@ -1449,6 +1545,9 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
   integer :: i, LBndi, Ubndi
   integer :: max_size_record
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_R8"
+
   !-----------------------------------------------------------------------------
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
@@ -1514,6 +1613,9 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
   character (len=:), allocatable :: csv_record
   integer :: i, LBndi, Ubndi
   integer :: max_size_record
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_S"
 
   !-----------------------------------------------------------------------------
 
@@ -1594,6 +1696,9 @@ function I4_WIDTH (i) result (i4width)
   ! Calling parameters
   integer :: i
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "I4_WIDTH"
+
   !-----------------------------------------------------------------------------
 
   if ( 0 < i ) then
@@ -1649,6 +1754,9 @@ function I4_LOG_10 (i) result(i4log10)
   integer :: i_abs
   integer :: ten_pow
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "I4_LOG_10"
+
   !-----------------------------------------------------------------------------
 
   if ( i == 0 ) then
@@ -1666,78 +1774,5 @@ function I4_LOG_10 (i) result(i4log10)
 end function I4_LOG_10
 
 !-------------------------------------------------------------------------------
-
-function TIMESTAMP_FULL() result (tstamp_string)
-!*******************************************************************************
-! TIMESTAMP
-! PURPOSE: returns the current date as a human readable time stamp, e.g.
-!          19 November 2015  11:13:43.662 PM
-! CALL PARAMETERS:
-!   None
-! RETURNS:
-!   String timestamp
-! NOTES: Useful for CSV file header
-! Author: John Burkardt : This code is distributed under the GNU LGPL license.
-! Modified by Sergey Budaev
-!*******************************************************************************
-
-  implicit none
-
-  ! Function value
-  character (len=35) :: tstamp_string
-
-  ! Local variables
-  character (len=8) :: ampm
-  integer :: d
-  integer :: h
-  integer :: m
-  integer :: mm
-  character (len=9), parameter, dimension(12) :: month = (/ &
-    'January  ', 'February ', 'March    ', 'April    ', &
-    'May      ', 'June     ', 'July     ', 'August   ', &
-    'September', 'October  ', 'November ', 'December ' /)
-  integer :: n
-  integer :: s
-  integer :: values(8)
-  integer :: y
-
-  !-----------------------------------------------------------------------------
-
-  call date_and_time (values=values)
-
-  y = values(1)
-  m = values(2)
-  d = values(3)
-  h = values(5)
-  n = values(6)
-  s = values(7)
-  mm = values(8)
-
-  if ( h < 12 ) then
-    ampm = 'AM'
-  else if ( h == 12 ) then
-    if ( n == 0 .and. s == 0 ) then
-      ampm = 'Noon'
-    else
-      ampm = 'PM'
-    end if
-  else
-    h = h - 12
-    if ( h < 12 ) then
-      ampm = 'PM'
-    else if ( h == 12 ) then
-      if ( n == 0 .and. s == 0 ) then
-        ampm = 'Midnight'
-      else
-        ampm = 'AM'
-      end if
-    end if
-  end if
-
-  write (tstamp_string, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
-    d, trim(month(m)), y, h, ':', n, ':', s, '.', mm, trim(ampm)
-
-end function TIMESTAMP_FULL
-
 
 end module CSV_IO
