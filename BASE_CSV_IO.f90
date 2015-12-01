@@ -1,9 +1,10 @@
 module CSV_IO
 !*******************************************************************************
+! CSV_IO
 ! PURPOSE: This module provides high level functions for input and output in
 !          CSV (Comma Seperated Values) file format along with a few other
 !          basic utilities. CSV is accessible by LibreOffice and MS Excel.
-! VERSION AND DATE: 1.3, 2015/11/24
+! VERSION AND DATE: 0.3, 2015/11/30
 ! CONTENTS:
 !    TODO: **** bla bla bla
 ! NOTES:
@@ -60,12 +61,12 @@ integer, public, parameter :: MAX_UNIT=99       ! Maximum unit number (in old
 ! Logger module. Each module must also have a DEBUG Logger subroutine, that
 ! is a wrapper to module LOGGER (or perhaps any other that is being used)
 !   procedure name PROCNAME
-character (len=*), parameter :: MODNAME = "CSV_IO"
+character (len=*), private, parameter :: MODNAME = "CSV_IO"
 
 ! Set the debug mode to ON or OFF, in the debug mode, events are written to
-! the log, determined by the LOG_DBG subroutine, normally, a wrapper to the
-! module LOGGER. May also define integer DEBUG_LEVEL parameter...
-logical, parameter :: IS_DEBUG = .TRUE.
+! the log, determined by the module local LOG_DBG subroutine, normally, a
+! wrapper to the module LOGGER. May also define integer DEBUG_LEVEL parameter...
+logical, private, parameter :: IS_DEBUG = .FALSE.
 
 !*******************************************************************************
 ! GENERIC INTERFACES
@@ -105,27 +106,66 @@ interface CSV_ARRAY_WRITE
 
 end interface CSV_ARRAY_WRITE
 
+private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
+                    ! may or may not use the module LOGGER, if not, it can be
+                    ! used as a stand-alone module in other projects... But it
+                    ! has the same name as in the model proto
+
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
-subroutine LOG_DBG(message_string)
+subroutine LOG_DBG(message_string, procname, modname)
 !*******************************************************************************
 ! LOG_DBG
-! PURPOSE: This subroutine is a wrapper for writing debug messages. Normally it
-! should use the module LOGGER. But in the most trivial form, if LOGGER is
-! not available, may just be modified to print the debug message to the
-! standard error (or stdout, or into a file).
+! PURPOSE: This subroutine is a wrapper for writing debug messages. It can
+! either just print to STDERR or use the module LOGGER. Here the selection
+! of the module behaviour is made by commenting out unused code, possibly
+! change to conditional compilation with preprocessor... but portability will
+! be problem in such a case...
 !*******************************************************************************
 
-  use LOGGER      ! we need it get access to logger
+  !#ifdef USE_LOGGER_MODULE
+  !use LOGGER      ! we might need logger later
+  !#endif
+  use, intrinsic :: ISO_FORTRAN_ENV ! need it for write(ERROR_UNIT, *)
 
   implicit none
 
+  ! Calling parameters
   character(len=*), intent(in) :: message_string
+  character (len=*), optional, intent(in) :: procname
+  character (len=*), optional, intent(in) :: modname
 
-  ! TODO: need to add checking if logger is started, and if not, init it
+  ! Local variables
+  character (len=:), allocatable :: prefix_msg
 
-  if (IS_DEBUG) call LOG_MSG (message_string)
+  !-----------------------------------------------------------------------------
+
+  if (IS_DEBUG) then        ! Only if IS_DEBUG is set to TRUE, this sub is not
+                            ! used in normal operation when not debugging
+    ! We first generate the message prefix containing module and procedure name
+    if (present(procname)) then
+      if (present(modname)) then
+        prefix_msg="MODULE:" // modname // "PROCEDURE: " // procname // ":: "
+      else
+        prefix_msg="PROCEDURE: " // procname // ":: "
+      end if
+    else
+      if (present(modname)) then
+        prefix_msg="MODULE:" // modname // ":: "
+      else
+        prefix_msg=""
+      end if
+    end if
+
+    ! Second, we print  the message prefix + message
+    !#ifdef USE_LOGGER_MODULE
+    !call LOG_MSG( prefix_msg // message_string )  ! use module LOGGER
+    !# else
+    write(ERROR_UNIT, *) prefix_msg, message_string
+    !#endif
+
+  end if
 
 end subroutine LOG_DBG
 
@@ -482,9 +522,9 @@ subroutine CSV_FILE_CLOSE (csv_file_name, csv_file_unit, csv_file_status)
 
   ! Check IO errors and report back if optional args are present
   if (file_error_status==0) then
-      if (present(csv_file_status)) csv_file_status=.TRUE.  ! No error
-    else
-      if (present(csv_file_status)) csv_file_status=.FALSE. ! File error
+    if (present(csv_file_status)) csv_file_status=.TRUE.  ! No error
+  else
+    if (present(csv_file_status)) csv_file_status=.FALSE. ! File error
   end if
 
 end subroutine CSV_FILE_CLOSE
@@ -1213,13 +1253,13 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
                                 csv_file_status_here)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
     end if
 
   end do
   call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
-      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+    if (present(csv_file_status)) csv_file_status=csv_file_status_here
     return
   end if
 

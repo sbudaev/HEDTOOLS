@@ -27,14 +27,15 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=1
-FILE_NAME_0=3103;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_CSV_IO.f90;0;2
-FILE_NAME_1=3301;Fortran;0;EUTF-8;1;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_UTILS.f90;0;2
-FILE_NAME_2=11322;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_LOGGER.f90;0;2
-FILE_NAME_3=1670;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2Ftests%2FMODEL_PROTO.f90;0;2
+current_page=3
+FILE_NAME_0=5408;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_CSV_IO.f90;0;2
+FILE_NAME_1=2794;Fortran;0;EUTF-8;1;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_UTILS.f90;0;2
+FILE_NAME_2=2740;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_LOGGER.f90;0;2
+FILE_NAME_3=16943;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2Ftests%2FMODEL_PROTO.f90;0;2
+FILE_NAME_4=1464;Make;0;EUTF-8;1;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2Ftests%2FMakefile;0;2
 
 [VTE]
-last_dir=/home/budaev/Desktop/WORK/AHA-DEV/branches/budaev/HEDTOOLS
+last_dir=/home/budaev/Desktop/WORK/AHA-DEV/branches/budaev/HEDTOOLS/tests
 
 [prjorg]
 source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;*.m;

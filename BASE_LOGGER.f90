@@ -59,8 +59,7 @@
 !
 module LOGGER
 
-  use, intrinsic :: ISO_FORTRAN_ENV   ! Portability, default units
-  use CSV_IO                          ! File operations standardised, constants
+  use, intrinsic :: ISO_FORTRAN_ENV   ! Portability, default units  
 
   implicit none
 
@@ -87,6 +86,17 @@ module LOGGER
   !
   ! Static fields
   !
+  ! NOTE:: The unit MAX_UNIT is used to write log file, it should not overlap 
+  ! with (e.g. as a rule be larger than) the MAX_UNIT defined in CSV_IO
+  integer, public, parameter :: MAX_UNIT = 299
+  
+  ! Module name for the DEBUG LOGGER: every function/sub must also have
+  ! the PROCNAME parameter referring to its name. This is done for the Debug
+  ! Logger module. Each module must also have a DEBUG Logger subroutine, that
+  ! is a wrapper to module LOGGER (or perhaps any other that is being used)
+  !   procedure name PROCNAME
+  character (len=*), private, parameter :: MODNAME = "LOGGER"
+  
   ! Logical unit associated with the log file, we use MAX_UNIT from CSV_IO
   integer :: log_fileunit = MAX_UNIT                ! to avoid collisions
   ! Logical unit associated with the standard output

@@ -9,9 +9,9 @@
 !      local subroutines, functions, derived type declarations and everythin.
 !      This is particularly useful for ththe next object-oriented models...
 !
-! Buld commands for GNU fortran
-! gfortran -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 ../BASE_LOGGER.f90
-! gfortran -g -c MODEL_PROTO.f90
+! Normally use make to build. If make unavailable, use manual build as follows
+! (for GNU fortran)::
+! gfortran -g -c ../BASE_LOGGER.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 MODEL_PROTO.f90
 ! gfortran -g -o ZZZ MODEL_PROTO.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 ../BASE_LOGGER.f90
 !*******************************************************************************
 
@@ -35,9 +35,9 @@ module COMMONDATA
   logical, parameter, public :: IS_DEBUG=.TRUE.
 
   ! various other parameters...
-  integer, parameter, public :: Cinds = 10
+  integer, parameter, public :: Cinds = 3
   integer, parameter, public :: Cfmothers = 10, Cmaxlife = 5000
-  integer, parameter, public :: CgNR = 10,Cxy = 2, Cdip = 20, CNRcomp = 10
+  integer, parameter, public :: CgNR = 5,Cxy = 2, Cdip = 5, CNRcomp = 5
   integer, parameter, public :: CgMEM = 2
 
   !----------- VARIABLE/ARRAYS/MATRICES SECTION --------------------------------
@@ -51,6 +51,14 @@ module COMMONDATA
 
   ! genome for memory genes !(CgMEM genes,diploid)
   real genomeMOD(Cinds,Cdip)
+
+  !--------- MODULE DEBUG LOGGER -----------------------------------------------
+  ! Module name for the DEBUG LOGGER: every function/sub must also have
+  ! the PROCNAME parameter referring to its name. This is done for the Debug
+  ! Logger module. Each module must also have a DEBUG Logger subroutine, that
+  ! is a wrapper to module LOGGER (or perhaps any other that is being used)
+  !   procedure name PROCNAME
+  character (len=*), private, parameter :: MODNAME = "COMMONDATA"
 
 !----------- CONTAINED SUBROUTINES SECTION -------------------------------------
 contains  ! Note that these contained subroutines may be separate, but in such
@@ -66,16 +74,23 @@ subroutine LOGGER_INIT()
 
   implicit none
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "LOGGER_INIT"
+
   ! We first initialise the log and set log file name
-  call LOG_STARTUP (MODEL_NAME // "-log.txt")
+  call LOG_STARTUP (MODEL_NAME // "-LOG.log")
 
   call LOG_CONFIGURE("timestamp", .true.)      ! Produce timestamps in the log
-  call LOG_CONFIGURE("writeonstdout" , .true.) ! Output log on screen and file
+  call LOG_CONFIGURE("writeonstdout" , .true.) ! Output log on screen AND file
 
   call LOG_CONFIGURE("level_string_volume", "chapter" )  ! Set log level
   call LOG_DELIMITER()                                   ! Issue log delimiter
 
-  ! Send messages to the log
+  ! Send informative messages to the log..
+  ! Note that there is a specific subroutine LOG_DBG for producing
+  ! debug messages. It is reasonable to do an additional wrapper
+  ! for normal informative non-debug messages, if all of them should
+  ! contain specific prefix (e.g. INFO::)
   call LOG_MSG("We are now starting to rubn our prototype model")
   call LOG_MSG("Model name: " // MODEL_NAME)
   call LOG_MSG("Model parameters:")
@@ -98,32 +113,66 @@ subroutine LOGGER_INIT()
 
 end subroutine LOGGER_INIT
 
-subroutine LOG_DBG(message_string)
-! This subroutine is a wrapper for writing debug messages
-! It is hidden into a subroutine to avoid extra clutter in the
-! main program...
+subroutine LOG_DBG(message_string, procname, modname)
+!*******************************************************************************
+! LOG_DBG
+! PURPOSE: This subroutine is a wrapper for writing debug messages by the
+! module LOGGER.
+!*******************************************************************************
 
-  use LOGGER      ! we need it get access to logger
+  use LOGGER
 
   implicit none
 
+  ! Calling parameters
   character(len=*), intent(in) :: message_string
+  character (len=*), optional, intent(in) :: procname
+  character (len=*), optional, intent(in) :: modname
 
-  if (IS_DEBUG) call LOG_MSG(message_string)
+  ! Local variables
+  character (len=:), allocatable :: prefix_msg
+
+  !-----------------------------------------------------------------------------
+
+  if (IS_DEBUG) then
+
+    ! We first generate the message prefix
+    if (present(procname)) then
+      if (present(modname)) then
+        prefix_msg="DEBUG:: MODULE:" // modname // "PROCEDURE: " // procname // ":: "
+      else
+        prefix_msg="PROCEDURE: " // procname // ":: "
+      end if
+    else
+      if (present(modname)) then
+        prefix_msg="DEBUG:: MODULE:" // modname // ":: "
+      else
+        prefix_msg="DEBUG:: "
+      end if
+    end if
+
+    call LOG_MSG( prefix_msg // message_string )  ! use module LOGGER mandatory
+
+  end if
 
 end subroutine LOG_DBG
 
+
 subroutine FATAL_ERROR(message)
-  !-----------------------------------------------------------------------------
-  ! We may need an error trapping module...
-  ! It may be  be produced later, presumably using something using IEEE
-  ! assertions, that could trap numerical errors/esceptions etc...
-  ! now, just trivial
+!-----------------------------------------------------------------------------
+! We may need an error trapping module...
+! It may be  be produced later, presumably using something using IEEE
+! assertions, that could trap numerical errors/esceptions etc...
+! now, just trivial
+!-----------------------------------------------------------------------------
 
   use LOGGER
   use BASE_UTILS
 
   implicit none
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "FATAL_ERROR"
 
   character(len=*) :: message
 
@@ -138,32 +187,45 @@ subroutine FATAL_ERROR(message)
 
 end subroutine FATAL_ERROR
 
-subroutine CHECK_ERROR_FILE ( file_status_flag )
-  ! Wrapper subroutine to check if CSV output resulted in an error
+subroutine CHECK_ERROR_FILE ( file_status_flag, fatal )
+!--------------------------------------------------------------------
+! Wrapper subroutine to check if CSV output resulted in an error
+!--------------------------------------------------------------------
 
   use LOGGER
   use BASE_UTILS
+
   implicit none
 
-  logical, intent(in) :: file_status_flag
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CHECK_ERROR_FILE"
 
-  if (file_status_flag) then
+  logical, intent(in) :: file_status_flag
+  logical, optional, intent(in) :: fatal
+
+  if (.NOT. file_status_flag) then
     ! If everything ok, write confirmation to the log
     call LOG_DBG("File operation returned " // TOSTR(file_status_flag) &
-                  // " status." )
-  else
+                  // " status.", PROCNAME )
     ! enable log output to the the screen as well as to the file
     call LOG_CONFIGURE("writeonstdout" , .true.)
     ! and log it
     call LOG_DELIMITER()
     call LOG_DBG("ERROR:: File operation returned error status " // &
-                  TOSTR(file_status_flag))
-    call LOG_DBG("We will go to FATAL_ERROR procedure now...")
-    call LOG_DELIMITER()
-    call FATAL_ERROR ("File output error")
+                  TOSTR(file_status_flag), PROCNAME)
+    ! If the subroutine is called with the fatal flag = .true., stop execution
+    if (present(fatal)) then
+      if (fatal) then
+        call LOG_DBG("We will go to FATAL_ERROR procedure now...")
+        call LOG_DELIMITER()
+        call FATAL_ERROR ("Fatal file output error")
+      end if
+    end if
   end if
 
 end subroutine CHECK_ERROR_FILE
+
+!-------------------------------------------------------------------------------
 
 end module COMMONDATA
 
@@ -173,6 +235,7 @@ end module COMMONDATA
 
 program MODEL_PROTO
 
+  !-----[ DECLARATION SECTION ]-------------------------------------------------
   ! We first declare which modules the model is going to use
 
   use BASE_UTILS    ! Basic utils
@@ -183,6 +246,10 @@ program MODEL_PROTO
 
   implicit none     ! This is standard thing...
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: MODNAME = "MODEL_PROTO_MAIN"
+  character (len=*), parameter :: PROCNAME = "MODEL_PROTO_MAIN"
+
   ! Now we declare various model constants and variables...
 
   integer, parameter :: BIGNUM = 100, SMALLNUM = 10
@@ -191,20 +258,17 @@ program MODEL_PROTO
 
   real, dimension (BIGNUM,SMALLNUM) :: RAND_A
 
-  real, dimension (BIGNUM,SMALLNUM) :: RAND_B
-
-  real, dimension (BIGNUM) :: RAND_C
-
   ! We need a name and unit for CSV output file written  with CSV_IO module
   character(len=:), allocatable :: name_for_csv_out
   integer :: unit_for_csv_out
 
-  real :: RANDOM_VALUE
+  ! Note that we may use an error status variable to flag file output errors,
+  ! mainly in CSV_IO. Initialise it with a TRUE value as there are portability
+  ! issues in non-passing logical optional parameter on some
+  ! platforms / compiler combinations...
+  logical :: no_error_status=.TRUE.
 
-  logical :: no_error_status  ! Note that we may use an error status variable to
-                              ! flag file output errors, mainly in CSV_IO
-
-  ! ----------------------------------------------------------------------------
+  ! -----[ EXECUTION SECTION ]--------------------------------------------------
   ! We now start the model...
 
   ! First, initialise the model logger. Logger is quite configurable and
@@ -212,9 +276,6 @@ program MODEL_PROTO
   ! It is probably better to hide all this logger init code into a subroutine
   ! to avoid cluttering ...
   call LOGGER_INIT()
-
-  call LOG_DELIMITER() ! It is good to write delimiter lines to the log to focus
-                       ! attention on more important things
 
   ! We also have options to write some information on the standard output
   ! and standard error devices. This does not go to log. It can be considered
@@ -255,15 +316,15 @@ program MODEL_PROTO
 
   ! But first show how we can produce debug messages
   ! of course, we can hide this code to a wrapper subroutine
-  call LOG_DBG("About to go into CALCULATE_RANDOM_MODEL...")
+  call LOG_DBG("About to go into CALCULATE_RANDOM_MODEL...", PROCNAME)
 
   ! Call some calculations...
   call CALCULATE_RANDOM_MODEL()
 
   ! We can Log debug messages as much as possible...
-  call LOG_DBG("Exited from CALCULATE_RANDOM_MODEL...")
+  call LOG_DBG("Exited from CALCULATE_RANDOM_MODEL...", PROCNAME)
 
-  call LOG_DBG("About to Initialise random seed...") ! Log only in DEDUG mode
+  call LOG_DBG("About to Initialise random seed...", PROCNAME)
 
   call RANDOM_SEED_INIT() ! Standard utility to init random seed from BASE_UTIL
 
@@ -274,37 +335,39 @@ program MODEL_PROTO
   ! so that we could easily see the high-level structure of the model
   ! and avoid most of the clutter....
 
-  call LOG_DBG("Starting to cycle over i ...") ! Log only in DEDUG mode
+  call LOG_DBG("Starting to cycle over i ...", PROCNAME)
 
   do i=1, ubound(RAND_A, 1)
 
-    call LOG_DBG("Starting to cycle over j...")
+    call LOG_DBG("Starting to cycle over j...", PROCNAME)
 
     do j=1, ubound(RAND_A, 2)
 
       call random_number(RAND_A(i,j))
 
       call LOG_DBG( "Writing row " // TOSTR(i) // ", col " // TOSTR(j) // &
-                  ", Value=" // TOSTR(RAND_A(i,j)) )
+                  ", Value=" // TOSTR(RAND_A(i,j)) , PROCNAME)
 
     end do
 
   end do
 
-  call LOG_DBG("Exit cycles over j and j...")
+  call LOG_DBG("Exit cycles over j and j...", PROCNAME)
 
   name_for_csv_out = MODEL_NAME // "-data-randon.csv" ! CSV file name
 
   ! We can use high-level functions to save data matrices
-  call LOG_DBG("We are going to output RAND_A to " // name_for_csv_out)
+  call LOG_DBG("We are going to output RAND_A to " // name_for_csv_out, &
+        PROCNAME)
 
-  ! here is the actual function, it can handle one-dimensional arrays and
-  ! two-dimensional matrices of any type (integer, real, double, and character
-  call CSV_MATRIX_WRITE(RAND_A, name_for_csv_out, no_error_status)
+  ! Here is the actual data save function, it can handle one-dimensional arrays
+  !  and two-dimensional matrices of any type (integer,real,double,character)
+  call CSV_MATRIX_WRITE(matrix=RAND_A, csv_file_name=name_for_csv_out, &
+                        csv_file_status=no_error_status)
 
   ! Error handling...  and debug logging...
   call LOG_DBG("Write status for RAND_A file " // name_for_csv_out &
-                // " is " // TOSTR(no_error_status) // ".")
+                // " is " // TOSTR(no_error_status) // ".", PROCNAME)
 
   call CHECK_ERROR_FILE(no_error_status)
 
@@ -322,39 +385,28 @@ program MODEL_PROTO
 
   stop 0  ! explicit stop, not really needed
 
-!-------------------------------------------------------------------------------
-! end of the program
-!-------------------------------------------------------------------------------
 
-contains ! Now, subroutines local to the MODEL_PROTO may follow...
-! We include subroutines after contains within the main program so that
-! they have access to program-private objects and do not need to USE XXX
-
-subroutine CALC_SOMETHING (A, B, C)
-! This is just an arbitrary local subroutine within the model definition
-! module it should be accessible to all subroutines (if not declared private)
-
-integer, intent(in) :: A, B
-integer, intent(out) :: C
-
-C=A+B ! trivial thing here
-
-end subroutine CALC_SOMETHING
-
+!----[ end of the program ]-----------------------------------------------------
 end program MODEL_PROTO
 
 !-------------------------------------------------------------------------------
 ! External and other subroutines follow...
+! Note: the use of modules is more convenient as we won't need interface blocks
+! which may be mandatory in some cases...
 !-------------------------------------------------------------------------------
 
 subroutine CALCULATE_RANDOM_MODEL ()
 
+!----[ DECLARATION SECTION ]----------------------------------------------------
   use COMMONDATA    ! This is to get access to the global data and objects
   use BASE_UTILS    ! for Basic utils
   use CSV_IO        ! for CSV data handling
   use LOGGER        ! for the Logger
 
   implicit none
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CALCULATE_RANDOM_MODEL"
 
   integer :: i, j, k, l, m, o  ! local variables for this subroutine
 
@@ -370,8 +422,10 @@ subroutine CALCULATE_RANDOM_MODEL ()
   ! it with the necessary values each time
   character (len=:), allocatable :: RECORD_CSV
 
+  !----[ CALCULATION SECTION ]--------------------------------------------------
+
   ! Write / log what is being done to log if DEBUGging
-  call LOG_DBG("Entering subroutine CALCULATE_RANDOM_MODEL...")
+  call LOG_DBG("Entering subroutine CALCULATE_RANDOM_MODEL...", PROCNAME)
 
   do i=1, Cinds     ! We will here (1) )cycle over the dimensions of
                     ! the multidimensional array; (2) set its value;
@@ -410,7 +464,7 @@ subroutine CALCULATE_RANDOM_MODEL ()
 
             ! And we can of course log everything
             call LOG_DBG("Set value =" // &
-                          TOSTR(genomeNR(i,j,k,l,m)))
+                          TOSTR(genomeNR(i,j,k,l,m)), PROCNAME)
 
             ! Note: CSV block
             ! 4. for CSV output we cycle over m and append each number to the
@@ -433,7 +487,7 @@ subroutine CALCULATE_RANDOM_MODEL ()
                       ! Data ::10,10,2,20  1 2 3 ::  0.92 0.35 0.09
 
           call LOG_DBG("About to write record " // TOSTR(m) // ", of size " &
-                        // TOSTR(CSV_RECORD_SIZE(RECORD_CSV)) )
+                        // TOSTR(CSV_RECORD_SIZE(RECORD_CSV)) , PROCNAME)
           ! Note: CSV block
           ! 5. write l-th CSV record
           !    Note that we use named optional parameters and can refer to the
@@ -463,7 +517,8 @@ subroutine CALCULATE_RANDOM_MODEL ()
 
   end do ! end i
 
-  call LOG_DBG("Now we are about to go out of CALCULATE_RANDOM_MODEL...")
+  call LOG_DBG("Now we are about to go out of CALCULATE_RANDOM_MODEL...", &
+                PROCNAME)
 
 end subroutine CALCULATE_RANDOM_MODEL
 

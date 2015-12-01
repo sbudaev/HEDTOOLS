@@ -1,8 +1,9 @@
 module BASE_UTILS
 !*******************************************************************************
+! BASE_UTILS:
 ! PURPOSE: This module provides basic high level utilities that are used in
 !   Different models (and should be of general applicability).
-!
+! VERSION AND DATE: 0.3, 2015/11/30
 ! CONTENTS:
 !
 ! EXAMPLE:
@@ -18,12 +19,12 @@ implicit none
 ! Logger module. Each module must also have a DEBUG Logger subroutine, that
 ! is a wrapper to module LOGGER (or perhaps any other that is being used)
 !   procedure name PROCNAME
-character (len=*), parameter :: MODNAME = "BASE_UTILS"
+character (len=*), private, parameter :: MODNAME = "BASE_UTILS"
 
 ! Set the debug mode to ON or OFF, in the debug mode, events are written to
 ! the log, determined by the LOG_DBG subroutine, normally, a wrapper to the
 ! module LOGGER. May also define integer DEBUG_LEVEL parameter...
-logical, parameter :: IS_DEBUG = .TRUE.
+logical, private, parameter :: IS_DEBUG = .FALSE.
 
 !*******************************************************************************
 ! GENERIC INTERFACES
@@ -68,27 +69,66 @@ interface STDERR              ! Short name for stderr-output routine
 
 end interface STDERR
 
+private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
+                    ! may or may not use the module LOGGER, if not, it can be
+                    ! used as a stand-alone module in other projects... But it
+                    ! has the same name as in the model proto
+
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
-subroutine LOG_DBG(message_string)
+subroutine LOG_DBG(message_string, procname, modname)
 !*******************************************************************************
 ! LOG_DBG
-! PURPOSE: This subroutine is a wrapper for writing debug messages. Normally it
-! should use the module LOGGER. But in the most trivial form, if LOGGER is
-! not available, may just be modified to print the debug message to the
-! standard error (or stdout, or into a file).
+! PURPOSE: This subroutine is a wrapper for writing debug messages. It can
+! either just print to STDERR or use the module LOGGER. Here the selection
+! of the module behaviour is made by commenting out unused code, possibly
+! change to conditional compilation with preprocessor... but portability will
+! be problem in such a case...
 !*******************************************************************************
 
-  use LOGGER      ! we need it get access to logger
+  !#ifdef USE_LOGGER_MODULE
+  !use LOGGER      ! we might need logger later
+  !#endif
+  use, intrinsic :: ISO_FORTRAN_ENV ! need it for write(ERROR_UNIT, *)
 
   implicit none
 
+  ! Calling parameters
   character(len=*), intent(in) :: message_string
+  character (len=*), optional, intent(in) :: procname
+  character (len=*), optional, intent(in) :: modname
 
-  ! TODO: need to add checking if logger is started, and if not, init it
+  ! Local variables
+  character (len=:), allocatable :: prefix_msg
 
-  if (IS_DEBUG) call LOG_MSG (message_string)
+  !-----------------------------------------------------------------------------
+
+  if (IS_DEBUG) then        ! Only if IS_DEBUG is set to TRUE, this sub is not
+                            ! used in normal operation when not debugging
+    ! We first generate the message prefix containing module and procedure name
+    if (present(procname)) then
+      if (present(modname)) then
+        prefix_msg="MODULE:" // modname // "PROCEDURE: " // procname // ":: "
+      else
+        prefix_msg="PROCEDURE: " // procname // ":: "
+      end if
+    else
+      if (present(modname)) then
+        prefix_msg="MODULE:" // modname // ":: "
+      else
+        prefix_msg=""
+      end if
+    end if
+
+    ! Second, we print  the message prefix + message
+    !#ifdef USE_LOGGER_MODULE
+    !call LOG_MSG( prefix_msg // message_string )  ! use module LOGGER
+    !# else
+    write(ERROR_UNIT, *) prefix_msg, message_string
+    !#endif
+
+  end if
 
 end subroutine LOG_DBG
 
