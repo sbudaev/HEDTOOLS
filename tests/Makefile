@@ -15,6 +15,10 @@ RCHECKS=-Wall -fbounds-check
 # compiler flags
 FFLAGS=-g $(STATIC) $(TRAPS)
 # ----------------------------------------------------
+# Determine platform type and SVN revision number
+PLATFORM = $(shell uname)
+SVN_VER = $(shell svn info | grep Revision: | cut -d " " -f 2)
+# ----------------------------------------------------
 
 .DEFAULT:
 	-echo $@ does not exist.
@@ -37,7 +41,7 @@ SRC = ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 ./MODEL_PROTO.f90 ../BASE_LOGGER.f90
 OBJ = BASE_CSV_IO.o BASE_UTILS.o MODEL_PROTO.o BASE_LOGGER.o
 OFF = ../BASE_LOGGER.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
 clean: neat
-	-rm -f .MODEL_PROTO.cppdefs $(OBJ) MODEL_PROTO *.csv *.log *.mod
+	-rm -f .MODEL_PROTO.cppdefs $(OBJ) MODEL_PROTO *.csv *.log *.mod *.o
 neat:
 	-rm -f $(TMPFILES)
 localize: $(OFF)
@@ -47,6 +51,11 @@ TAGS: $(SRC)
 tags: $(SRC)
 	ctags $(SRC)
 MODEL_PROTO: $(OBJ)
+	@echo ----------------------------------------
+	@echo "Building for platform :: '$(PLATFORM)'"
+	@echo "Build SVN revision    :: '$(SVN_VER)'"
+	@echo ----------------------------------------
 	$(FC) $(OBJ) -o MODEL_PROTO  $(LDFLAGS)
 run: MODEL_PROTO
+	echo "Build platform is '$(PLATFORM)'"
 	./MODEL_PROTO
