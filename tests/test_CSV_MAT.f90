@@ -2,8 +2,8 @@ program RANDOM_MATRICES
 ! Test CSV_IO matrix output by producing many random matrices
 ! with different ranges
 
-! gfortran -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
-! gfortran -g -o ZZZ test_CSV_MAT.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
+! gfortran -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 ../BASE_ERRORS.f90
+! gfortran -g -o ZZZ test_CSV_MAT.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90 ../BASE_ERRORS.f90
 
 use, intrinsic :: ISO_FORTRAN_ENV
 use CSV_IO

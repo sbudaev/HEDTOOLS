@@ -1,6 +1,21 @@
+!*******************************************************************************
+! Error-handling and reporting modules::
+!
+!   ASSERT: provides an interface to check for assertions and
+!     generate corresponding errors.
+!
+!   EXCEPTION: Provides services to generate different levels of exceptions
+!     and display the message of the exception.
+!
+!   THROWABLE: Abstraction of a stack of exceptions.
+!
+!   ERRORS: Generic error message handler that stores error messages into a
+!     single string
+!*******************************************************************************
+
 module EXCEPTION
 !*******************************************************************************
-! m_exception --
+! EXCEPTION --
 !
 !   Provides services to generate different levels of exceptions
 !   and display the message of the exception.
@@ -22,7 +37,7 @@ module EXCEPTION
 !   execution of the program
 !
 !    function compute_sqrt ( value ) result ( root )
-!      use m_exception
+!      use EXCEPTION
 !      implicit none
 !      real, intent(in) :: value
 !      real :: root
@@ -70,7 +85,7 @@ module EXCEPTION
 !     with "exception_setlogunit", so that the messages are written
 !     on the given logical unit number.
 !     This allows for example to write on an existing log file, may be the log
-!     file manage by the m_logger component included in the project.
+!     file manage by the LOGGER component included in the project.
 !
 !   In the following example, the client code first disables all output,
 !   set "stoponerror" to false and generates an error which is not displayed
@@ -84,7 +99,7 @@ module EXCEPTION
 !   call exception_raiseError ( "This message WILL be displayed and the &
 !                             execution will continue." )
 !
-!   In the following example, the client code connects the m_exception
+!   In the following example, the client code connects the EXCEPTION
 !   component to an existing unit so that the exception messages are written
 !   onto a client log file.
 !
@@ -99,9 +114,9 @@ module EXCEPTION
 !                             output and the execution will continue." )
 !     close ( log_fileunit )
 !
-!   In the following example, the client code connects the m_exception &
+!   In the following example, the client code connects the EXCEPTION &
 !                             component to
-!   the logfile manage by m_logger. This way, the exception messages are
+!   the logfile manage by LOGGER. This way, the exception messages are
 !   collected in the unique log file of the client code.
 !
 !     call log_startup ( "log_file.log" , append=.true. )
@@ -122,7 +137,7 @@ module EXCEPTION
 !   exception management when needed.
 !   Suppose that you have a subroutine which source code is :
 !     subroutine yoursubroutine ()
-!       use m_exception, only : exception_raiseFatalError
+!       use EXCEPTION, only : exception_raiseFatalError
 !       implicit none
 !       [...]
 !       call exception_raiseFatalError ( "Wrong blabla in yoursubroutine" )
@@ -132,7 +147,7 @@ module EXCEPTION
 !   have been generated so that these errors may be processed, or not.
 !   One can use the "exception_catch" service to compute the status
 !   of one subroutine and manage that status :
-!     use m_exception, only : exception_catch, &
+!     use EXCEPTION, only : exception_catch, &
 !         EXCEPTION_INFORMATION, &
 !         EXCEPTION_WARNING &
 !         EXCEPTION_ERROR &
@@ -157,10 +172,14 @@ module EXCEPTION
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: m_exception.f90,v 1.4 2008/06/18 10:35:22 relaxmike Exp $
+! $Id: EXCEPTION.f90,v 1.4 2008/06/18 10:35:22 relaxmike Exp $
 !*******************************************************************************
   implicit none
+
   private
+
+  ! Default unit used for LOGGER output
+  integer, parameter, private :: MAX_UNIT = 299
   !
   ! Public methods
   !
@@ -208,7 +227,7 @@ module EXCEPTION
   ! Set exception_log_active to true to activate the exception logging
   ! to the unit # exception_log_unit
   !
-  integer :: exception_log_unit = 0
+  integer :: exception_log_unit = MAX_UNIT
   logical :: exception_log_unit_active = .false.
   !
   ! Set exception_log_active to true to display the exception messages
@@ -327,12 +346,13 @@ contains
   !   Write the given message onto the default unit.
   !
   subroutine exception_logmsg ( message )
+    use, intrinsic :: ISO_FORTRAN_ENV
     character(len=*), intent(in) :: message
     if ( exception_log_active ) then
        if ( exception_log_unit_active ) then
           write(exception_log_unit,*) trim(message)
        else
-          write(*,*) trim(message)
+          write(ERROR_UNIT,*) trim(message)
        endif
     endif
   end subroutine exception_logmsg
@@ -405,7 +425,6 @@ contains
   subroutine exception_setlogunit ( unitn )
     integer, optional, intent(in) :: unitn
     integer :: unitnumber
-    integer, parameter :: MAX_UNIT = 299
 
     if (present(unitn)) then
       unitnumber=unitn
@@ -507,16 +526,17 @@ end module EXCEPTION
 module ASSERT
 !*******************************************************************************
 ! ASSERT --
+!
 !   This module provides an interface to check for assertions and
 !   generate corresponding errors.
 !
-!   This component is based on the m_exception module.
+!   This component is based on the EXCEPTION module.
 !   The main service of the component is the subroutine "assert_assert"
 !   which check that the given logical variable is true. The following
 !   is a sample use. If the condition is not .true., then an exception
-!   of error type is raised by the m_exception module.
+!   of error type is raised by the EXCEPTION module.
 !
-!      use m_assert, only : assert_assert
+!      use ASSERT, only : assert_assert
 !      integer :: x , y
 !      x = 2
 !      y = x**2
@@ -541,12 +561,12 @@ module ASSERT
 !   and the number of assertions which failed with assert_getcounters,
 !   and reset the internal counters with assert_initcounters.
 !
-!   To control more precisely the behaviour of the m_assert component
-!   when an exception occurs, the user can directly configure m_exception.
+!   To control more precisely the behaviour of the ASSERT component
+!   when an exception occurs, the user can directly configure EXCEPTION.
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: m_assert.f90,v 1.2 2008/05/06 08:39:47 relaxmike Exp $
+! $Id: ASSERT.f90,v 1.2 2008/05/06 08:39:47 relaxmike Exp $
 !*******************************************************************************
   use EXCEPTION, only : &
        exception_raiseError , &
@@ -772,6 +792,7 @@ end module ASSERT
 module THROWABLE
 !*******************************************************************************
 ! THROWABLE --
+!
 !   Abstraction of a stack of exceptions.
 !   A throwable object is a made of a message (a string)
 !   and a cause (a throwable object).
@@ -797,11 +818,14 @@ module THROWABLE
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: m_throwable.f90,v 1.1 2008/04/09 07:29:23 relaxmike Exp $
+! $Id: THROWABLE.f90,v 1.1 2008/04/09 07:29:23 relaxmike Exp $
 !*******************************************************************************
 
-
   implicit none
+
+  ! Default unit used for LOGGER output
+  integer, parameter, private :: MAX_UNIT = 299
+
   private
   !
   ! Public methods
@@ -931,9 +955,15 @@ contains
   ! throwable_write --
   !   Writes a short description of this throwable on the given unit.
   !
-  subroutine throwable_write ( this , unitnumber )
+  subroutine throwable_write ( this , unitn )
     type ( T_THROWABLE ) , pointer :: this
-    integer , intent ( in ) :: unitnumber
+    integer , optional, intent ( in ) :: unitn
+    integer  :: unitnumber
+    if (present(unitn)) then
+      unitnumber=unitn
+    else
+      unitnumber=MAX_UNIT
+    end if
     write ( unitnumber , * ) "Throwable:"
     write ( unitnumber , * ) trim ( this % message )
   end subroutine throwable_write
@@ -969,7 +999,7 @@ contains
       if ( present ( unitnumber ) ) then
          write ( unitnumber , * ) trim ( message )
       else
-         write ( * , * ) trim ( message )
+         write ( MAX_UNIT , * ) trim ( message )
       endif
     end subroutine printmsg
   end subroutine throwable_printStackTrace_onunit
@@ -1025,6 +1055,8 @@ end module THROWABLE
 
 module ERRORS
 !*******************************************************************************
+! ERRORS --
+!
 ! PURPOSE:
 ! Generic error message handler The routines in this module do not halt program
 ! execution; they merely store error messages for subsequent
