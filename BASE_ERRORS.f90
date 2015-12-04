@@ -1,6 +1,5 @@
 module EXCEPTION
-
-!
+!*******************************************************************************
 ! m_exception --
 !
 !   Provides services to generate different levels of exceptions
@@ -17,9 +16,10 @@ module EXCEPTION
 !   Suppose that one would like to compute the square root of one
 !   real value. The "compute_sqrt" function takes one positive real argument,
 !   and if the argument is negative, one cannot compute the square root so
-!   that one would generate an error. In the following example, extracted from the
-!   unit tests included in the project, one uses the static method "exception_raiseError"
-!   to display a user-friendly message and stop the execution of the program
+!   that one would generate an error. In the following example, extracted from
+!   the unit tests included in the project, one uses the static method
+!   "exception_raiseError" to display a user-friendly message and stop the
+!   execution of the program
 !
 !    function compute_sqrt ( value ) result ( root )
 !      use m_exception
@@ -54,7 +54,8 @@ module EXCEPTION
 !   called so that an error does not interrupt the execution.
 !
 !   call exception_setstoponerror ( .false. )
-!   call exception_raiseError ( "There is an error, but the execution will continue." )
+!   call exception_raiseError ( "There is an error, but the execution will &
+!                             continue." )
 !
 ! Controlling output
 !
@@ -77,31 +78,38 @@ module EXCEPTION
 !
 !   call exception_setstoponerror ( .false. )
 !   call exception_logactive ( .false. )
-!   call exception_raiseError ( "This message will not be displayed and the execution will continue." )
+!   call exception_raiseError ( "This message will not be displayed and the &
+!                             execution will continue." )
 !   call exception_logactive ( .true. )
-!   call exception_raiseError ( "This message WILL be displayed and the execution will continue." )
+!   call exception_raiseError ( "This message WILL be displayed and the &
+!                             execution will continue." )
 !
-!   In the following example, the client code connects the m_exception component to
-!   an existing unit so that the exception messages are written onto a client log file.
+!   In the following example, the client code connects the m_exception
+!   component to an existing unit so that the exception messages are written
+!   onto a client log file.
 !
 !     log_fileunit = 12
 !     call exception_setstoponerror ( .false. )
 !     open ( log_fileunit , FILE= "log_file.log" )
 !     call exception_setlogunit ( log_fileunit )
-!     call exception_raiseError ( "This message will be written in log_file.log and the execution will continue." )
+!     call exception_raiseError ( "This message will be written in &
+!                             log_file.log and the execution will continue." )
 !     call exception_setlogunit ( 0 )
-!     call exception_raiseError ( "This message will be written on standard output and the execution will continue." )
+!     call exception_raiseError ( "This message will be written on standard &
+!                             output and the execution will continue." )
 !     close ( log_fileunit )
 !
-!   In the following example, the client code connects the m_exception component to
-!   the logfile manage by m_logger. This way, the exception messages are collected in the
-!   unique log file of the client code.
+!   In the following example, the client code connects the m_exception &
+!                             component to
+!   the logfile manage by m_logger. This way, the exception messages are
+!   collected in the unique log file of the client code.
 !
 !     call log_startup ( "log_file.log" , append=.true. )
 !     call log_cget ( "logfileunit" , log_fileunit )
 !     call exception_setstoponerror ( .false. )
 !     call exception_setlogunit ( log_fileunit )
-!     call exception_raiseError ( "This message will be written in log_file.log and the execution will continue." )
+!     call exception_raiseError ( "This message will be written in &
+!                             log_file.log and the execution will continue." )
 !     call log_shutdown ()
 !
 ! Pseudo-catch
@@ -144,13 +152,13 @@ module EXCEPTION
 !     end select
 !
 ! TODO
-!   - design a more powerful exception management system, which manages exceptions
-!   through the call stack
+!   - design a more powerful exception management system, which manages
+!   exceptions through the call stack
 !
 ! Copyright (c) 2008 Michael Baudin
 !
 ! $Id: m_exception.f90,v 1.4 2008/06/18 10:35:22 relaxmike Exp $
-!
+!*******************************************************************************
   implicit none
   private
   !
@@ -497,7 +505,8 @@ end module EXCEPTION
 !-------------------------------------------------------------------------------
 
 module ASSERT
-! m_assert --
+!*******************************************************************************
+! ASSERT --
 !   This module provides an interface to check for assertions and
 !   generate corresponding errors.
 !
@@ -538,7 +547,7 @@ module ASSERT
 ! Copyright (c) 2008 Michael Baudin
 !
 ! $Id: m_assert.f90,v 1.2 2008/05/06 08:39:47 relaxmike Exp $
-!
+!*******************************************************************************
   use EXCEPTION, only : &
        exception_raiseError , &
        exception_raiseFailure , &
@@ -757,6 +766,260 @@ contains
     assert_numbertotal = 0
   end subroutine assert_initcounters
 end module ASSERT
+
+!-------------------------------------------------------------------------------
+
+module THROWABLE
+!*******************************************************************************
+! THROWABLE --
+!   Abstraction of a stack of exceptions.
+!   A throwable object is a made of a message (a string)
+!   and a cause (a throwable object).
+!
+!   A throwable object made be created with no message and no cause,
+!   with a message but without a cause, with a cause but without
+!   a message and with both a cause and a message.
+!
+!   The stack trace associated with the current object can
+!   be displayed with throwable_printStackTrace, either on the
+!   standard output or a given unit number or with a callback
+!   display subroutine. The typical output is :
+!
+!     My throw 3
+!     Caused by:My throw 2
+!     Caused by:My throw 1
+!
+!   The throwable_exists service allows to know if
+!   the throwable object has been created, that is, if
+!   an exception has occured. The message associated can be
+!   retrieved with throwable_getmessage and the cause
+!   may be directly accessed with throwable_getcause.
+!
+! Copyright (c) 2008 Michael Baudin
+!
+! $Id: m_throwable.f90,v 1.1 2008/04/09 07:29:23 relaxmike Exp $
+!*******************************************************************************
+
+
+  implicit none
+  private
+  !
+  ! Public methods
+  !
+  public :: T_THROWABLE
+  public :: throwable_exists
+  public :: throwable_free
+  public :: throwable_getcause
+  public :: throwable_getmessage
+  public :: throwable_iscause
+  public :: throwable_new
+  public :: throwable_printStackTrace
+  public :: throwable_write
+  !
+  ! Maximum number of characters in a message generated by the exception
+  !
+  integer , parameter :: THROWABLE_MAXIMUM_LENGTH = 500
+  !
+  ! Derived-type to manage throwable objects
+  !
+  type T_THROWABLE
+     private
+     logical :: exists = .false.
+     character ( len = THROWABLE_MAXIMUM_LENGTH ) :: message
+     type ( T_THROWABLE ), pointer :: cause
+  end type T_THROWABLE
+  !
+  ! Interface for constructors
+  !
+  interface throwable_new
+     module procedure throwable_new_empty
+     module procedure throwable_new_cause
+     module procedure throwable_new_message
+     module procedure throwable_new_cause_message
+  end interface throwable_new
+  interface throwable_printStackTrace
+     module procedure throwable_printStackTrace_onunit
+     module procedure throwable_printStackTrace_callback
+  end interface throwable_printStackTrace
+contains
+  !
+  ! throwable_new_empty --
+  !   Constructor
+  !
+  subroutine throwable_new_empty ( this )
+    type ( T_THROWABLE ) , pointer :: this
+    allocate ( this )
+    this % exists = .true.
+    this % cause => NULL ()
+    this % message = ""
+  end subroutine throwable_new_empty
+  !
+  ! throwable_new_cause --
+  !   Constructor
+  !
+  subroutine throwable_new_cause ( this , cause )
+    type ( T_THROWABLE ) , pointer :: this
+    type ( T_THROWABLE ), pointer :: cause
+    call throwable_new_empty ( this )
+    this % cause => cause
+    this % message = ""
+  end subroutine throwable_new_cause
+  !
+  ! throwable_new_message --
+  !   Constructor
+  !
+  subroutine throwable_new_message ( this , message )
+    type ( T_THROWABLE ) , pointer :: this
+    character ( len = *) , intent ( in ) :: message
+    call throwable_new_empty ( this )
+    this % cause => NULL ()
+    this % message = message
+  end subroutine throwable_new_message
+  !
+  ! throwable_new_cause_message --
+  !   Constructor
+  !
+  subroutine throwable_new_cause_message ( this , cause , message )
+    type ( T_THROWABLE ) , pointer :: this
+    type ( T_THROWABLE ), pointer :: cause
+    character ( len = *) , intent ( in ) :: message
+    call throwable_new_empty ( this )
+    this % cause => cause
+    this % message = message
+  end subroutine throwable_new_cause_message
+  !
+  ! throwable_free --
+  !   Destructor
+  !
+  recursive subroutine throwable_free ( this )
+    type ( T_THROWABLE ) , pointer :: this
+    logical :: causeassociated
+    causeassociated = associated ( this % cause )
+    if ( causeassociated ) then
+       call throwable_free ( this % cause )
+    endif
+    this % exists = .false.
+    deallocate ( this )
+  end subroutine throwable_free
+  !
+  ! throwable_iscause --
+  !   Returns .true. if the current throwable object has a cause.
+  !
+  logical function throwable_iscause ( this )
+    type ( T_THROWABLE ) , pointer :: this
+    throwable_iscause = associated ( this % cause )
+  end function throwable_iscause
+  !
+  ! throwable_getcause --
+  !   Get the cause of the current throwable object
+  !
+  subroutine throwable_getcause ( this , cause )
+    type ( T_THROWABLE ) , pointer :: this
+    type ( T_THROWABLE ) , pointer :: cause
+    cause => this % cause
+  end subroutine throwable_getcause
+  !
+  ! throwable_getmessage --
+  !   Get the message of the current throwable object
+  !
+  subroutine throwable_getmessage ( this , message )
+    type ( T_THROWABLE ) , pointer :: this
+    character ( len = *) , intent ( out ) :: message
+    message = this % message
+  end subroutine throwable_getmessage
+  !
+  ! throwable_write --
+  !   Writes a short description of this throwable on the given unit.
+  !
+  subroutine throwable_write ( this , unitnumber )
+    type ( T_THROWABLE ) , pointer :: this
+    integer , intent ( in ) :: unitnumber
+    write ( unitnumber , * ) "Throwable:"
+    write ( unitnumber , * ) trim ( this % message )
+  end subroutine throwable_write
+  !
+  ! throwable_printStackTrace_onunit --
+  !   Prints this throwable and its backtrace to the given unit number.
+  ! Arguments :
+  !   unitnumber : if present, the messages are written on this unit number.
+  !     If not provided, the messages are written on standard output.
+  !
+  subroutine throwable_printStackTrace_onunit ( this , unitnumber )
+    type ( T_THROWABLE ) , pointer :: this
+    integer , intent ( in ), optional :: unitnumber
+    type ( T_THROWABLE ) , pointer  :: current
+    logical :: iscause
+    character ( len = THROWABLE_MAXIMUM_LENGTH ) :: message
+    write ( message , * ) trim(this % message)
+    call printmsg ( message )
+    !
+    ! Prints the stack causes
+    !
+    current => this
+    iscause = throwable_iscause ( current )
+    do while ( iscause )
+       current => current % cause
+       write ( message , * ) "Caused by:", trim ( current % message )
+       call printmsg ( message )
+       iscause = throwable_iscause ( current )
+    end do
+  contains
+    subroutine printmsg ( message )
+      character (len=*) , intent(in) :: message
+      if ( present ( unitnumber ) ) then
+         write ( unitnumber , * ) trim ( message )
+      else
+         write ( * , * ) trim ( message )
+      endif
+    end subroutine printmsg
+  end subroutine throwable_printStackTrace_onunit
+  !
+  ! throwable_printStackTrace_callback --
+  !   Prints this throwable and its backtrace and pass the message to
+  !   the given callback
+  !
+  subroutine throwable_printStackTrace_callback ( this , callback )
+    type ( T_THROWABLE ) , pointer :: this
+    external callback
+    ! The following is regular fortran but generates an "Internal error" with IVF 8
+    !!$    interface interfacecallback
+    !!$       subroutine callback ( message )
+    !!$         implicit none
+    !!$         character ( len = * ) , intent(in) :: message
+    !!$       end subroutine callback
+    !!$    end interface interfacecallback
+    type ( T_THROWABLE ) , pointer  :: current
+    logical :: iscause
+    character ( len = THROWABLE_MAXIMUM_LENGTH ) :: message
+    write ( message , * ) trim ( this % message )
+    call callback ( message )
+    !
+    ! Prints the stack causes
+    !
+    current => this
+    iscause = throwable_iscause ( current )
+    do while ( iscause )
+       current => current % cause
+       write ( message , * ) "Caused by:", trim ( current % message )
+       call callback ( message )
+       iscause = throwable_iscause ( current )
+    end do
+  end subroutine throwable_printStackTrace_callback
+  !
+  ! throwable_exists --
+  !   Returns true if the current throwable object is allocated.
+  !
+  logical function throwable_exists ( this )
+    type ( T_THROWABLE ) , pointer :: this
+    logical :: isassociated
+    isassociated = associated ( this )
+    if ( isassociated ) then
+       throwable_exists = this % exists
+    else
+       throwable_exists = .false.
+    endif
+  end function throwable_exists
+end module THROWABLE
 
 !-------------------------------------------------------------------------------
 
