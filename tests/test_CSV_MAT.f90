@@ -52,7 +52,7 @@ LOOP_MAT: do m=0, N_MAT-1     ! Loop for matrices
   end do
 
   ! Save matrices to CSV
-  Fileout="out_file_" // TOSTR(m) // ".csv"
+  Fileout="/out_file_" // TOSTR(m) // ".csv"
   call CSV_MATRIX_WRITE( matrix=MATRIX, &
                          csv_file_name=Fileout, &
                          csv_file_status=f_status )
@@ -62,8 +62,8 @@ LOOP_MAT: do m=0, N_MAT-1     ! Loop for matrices
   if(.NOT. f_status) then
     call ERR_HANDLE ( err=handle_err, err_code=2, &
                       called_from = PROCNAME //" in module "// MODNAME, &
-                      custom_1="Test error", file_name= Fileout )
-    exit LOOP_MAT
+                      custom_1="LOOP_MAT", file_name= Fileout )
+    !exit LOOP_MAT
   end if
 
   deallocate(MATRIX)
