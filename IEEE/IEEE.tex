@@ -1,0 +1,246 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage[title]{appendix}
+\usepackage{bm}
+\usepackage{url}
+\usepackage{fmtcount} % displaying latex counters
+
+\usepackage{hyperref}
+\setlength{\textheight}{9in}
+\setlength{\textwidth}{6.5in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-.75in}
+\makeatletter% Set up the page style
+\newcommand{\ps@fred}{%
+\renewcommand{\@oddfoot}{%
+\today \hfill RJH:\ Non-Intrinsic IEEE Modules
+\hfill Page \thepage }% \renewcommand{\@evenhead}{}%
+\renewcommand{\@oddhead}{}%
+\renewcommand{\@evenfoot}{}%
+}%
+\makeatother% End of setting up the page style
+\DeclareRobustCommand{\us}{\rule{.2pt}{0pt}\rule[-.8pt]{.4em}{.5pt}%
+\rule{.2pt}{0pt}}
+
+\begin{document}
+\bibliographystyle{plain}
+\pagestyle{fred}
+\thispagestyle{empty}
+\begin{center}
+  {\LARGE \bf Non-Intrinsic IEEE Modules}
+   \\[10pt]
+  %{\Large Math \`a la Carte Report 2012-x}\\[5pt]
+  {\large January 9, 2013, July 31, 2013\\[5pt]
+ R. J. Hanson}\vspace{10pt}
+\end{center}
+
+\begin{abstract}
+  Three non-intrinsic Fortran 2003  modules are implemented.  These modules are IEEE\_FEATURES,  IEEE\_EXCEPTIONS, and IEEE\_ARITHMETIC.  All codes assume the underlying machine architecture
+ is the Intel or AMD x86.  Machine instructions are used that have appeared since about 1999.
+The module procedures call  C codes that use in-line assembler for  instructions that 
+must maintain the flags, status,  and computation of the remainder function, IEEE\_REM.  
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+This brief documentation for the IEEE modules is intended primarily for the team that will
+install them as part of the Fortran compiler, known by its common name {\it gfortran}.
+These notes might be useful to developers when the results are made available in a future compiler release.\newline
+There are sections below that describe additional details of the three modules.  Readers
+will find  the names and specification details in the final draft of the Fortran 2008 standard, {\bf ISO/IEC JTC 1/SC 22/WG 5/N1830}.  This will be referred to as {\bf F2008}.  Have a copy of this document available.\\ \\
+
+Here are four principles that contributed to design and  construction of this work:
+\begin{enumerate}
+\item All  critical parts of the standard specification are implemented.
+\item Every routine and derived type is written in Fortran, as far as possible.
+\item Access to machine instructions is obtained by Fortran calling C routines with in-line
+assembler for these instructions.
+The Fortran 2003 standard specification  for interoperability of Fortran and C is used.
+\item Every routine in the modules is {\it thread-safe}, based on Fortran OpenMP multi-thread usage.
+\end{enumerate}
+
+As a bonus, a derived type: TYPE(IEEE\_X87\_PRECISION\_TYPE), is defined. 
+ It allows the run-time system to get, test and set the
+precision that the x87 floating-point unit employs in its internal arithmetic.  Useful choices
+are:  IEEE\_SINGLE, IEEE\_DOUBLE and IEEE\_DOUBLE\_EXTENDED.
+
+A test program, IEEE\_tests\_gfortran.f90,  calls routines from the package
+and checks their correctness.  This testing software was first developed with the Intel XE 12.0 Fortran compiler.  That
+allowed the C codes to be developed with Intel formats, compiled with MS VS C++, and using the in-line assembler.  After this was working the in-line assembler codes were converted to use the {\it gcc} C compiler formats.  
+
+Certain routines, {\bf F2008}, Table 14.1, are intended as {\it elemental} or {\it pure}.  These declarations
+were sacrificed in favor of OpenMP thread-safety.  For example a variable that is {\it threadprivate}, 
+with respect to OpenMP, must be specified with
+a {\it save} attribute.  But that attribute is not allowed in  {\it elemental} or {\it pure} routines.
+It was felt that assuring thread safety, using {\it threadprivate} local variables,
+ was more important than adhering to these declarations.
+{\it Users of the package can ignore this issue.}
+
+\section{The Module IEEE\_FEATURES}
+See {\bf F2008}, 14.2.4. \\
+The module IEEE\_FEATURES defines the type IEEE\_FEATURES\_TYPE,  expressing the need for
+ particular features. Its  possible values are those of named constants defined in the module:
+IEEE\_DATATYPE, IEEE\_DENORMAL, IEEE\_DIVIDE, IEEE\_HALTING,\\ IEEE\_INEXACT\_FLAG, IEEE\_INF,
+IEEE\_INVALID\_FLAG, IEEE\_NAN, IEEE\_ROUNDING, IEEE\_SQRT, and IEEE\_UNDERFLOW\_FLAG.
+There is an additional constant,\\  IEEE\_X87\_ACCURACY, indicating support
+for precision control in the x87 floating- point unit.
+
+{\it  All these features are available by default}.
+So use-associating this module will have no effect  on the performance  obtained by additional
+use-association  of the modules\\ IEEE\_ARITHMETIC and IEEE\_EXCEPTIONS. 
+
+
+\section{The Module IEEE\_EXCEPTIONS}
+See {\bf F2008}, Table 14.2, and 14.2.4. \\ 
+The module IEEE\_EXCEPTIONS defines the following types.
+IEEE\_FLAG\_TYPE is for identifying a particular exception flag.
+Its only possible values are those of
+named constants defined in the module: IEEE\_INVALID, IEEE\_OVERFLOW, IEEE\_DIVIDE\_BY\_ZERO,
+IEEE\_UNDERFLOW, and IEEE\_INEXACT.  The module also defines arrays of these named constants: 
+IEEE\_USUAL = [IEEE\_OVERFLOW, IEEE\_DIVIDE BY ZERO, IEEE\_INVALID] and IEEE ALL = 
+[IEEE\_USUAL, IEEE\_UNDERFLOW, IEEE\_INEXACT].
+
+The inquiry functions IEEE\_SUPPORT\_FLAG and IEEE\_SUPPORT\_HALTING always return .TRUE.,
+for all  input parameters.
+
+\subsection{ IEEE\_STATUS\_TYPE, IEEE\_GET\_STATUS,\\  and IEEE\_SET\_STATUS}
+\subsubsection{Usage}
+The type IEEE\_STATUS\_TYPE is for representing the floating-point status or state.  This object has  a
+C binding and a single {\it private} component, an array {\bf INTEGER(C\_INT) :: STATE(128+27)}.  This component contains  the 512 bytes of the SSE together with the 108 bytes of the x87  floating-point unit.
+This array holds the  snapshot of the entire state of both floating-point units,  when
+IEEE\_GET\_STATUS is called.  A fragment of an example:
+
+{\tt TYPE(IEEE\_STATUS\_TYPE) :: SAVE\_STATE\\
+       ...\\
+       CALL IEEE\_GET\_STATUS(SAVE\_STATE)\\
+! Do some computing, test and set flags, ...\\
+! Return floating point units to initial status.\\
+      CALL IEEE\_SET\_STATUS(SAVE\_STATE)\\ 
+ }
+
+\subsubsection{Interface}
+
+The subroutine  IEEE\_GET\_STATUS calls the C routine {\tt GET\_STATES}.  This C routine copies
+the x87 and the SSE states into its integer array component.
+The machine instruction for saving the status of the SSE is {\it fxsave s;}.  The
+target of the operation is the memory location {\it int s[128]}.  The alignment of this
+array is required by the hardware to have its memory address divisible by 16.  Thus align this
+intermediate array: {\it int s[128] \_\_attribute\_\_((aligned(16)));}.  Following the save of
+the SSE state to {\it s}, the contents are then copied to the component of the derived type
+{\it SAVE\_STATE} that may not have this alignment constraint.  There is no restriction on the memory address 
+alignment for saving the x87 state: {\it fsave s[27];}.
+
+
+The subroutine  IEEE\_SET\_STATUS calls the C routine {\tt SET\_STATES} with
+the C binding name {\tt \_\_GFORTRAN\_\_set\_states}.  This C routine reverses
+the copy into
+the x87 and the SSE states from  its integer array component.  There is a corresponding copy-in,
+copy-out requirement for restoring the status of the SSE.
+State saving and restore are relatively expensive, but as they should only be called rarely this should not be an issue.
+ 
+\subsection{ IEEE\_FLAG\_TYPE, IEEE\_GET\_FLAG,\\  and IEEE\_SET\_FLAG}
+See {\bf F2008, 14.3}.  The exceptions are the following.
+\begin{itemize}
+\item IEEE\_OVERFLOW occurs when the result for an intrinsic real operation or assignment has an absolute
+value greater than a processor-dependent limit, or the real or imaginary part of the result for an intrinsic
+complex operation or assignment has an absolute value greater than a processor-dependent limit.
+These limits are provided by the environmental parameters {\it HUGE(X)}, where {\it X} has
+a {\it KIND} value that depends on the accuracy of the operation.
+\item IEEE\_DIVIDE\_BY\_ZERO occurs when a real or complex division has a nonzero numerator and a zero
+denominator.
+\item IEEE\_INVALID occurs when a real or complex operation or assignment is invalid; possible examples are
+SQRT (X) when X is real and has a nonzero negative value, and conversion to an integer (by assignment,
+an intrinsic procedure, or a procedure defined in an intrinsic module) when the result is too large to be
+representable.
+\item IEEE\_ UNDERFLOW occurs when the result for an intrinsic real operation or assignment has an absolute
+value less than a processor-dependent limit and loss of accuracy is detected, or the real or imaginary part
+of the result for an intrinsic complex operation or assignment has an absolute value less than a processor-
+dependent limit and loss of accuracy is detected.  These limits are provided by the environmental parameters {\it TINY(X)}, where {\it X} has a {\it KIND} value that depends on the accuracy of the operation.
+\item IEEE\_INEXACT occurs when the result of a real or complex operation or assignment is not exact.
+\end{itemize}
+\subsubsection{Usage}
+The Fortran subroutine  IEEE\_GET\_FLAG(FLAG, YES\_NO) calls the C routines {\tt GETSWX87} and {\tt GETSWSSE}. 
+The C routines get the status words for the x87 and the SSE.  The argument FLAG is one of the above named exceptions
+of type  IEEE\_FLAG\_TYPE.  The argument YES\_NO is a Fortran logical, indicating that this exception is signaling in either the x87 floating-pint unit or the SSE.
+
+The subroutine IEEE\_SET\_FLAG (FLAG, YES\_NO) calls the C routines {\tt GETSWX87} and {\tt GETSWSSE}. If
+changes occur after setting or clearing the exception flags, the C routines {\tt SETCWSSE} and {\tt SETSWS87} are
+called.  Both the x87 and SSE status flags are set to the same logical value.  The argument FLAG can be scalar or an array.  The argument YES\_NO can be scalar or an array of Fortran logicals.  When an array argument is used for FLAG, any repeats in the entries will use the flag with the highest index.\\
+
+A fragment of an example:
+
+{\tt     LOGICAL DIV\_BY\_Z\\
+ ! ... Do some computing with floating-point divides:\\
+       CALL IEEE\_GET\_FLAG(IEEE\_DIVIDE\_BY\_ZERO,  DIV\_BY\_Z)\\
+       IF( DIV\_BY\_Z) THEN\\
+! ... Take any needed action and clear the flag.\\
+       CALL IEEE\_SET\_FLAG(IEEE\_DIVIDE\_BY\_ZERO, .FALSE.)\\ 
+       END IF\\     
+ ...
+ }
+ \subsection{IEEE\_GET\_HALTING\_MODE, IEEE\_SET\_HALTING\_MODE}
+ This subroutine guides  the occurrence of an exception to either quietly set a status flag or else cause an interrupt that calls an external handler function or terminates the execution.  This is illustrated with an example.  Suppose  a code is compiled to never tolerate  an INVALID operation.  A part of the code is allowed to encounter this exception and not terminate execution.  After this  code is finished, and the exception is handled, revert to the initial halting mode for this exception.\\
+ 
+ A fragment:
+{\tt     LOGICAL :: HALT, INVLD\\
+ ! ...Save the initial halting mode:\\
+       CALL IEEE\_GET\_HALTING\_MODE(IEEE\_INVALID, HALT)\\
+! ...Allow INVALID exceptions without halting.\\       
+       CALL IEEE\_SET\_HALTING\_MODE(IEEE\_INVALID, .FALSE.)\\
+ !... Execute  code  or routines that may set IEEE\_INVALID\\
+ ...\\
+        CALL IEEE\_GET\_FLAG(IEEE\_INVALID, INVLD)\\
+      IF (INVLD) THEN\\
+! ... Take any needed action and clear the flag.\\    
+       CALL IEEE\_SET\_FLAG(IEEE\_INVALID, .FALSE.)\\ 
+       END IF\\   
+! ... Restore the initial halting mode.\\ 
+      CALL IEEE\_SET\_HALTING\_MODE(IEEE\_INVALID, HALT)\\ 
+  ...\\     
+ }
+ Similar coding to that of the above fragment  can be used for any of
+  IEEE\_INVALID, IEEE\_OVERFLOW, IEEE\_DIVIDE\_BY\_ZERO,
+IEEE\_UNDERFLOW, or IEEE\_INEXACT.   
+
+\section{The Module IEEE\_ARITHMETIC}
+See  {\bf F2008}, Table 14.2, and section 14.11. \\ 
+The module IEEE\_EXCEPTIONS is  use-associated by IEEE\_ARITHMETIC.   This is done because
+the routine IEEE\_GET\_FLAG is called by some of the module subprograms that implement the
+procedures listed in {\bf F2008}, 14.11.1 - 14.11.18.  Consequently a user routine can  use-associate
+just  IEEE\_ARITHMETIC to have access to both modules.
+
+Several of these procedure names are generic and refer to specific module procedures, depending on the type, kind and rank of their  arguments.  The inquiry functions {\bf F2008}, 14,11.24-14.11.27, and 14.11.29-14.11.35,  are generic with respect to single and double precision scalar arguments.  They are  generic with respect to arrays of these precisions, up to and including  rank 7.
+
+An initial version of this module, and the test program  IEEE\_tests\_gfortran, contained INTEGER variables that required
+the high order bit, number 31, to be set.  For example the IEEE single precision value for $-\infty$ was initialized to the value \lq{}FF800000\rq{}.  But gfortran and the Nag compiler give a default compiler error.  The issue is that the size of this integer value exceeds  huge(1)=2**31-1.  That compile error was avoided by initializing the  value to \lq{}7F800000\rq{}, and replacing the role of  IEEE $-\infty$  as the intrinsic function value IBSET(\lq{}7F800000\rq{},31).  Similar code changes were made for other IEEE\_CLASS types that  have bit 31 set. 
+
+\section{The Test Program IEEE\_tests\_gfortran}
+Testing anything approaching all  ways to use the modules is practically impossible.  But several routines are tested, in both single and double precision.  The main program unit  IEEE\_tests\_gfortran.f90 does a small amount of consistency checking for the following routines and overloaded comparisons.  To test exceptions signaled by the x87 there are C functions
+{\tt S87} and {\tt D87} that compute the function $d=\sqrt{a/b+c}$, for inputs $a,b,c$.  The operations use the x87. There is an additional x87 function {\tt GETPI} that returns a  value of $\pi$, with double precision accuracy.    Printing of the status of results uses subroutine {\tt messy}, ~\cite{Krogh:2013:MSY}.
+
+\begin{enumerate}
+\item IEEE\_GET\_STATUS
+\item IEEE\_SET\_STATUS
+\item IEEE\_GET\_HALTING\_MODE
+\item IEEE\_SET\_HALTING\_MODE
+\item IEEE\_GET\_FLAG
+\item IEEE\_SET\_FLAG
+\item IEEE\_COPY\_SIGN
+\item IEEE\_LOGB
+\item IEEE\_NEXT\_AFTER
+\item IEEE\_REM
+\item IEEE\_RINT
+\item IEEE\_SCALB
+\item IEEE\_GET\_X87\_PRECISION\_MODE
+\item IEEE\_SET\_X87\_PRECISION\_MODE
+\item Logical comparisons ``==\rq{}\rq{} and ``/=\rq{}\rq{}
+\end{enumerate}
+\section{Acknowledgments}
+W. Van Snyder provided insight into aspects of the Fortran 2008 standard.   F. T. Krogh kindly made his {\it gcc} and {\it gfortran} compilers available.  He also provided use of his machine for testing.  Additionally  he improved the documentation with several suggestions.  Tim Hopkins made changes to the codes that allowed the Nag Fortran compiler to be successfully used.  Dominique d'Humieres provided a fix for a difference in  printed output that resulted  with the  IEEE rounding mode set to round toward zero.
+\bibliography{IEEE}
+\end{document}
+
+
