@@ -1,0 +1,22 @@
+The files are all located in IEEE.zip.  Unzip this file to get them.
+The compilation order:
+precision_m.f90
+messy_m.f90
+c_control.c
+IEEE_FEATURES.f90
+IEEE_EXCEPTIONS.f90
+IEEE_ARITHMETIC.f90
+
+Run this testing routine and link with the above files:
+IEEE_tests_gfortran.f90
+
+Check the results of the run against the file 'list'.
+
+The documentation file IEEE.pdf is the result of LaTeX applied to IEEE.tex.
+
+--------------
+
+The files IEEE_ARITHMETIC.f90 and IEEE_tests_gfortran.f90 must be
+compiled with the -fno-range-check option (for the second file it
+triggers PR58027). On x86_64-apple-darwin10 the output differs from the
+one in 'list'
