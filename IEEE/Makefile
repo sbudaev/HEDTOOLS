@@ -18,3 +18,5 @@ clean:
 	rm -f -r f_{files,modd}* *.o *.mod *.M *.d V*.inc *.vo \
 	V*.f *.dbg album F.err
 
+run:
+	./$(OUT)
