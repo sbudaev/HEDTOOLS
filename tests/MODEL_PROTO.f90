@@ -57,8 +57,10 @@ module COMMONDATA
   ! the PROCNAME parameter referring to its name. This is done for the Debug
   ! Logger module. Each module must also have a DEBUG Logger subroutine, that
   ! is a wrapper to module LOGGER (or perhaps any other that is being used)
-  !   procedure name PROCNAME
-  character (len=*), private, parameter :: MODNAME = "COMMONDATA"
+  !   procedure name PROCNAME. In this module it is not necessary though
+  !   as it is n't used here (and will result in compile errors due to
+  !   double declaration of PROCNAME in two subroutines LOGGER_INIT and LOG_DBG.
+  ! character (len=*), private, parameter :: MODNAME = "COMMONDATA"
 
 !----------- CONTAINED SUBROUTINES SECTION -------------------------------------
 contains  ! Note that these contained subroutines may be separate, but in such
@@ -73,9 +75,8 @@ subroutine LOGGER_INIT()
   use BASE_UTILS  ! need this for access to base utils
 
   implicit none
-
-  ! Subroutine name for DEBUG LOGGER
-  character (len=*), parameter :: PROCNAME = "LOGGER_INIT"
+  
+  !-----------------------------------------------------------------------------
 
   ! We first initialise the log and set log file name
   call LOG_STARTUP (MODEL_NAME // "-LOG.log")
