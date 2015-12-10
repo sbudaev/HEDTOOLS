@@ -15,8 +15,8 @@ all:
 	   IEEE_FEATURES.f90 IEEE_EXCEPTIONS.f90 IEEE_ARITHMETIC.f90 c_control.c
 
 clean:
-	rm -f -r f_{files,modd}* *.o *.mod *.M *.d V*.inc *.vo \
+	-rm -f -r f_{files,modd}* *.o *.mod *.M *.d V*.inc *.vo \
 	V*.f *.dbg album F.err
 
-run:
+run: $(OUT)
 	./$(OUT)

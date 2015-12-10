@@ -271,4 +271,123 @@ TEST ON *BASS* laptop, Linux x86-32
 *** Some Tests DID NOT PASS for non-intrinsic IEEE modules.  Look for the details in the output lists.
 
 --------------------------------------------------------------------------------
+TEST on *SUNFISH* (Solaris OS)
+
+ Computing (w/x87) D=sqrt(A/B+C), D=NaN, A=0., B=0., C=0., correctly signals 
+ IEEE_INVALID using gfortran  
+
+ Computing (w/SSE) D=sqrt(A/B+C), D=NaN, A=0., B=0., C=0., correctly signals 
+ IEEE_INVALID using gfortran  
+
+ Computing (w/x87) D=sqrt(A/B+C), D= Infinity, A=1.000, B=0., C=0., correctly 
+ signals IEEE_DIVIDE_BY_ZERO using gfortran  
+
+ Computing (w/SSE) D=sqrt(A/B+C), D= Infinity, A=1.000, B=0., C=0., correctly 
+ signals IEEE_DIVIDE_BY_ZERO using gfortran  
+
+ Computing (w/x87) D=sqrt(A/B+C), D=1.701E+38, A=3.403E+38, B=1.175E-38, C=0., correctly 
+ DOES NOT signal IEEE_OVERFLOW using gfortran  
+
+ Computing (w/SSE) D=sqrt(A/B+C), D=1.701E+38, A=3.403E+38, B=1.175E-38, C=0., incorrectly 
+ DOES NOT signal IEEE_OVERFLOW using gfortran  
+
+ Computing (w/x87) D=sqrt(A/B+C), D=5.877E-39, A=1.175E-38, B=3.403E+38, C=0., correctly 
+ signals IEEE_UNDERFLOW using gfortran  
+
+ Computing (w/SSE) D=sqrt(A/B+C), D=5.877E-39, A=1.175E-38, B=3.403E+38, C=0., correctly 
+ signals IEEE_UNDERFLOW using gfortran  
+
+ Computing (w/x87) D=sqrt(A/B+C), D=1.414, A=2.000, B=1.000, C=0., correctly 
+ signals IEEE_INEXACT using gfortran  
+
+ Computing (w/SSE) D=sqrt(A/B+C), D=1.414, A=2.000, B=1.000, C=0., correctly 
+ signals IEEE_INEXACT using gfortran  
+
+ All single precision types are correctly classified
+  using IEEE_CLASS() and the overloaded comparisons ==, /=.
+
+ All double precision types are correctly classified
+  using IEEE_CLASS() and the overloaded comparisons ==, /=.
+
+ A single precision sign copy of 1. to -1.
+  and then -1. to 1. is correct.
+
+ A double precision sign copy of 1. to -1.
+  and then -1. to 1. is correct.
+
+ All single precision FINITE VALUE classifications are correct.
+
+ All double precision FINITE VALUE classifications are correct.
+
+ All single precision NaN VALUE classifications are correct.
+
+ All double precision NaN VALUE classifications are correct.
+
+ All single precision NEGATIVE VALUE classifications are correct.
+
+ All double precision NEGATIVE VALUE classifications are correct.
+
+ All single precision NORMAL VALUE classifications are correct.
+
+ All double precision NORMAL VALUE classifications are correct.
+
+ Single precision LOGB returned correct results with inputs of (2.000 and 0.).
+
+ Double precision LOGB returned correct results with inputs of (2.000 and 0.).
+
+ Single precision NEXT_AFTER(x,y) returned correct results with inputs of x=0. and y= Infinity.
+
+ Single precision NEXT_AFTER(x,y) returned correct results with inputs of x=0. and y= -Infinity.
+
+ Single precision NEXT_AFTER(HUGE(0.E0),+Inf), correctly has an INFINITE value.
+
+ Double precision NEXT_AFTER(x,y) returned correct results with inputs of x=0. and y= Infinity.
+
+ Double precision NEXT_AFTER(x,y) returned correct results with inputs of x=0. and y= -Infinity.
+
+ Double precision NEXT_AFTER(HUGE(0.D0),+Inf), correctly has an INFINITE value.
+
+ NOTE: The default X87 precision is set for DOUBLE_EXTENDED, or 64 bits of working precision.
+
+ Double precision rounding mode IEEE_DOWN for \pi ~= 3.142 is < value with IEEE_UP.
+
+ Double precision rounding mode IEEE_DOWN for \pi ~= 3.142 agrees with IEEE_TO_ZERO.
+
+ Double precision a=IEEE_REM(4, \pi) correctly satisfies a + \pi==4.
+
+ Double precision a=IEEE_REM(5, \pi) correctly satisfies a + 2 * \pi==5.
+
+ Single precision IEEE_RINT of 0.5, 1.5 is correct for
+ rounding modes: IEEE_NEAREST, IEEE_DOWN, IEEE_UP and IEEE_TO_ZERO.
+
+ Double precision IEEE_RINT of 0.5, 1.5 is correct for
+ rounding modes: IEEE_NEAREST, IEEE_DOWN, IEEE_UP and IEEE_TO_ZERO.
+
+ Single precision a=IEEE_SCALB(TINY(0.E0),-3)
+ correctly signals IEEE_UNDERFLOW, with gradual underflow disabled.
+
+ Single precision IEEE_SCALB of 1.0 is correct.
+ IEEE_SCALB(TINY(0.E0),-3) with gradual underflow disabled is correct.
+
+ Single precision a=IEEE_SCALB(TINY(0.E0),-3)
+ correctly signals IEEE_UNDERFLOW, with gradual underflow enabled.
+
+ Single precision IEEE_SCALB of 1.0 is correct.
+ IEEE_SCALB(TINY(0.E0),-3) with gradual underflow enabled is correct.
+
+ Double precision a=IEEE_SCALB(TINY(0.D0),-3)
+ signals IEEE_UNDERFLOW, with gradual underflow disabled.
+
+ Double precision IEEE_SCALB of 1.0 is correct.
+ IEEE_SCALB(TINY(0.D0),-3) with gradual underflow disabled is correct.
+
+ Double precision a=IEEE_SCALB(TINY(0.D0),-3)
+ signals IEEE_UNDERFLOW, with gradual underflow enabled.
+
+ Double precision IEEE_SCALB of 1.0 is correct.
+ IEEE_SCALB(TINY(0.D0),-3) with gradual underflow enabled is correct.
+
+*** Some Tests DID NOT PASS for non-intrinsic IEEE modules.  Look for the details in the output lists.
+
+--------------------------------------------------------------------------------
 
