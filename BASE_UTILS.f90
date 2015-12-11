@@ -719,10 +719,9 @@ subroutine RANDOM_SEED_INIT()
 !*******************************************************************************
 
   implicit none
-  integer, parameter :: STD=4   ! Here we have to use standard precision kind=4
-                                ! DOUBLE does not seem to be supported
-  integer(STD) :: i, n, clock
-  integer(STD), dimension(:), allocatable :: seed
+
+  integer :: i, n, clock                ! DEFAULT INTEGER type, for portability
+  integer, dimension(:), allocatable :: seed
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
