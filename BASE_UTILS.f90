@@ -333,9 +333,9 @@ end function STR_LTOA
 function STR_ATOA (A) result (ToStrA)
 
 !*******************************************************************************
-! PURPOSE: Convert STRING to a string type. 
+! PURPOSE: Convert STRING to a string type.
 ! CALL PARAMETERS: string
-! NOTE: 
+! NOTE:
 !  Safety function, to allow wrong inclusion of TOSTR with string variables,
 !  TOSTR should normally be applied to convert number to string.
 !*******************************************************************************
@@ -354,7 +354,7 @@ function STR_ATOA (A) result (ToStrA)
   !-----------------------------------------------------------------------------
 
   ToStrA = A
-  
+
 end function STR_ATOA
 
 !-------------------------------------------------------------------------------
@@ -534,11 +534,11 @@ end function STR_ARRAY_LTOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_ATOA (r) result(ToStrA)
+function STR_ARRAY_ATOA (r, delimiter) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert STRING array to string type.
 ! CALL PARAMETERS: STRING array
-! NOTE: 
+! NOTE:
 !  Safety function, to allow wrong inclusion of TOSTR with string variables,
 !  TOSTR should normally be applied to convert number to string.
 !*******************************************************************************
@@ -550,9 +550,11 @@ function STR_ARRAY_ATOA (r) result(ToStrA)
 
   ! Calling parameters
   character(len=*), dimension(:), intent(in) :: r
+  character(len=*), optional, intent(in) :: delimiter
 
   ! Local variables
   character (len=:), allocatable :: tmpStr
+  character (len=:), allocatable :: delimiter_here
   integer :: i
 
   ! Subroutine name for DEBUG LOGGER
@@ -560,9 +562,15 @@ function STR_ARRAY_ATOA (r) result(ToStrA)
 
   !-------------------------------------------------------
 
-  tmpStr=""
-  do i=lbound(r,1), ubound(r,1)
-    tmpStr = tmpStr // " " // r(i)
+  if (present(delimiter)) then
+    delimiter_here=delimiter
+  else
+    delimiter_here=" "
+  end if
+
+  tmpStr=r(lbound(r,1))
+  do i=lbound(r,1)+1, ubound(r,1)
+    tmpStr = tmpStr // delimiter_here // r(i)
   end do
 
   ToStrA = tmpStr
