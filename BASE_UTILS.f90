@@ -558,7 +558,7 @@ function STR_ARRAY_ATOA (r, delimiter) result(ToStrA)
   integer :: i
 
   ! Subroutine name for DEBUG LOGGER
-  character (len=*), parameter :: PROCNAME = "STR_ARRAY_LTOA"
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_ATOA"
 
   !-------------------------------------------------------
 
