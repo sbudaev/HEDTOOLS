@@ -47,10 +47,10 @@ module COMMONDATA
   real, public :: genomeNR(Cinds,CgNR,Cxy,Cdip,CNRcomp)
 
   ! genome for modulatory genes CgMOD genes,diploid)
-  real genomeMEM(Cinds,CgMEM,Cdip)
+  real, public :: genomeMEM(Cinds,CgMEM,Cdip)
 
   ! genome for memory genes !(CgMEM genes,diploid)
-  real genomeMOD(Cinds,Cdip)
+  real, public :: genomeMOD(Cinds,Cdip)
 
   !--------- MODULE DEBUG LOGGER -----------------------------------------------
   ! Module name for the DEBUG LOGGER: every function/sub must also have
@@ -75,7 +75,7 @@ subroutine LOGGER_INIT()
   use BASE_UTILS  ! need this for access to base utils
 
   implicit none
-  
+
   !-----------------------------------------------------------------------------
 
   ! We first initialise the log and set log file name
@@ -427,7 +427,7 @@ subroutine CALCULATE_RANDOM_MODEL ()
   !----[ CALCULATION SECTION ]--------------------------------------------------
 
   ! Write / log what is being done to log if DEBUGging
-  call LOG_DBG("Entering subroutine CALCULATE_RANDOM_MODEL...", PROCNAME)
+  call LOG_DBG("Entering subroutine " // PROCNAME // "...", PROCNAME)
 
   do i=1, Cinds     ! We will here (1) )cycle over the dimensions of
                     ! the multidimensional array; (2) set its value;
