@@ -85,7 +85,7 @@ subroutine LOGGER_INIT()
   call LOG_CONFIGURE("writeonstdout" , .true.) ! Output log on screen AND file
 
   call LOG_CONFIGURE("level_string_volume", "chapter" )  ! Set log level
-  call LOG_DELIMITER()                                   ! Issue log delimiter
+  call LOG_DELIMITER                                     ! Issue log delimiter
 
   ! Send informative messages to the log..
   ! Note that there is a specific subroutine LOG_DBG for producing

@@ -49,11 +49,13 @@ interface TOSTR               ! Generic interface to number-to-string
   module procedure STR_RTOA   ! for convenience, they're identical
   module procedure STR_R8TOA
   module procedure STR_LTOA
+  module procedure STR_ATOA
 
   module procedure STR_ARRAY_ITOA
   module procedure STR_ARRAY_RTOA
   module procedure STR_ARRAY_R8TOA
   module procedure STR_ARRAY_LTOA
+  module procedure STR_ARRAY_ATOA
 
 end interface TOSTR
 
@@ -328,6 +330,35 @@ end function STR_LTOA
 
 !-------------------------------------------------------------------------------
 
+function STR_ATOA (A) result (ToStrA)
+
+!*******************************************************************************
+! PURPOSE: Convert STRING to a string type. 
+! CALL PARAMETERS: string
+! NOTE: 
+!  Safety function, to allow wrong inclusion of TOSTR with string variables,
+!  TOSTR should normally be applied to convert number to string.
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  character(len=*) :: A
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ATOA"
+
+  !-----------------------------------------------------------------------------
+
+  ToStrA = A
+  
+end function STR_ATOA
+
+!-------------------------------------------------------------------------------
+
 function STR_ARRAY_ITOA (r) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert integer array to a string type.
@@ -500,6 +531,43 @@ function STR_ARRAY_LTOA (r) result(ToStrA)
   ToStrA = tmpStr
 
 end function STR_ARRAY_LTOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ARRAY_ATOA (r) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert STRING array to string type.
+! CALL PARAMETERS: STRING array
+! NOTE: 
+!  Safety function, to allow wrong inclusion of TOSTR with string variables,
+!  TOSTR should normally be applied to convert number to string.
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  character(len=*), dimension(:), intent(in) :: r
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_LTOA"
+
+  !-------------------------------------------------------
+
+  tmpStr=""
+  do i=lbound(r,1), ubound(r,1)
+    tmpStr = tmpStr // " " // r(i)
+  end do
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_ATOA
 
 !-------------------------------------------------------------------------------
 

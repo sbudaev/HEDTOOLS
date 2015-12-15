@@ -10,8 +10,8 @@
 
 program TEST_SCRATCH
 
-!  use BASE_UTILS
-!  use CSV_IO
+  use BASE_UTILS
+! use CSV_IO
 
   real(8) :: ZZ = 12.455565465654654_8
   character (len=120) :: SS
@@ -19,6 +19,8 @@ program TEST_SCRATCH
   real, dimension (10) :: YY = [1.,2.,3.,4.,5.,6.,7.,8.,9.,10.]
   real(8), dimension (10) :: BB = [1._8,2._8,3._8,4._8,5._8,6._8,7._8,8._8,9._8,10._8]
   integer, dimension(10) :: VV = [1,2,3,4,5,6,7,8,9,10]
+  
+  character(4), dimension(5) :: SSSA=["1111","2222","3333","4444","5555"]
 
   integer :: CSV_VV = 1
   integer :: CSV_UNIT, o
@@ -36,6 +38,11 @@ program TEST_SCRATCH
   !print *,">>>>", RECORD_CSV,"<<<<", len(RECORD_CSV), len_trim(RECORD_CSV)
 
   print *, ">>>", char(9), "<<<"
+  
+  print *, "MUST BE ITSELF ", TOSTR(SSSA)
+  print *, SSSA
+  
+  stop 0
 
 
   print *, BBB, real(int(BBB, kind=8))
