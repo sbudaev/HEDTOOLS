@@ -27,7 +27,7 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=0
+current_page=6
 FILE_NAME_0=3015;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_CSV_IO.f90;0;2
 FILE_NAME_1=12105;Fortran;0;EUTF-8;1;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_UTILS.f90;0;2
 FILE_NAME_2=3498;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2FBASE_LOGGER.f90;0;2
@@ -37,7 +37,7 @@ FILE_NAME_5=13307;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA
 FILE_NAME_6=2286;Fortran;0;EUTF-8;0;1;1;%2Fhome%2Fbudaev%2FDesktop%2FWORK%2FAHA-DEV%2Fbranches%2Fbudaev%2FHEDTOOLS%2Ftests%2Ftest_CSV_MAT.f90;0;2
 
 [VTE]
-last_dir=/home/budaev/Desktop/WORK/AHA-DEV/branches/budaev/HEDTOOLS
+last_dir=/home/budaev/Desktop/WORK/AHA-DEV/branches/budaev/HEDTOOLS/tests
 
 [prjorg]
 source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;*.m;
