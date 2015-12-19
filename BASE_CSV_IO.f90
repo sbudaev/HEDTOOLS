@@ -68,12 +68,37 @@ character (len=*), private, parameter :: MODNAME = "CSV_IO"
 ! wrapper to the module LOGGER. May also define integer DEBUG_LEVEL parameter...
 logical, private, parameter :: IS_DEBUG = .FALSE.
 
+! Define derived type csv_file structure for keeping csv file handle:
+!
+! PORTABILITY NOTE for derived type file handle:
+! character (len=:), allocatable :: name -- works on Oracle F95 and probably
+! some other, but gfortran prior to v. 5 issues this error:
+!
+! Deferred-length character component 'name' at (1) is not yet supported
+!
+! Therefore, use fixed length string for portability here; don't forget that
+!  concatenation of fixed strings requires trim() to avoid empty holes in
+!  the result or no result, e.g.:
+! type (csv_file) :: zoutput
+! zoutput%name= trim(directory) // "file_" // TOSTR(number) // ".txt"
+!  We also define the maximum length of file name string as a parameter,
+!  is it enough length for full file path?
+integer, public, parameter :: MAX_FILENAME=255
+type, public :: csv_file
+  character (len=MAX_FILENAME) :: name  ! the name of the file
+  integer :: unit                       ! file-handle unit
+  logical :: status                     ! flag for success of latest operation
+end type csv_file
+
 !*******************************************************************************
 ! GENERIC INTERFACES
 ! Generic interfaces to the modules. These allow calling CSV_RECORD_APPEND
 ! generically, for different data types, which are selected by the module
 ! automatically. e.g. just call CSV_RECORD_APPEND irrespective of the data type
 !*******************************************************************************
+
+! Generic interfaces for whole array/matrix operations with arbitrary data types
+
 interface CSV_RECORD_APPEND
 
   module procedure CSV_RECORD_APPEND_I4
@@ -105,6 +130,43 @@ interface CSV_ARRAY_WRITE
   module procedure CSV_ARRAY_WRITE_S
 
 end interface CSV_ARRAY_WRITE
+
+! Generic interfaces for physical read/write using the derived type file handle
+
+interface CSV_OPEN_READ
+
+  module procedure CSV_FILE_OPEN_READ
+  module procedure CSV_FILE_OPEN_READ_T
+
+end interface CSV_OPEN_READ
+
+interface CSV_OPEN_WRITE
+
+  module procedure CSV_FILE_OPEN_WRITE
+  module procedure CSV_FILE_OPEN_WRITE_T
+
+end interface CSV_OPEN_WRITE
+
+interface CSV_CLOSE
+
+  module procedure CSV_FILE_CLOSE
+  module procedure CSV_FILE_CLOSE_T
+
+end interface CSV_CLOSE
+
+interface CSV_HEADER_WRITE
+
+  module procedure CSV_FILE_HEADER_WRITE
+  module procedure CSV_FILE_HEADER_WRITE_T
+
+end interface CSV_HEADER_WRITE
+
+interface CSV_RECORD_WRITE
+
+  module procedure CSV_FILE_RECORD_WRITE
+  module procedure CSV_FILE_RECORD_WRITE_T
+
+end interface CSV_RECORD_WRITE
 
 private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
                     ! may or may not use the module LOGGER, if not, it can be
@@ -315,7 +377,7 @@ function GET_FILE_UNIT (csv_file_name, csv_file_status) &
 
   !-----------------------------------------------------------------------------
 
-  csv_file_name_here=csv_file_name  ! copy name as it is intent-in
+  csv_file_name_here=csv_file_name   ! copy name as it is intent-in
   !csv_file_unit=-1                  ! this is default if no unit linked
 
   inquire(file=csv_file_name_here, number=csv_file_unit, opened=openedq, &
@@ -404,6 +466,28 @@ end subroutine CSV_FILE_OPEN_READ
 
 !-------------------------------------------------------------------------------
 
+subroutine CSV_FILE_OPEN_READ_T (csv_file_handle)
+!*******************************************************************************
+! CSV_FILE_OPEN_READ_T
+! PURPOSE: opens a CSV file for reading. Wrapper using file handle derived type
+! CALL PARAMETERS:
+!    csv file handle of the type csv_file defined in this module
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  type(csv_file), intent(inout) :: csv_file_handle
+
+  call CSV_FILE_OPEN_READ( csv_file_handle%name, &
+                           csv_file_handle%unit, &
+                           csv_file_handle%status )
+
+end subroutine CSV_FILE_OPEN_READ_T
+
+!-------------------------------------------------------------------------------
+
 subroutine CSV_FILE_OPEN_WRITE (csv_file_name, csv_file_unit, csv_file_status)
 !*******************************************************************************
 ! CSV_FILE_OPEN_WRITE
@@ -461,6 +545,28 @@ subroutine CSV_FILE_OPEN_WRITE (csv_file_name, csv_file_unit, csv_file_status)
   if(present(csv_file_status)) csv_file_status=csv_file_status_here
 
 end subroutine CSV_FILE_OPEN_WRITE
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_FILE_OPEN_WRITE_T (csv_file_handle)
+!*******************************************************************************
+! CSV_FILE_OPEN_WRITE_T
+! PURPOSE: opens a CSV file for writing. Wrapper using file handle derived type
+! CALL PARAMETERS:
+!    csv file handle of the type csv_file defined in this module
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  type(csv_file), intent(inout) :: csv_file_handle
+
+  call CSV_FILE_OPEN_WRITE( csv_file_handle%name, &
+                            csv_file_handle%unit, &
+                            csv_file_handle%status )
+
+end subroutine CSV_FILE_OPEN_WRITE_T
 
 !-------------------------------------------------------------------------------
 
@@ -531,6 +637,29 @@ end subroutine CSV_FILE_CLOSE
 
 !-------------------------------------------------------------------------------
 
+subroutine CSV_FILE_CLOSE_T (csv_file_handle)
+!*******************************************************************************
+! CSV_FILE_CLOSE_T
+! PURPOSE: closes a CSV file for reading or writing. Wrapper using file handle
+!    derived type
+! CALL PARAMETERS:
+!    csv file handle of the type csv_file defined in this module
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  type(csv_file), intent(inout) :: csv_file_handle
+
+  call CSV_FILE_CLOSE ( csv_file_handle%name, &
+                        csv_file_handle%unit, &
+                        csv_file_handle%status )
+
+end subroutine CSV_FILE_CLOSE_T
+
+!-------------------------------------------------------------------------------
+
 subroutine CSV_FILE_HEADER_WRITE (csv_file_name, csv_file_unit, header, &
       csv_file_status)
 !*******************************************************************************
@@ -597,6 +726,33 @@ subroutine CSV_FILE_HEADER_WRITE (csv_file_name, csv_file_unit, header, &
   end if
 
 end subroutine CSV_FILE_HEADER_WRITE
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_FILE_HEADER_WRITE_T(header, csv_file_handle)
+!*******************************************************************************
+! CSV_FILE_HEADER_WRITE_T
+! PURPOSE: writes a header to a CSV file. Should normally be the first line.
+!    Wrapper using file handle derived type
+! CALL PARAMETERS:
+!    arbitrary string header
+!    csv file handle of the type csv_file defined in this module
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(in) :: header
+  type(csv_file), intent(inout) :: csv_file_handle
+
+
+  call CSV_FILE_HEADER_WRITE ( csv_file_handle%name, &
+                               csv_file_handle%unit, &
+                               header, &
+                               csv_file_handle%status )
+
+end subroutine CSV_FILE_HEADER_WRITE_T
 
 !-------------------------------------------------------------------------------
 
@@ -684,7 +840,7 @@ subroutine CSV_FILE_RECORD_WRITE (csv_file_name, csv_file_unit, record, &
 ! CALL PARAMETERS:
 !    Character CSV_FILE_NAME, the name of the file.
 !    Integer CSV_FILE_UNIT, the unit number
-!    Character RECORD, the record.
+!    Character RECORD, the complete record.
 ! NOTES:
 ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
 ! Modified by Sergey Budaev
@@ -694,12 +850,11 @@ subroutine CSV_FILE_RECORD_WRITE (csv_file_name, csv_file_unit, record, &
 
   ! Calling parameters
   character (len=*), optional, intent(in) :: csv_file_name
-  integer, optional, intent(inout) :: csv_file_unit
+  integer, optional :: csv_file_unit ! intent(inout), doesn't work with literals
   character (len=*), intent(in)  :: record
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: csv_file_name_here
   integer :: csv_file_unit_here
   logical  :: csv_file_status_here
 
@@ -741,6 +896,32 @@ subroutine CSV_FILE_RECORD_WRITE (csv_file_name, csv_file_unit, record, &
   end if
 
 end subroutine CSV_FILE_RECORD_WRITE
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_FILE_RECORD_WRITE_T (record, csv_file_handle)
+!*******************************************************************************
+! CSV_FILE_RECORD_WRITE_T
+! PURPOSE: writes a complete record to a CSV file. Wrapper using file handle
+!    derived type
+! CALL PARAMETERS:
+!    Character RECORD, the complete record.
+!    csv file handle of the type csv_file defined in this module
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(in)  :: record
+  type(csv_file), intent(inout) :: csv_file_handle
+
+  call CSV_FILE_RECORD_WRITE ( csv_file_handle%name, &
+                               csv_file_handle%unit, &
+                               record, &
+                               csv_file_handle%status )
+
+end subroutine CSV_FILE_RECORD_WRITE_T
 
 !-------------------------------------------------------------------------------
 
