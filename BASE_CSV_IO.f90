@@ -68,7 +68,10 @@ character (len=*), private, parameter :: MODNAME = "CSV_IO"
 ! wrapper to the module LOGGER. May also define integer DEBUG_LEVEL parameter...
 logical, private, parameter :: IS_DEBUG = .FALSE.
 
+!*******************************************************************************
+! DERIVED TYP for CSV FILE HANDLE
 ! Define derived type csv_file structure for keeping csv file handle:
+!*******************************************************************************
 !
 ! PORTABILITY NOTE for derived type file handle:
 ! character (len=:), allocatable :: name -- works on Oracle F95 and probably
@@ -82,7 +85,7 @@ logical, private, parameter :: IS_DEBUG = .FALSE.
 ! type (csv_file) :: zoutput
 ! zoutput%name= trim(directory) // "file_" // TOSTR(number) // ".txt"
 !  We also define the maximum length of file name string as a parameter,
-!  is it enough length for full file path?
+!  is it (255) enough length for full file path?
 integer, public, parameter :: MAX_FILENAME=255
 type, public :: csv_file
   character (len=MAX_FILENAME) :: name  ! the name of the file
@@ -168,10 +171,10 @@ interface CSV_RECORD_WRITE
 
 end interface CSV_RECORD_WRITE
 
-private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
-                    ! may or may not use the module LOGGER, if not, it can be
-                    ! used as a stand-alone module in other projects... But it
-                    ! has the same name as in the model proto
+private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for debugging this
+                    ! module. It may not or may use the module LOGGER, if not,
+                    ! (normally)  it can be used as a stand-alone module in
+                    ! other projects...
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
