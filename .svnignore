@@ -1,0 +1,16 @@
+# Git files
+.git
+.gitignore
+
+# AHA output
+outputs_*
+BUILD-ERR-GCC.txt
+BUILD_*
+errors.txt
+
+# Swap files
+*.swp
+*~
+
+# exe files
+*.exe
