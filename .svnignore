@@ -14,3 +14,6 @@ errors.txt
 
 # exe files
 *.exe
+
+# syncthing conflicting
+*.sync-conflict-*
