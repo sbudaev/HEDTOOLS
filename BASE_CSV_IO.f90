@@ -88,9 +88,10 @@ logical, private, parameter :: IS_DEBUG = .FALSE.
 !  is it (255) enough length for full file path?
 integer, public, parameter :: MAX_FILENAME=255
 type, public :: csv_file
-  character (len=MAX_FILENAME) :: name  ! the name of the file
-  integer :: unit                       ! file-handle unit
-  logical :: status                     ! flag for success of latest operation
+ !character (len=:), allocatable :: name  ! name of file :: disabled, unportable
+  character (len=MAX_FILENAME) :: name    ! the name of the file
+  integer :: unit                         ! file-handle unit
+  logical :: status                       ! flag for success of latest operation
 end type csv_file
 
 !*******************************************************************************
