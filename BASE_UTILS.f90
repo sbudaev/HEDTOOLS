@@ -136,7 +136,7 @@ end subroutine LOG_DBG
 
 !-------------------------------------------------------------------------------
 
-function STR_ITOA(i) result (ToStrA)
+function STR_ITOA(i, formatstr) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.
 ! CALL PARAMETERS: single integer value
@@ -157,17 +157,26 @@ function STR_ITOA(i) result (ToStrA)
 
   ! Calling parameters
   integer, intent(in) :: i
+  character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
   character(range(i)+2) :: tmpStr
+  character(len=:), allocatable :: tmpFormat
+
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "STR_ITOA"
 
   !--------------------------------------------------
 
-  write(tmpStr,'(i0)') i
-  ToStrA = CLEANUP(tmpStr)          ! see notes on _R and _R8 versions below
+  if (present(formatstr))  then
+    tmpFormat=formatstr
+    write(tmpStr, tmpFormat) i
+    ToStrA = trim(tmpStr)
+  else
+    write(tmpStr,'(i0)') i
+    ToStrA = CLEANUP(tmpStr)        ! see notes on _R and _R8 versions below
+  end if
 
 end function STR_ITOA
 
@@ -359,7 +368,7 @@ end function STR_ATOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_ITOA (r) result(ToStrA)
+function STR_ARRAY_ITOA (r,formatstr) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert integer array to a string type.
 ! CALL PARAMETERS: integer array
@@ -375,6 +384,7 @@ function STR_ARRAY_ITOA (r) result(ToStrA)
 
   ! Calling parameters
   integer, dimension(:), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
   character (len=:), allocatable :: tmpStr
@@ -388,8 +398,13 @@ function STR_ARRAY_ITOA (r) result(ToStrA)
   tmpStr=""
 
   do i=lbound(r,1), ubound(r,1)
-    tmpStr = tmpStr // " " // STR_ITOA(r(i))
+    if (present(formatstr)) then
+      tmpStr=tmpStr // " " // STR_ITOA(r(i), formatstr)
+    else
+      tmpStr = tmpStr // " " // STR_ITOA(r(i))
+    end if
   end do
+
 
   ToStrA = tmpStr
 
@@ -430,6 +445,7 @@ function STR_ARRAY_RTOA (r,formatstr) result(ToStrA)
 
   !-------------------------------------------------------
   tmpStr=""
+
   do i=lbound(r,1), ubound(r,1)
     if (present(formatstr)) then
       tmpStr=tmpStr // " " // STR_RTOA(r(i), formatstr)
@@ -477,6 +493,7 @@ function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
 
   !-------------------------------------------------------
   tmpStr=""
+
   do i=lbound(r,1), ubound(r,1)
     if (present(formatstr)) then
       tmpStr=tmpStr // " " // STR_R8TOA(r(i), formatstr)
