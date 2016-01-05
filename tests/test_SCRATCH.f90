@@ -2,7 +2,7 @@
 
 ! for Solaris Studio::
 ! of95 -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
-! of95 -o zzz test_SCRATCH.f90 ../BASE_UTILS.f90
+! of95 -g -o zzz test_SCRATCH.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90 && ./zzz
 
 ! gfortran -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
 ! gfortran -g -o zzz test_SCRATCH.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90 && ./zzz
@@ -11,23 +11,34 @@
 program TEST_SCRATCH
 
   use BASE_UTILS
-! use CSV_IO
+  use CSV_IO
 
-  type :: out_file
-    character (len=255) :: name_file ! CSV file name
-    integer :: unit_file                        ! file unit (internal mostly)
-    logical :: succeed_file                     ! last access success flag
-  end type out_file
+  type (csv_file) :: zzz
 
-  type (out_file) :: zzz
+  character (len=:), allocatable :: aaa
+  character (len=:), allocatable :: bbb
 
-  character (len=255) :: xxx = "R123456789"
-  character (len=255) :: yyy
+  real, dimension (10) :: MATRX=3.1415926
+  integer, dimension (10) :: IMAT=300
 
-  yyy = "XXX hhh" // xxx
-  zzz%name_file= trim(yyy) // "test xxx zzz" // TOSTR(120)
+  aaa = "file_name_001"
+  bbb = "_"
+  zzz%name= bbb // aaa // bbb // TOSTR(120) // ".csv"
 
-  print *, zzz%name_file
+  print *, trim(zzz%name), ":"
+  print *, trim(zzz%name) // "_GGG"
 
+  call CSV_MATRIX_WRITE(MATRX, zzz%name)
+
+  zzz%unit=24
+
+  VALID: if (CHECK_UNIT_VALID(zzz%unit)) then
+    print *, "Unit valid"
+  end if VALID
+
+  print *, ">>", TOSTR(MATRX), "<<"
+  print *, ">>", TOSTR(MATRX, "(f4.2)"), "<<"
+  print *, ">>", TOSTR(IMAT), "<<"
+  print *, ">>", TOSTR(IMAT, "(I4)"), "<<"
 
 end program TEST_SCRATCH
