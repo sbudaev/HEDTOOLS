@@ -101,7 +101,7 @@ end type csv_file
 ! automatically. e.g. just call CSV_RECORD_APPEND irrespective of the data type
 !*******************************************************************************
 
-! Generic interfaces for whole array/matrix operations with arbitrary data types
+! Generic interfaces for record building, one value or array or list
 
 interface CSV_RECORD_APPEND
 
@@ -121,6 +121,8 @@ interface CSV_RECORD_APPEND
   module procedure CSV_RECORD_APPEND_LST_S
 
 end interface CSV_RECORD_APPEND
+
+! Generic interfaces for whole array/matrix operations with arbitrary data types
 
 interface CSV_MATRIX_WRITE
 
@@ -1339,14 +1341,14 @@ subroutine CSV_RECORD_APPEND_ARRAY_I4 (record, array)
   integer :: i, LBndi, Ubndi
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   do i=LBndi, UBndi
     call CSV_RECORD_APPEND_I4(record_here,array(i))
@@ -1380,14 +1382,14 @@ subroutine CSV_RECORD_APPEND_ARRAY_R4 (record, array)
   integer :: i, LBndi, Ubndi
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   do i=LBndi, UBndi
     call CSV_RECORD_APPEND_R4(record_here,array(i))
@@ -1421,14 +1423,14 @@ subroutine CSV_RECORD_APPEND_ARRAY_R8 (record, array)
   integer :: i, LBndi, Ubndi
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   do i=LBndi, UBndi
     call CSV_RECORD_APPEND_R8(record_here,array(i))
@@ -1462,14 +1464,14 @@ subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
   integer :: i, LBndi, Ubndi
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   do i=LBndi, UBndi
     call CSV_RECORD_APPEND_S(record_here,array(i))
@@ -1621,11 +1623,11 @@ subroutine CSV_RECORD_APPEND_LST_I4 (record, &
   integer, optional, intent(in) :: s100
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   call CSV_RECORD_APPEND_I4(record_here,   s1)
   call CSV_RECORD_APPEND_I4(record_here,   s2)
@@ -1875,11 +1877,11 @@ subroutine CSV_RECORD_APPEND_LST_R4 (record, &
   real, optional, intent(in) :: s100
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   call CSV_RECORD_APPEND_R4(record_here,   s1)
   call CSV_RECORD_APPEND_R4(record_here,   s2)
@@ -2129,11 +2131,11 @@ subroutine CSV_RECORD_APPEND_LST_R8 (record, &
   real (kind=8), optional, intent(in) :: s100
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   call CSV_RECORD_APPEND_R8(record_here,   s1)
   call CSV_RECORD_APPEND_R8(record_here,   s2)
@@ -2244,7 +2246,7 @@ end subroutine CSV_RECORD_APPEND_LST_R8
 !-------------------------------------------------------------------------------
 
 subroutine CSV_RECORD_APPEND_LST_S (record, &
-                                      s1, s2, s3, s4, s5, s6, s7, s8, s9,s10, &
+                                      s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
                                      s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
                                      s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
                                      s31,s32,s33,s34,s35,s36,s37,s38,s39,s40,&
@@ -2392,11 +2394,11 @@ subroutine CSV_RECORD_APPEND_LST_S (record, &
   character (len=*), optional, intent(in) :: s100
 
   ! Local variables, copies of optionals
-  character (len=:), allocatable :: record_here
+  character (len=len(record)) :: record_here
 
   !-----------------------------------------------------------------------------
 
-  record_here = trim(record) ! remove trailing empties from whole record
+  record_here = record
 
   call CSV_RECORD_APPEND_S(record_here,   s1)
   call CSV_RECORD_APPEND_S(record_here,   s2)
