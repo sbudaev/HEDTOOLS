@@ -83,7 +83,7 @@ logical, private, parameter :: IS_DEBUG = .FALSE.
 !  concatenation of fixed strings requires trim() to avoid empty holes in
 !  the result or no result, e.g.:
 ! type (csv_file) :: zoutput
-! zoutput%name= trim(directory) // "file_" // TOSTR(number) // ".txt"
+! zoutput%name= trim(directory) // "file_" // TOSTR(number) // ".csv"
 !  We also define the maximum length of file name string as a parameter,
 !  is it (255) enough length for full file path?
 integer, public, parameter :: MAX_FILENAME=255
@@ -109,6 +109,15 @@ interface CSV_RECORD_APPEND
   module procedure CSV_RECORD_APPEND_R4
   module procedure CSV_RECORD_APPEND_R8
   module procedure CSV_RECORD_APPEND_S
+
+  module procedure CSV_RECORD_APPEND_ARRAY_I4
+  module procedure CSV_RECORD_APPEND_ARRAY_R4
+  module procedure CSV_RECORD_APPEND_ARRAY_R8
+  module procedure CSV_RECORD_APPEND_ARRAY_S
+
+  module procedure CSV_RECORD_APPEND_LST_I4
+  module procedure CSV_RECORD_APPEND_LST_R4
+  module procedure CSV_RECORD_APPEND_LST_R8
   module procedure CSV_RECORD_APPEND_LST_S
 
 end interface CSV_RECORD_APPEND
@@ -1308,6 +1317,932 @@ end subroutine CSV_RECORD_APPEND_S
 
 !-------------------------------------------------------------------------------
 
+subroutine CSV_RECORD_APPEND_ARRAY_I4 (record, array)
+!*******************************************************************************
+! CSV_RECORD_APPEND_ARRAY_I4
+! PURPOSE: appends an array of integers to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Integer array to be appended
+! NOTE: Whole array is appended, without specifying upper and lower
+!    boundaries, use slices if necessary
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(inout) :: record
+  integer, dimension(:), intent(in) :: array
+
+  ! Local variables
+  integer :: i, LBndi, Ubndi
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  UBndi=ubound(array, 1)
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  do i=LBndi, UBndi
+    call CSV_RECORD_APPEND_I4(record_here,array(i))
+  end do
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_ARRAY_I4
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RECORD_APPEND_ARRAY_R4 (record, array)
+!*******************************************************************************
+! CSV_RECORD_APPEND_ARRAY_R4
+! PURPOSE: appends an array of integers to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Real array to be appended
+! NOTE: Whole array is appended, without specifying upper and lower
+!    boundaries, use slices if necessary
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(inout) :: record
+  real, dimension(:), intent(in) :: array
+
+  ! Local variables
+  integer :: i, LBndi, Ubndi
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  UBndi=ubound(array, 1)
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  do i=LBndi, UBndi
+    call CSV_RECORD_APPEND_R4(record_here,array(i))
+  end do
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_ARRAY_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RECORD_APPEND_ARRAY_R8 (record, array)
+!*******************************************************************************
+! CSV_RECORD_APPEND_ARRAY_R8
+! PURPOSE: appends an array of integers to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Real (kind 8, double) array to be appended
+! NOTE: Whole array is appended, without specifying upper and lower
+!    boundaries, use slices if necessary
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(inout) :: record
+  real (kind=8), dimension(:), intent(in) :: array
+
+  ! Local variables
+  integer :: i, LBndi, Ubndi
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  UBndi=ubound(array, 1)
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  do i=LBndi, UBndi
+    call CSV_RECORD_APPEND_R8(record_here,array(i))
+  end do
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_ARRAY_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
+!*******************************************************************************
+! CSV_RECORD_APPEND_ARRAY_S
+! PURPOSE: appends an array of integers to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Character array to be appended
+! NOTE: Whole array is appended, without specifying upper and lower
+!    boundaries, use slices if necessary
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(inout) :: record
+  character (len=*), dimension(:), intent(in) :: array
+
+  ! Local variables
+  integer :: i, LBndi, Ubndi
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  UBndi=ubound(array, 1)
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  do i=LBndi, UBndi
+    call CSV_RECORD_APPEND_S(record_here,array(i))
+  end do
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_ARRAY_S
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RECORD_APPEND_LST_I4 (record, &
+                                      s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
+                                     s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
+                                     s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
+                                     s31,s32,s33,s34,s35,s36,s37,s38,s39,s40,&
+                                     s41,s42,s43,s44,s45,s46,s47,s48,s49,s50,&
+                                     s51,s52,s53,s54,s55,s56,s57,s58,s59,s60,&
+                                     s61,s62,s63,s64,s65,s66,s67,s68,s69,s70,&
+                                     s71,s72,s73,s74,s75,s76,s77,s78,s79,s80,&
+                                     s81,s82,s83,s84,s85,s86,s87,s88,s89,s90,&
+                                     s91,s92,s93,s94,s95,s96,s97,s98,s99,s100 )
+!*******************************************************************************
+! CSV_RECORD_APPEND_LST_I4
+! PURPOSE: appends a list of strings to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Optional list of integers to be appended, at least two values
+!
+! NOTES:
+!   This is a rudimentary implementation making use of optional parameters,
+!   with maximum 100. It should be enough for most cases where the purpose
+!   of this subroutine is to construct header line with variable names
+!   in a single call instead of multiple CSV_RECORD_APPEND calls. Should be
+!   rewritten to use detived types and pointers for arbitrary list size.
+!   But for now (in this version) the main aim is implementation and
+!   debugging simplicity. May be worth appending more strings... Is 200 enough?
+!
+! TODO: Make also the same function, in addition to sub with generic interface
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters, first record itself, then 100 list items
+  character (len=*), intent(inout) :: record
+
+  integer, intent(in) :: s1  ! The first two strings in the list are
+  integer, intent(in) :: s2  ! mandatory to make it unique in the
+                                       ! generic interface block
+
+  integer, optional, intent(in) :: s3
+  integer, optional, intent(in) :: s4
+  integer, optional, intent(in) :: s5
+  integer, optional, intent(in) :: s6
+  integer, optional, intent(in) :: s7
+  integer, optional, intent(in) :: s8
+  integer, optional, intent(in) :: s9
+  integer, optional, intent(in) :: s10
+  integer, optional, intent(in) :: s11
+  integer, optional, intent(in) :: s12
+  integer, optional, intent(in) :: s13
+  integer, optional, intent(in) :: s14
+  integer, optional, intent(in) :: s15
+  integer, optional, intent(in) :: s16
+  integer, optional, intent(in) :: s17
+  integer, optional, intent(in) :: s18
+  integer, optional, intent(in) :: s19
+  integer, optional, intent(in) :: s20
+  integer, optional, intent(in) :: s21
+  integer, optional, intent(in) :: s22
+  integer, optional, intent(in) :: s23
+  integer, optional, intent(in) :: s24
+  integer, optional, intent(in) :: s25
+  integer, optional, intent(in) :: s26
+  integer, optional, intent(in) :: s27
+  integer, optional, intent(in) :: s28
+  integer, optional, intent(in) :: s29
+  integer, optional, intent(in) :: s30
+  integer, optional, intent(in) :: s31
+  integer, optional, intent(in) :: s32
+  integer, optional, intent(in) :: s33
+  integer, optional, intent(in) :: s34
+  integer, optional, intent(in) :: s35
+  integer, optional, intent(in) :: s36
+  integer, optional, intent(in) :: s37
+  integer, optional, intent(in) :: s38
+  integer, optional, intent(in) :: s39
+  integer, optional, intent(in) :: s40
+  integer, optional, intent(in) :: s41
+  integer, optional, intent(in) :: s42
+  integer, optional, intent(in) :: s43
+  integer, optional, intent(in) :: s44
+  integer, optional, intent(in) :: s45
+  integer, optional, intent(in) :: s46
+  integer, optional, intent(in) :: s47
+  integer, optional, intent(in) :: s48
+  integer, optional, intent(in) :: s49
+  integer, optional, intent(in) :: s50
+  integer, optional, intent(in) :: s51
+  integer, optional, intent(in) :: s52
+  integer, optional, intent(in) :: s53
+  integer, optional, intent(in) :: s54
+  integer, optional, intent(in) :: s55
+  integer, optional, intent(in) :: s56
+  integer, optional, intent(in) :: s57
+  integer, optional, intent(in) :: s58
+  integer, optional, intent(in) :: s59
+  integer, optional, intent(in) :: s60
+  integer, optional, intent(in) :: s61
+  integer, optional, intent(in) :: s62
+  integer, optional, intent(in) :: s63
+  integer, optional, intent(in) :: s64
+  integer, optional, intent(in) :: s65
+  integer, optional, intent(in) :: s66
+  integer, optional, intent(in) :: s67
+  integer, optional, intent(in) :: s68
+  integer, optional, intent(in) :: s69
+  integer, optional, intent(in) :: s70
+  integer, optional, intent(in) :: s71
+  integer, optional, intent(in) :: s72
+  integer, optional, intent(in) :: s73
+  integer, optional, intent(in) :: s74
+  integer, optional, intent(in) :: s75
+  integer, optional, intent(in) :: s76
+  integer, optional, intent(in) :: s77
+  integer, optional, intent(in) :: s78
+  integer, optional, intent(in) :: s79
+  integer, optional, intent(in) :: s80
+  integer, optional, intent(in) :: s81
+  integer, optional, intent(in) :: s82
+  integer, optional, intent(in) :: s83
+  integer, optional, intent(in) :: s84
+  integer, optional, intent(in) :: s85
+  integer, optional, intent(in) :: s86
+  integer, optional, intent(in) :: s87
+  integer, optional, intent(in) :: s88
+  integer, optional, intent(in) :: s89
+  integer, optional, intent(in) :: s90
+  integer, optional, intent(in) :: s91
+  integer, optional, intent(in) :: s92
+  integer, optional, intent(in) :: s93
+  integer, optional, intent(in) :: s94
+  integer, optional, intent(in) :: s95
+  integer, optional, intent(in) :: s96
+  integer, optional, intent(in) :: s97
+  integer, optional, intent(in) :: s98
+  integer, optional, intent(in) :: s99
+  integer, optional, intent(in) :: s100
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  call CSV_RECORD_APPEND_I4(record_here,   s1)
+  call CSV_RECORD_APPEND_I4(record_here,   s2)
+
+  if (present(s3))  call CSV_RECORD_APPEND_I4(record_here,  s3)
+  if (present(s4))  call CSV_RECORD_APPEND_I4(record_here,  s4)
+  if (present(s5))  call CSV_RECORD_APPEND_I4(record_here,  s5)
+  if (present(s6))  call CSV_RECORD_APPEND_I4(record_here,  s6)
+  if (present(s7))  call CSV_RECORD_APPEND_I4(record_here,  s7)
+  if (present(s8))  call CSV_RECORD_APPEND_I4(record_here,  s8)
+  if (present(s9))  call CSV_RECORD_APPEND_I4(record_here,  s9)
+  if (present(s10)) call CSV_RECORD_APPEND_I4(record_here, s10)
+  if (present(s11)) call CSV_RECORD_APPEND_I4(record_here, s11)
+  if (present(s12)) call CSV_RECORD_APPEND_I4(record_here, s12)
+  if (present(s13)) call CSV_RECORD_APPEND_I4(record_here, s13)
+  if (present(s14)) call CSV_RECORD_APPEND_I4(record_here, s14)
+  if (present(s15)) call CSV_RECORD_APPEND_I4(record_here, s15)
+  if (present(s16)) call CSV_RECORD_APPEND_I4(record_here, s16)
+  if (present(s17)) call CSV_RECORD_APPEND_I4(record_here, s17)
+  if (present(s18)) call CSV_RECORD_APPEND_I4(record_here, s18)
+  if (present(s19)) call CSV_RECORD_APPEND_I4(record_here, s19)
+  if (present(s20)) call CSV_RECORD_APPEND_I4(record_here, s20)
+  if (present(s21)) call CSV_RECORD_APPEND_I4(record_here, s21)
+  if (present(s22)) call CSV_RECORD_APPEND_I4(record_here, s22)
+  if (present(s23)) call CSV_RECORD_APPEND_I4(record_here, s23)
+  if (present(s24)) call CSV_RECORD_APPEND_I4(record_here, s24)
+  if (present(s25)) call CSV_RECORD_APPEND_I4(record_here, s25)
+  if (present(s26)) call CSV_RECORD_APPEND_I4(record_here, s26)
+  if (present(s27)) call CSV_RECORD_APPEND_I4(record_here, s27)
+  if (present(s28)) call CSV_RECORD_APPEND_I4(record_here, s28)
+  if (present(s29)) call CSV_RECORD_APPEND_I4(record_here, s29)
+  if (present(s30)) call CSV_RECORD_APPEND_I4(record_here, s30)
+  if (present(s31)) call CSV_RECORD_APPEND_I4(record_here, s31)
+  if (present(s32)) call CSV_RECORD_APPEND_I4(record_here, s32)
+  if (present(s33)) call CSV_RECORD_APPEND_I4(record_here, s33)
+  if (present(s34)) call CSV_RECORD_APPEND_I4(record_here, s34)
+  if (present(s35)) call CSV_RECORD_APPEND_I4(record_here, s35)
+  if (present(s36)) call CSV_RECORD_APPEND_I4(record_here, s36)
+  if (present(s37)) call CSV_RECORD_APPEND_I4(record_here, s37)
+  if (present(s38)) call CSV_RECORD_APPEND_I4(record_here, s38)
+  if (present(s39)) call CSV_RECORD_APPEND_I4(record_here, s39)
+  if (present(s40)) call CSV_RECORD_APPEND_I4(record_here, s40)
+  if (present(s41)) call CSV_RECORD_APPEND_I4(record_here, s41)
+  if (present(s42)) call CSV_RECORD_APPEND_I4(record_here, s42)
+  if (present(s43)) call CSV_RECORD_APPEND_I4(record_here, s43)
+  if (present(s44)) call CSV_RECORD_APPEND_I4(record_here, s44)
+  if (present(s45)) call CSV_RECORD_APPEND_I4(record_here, s45)
+  if (present(s46)) call CSV_RECORD_APPEND_I4(record_here, s46)
+  if (present(s47)) call CSV_RECORD_APPEND_I4(record_here, s47)
+  if (present(s48)) call CSV_RECORD_APPEND_I4(record_here, s48)
+  if (present(s49)) call CSV_RECORD_APPEND_I4(record_here, s49)
+  if (present(s50)) call CSV_RECORD_APPEND_I4(record_here, s50)
+  if (present(s51)) call CSV_RECORD_APPEND_I4(record_here, s51)
+  if (present(s52)) call CSV_RECORD_APPEND_I4(record_here, s52)
+  if (present(s53)) call CSV_RECORD_APPEND_I4(record_here, s53)
+  if (present(s54)) call CSV_RECORD_APPEND_I4(record_here, s54)
+  if (present(s55)) call CSV_RECORD_APPEND_I4(record_here, s55)
+  if (present(s56)) call CSV_RECORD_APPEND_I4(record_here, s56)
+  if (present(s57)) call CSV_RECORD_APPEND_I4(record_here, s57)
+  if (present(s58)) call CSV_RECORD_APPEND_I4(record_here, s58)
+  if (present(s59)) call CSV_RECORD_APPEND_I4(record_here, s59)
+  if (present(s60)) call CSV_RECORD_APPEND_I4(record_here, s60)
+  if (present(s61)) call CSV_RECORD_APPEND_I4(record_here, s61)
+  if (present(s62)) call CSV_RECORD_APPEND_I4(record_here, s62)
+  if (present(s63)) call CSV_RECORD_APPEND_I4(record_here, s63)
+  if (present(s64)) call CSV_RECORD_APPEND_I4(record_here, s64)
+  if (present(s65)) call CSV_RECORD_APPEND_I4(record_here, s65)
+  if (present(s66)) call CSV_RECORD_APPEND_I4(record_here, s66)
+  if (present(s67)) call CSV_RECORD_APPEND_I4(record_here, s67)
+  if (present(s68)) call CSV_RECORD_APPEND_I4(record_here, s68)
+  if (present(s69)) call CSV_RECORD_APPEND_I4(record_here, s69)
+  if (present(s70)) call CSV_RECORD_APPEND_I4(record_here, s70)
+  if (present(s71)) call CSV_RECORD_APPEND_I4(record_here, s71)
+  if (present(s72)) call CSV_RECORD_APPEND_I4(record_here, s72)
+  if (present(s73)) call CSV_RECORD_APPEND_I4(record_here, s73)
+  if (present(s74)) call CSV_RECORD_APPEND_I4(record_here, s74)
+  if (present(s75)) call CSV_RECORD_APPEND_I4(record_here, s75)
+  if (present(s76)) call CSV_RECORD_APPEND_I4(record_here, s76)
+  if (present(s77)) call CSV_RECORD_APPEND_I4(record_here, s77)
+  if (present(s78)) call CSV_RECORD_APPEND_I4(record_here, s78)
+  if (present(s79)) call CSV_RECORD_APPEND_I4(record_here, s79)
+  if (present(s80)) call CSV_RECORD_APPEND_I4(record_here, s80)
+  if (present(s81)) call CSV_RECORD_APPEND_I4(record_here, s81)
+  if (present(s82)) call CSV_RECORD_APPEND_I4(record_here, s82)
+  if (present(s83)) call CSV_RECORD_APPEND_I4(record_here, s83)
+  if (present(s84)) call CSV_RECORD_APPEND_I4(record_here, s84)
+  if (present(s85)) call CSV_RECORD_APPEND_I4(record_here, s85)
+  if (present(s86)) call CSV_RECORD_APPEND_I4(record_here, s86)
+  if (present(s87)) call CSV_RECORD_APPEND_I4(record_here, s87)
+  if (present(s88)) call CSV_RECORD_APPEND_I4(record_here, s88)
+  if (present(s89)) call CSV_RECORD_APPEND_I4(record_here, s89)
+  if (present(s90)) call CSV_RECORD_APPEND_I4(record_here, s90)
+  if (present(s91)) call CSV_RECORD_APPEND_I4(record_here, s91)
+  if (present(s92)) call CSV_RECORD_APPEND_I4(record_here, s92)
+  if (present(s93)) call CSV_RECORD_APPEND_I4(record_here, s93)
+  if (present(s94)) call CSV_RECORD_APPEND_I4(record_here, s94)
+  if (present(s95)) call CSV_RECORD_APPEND_I4(record_here, s95)
+  if (present(s96)) call CSV_RECORD_APPEND_I4(record_here, s96)
+  if (present(s97)) call CSV_RECORD_APPEND_I4(record_here, s97)
+  if (present(s98)) call CSV_RECORD_APPEND_I4(record_here, s98)
+  if (present(s99)) call CSV_RECORD_APPEND_I4(record_here, s99)
+  if (present(s100)) call CSV_RECORD_APPEND_I4(record_here,s100)
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_LST_I4
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RECORD_APPEND_LST_R4 (record, &
+                                      s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
+                                     s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
+                                     s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
+                                     s31,s32,s33,s34,s35,s36,s37,s38,s39,s40,&
+                                     s41,s42,s43,s44,s45,s46,s47,s48,s49,s50,&
+                                     s51,s52,s53,s54,s55,s56,s57,s58,s59,s60,&
+                                     s61,s62,s63,s64,s65,s66,s67,s68,s69,s70,&
+                                     s71,s72,s73,s74,s75,s76,s77,s78,s79,s80,&
+                                     s81,s82,s83,s84,s85,s86,s87,s88,s89,s90,&
+                                     s91,s92,s93,s94,s95,s96,s97,s98,s99,s100 )
+!*******************************************************************************
+! CSV_RECORD_APPEND_LST_R4
+! PURPOSE: appends a list of strings to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Optional list of reals (kind 4) to be appended, at least two values
+!
+! NOTES:
+!   This is a rudimentary implementation making use of optional parameters,
+!   with maximum 100. It should be enough for most cases where the purpose
+!   of this subroutine is to construct header line with variable names
+!   in a single call instead of multiple CSV_RECORD_APPEND calls. Should be
+!   rewritten to use detived types and pointers for arbitrary list size.
+!   But for now (in this version) the main aim is implementation and
+!   debugging simplicity. May be worth appending more strings... Is 200 enough?
+!
+! TODO: Make also the same function, in addition to sub with generic interface
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters, first record itself, then 100 list items
+  character (len=*), intent(inout) :: record
+
+  real, intent(in) :: s1  ! The first two strings in the list are
+  real, intent(in) :: s2  ! mandatory to make it unique in the
+                                       ! generic interface block
+
+  real, optional, intent(in) :: s3
+  real, optional, intent(in) :: s4
+  real, optional, intent(in) :: s5
+  real, optional, intent(in) :: s6
+  real, optional, intent(in) :: s7
+  real, optional, intent(in) :: s8
+  real, optional, intent(in) :: s9
+  real, optional, intent(in) :: s10
+  real, optional, intent(in) :: s11
+  real, optional, intent(in) :: s12
+  real, optional, intent(in) :: s13
+  real, optional, intent(in) :: s14
+  real, optional, intent(in) :: s15
+  real, optional, intent(in) :: s16
+  real, optional, intent(in) :: s17
+  real, optional, intent(in) :: s18
+  real, optional, intent(in) :: s19
+  real, optional, intent(in) :: s20
+  real, optional, intent(in) :: s21
+  real, optional, intent(in) :: s22
+  real, optional, intent(in) :: s23
+  real, optional, intent(in) :: s24
+  real, optional, intent(in) :: s25
+  real, optional, intent(in) :: s26
+  real, optional, intent(in) :: s27
+  real, optional, intent(in) :: s28
+  real, optional, intent(in) :: s29
+  real, optional, intent(in) :: s30
+  real, optional, intent(in) :: s31
+  real, optional, intent(in) :: s32
+  real, optional, intent(in) :: s33
+  real, optional, intent(in) :: s34
+  real, optional, intent(in) :: s35
+  real, optional, intent(in) :: s36
+  real, optional, intent(in) :: s37
+  real, optional, intent(in) :: s38
+  real, optional, intent(in) :: s39
+  real, optional, intent(in) :: s40
+  real, optional, intent(in) :: s41
+  real, optional, intent(in) :: s42
+  real, optional, intent(in) :: s43
+  real, optional, intent(in) :: s44
+  real, optional, intent(in) :: s45
+  real, optional, intent(in) :: s46
+  real, optional, intent(in) :: s47
+  real, optional, intent(in) :: s48
+  real, optional, intent(in) :: s49
+  real, optional, intent(in) :: s50
+  real, optional, intent(in) :: s51
+  real, optional, intent(in) :: s52
+  real, optional, intent(in) :: s53
+  real, optional, intent(in) :: s54
+  real, optional, intent(in) :: s55
+  real, optional, intent(in) :: s56
+  real, optional, intent(in) :: s57
+  real, optional, intent(in) :: s58
+  real, optional, intent(in) :: s59
+  real, optional, intent(in) :: s60
+  real, optional, intent(in) :: s61
+  real, optional, intent(in) :: s62
+  real, optional, intent(in) :: s63
+  real, optional, intent(in) :: s64
+  real, optional, intent(in) :: s65
+  real, optional, intent(in) :: s66
+  real, optional, intent(in) :: s67
+  real, optional, intent(in) :: s68
+  real, optional, intent(in) :: s69
+  real, optional, intent(in) :: s70
+  real, optional, intent(in) :: s71
+  real, optional, intent(in) :: s72
+  real, optional, intent(in) :: s73
+  real, optional, intent(in) :: s74
+  real, optional, intent(in) :: s75
+  real, optional, intent(in) :: s76
+  real, optional, intent(in) :: s77
+  real, optional, intent(in) :: s78
+  real, optional, intent(in) :: s79
+  real, optional, intent(in) :: s80
+  real, optional, intent(in) :: s81
+  real, optional, intent(in) :: s82
+  real, optional, intent(in) :: s83
+  real, optional, intent(in) :: s84
+  real, optional, intent(in) :: s85
+  real, optional, intent(in) :: s86
+  real, optional, intent(in) :: s87
+  real, optional, intent(in) :: s88
+  real, optional, intent(in) :: s89
+  real, optional, intent(in) :: s90
+  real, optional, intent(in) :: s91
+  real, optional, intent(in) :: s92
+  real, optional, intent(in) :: s93
+  real, optional, intent(in) :: s94
+  real, optional, intent(in) :: s95
+  real, optional, intent(in) :: s96
+  real, optional, intent(in) :: s97
+  real, optional, intent(in) :: s98
+  real, optional, intent(in) :: s99
+  real, optional, intent(in) :: s100
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  call CSV_RECORD_APPEND_R4(record_here,   s1)
+  call CSV_RECORD_APPEND_R4(record_here,   s2)
+
+  if (present(s3))  call CSV_RECORD_APPEND_R4(record_here,  s3)
+  if (present(s4))  call CSV_RECORD_APPEND_R4(record_here,  s4)
+  if (present(s5))  call CSV_RECORD_APPEND_R4(record_here,  s5)
+  if (present(s6))  call CSV_RECORD_APPEND_R4(record_here,  s6)
+  if (present(s7))  call CSV_RECORD_APPEND_R4(record_here,  s7)
+  if (present(s8))  call CSV_RECORD_APPEND_R4(record_here,  s8)
+  if (present(s9))  call CSV_RECORD_APPEND_R4(record_here,  s9)
+  if (present(s10)) call CSV_RECORD_APPEND_R4(record_here, s10)
+  if (present(s11)) call CSV_RECORD_APPEND_R4(record_here, s11)
+  if (present(s12)) call CSV_RECORD_APPEND_R4(record_here, s12)
+  if (present(s13)) call CSV_RECORD_APPEND_R4(record_here, s13)
+  if (present(s14)) call CSV_RECORD_APPEND_R4(record_here, s14)
+  if (present(s15)) call CSV_RECORD_APPEND_R4(record_here, s15)
+  if (present(s16)) call CSV_RECORD_APPEND_R4(record_here, s16)
+  if (present(s17)) call CSV_RECORD_APPEND_R4(record_here, s17)
+  if (present(s18)) call CSV_RECORD_APPEND_R4(record_here, s18)
+  if (present(s19)) call CSV_RECORD_APPEND_R4(record_here, s19)
+  if (present(s20)) call CSV_RECORD_APPEND_R4(record_here, s20)
+  if (present(s21)) call CSV_RECORD_APPEND_R4(record_here, s21)
+  if (present(s22)) call CSV_RECORD_APPEND_R4(record_here, s22)
+  if (present(s23)) call CSV_RECORD_APPEND_R4(record_here, s23)
+  if (present(s24)) call CSV_RECORD_APPEND_R4(record_here, s24)
+  if (present(s25)) call CSV_RECORD_APPEND_R4(record_here, s25)
+  if (present(s26)) call CSV_RECORD_APPEND_R4(record_here, s26)
+  if (present(s27)) call CSV_RECORD_APPEND_R4(record_here, s27)
+  if (present(s28)) call CSV_RECORD_APPEND_R4(record_here, s28)
+  if (present(s29)) call CSV_RECORD_APPEND_R4(record_here, s29)
+  if (present(s30)) call CSV_RECORD_APPEND_R4(record_here, s30)
+  if (present(s31)) call CSV_RECORD_APPEND_R4(record_here, s31)
+  if (present(s32)) call CSV_RECORD_APPEND_R4(record_here, s32)
+  if (present(s33)) call CSV_RECORD_APPEND_R4(record_here, s33)
+  if (present(s34)) call CSV_RECORD_APPEND_R4(record_here, s34)
+  if (present(s35)) call CSV_RECORD_APPEND_R4(record_here, s35)
+  if (present(s36)) call CSV_RECORD_APPEND_R4(record_here, s36)
+  if (present(s37)) call CSV_RECORD_APPEND_R4(record_here, s37)
+  if (present(s38)) call CSV_RECORD_APPEND_R4(record_here, s38)
+  if (present(s39)) call CSV_RECORD_APPEND_R4(record_here, s39)
+  if (present(s40)) call CSV_RECORD_APPEND_R4(record_here, s40)
+  if (present(s41)) call CSV_RECORD_APPEND_R4(record_here, s41)
+  if (present(s42)) call CSV_RECORD_APPEND_R4(record_here, s42)
+  if (present(s43)) call CSV_RECORD_APPEND_R4(record_here, s43)
+  if (present(s44)) call CSV_RECORD_APPEND_R4(record_here, s44)
+  if (present(s45)) call CSV_RECORD_APPEND_R4(record_here, s45)
+  if (present(s46)) call CSV_RECORD_APPEND_R4(record_here, s46)
+  if (present(s47)) call CSV_RECORD_APPEND_R4(record_here, s47)
+  if (present(s48)) call CSV_RECORD_APPEND_R4(record_here, s48)
+  if (present(s49)) call CSV_RECORD_APPEND_R4(record_here, s49)
+  if (present(s50)) call CSV_RECORD_APPEND_R4(record_here, s50)
+  if (present(s51)) call CSV_RECORD_APPEND_R4(record_here, s51)
+  if (present(s52)) call CSV_RECORD_APPEND_R4(record_here, s52)
+  if (present(s53)) call CSV_RECORD_APPEND_R4(record_here, s53)
+  if (present(s54)) call CSV_RECORD_APPEND_R4(record_here, s54)
+  if (present(s55)) call CSV_RECORD_APPEND_R4(record_here, s55)
+  if (present(s56)) call CSV_RECORD_APPEND_R4(record_here, s56)
+  if (present(s57)) call CSV_RECORD_APPEND_R4(record_here, s57)
+  if (present(s58)) call CSV_RECORD_APPEND_R4(record_here, s58)
+  if (present(s59)) call CSV_RECORD_APPEND_R4(record_here, s59)
+  if (present(s60)) call CSV_RECORD_APPEND_R4(record_here, s60)
+  if (present(s61)) call CSV_RECORD_APPEND_R4(record_here, s61)
+  if (present(s62)) call CSV_RECORD_APPEND_R4(record_here, s62)
+  if (present(s63)) call CSV_RECORD_APPEND_R4(record_here, s63)
+  if (present(s64)) call CSV_RECORD_APPEND_R4(record_here, s64)
+  if (present(s65)) call CSV_RECORD_APPEND_R4(record_here, s65)
+  if (present(s66)) call CSV_RECORD_APPEND_R4(record_here, s66)
+  if (present(s67)) call CSV_RECORD_APPEND_R4(record_here, s67)
+  if (present(s68)) call CSV_RECORD_APPEND_R4(record_here, s68)
+  if (present(s69)) call CSV_RECORD_APPEND_R4(record_here, s69)
+  if (present(s70)) call CSV_RECORD_APPEND_R4(record_here, s70)
+  if (present(s71)) call CSV_RECORD_APPEND_R4(record_here, s71)
+  if (present(s72)) call CSV_RECORD_APPEND_R4(record_here, s72)
+  if (present(s73)) call CSV_RECORD_APPEND_R4(record_here, s73)
+  if (present(s74)) call CSV_RECORD_APPEND_R4(record_here, s74)
+  if (present(s75)) call CSV_RECORD_APPEND_R4(record_here, s75)
+  if (present(s76)) call CSV_RECORD_APPEND_R4(record_here, s76)
+  if (present(s77)) call CSV_RECORD_APPEND_R4(record_here, s77)
+  if (present(s78)) call CSV_RECORD_APPEND_R4(record_here, s78)
+  if (present(s79)) call CSV_RECORD_APPEND_R4(record_here, s79)
+  if (present(s80)) call CSV_RECORD_APPEND_R4(record_here, s80)
+  if (present(s81)) call CSV_RECORD_APPEND_R4(record_here, s81)
+  if (present(s82)) call CSV_RECORD_APPEND_R4(record_here, s82)
+  if (present(s83)) call CSV_RECORD_APPEND_R4(record_here, s83)
+  if (present(s84)) call CSV_RECORD_APPEND_R4(record_here, s84)
+  if (present(s85)) call CSV_RECORD_APPEND_R4(record_here, s85)
+  if (present(s86)) call CSV_RECORD_APPEND_R4(record_here, s86)
+  if (present(s87)) call CSV_RECORD_APPEND_R4(record_here, s87)
+  if (present(s88)) call CSV_RECORD_APPEND_R4(record_here, s88)
+  if (present(s89)) call CSV_RECORD_APPEND_R4(record_here, s89)
+  if (present(s90)) call CSV_RECORD_APPEND_R4(record_here, s90)
+  if (present(s91)) call CSV_RECORD_APPEND_R4(record_here, s91)
+  if (present(s92)) call CSV_RECORD_APPEND_R4(record_here, s92)
+  if (present(s93)) call CSV_RECORD_APPEND_R4(record_here, s93)
+  if (present(s94)) call CSV_RECORD_APPEND_R4(record_here, s94)
+  if (present(s95)) call CSV_RECORD_APPEND_R4(record_here, s95)
+  if (present(s96)) call CSV_RECORD_APPEND_R4(record_here, s96)
+  if (present(s97)) call CSV_RECORD_APPEND_R4(record_here, s97)
+  if (present(s98)) call CSV_RECORD_APPEND_R4(record_here, s98)
+  if (present(s99)) call CSV_RECORD_APPEND_R4(record_here, s99)
+  if (present(s100)) call CSV_RECORD_APPEND_R4(record_here,s100)
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_LST_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RECORD_APPEND_LST_R8 (record, &
+                                      s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
+                                     s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
+                                     s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
+                                     s31,s32,s33,s34,s35,s36,s37,s38,s39,s40,&
+                                     s41,s42,s43,s44,s45,s46,s47,s48,s49,s50,&
+                                     s51,s52,s53,s54,s55,s56,s57,s58,s59,s60,&
+                                     s61,s62,s63,s64,s65,s66,s67,s68,s69,s70,&
+                                     s71,s72,s73,s74,s75,s76,s77,s78,s79,s80,&
+                                     s81,s82,s83,s84,s85,s86,s87,s88,s89,s90,&
+                                     s91,s92,s93,s94,s95,s96,s97,s98,s99,s100 )
+!*******************************************************************************
+! CSV_RECORD_APPEND_LST_R8
+! PURPOSE: appends a list of strings to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Optional list of reals (kind 8) to be appended, at least two values
+!
+! NOTES:
+!   This is a rudimentary implementation making use of optional parameters,
+!   with maximum 100. It should be enough for most cases where the purpose
+!   of this subroutine is to construct header line with variable names
+!   in a single call instead of multiple CSV_RECORD_APPEND calls. Should be
+!   rewritten to use detived types and pointers for arbitrary list size.
+!   But for now (in this version) the main aim is implementation and
+!   debugging simplicity. May be worth appending more strings... Is 200 enough?
+!
+! TODO: Make also the same function, in addition to sub with generic interface
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters, first record itself, then 100 list items
+  character (len=*), intent(inout) :: record
+
+  real (kind=8), intent(in) :: s1  ! The first two strings in the list are
+  real (kind=8), intent(in) :: s2  ! mandatory to make it unique in the
+                                       ! generic interface block
+
+  real (kind=8), optional, intent(in) :: s3
+  real (kind=8), optional, intent(in) :: s4
+  real (kind=8), optional, intent(in) :: s5
+  real (kind=8), optional, intent(in) :: s6
+  real (kind=8), optional, intent(in) :: s7
+  real (kind=8), optional, intent(in) :: s8
+  real (kind=8), optional, intent(in) :: s9
+  real (kind=8), optional, intent(in) :: s10
+  real (kind=8), optional, intent(in) :: s11
+  real (kind=8), optional, intent(in) :: s12
+  real (kind=8), optional, intent(in) :: s13
+  real (kind=8), optional, intent(in) :: s14
+  real (kind=8), optional, intent(in) :: s15
+  real (kind=8), optional, intent(in) :: s16
+  real (kind=8), optional, intent(in) :: s17
+  real (kind=8), optional, intent(in) :: s18
+  real (kind=8), optional, intent(in) :: s19
+  real (kind=8), optional, intent(in) :: s20
+  real (kind=8), optional, intent(in) :: s21
+  real (kind=8), optional, intent(in) :: s22
+  real (kind=8), optional, intent(in) :: s23
+  real (kind=8), optional, intent(in) :: s24
+  real (kind=8), optional, intent(in) :: s25
+  real (kind=8), optional, intent(in) :: s26
+  real (kind=8), optional, intent(in) :: s27
+  real (kind=8), optional, intent(in) :: s28
+  real (kind=8), optional, intent(in) :: s29
+  real (kind=8), optional, intent(in) :: s30
+  real (kind=8), optional, intent(in) :: s31
+  real (kind=8), optional, intent(in) :: s32
+  real (kind=8), optional, intent(in) :: s33
+  real (kind=8), optional, intent(in) :: s34
+  real (kind=8), optional, intent(in) :: s35
+  real (kind=8), optional, intent(in) :: s36
+  real (kind=8), optional, intent(in) :: s37
+  real (kind=8), optional, intent(in) :: s38
+  real (kind=8), optional, intent(in) :: s39
+  real (kind=8), optional, intent(in) :: s40
+  real (kind=8), optional, intent(in) :: s41
+  real (kind=8), optional, intent(in) :: s42
+  real (kind=8), optional, intent(in) :: s43
+  real (kind=8), optional, intent(in) :: s44
+  real (kind=8), optional, intent(in) :: s45
+  real (kind=8), optional, intent(in) :: s46
+  real (kind=8), optional, intent(in) :: s47
+  real (kind=8), optional, intent(in) :: s48
+  real (kind=8), optional, intent(in) :: s49
+  real (kind=8), optional, intent(in) :: s50
+  real (kind=8), optional, intent(in) :: s51
+  real (kind=8), optional, intent(in) :: s52
+  real (kind=8), optional, intent(in) :: s53
+  real (kind=8), optional, intent(in) :: s54
+  real (kind=8), optional, intent(in) :: s55
+  real (kind=8), optional, intent(in) :: s56
+  real (kind=8), optional, intent(in) :: s57
+  real (kind=8), optional, intent(in) :: s58
+  real (kind=8), optional, intent(in) :: s59
+  real (kind=8), optional, intent(in) :: s60
+  real (kind=8), optional, intent(in) :: s61
+  real (kind=8), optional, intent(in) :: s62
+  real (kind=8), optional, intent(in) :: s63
+  real (kind=8), optional, intent(in) :: s64
+  real (kind=8), optional, intent(in) :: s65
+  real (kind=8), optional, intent(in) :: s66
+  real (kind=8), optional, intent(in) :: s67
+  real (kind=8), optional, intent(in) :: s68
+  real (kind=8), optional, intent(in) :: s69
+  real (kind=8), optional, intent(in) :: s70
+  real (kind=8), optional, intent(in) :: s71
+  real (kind=8), optional, intent(in) :: s72
+  real (kind=8), optional, intent(in) :: s73
+  real (kind=8), optional, intent(in) :: s74
+  real (kind=8), optional, intent(in) :: s75
+  real (kind=8), optional, intent(in) :: s76
+  real (kind=8), optional, intent(in) :: s77
+  real (kind=8), optional, intent(in) :: s78
+  real (kind=8), optional, intent(in) :: s79
+  real (kind=8), optional, intent(in) :: s80
+  real (kind=8), optional, intent(in) :: s81
+  real (kind=8), optional, intent(in) :: s82
+  real (kind=8), optional, intent(in) :: s83
+  real (kind=8), optional, intent(in) :: s84
+  real (kind=8), optional, intent(in) :: s85
+  real (kind=8), optional, intent(in) :: s86
+  real (kind=8), optional, intent(in) :: s87
+  real (kind=8), optional, intent(in) :: s88
+  real (kind=8), optional, intent(in) :: s89
+  real (kind=8), optional, intent(in) :: s90
+  real (kind=8), optional, intent(in) :: s91
+  real (kind=8), optional, intent(in) :: s92
+  real (kind=8), optional, intent(in) :: s93
+  real (kind=8), optional, intent(in) :: s94
+  real (kind=8), optional, intent(in) :: s95
+  real (kind=8), optional, intent(in) :: s96
+  real (kind=8), optional, intent(in) :: s97
+  real (kind=8), optional, intent(in) :: s98
+  real (kind=8), optional, intent(in) :: s99
+  real (kind=8), optional, intent(in) :: s100
+
+  ! Local variables, copies of optionals
+  character (len=:), allocatable :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  record_here = trim(record) ! remove trailing empties from whole record
+
+  call CSV_RECORD_APPEND_R8(record_here,   s1)
+  call CSV_RECORD_APPEND_R8(record_here,   s2)
+
+  if (present(s3))  call CSV_RECORD_APPEND_R8(record_here,  s3)
+  if (present(s4))  call CSV_RECORD_APPEND_R8(record_here,  s4)
+  if (present(s5))  call CSV_RECORD_APPEND_R8(record_here,  s5)
+  if (present(s6))  call CSV_RECORD_APPEND_R8(record_here,  s6)
+  if (present(s7))  call CSV_RECORD_APPEND_R8(record_here,  s7)
+  if (present(s8))  call CSV_RECORD_APPEND_R8(record_here,  s8)
+  if (present(s9))  call CSV_RECORD_APPEND_R8(record_here,  s9)
+  if (present(s10)) call CSV_RECORD_APPEND_R8(record_here, s10)
+  if (present(s11)) call CSV_RECORD_APPEND_R8(record_here, s11)
+  if (present(s12)) call CSV_RECORD_APPEND_R8(record_here, s12)
+  if (present(s13)) call CSV_RECORD_APPEND_R8(record_here, s13)
+  if (present(s14)) call CSV_RECORD_APPEND_R8(record_here, s14)
+  if (present(s15)) call CSV_RECORD_APPEND_R8(record_here, s15)
+  if (present(s16)) call CSV_RECORD_APPEND_R8(record_here, s16)
+  if (present(s17)) call CSV_RECORD_APPEND_R8(record_here, s17)
+  if (present(s18)) call CSV_RECORD_APPEND_R8(record_here, s18)
+  if (present(s19)) call CSV_RECORD_APPEND_R8(record_here, s19)
+  if (present(s20)) call CSV_RECORD_APPEND_R8(record_here, s20)
+  if (present(s21)) call CSV_RECORD_APPEND_R8(record_here, s21)
+  if (present(s22)) call CSV_RECORD_APPEND_R8(record_here, s22)
+  if (present(s23)) call CSV_RECORD_APPEND_R8(record_here, s23)
+  if (present(s24)) call CSV_RECORD_APPEND_R8(record_here, s24)
+  if (present(s25)) call CSV_RECORD_APPEND_R8(record_here, s25)
+  if (present(s26)) call CSV_RECORD_APPEND_R8(record_here, s26)
+  if (present(s27)) call CSV_RECORD_APPEND_R8(record_here, s27)
+  if (present(s28)) call CSV_RECORD_APPEND_R8(record_here, s28)
+  if (present(s29)) call CSV_RECORD_APPEND_R8(record_here, s29)
+  if (present(s30)) call CSV_RECORD_APPEND_R8(record_here, s30)
+  if (present(s31)) call CSV_RECORD_APPEND_R8(record_here, s31)
+  if (present(s32)) call CSV_RECORD_APPEND_R8(record_here, s32)
+  if (present(s33)) call CSV_RECORD_APPEND_R8(record_here, s33)
+  if (present(s34)) call CSV_RECORD_APPEND_R8(record_here, s34)
+  if (present(s35)) call CSV_RECORD_APPEND_R8(record_here, s35)
+  if (present(s36)) call CSV_RECORD_APPEND_R8(record_here, s36)
+  if (present(s37)) call CSV_RECORD_APPEND_R8(record_here, s37)
+  if (present(s38)) call CSV_RECORD_APPEND_R8(record_here, s38)
+  if (present(s39)) call CSV_RECORD_APPEND_R8(record_here, s39)
+  if (present(s40)) call CSV_RECORD_APPEND_R8(record_here, s40)
+  if (present(s41)) call CSV_RECORD_APPEND_R8(record_here, s41)
+  if (present(s42)) call CSV_RECORD_APPEND_R8(record_here, s42)
+  if (present(s43)) call CSV_RECORD_APPEND_R8(record_here, s43)
+  if (present(s44)) call CSV_RECORD_APPEND_R8(record_here, s44)
+  if (present(s45)) call CSV_RECORD_APPEND_R8(record_here, s45)
+  if (present(s46)) call CSV_RECORD_APPEND_R8(record_here, s46)
+  if (present(s47)) call CSV_RECORD_APPEND_R8(record_here, s47)
+  if (present(s48)) call CSV_RECORD_APPEND_R8(record_here, s48)
+  if (present(s49)) call CSV_RECORD_APPEND_R8(record_here, s49)
+  if (present(s50)) call CSV_RECORD_APPEND_R8(record_here, s50)
+  if (present(s51)) call CSV_RECORD_APPEND_R8(record_here, s51)
+  if (present(s52)) call CSV_RECORD_APPEND_R8(record_here, s52)
+  if (present(s53)) call CSV_RECORD_APPEND_R8(record_here, s53)
+  if (present(s54)) call CSV_RECORD_APPEND_R8(record_here, s54)
+  if (present(s55)) call CSV_RECORD_APPEND_R8(record_here, s55)
+  if (present(s56)) call CSV_RECORD_APPEND_R8(record_here, s56)
+  if (present(s57)) call CSV_RECORD_APPEND_R8(record_here, s57)
+  if (present(s58)) call CSV_RECORD_APPEND_R8(record_here, s58)
+  if (present(s59)) call CSV_RECORD_APPEND_R8(record_here, s59)
+  if (present(s60)) call CSV_RECORD_APPEND_R8(record_here, s60)
+  if (present(s61)) call CSV_RECORD_APPEND_R8(record_here, s61)
+  if (present(s62)) call CSV_RECORD_APPEND_R8(record_here, s62)
+  if (present(s63)) call CSV_RECORD_APPEND_R8(record_here, s63)
+  if (present(s64)) call CSV_RECORD_APPEND_R8(record_here, s64)
+  if (present(s65)) call CSV_RECORD_APPEND_R8(record_here, s65)
+  if (present(s66)) call CSV_RECORD_APPEND_R8(record_here, s66)
+  if (present(s67)) call CSV_RECORD_APPEND_R8(record_here, s67)
+  if (present(s68)) call CSV_RECORD_APPEND_R8(record_here, s68)
+  if (present(s69)) call CSV_RECORD_APPEND_R8(record_here, s69)
+  if (present(s70)) call CSV_RECORD_APPEND_R8(record_here, s70)
+  if (present(s71)) call CSV_RECORD_APPEND_R8(record_here, s71)
+  if (present(s72)) call CSV_RECORD_APPEND_R8(record_here, s72)
+  if (present(s73)) call CSV_RECORD_APPEND_R8(record_here, s73)
+  if (present(s74)) call CSV_RECORD_APPEND_R8(record_here, s74)
+  if (present(s75)) call CSV_RECORD_APPEND_R8(record_here, s75)
+  if (present(s76)) call CSV_RECORD_APPEND_R8(record_here, s76)
+  if (present(s77)) call CSV_RECORD_APPEND_R8(record_here, s77)
+  if (present(s78)) call CSV_RECORD_APPEND_R8(record_here, s78)
+  if (present(s79)) call CSV_RECORD_APPEND_R8(record_here, s79)
+  if (present(s80)) call CSV_RECORD_APPEND_R8(record_here, s80)
+  if (present(s81)) call CSV_RECORD_APPEND_R8(record_here, s81)
+  if (present(s82)) call CSV_RECORD_APPEND_R8(record_here, s82)
+  if (present(s83)) call CSV_RECORD_APPEND_R8(record_here, s83)
+  if (present(s84)) call CSV_RECORD_APPEND_R8(record_here, s84)
+  if (present(s85)) call CSV_RECORD_APPEND_R8(record_here, s85)
+  if (present(s86)) call CSV_RECORD_APPEND_R8(record_here, s86)
+  if (present(s87)) call CSV_RECORD_APPEND_R8(record_here, s87)
+  if (present(s88)) call CSV_RECORD_APPEND_R8(record_here, s88)
+  if (present(s89)) call CSV_RECORD_APPEND_R8(record_here, s89)
+  if (present(s90)) call CSV_RECORD_APPEND_R8(record_here, s90)
+  if (present(s91)) call CSV_RECORD_APPEND_R8(record_here, s91)
+  if (present(s92)) call CSV_RECORD_APPEND_R8(record_here, s92)
+  if (present(s93)) call CSV_RECORD_APPEND_R8(record_here, s93)
+  if (present(s94)) call CSV_RECORD_APPEND_R8(record_here, s94)
+  if (present(s95)) call CSV_RECORD_APPEND_R8(record_here, s95)
+  if (present(s96)) call CSV_RECORD_APPEND_R8(record_here, s96)
+  if (present(s97)) call CSV_RECORD_APPEND_R8(record_here, s97)
+  if (present(s98)) call CSV_RECORD_APPEND_R8(record_here, s98)
+  if (present(s99)) call CSV_RECORD_APPEND_R8(record_here, s99)
+  if (present(s100)) call CSV_RECORD_APPEND_R8(record_here,s100)
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_LST_R8
+
+!-------------------------------------------------------------------------------
+
 subroutine CSV_RECORD_APPEND_LST_S (record, &
                                       s1, s2, s3, s4, s5, s6, s7, s8, s9,s10, &
                                      s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
@@ -1327,25 +2262,27 @@ subroutine CSV_RECORD_APPEND_LST_S (record, &
 !    Optional list of character string to be appended, at least two strings
 !
 ! NOTES:
-!   This is a rudimentary implementation making use of optional parameters, 
+!   This is a rudimentary implementation making use of optional parameters,
 !   with maximum 100. It should be enough for most cases where the purpose
 !   of this subroutine is to construct header line with variable names
-!   in a single call instead of multiple CSV_RECORD_APPEND calls. May be 
+!   in a single call instead of multiple CSV_RECORD_APPEND calls. Should be
 !   rewritten to use detived types and pointers for arbitrary list size.
-!   But here the main aim is implementation and debugging simplicity. May be 
-!   further appended... Is 200 enough?
+!   But for now (in this version) the main aim is implementation and
+!   debugging simplicity. May be worth appending more strings... Is 200 enough?
 !
 ! TODO: Make also the same function, in addition to sub with generic interface
 ! Author: Sergey Budaev
 !*******************************************************************************
 
-  ! Calling parameters, first record itself, then 100 list items 
+  implicit none
+
+  ! Calling parameters, first record itself, then 100 list items
   character (len=*), intent(inout) :: record
-  
-  character (len=*), intent(in) :: s1  ! the first two strings in the list
-  character (len=*), intent(in) :: s2  ! mandatory to make it unique in 
+
+  character (len=*), intent(in) :: s1  ! The first two strings in the list are
+  character (len=*), intent(in) :: s2  ! mandatory to make it unique in the
                                        ! generic interface block
-  
+
   character (len=*), optional, intent(in) :: s3
   character (len=*), optional, intent(in) :: s4
   character (len=*), optional, intent(in) :: s5
@@ -1453,17 +2390,17 @@ subroutine CSV_RECORD_APPEND_LST_S (record, &
   character (len=*), optional, intent(in) :: s98
   character (len=*), optional, intent(in) :: s99
   character (len=*), optional, intent(in) :: s100
-  
+
   ! Local variables, copies of optionals
   character (len=:), allocatable :: record_here
-  
+
   !-----------------------------------------------------------------------------
-  
+
   record_here = trim(record) ! remove trailing empties from whole record
-  
+
   call CSV_RECORD_APPEND_S(record_here,   s1)
   call CSV_RECORD_APPEND_S(record_here,   s2)
-  
+
   if (present(s3))  call CSV_RECORD_APPEND_S(record_here,  s3)
   if (present(s4))  call CSV_RECORD_APPEND_S(record_here,  s4)
   if (present(s5))  call CSV_RECORD_APPEND_S(record_here,  s5)
@@ -1472,7 +2409,7 @@ subroutine CSV_RECORD_APPEND_LST_S (record, &
   if (present(s8))  call CSV_RECORD_APPEND_S(record_here,  s8)
   if (present(s9))  call CSV_RECORD_APPEND_S(record_here,  s9)
   if (present(s10)) call CSV_RECORD_APPEND_S(record_here, s10)
-  
+
   if (present(s11)) call CSV_RECORD_APPEND_S(record_here, s11)
   if (present(s12)) call CSV_RECORD_APPEND_S(record_here, s12)
   if (present(s13)) call CSV_RECORD_APPEND_S(record_here, s13)
@@ -1571,7 +2508,7 @@ subroutine CSV_RECORD_APPEND_LST_S (record, &
   if (present(s98)) call CSV_RECORD_APPEND_S(record_here, s98)
   if (present(s99)) call CSV_RECORD_APPEND_S(record_here, s99)
   if (present(s100)) call CSV_RECORD_APPEND_S(record_here,s100)
-    
+
   record = record_here
 
 end subroutine CSV_RECORD_APPEND_LST_S
