@@ -59,6 +59,22 @@ interface TOSTR               ! Generic interface to number-to-string
 
 end interface TOSTR
 
+interface STR                 ! An "alias" to TOSTR
+
+  module procedure STR_ITOA
+  module procedure STR_RTOA 
+  module procedure STR_R8TOA
+  module procedure STR_LTOA
+  module procedure STR_ATOA
+
+  module procedure STR_ARRAY_ITOA
+  module procedure STR_ARRAY_RTOA
+  module procedure STR_ARRAY_R8TOA
+  module procedure STR_ARRAY_LTOA
+  module procedure STR_ARRAY_ATOA
+
+end interface STR
+
 interface STDOUT              ! Short name for stdout-output routine
 
   module procedure OUT_FREE_STDOUT

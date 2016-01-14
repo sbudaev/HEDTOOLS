@@ -69,7 +69,7 @@ character (len=*), private, parameter :: MODNAME = "CSV_IO"
 logical, private, parameter :: IS_DEBUG = .FALSE.
 
 !*******************************************************************************
-! DERIVED TYP for CSV FILE HANDLE
+! DERIVED TYPE for CSV FILE HANDLE
 ! Define derived type csv_file structure for keeping csv file handle:
 !*******************************************************************************
 !
