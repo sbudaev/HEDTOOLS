@@ -58,8 +58,12 @@ program TEST_SCRATCH
   call CSV_RECORD_APPEND( REC, [ "VAR_001", ("VAR_" // TOSTR(i),i=2,10), "VAR_00X but this long part is lost" ] )
   print *, ">>", trim(REC), "<<"
   
+  ! TOSTR function can produce arbitrary number of leading zeroes 
   print *, TOSTR(10, 100), TOSTR(-10, 100)
   print *, TOSTR(14, 10000), TOSTR(-14, 10000)
   print *, "File_" // TOSTR(10, 1000) // ".txt"
+  
+  REC = "XX" // TOSTR(12, 1000) // "XX"  
+  print *, ">>", trim(REC), "<<<"
 
 end program TEST_SCRATCH
