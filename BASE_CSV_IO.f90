@@ -184,6 +184,10 @@ interface CSV_RECORD_WRITE
 
 end interface CSV_RECORD_WRITE
 
+private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
+                                ! Private here to avoid possible name conflicts, 
+                                ! do we need them outside?
+
 private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for debugging this
                     ! module. It may not or may use the module LOGGER, if not,
                     ! (normally)  it can be used as a stand-alone module in

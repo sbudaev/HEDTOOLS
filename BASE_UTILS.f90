@@ -40,6 +40,7 @@ interface NUMTOSTR            ! Generic interface to number-to-string
   module procedure STR_ARRAY_ITOA
   module procedure STR_ARRAY_RTOA
   module procedure STR_ARRAY_R8TOA
+  module procedure STR_ITOA_LZ
 
 end interface NUMTOSTR
 
@@ -56,6 +57,7 @@ interface TOSTR               ! Generic interface to number-to-string
   module procedure STR_ARRAY_R8TOA
   module procedure STR_ARRAY_LTOA
   module procedure STR_ARRAY_ATOA
+  module procedure STR_ITOA_LZ
 
 end interface TOSTR
 
@@ -72,6 +74,7 @@ interface STR                 ! An "alias" to TOSTR
   module procedure STR_ARRAY_R8TOA
   module procedure STR_ARRAY_LTOA
   module procedure STR_ARRAY_ATOA
+  module procedure STR_ITOA_LZ
 
 end interface STR
 
@@ -86,6 +89,10 @@ interface STDERR              ! Short name for stderr-output routine
   module procedure OUT_FREE_STDERR
 
 end interface STDERR
+
+private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
+                                ! Private here to avoid possible name conflicts, 
+                                ! do we need them outside?
 
 private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
                     ! may or may not use the module LOGGER, if not, it can be
@@ -929,5 +936,162 @@ end function TIMESTAMP_FULL
 
 !-------------------------------------------------------------------------------
 
+function STR_ITOA_LZ(i, maxi) result (ToStrA)
+!*******************************************************************************
+! STR_ITOA_LZ
+! PURPOSE: Convert integer to a string type including leading zeros. 
+!          Useful for generating file and variable names and other strings that
+!          that contain a numerical part with fixed width.
+! CALL PARAMETERS: integer
+!                  integer setting the maximum length of the digit string
+! EXAMPLE:
+!          FileName = "File" // STR_ITOA_LZ(10, 100) // ".txt"
+!          results in: File_0010.txt
+!*******************************************************************************
+  
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable  :: ToStrA
+
+  ! Calling parameters
+  integer, intent(in) :: i
+  integer, intent(in) :: maxi
+  
+  ! Local variables
+  integer :: iwidth, fwidth
+  
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "FMLEADZEROS"
+  
+  iwidth = I4_WIDTH(i)
+  fwidth = I4_WIDTH(maxi)
+  
+  if ( i < 0 ) then
+    ToStrA = "-" // repeat("0", fwidth-iwidth+1) // TOSTR(abs(i))
+  else
+    ToStrA = repeat("0", fwidth-iwidth) // TOSTR(i)
+  end if
+
+end function STR_ITOA_LZ
+
+!-------------------------------------------------------------------------------
+
+function I4_WIDTH (i) result (i4width)
+!*******************************************************************************
+! I4_WIDTH
+! PURPOSE: returns the "width" of an I4, the number of characters necessary
+!   to represent the integer in base 10, including a negative sign if necessary.
+! CALL PARAMETERS:
+!    Integer value
+! USES: I4_LOG_10 from the same module
+! NOTE:
+!    The width of an integer is the number of characters necessary to print it.
+!    The width of an integer can be useful when setting the appropriate output
+!    format for a vector or array of values.
+!    An I4 is an integer value.
+! EXAMPLE:
+!        I  I4_WIDTH
+!    -----  -------
+!    -1234    5
+!     -123    4
+!      -12    3
+!       -1    2
+!        0    1
+!        1    1
+!       12    2
+!      123    3
+!     1234    4
+!    12345    5
+! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+! Modified by Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  integer :: i4width
+
+  ! Calling parameters
+  integer :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "I4_WIDTH"
+
+  !-----------------------------------------------------------------------------
+
+  if ( 0 < i ) then
+    i4width = I4_LOG_10 ( i ) + 1
+  else if ( i == 0 ) then
+    i4width = 1
+  else if ( i < 0 ) then
+    i4width = I4_LOG_10 ( i ) + 2
+  end if
+
+end function I4_WIDTH
+
+!-------------------------------------------------------------------------------
+
+function I4_LOG_10 (i) result(i4log10)
+!*******************************************************************************
+! I4_LOG_10
+! PURPOSE: returns the integer part of the logarithm base 10 of the absolute
+!   value of an integer X.
+! CALL PARAMETERS:
+!   the number whose logarithm base 10
+! EXAMPLE:
+!   I4_LOG_10 (I) + 1 is the number of decimal digits in I. I4 is an integer.
+!        I  I4_LOG_10
+!    -----  --------
+!        0    0
+!        1    0
+!        2    0
+!        9    0
+!       10    1
+!       11    1
+!       99    1
+!      100    2
+!      101    2
+!      999    2
+!     1000    3
+!     1001    3
+!     9999    3
+!    10000    4
+! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+! Modified by Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  integer :: i4log10
+
+  ! Calling parameters
+  integer :: i
+
+  ! Local variables
+  integer :: i_abs
+  integer :: ten_pow
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "I4_LOG_10"
+
+  !-----------------------------------------------------------------------------
+
+  if ( i == 0 ) then
+    i4log10 = 0
+  else
+    i4log10 = 0
+    ten_pow = 10
+    i_abs = abs ( i )
+    do while ( ten_pow <= i_abs )
+      i4log10 = i4log10 + 1
+      ten_pow = ten_pow * 10
+    end do
+  end if
+
+end function I4_LOG_10
+
+!-------------------------------------------------------------------------------
 
 end module BASE_UTILS
