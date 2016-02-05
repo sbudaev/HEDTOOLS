@@ -945,7 +945,7 @@ function STR_ITOA_LZ(i, maxi) result (ToStrA)
 ! CALL PARAMETERS: integer
 !                  integer setting the maximum length of the digit string
 ! EXAMPLE:
-!          FileName = "File_" // TOSTR(10, 1000) // ".txt"
+!          FileName = "File_" // STR_ITOA_LZ(10, 1000) // ".txt"
 !          results in: File_0010.txt
 !*******************************************************************************
 
@@ -962,7 +962,7 @@ function STR_ITOA_LZ(i, maxi) result (ToStrA)
   integer :: iwidth, fwidth
 
   ! Subroutine name for DEBUG LOGGER
-  character (len=*), parameter :: PROCNAME = "FMLEADZEROS"
+  character (len=*), parameter :: PROCNAME = "STR_ITOA_LZ"
 
   iwidth = I4_WIDTH(i)
   fwidth = I4_WIDTH(maxi)
