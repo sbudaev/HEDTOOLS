@@ -13,7 +13,7 @@ program TEST_SCRATCH
   use BASE_UTILS
   use CSV_IO
 
-  character (len=25500) :: REC
+  character (len=255) :: REC
   integer :: i
   real, dimension(6) :: RARR = [0.1,0.2,0.3,0.4,0.5,0.6]
   character (len=4), dimension(6) :: STARR=["a1","a2","a3","a4","a5","a6"]
@@ -55,8 +55,11 @@ program TEST_SCRATCH
   ! using fortran array constructor to create strings
   ! Note that implicit constructor sets the constructed string length 
   ! at first invocation. So, set maximum length first (7 rather than 5)
-  call CSV_RECORD_APPEND( REC, [ "VAR_001", ("VAR_" // TOSTR(i),i=2,100) ] )
+  call CSV_RECORD_APPEND( REC, [ "VAR_001", ("VAR_" // TOSTR(i),i=2,10), "VAR_00X but this long part is lost" ] )
   print *, ">>", trim(REC), "<<"
   
+  print *, TOSTR(10, 100), TOSTR(-10, 100)
+  print *, TOSTR(14, 10000), TOSTR(-14, 10000)
+  print *, "File_" // TOSTR(10, 1000) // ".txt"
 
 end program TEST_SCRATCH
