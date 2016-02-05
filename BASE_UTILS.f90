@@ -945,7 +945,7 @@ function STR_ITOA_LZ(i, maxi) result (ToStrA)
 ! CALL PARAMETERS: integer
 !                  integer setting the maximum length of the digit string
 ! EXAMPLE:
-!          FileName = "File" // STR_ITOA_LZ(10, 100) // ".txt"
+!          FileName = "File_" // TOSTR(10, 1000) // ".txt"
 !          results in: File_0010.txt
 !*******************************************************************************
 
