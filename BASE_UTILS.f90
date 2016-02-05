@@ -64,7 +64,7 @@ end interface TOSTR
 interface STR                 ! An "alias" to TOSTR
 
   module procedure STR_ITOA
-  module procedure STR_RTOA 
+  module procedure STR_RTOA
   module procedure STR_R8TOA
   module procedure STR_LTOA
   module procedure STR_ATOA
@@ -91,7 +91,7 @@ interface STDERR              ! Short name for stderr-output routine
 end interface STDERR
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
-                                ! Private here to avoid possible name conflicts, 
+                                ! Private here to avoid possible name conflicts,
                                 ! do we need them outside?
 
 private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
@@ -939,8 +939,8 @@ end function TIMESTAMP_FULL
 function STR_ITOA_LZ(i, maxi) result (ToStrA)
 !*******************************************************************************
 ! STR_ITOA_LZ
-! PURPOSE: Convert integer to a string type including leading zeros. 
-!          Useful for generating file and variable names and other strings that
+! PURPOSE: Convert integer to a string type including leading zeros.
+!          Useful for generating file and variable names and other strings
 !          that contain a numerical part with fixed width.
 ! CALL PARAMETERS: integer
 !                  integer setting the maximum length of the digit string
@@ -948,7 +948,7 @@ function STR_ITOA_LZ(i, maxi) result (ToStrA)
 !          FileName = "File" // STR_ITOA_LZ(10, 100) // ".txt"
 !          results in: File_0010.txt
 !*******************************************************************************
-  
+
   implicit none
 
   ! Function value
@@ -957,16 +957,16 @@ function STR_ITOA_LZ(i, maxi) result (ToStrA)
   ! Calling parameters
   integer, intent(in) :: i
   integer, intent(in) :: maxi
-  
+
   ! Local variables
   integer :: iwidth, fwidth
-  
+
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "FMLEADZEROS"
-  
+
   iwidth = I4_WIDTH(i)
   fwidth = I4_WIDTH(maxi)
-  
+
   if ( i < 0 ) then
     ToStrA = "-" // repeat("0", fwidth-iwidth+1) // TOSTR(abs(i))
   else
