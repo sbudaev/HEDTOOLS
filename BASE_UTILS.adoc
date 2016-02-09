@@ -10,6 +10,16 @@ a2x -fpdf BASE_UTILS.adoc
 
 :language: fortran
 
+Abstract
+--------
+
+This document describes the modelling tools used for the new model environment.
+
+:numbered:
+
+Introduction
+------------
+
 These modelling tools include two separate modules: *BASE_UTILS* and *CSV_IO*.
 BASE_UTILS contains a few utility functions. CSV_IO is for output of numerical
 data into the CSV (comma separated values) format files. CSV is good because it
@@ -19,12 +29,13 @@ packages.
 Invoking the modules requires the _use_ keyword in Fortran. _use_'s' should
 normally be the first statements before _implicit none_:
 
+
 [source]
 --------------------------------------------------------------------------------
 program TEST
 
-  use BASE_UTILS
-  use CSV_IO
+  use BASE_UTILS  ! Invoke the modules
+  use CSV_IO      ! into this program
 
   implicit none
 
@@ -32,6 +43,8 @@ program TEST
   integer :: i
   real, dimension(6) :: RARR = [0.1,0.2,0.3,0.4,0.5,0.6]
   character (len=4), dimension(6) :: STARR=["a1","a2","a3","a4","a5","a6"]
+..........
+end program TEST
 --------------------------------------------------------------------------------
 
 Building the program with these modules using the command line is notmally a
@@ -62,14 +75,52 @@ f95 -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
 f95 -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
 --------------------------------------------------------------------------------
 
-[NOTE] The examples above assume that the module code is located in the
-upper-level directory, so ../.
+NOTE: The examples above assume that the module code is located in the
+upper-level directory, so "../"
 
 Module: BASE_UTILS
 ------------------
 
 This module contains a few utility functions and subroutines. So far there are
-two useful things here: TOSTR and CLEANUP
+two useful things here: STDOUT, STDERR, TOSTR and CLEANUP.
+
+Subroutines: STDOUT and STDERR
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These subroutines output arbitrary text to the terminal, either to the standard
+output and standard error. While it seems trivial (standard Fortran print *, or
+write() can be used), it is still good to have a dedicated standard subroutine
+for all outputs as we can then easily modify the code to use Matlab/R API to
+work with and run models from within these environments, or use a GUI window
+(the least necessary feature now, but may be useful if the environment is used
+for teaching in future). In such cases we will then implement a specific
+dedicated output function and just globally swap STDOUT with R_MESSAGE_PRINT or
+X_TXTGUI_PRINT.
+
+*STDOUT/STDERR* accept an arbitrary number of string parameters, which just
+represent messages placed to the output. Each parameter is printed on a new
+line. Trivial indeed:)
+
+NOTE: It is useful to have two separate subroutines for stdout and stderr as
+they could be easily separated (e.g. redirected to different files). Redirection
+could be done under Windows DOS prompt in such a simple way:
+model_command 1 > output_file_stdout 2 > output_file_stderr
+STDOUT is redirected to output_file_stdout, STDERR, to output_file_stderr
+
+*Examples*
+
+[source]
+--------------------------------------------------------------------------------
+call STDOUT("---------------------------------------------------",&
+            ch01 // " = " // ch02 // TOSTR(inumber) // " ***", &
+            ch10 // "; TEST NR= " // TOSTR(120.345), &
+            "Pi equals to = " //  TOSTR(realPi, "(f4.2)"), &
+            "---------------------------------------------------")
+--------------------------------------------------------------------------------
+
+The above code just prints a message. Note that TOSTR function is used to append
+numerical values to the text output (unlike standard write where values are
+separated by commas).
 
 Function: TOSTR
 ~~~~~~~~~~~~~~~
@@ -206,4 +257,5 @@ both produce >>Thisisalongstringblablabla<<
 Module: CSV_IO
 --------------
 
-gvhgvhgvhg
+This module contains subroutines and functions for outputting numerical data to
+the CSV (Comma separated values) format.
