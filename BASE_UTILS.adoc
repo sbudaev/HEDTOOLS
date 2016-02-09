@@ -1,0 +1,117 @@
+Module: BASE_UTILS
+==================
+Sergey Budaev <sbudaev@gmail.com>
+v.1.0, Last updated 09/02/2016
+
+This module contains a few utility functions and subroutines. So far there are
+two useful things here: TOSTR and CLEANUP
+
+:language: fortran
+
+Function: TOSTR
+----------------
+
+Convert a number to a strings. Accepts any numeric or non-numeric type,
+including integer and real (kind 4 and 8), logical and strings. Also accepts
+arrays of these numeric types. Outputs just the string representation of the
+number.
+
+*Basic Examples:*
+
+Integer:
+
+[source]
+print *, TOSTR(12)
+produces string "12"
+
+Single precision real (type 4)footnote:[Note that float point calculations,
+especially single precision (real type 4) may introduce a rounding error]
+
+[source]
+print *, ">>", TOSTR(3.1415926), "<<"
+produces >>3.14159250<<
+
+Double precision real (type 8)
+
+[source]
+print *, ">>", TOSTR(3.1415926_8), "<<"
+produces >>3.1415926000000001<<
+
+*Optional parameters*
+
+TOSTR can also accept standard Fortran format string as the second optional
+*string* parameter, for example:
+
+[source]
+print *, ">>", TOSTR(3.1415926,"(f4.2)"), "<<"
+produces >>3.14<<
+
+[source]
+print *, ">>", TOSTR(12,"(i4)"), "<<"
+produces >>  12<<
+
+With integers, TOSTR can also generate leading zeros, which is useful for
+auto-generating file names or variable names. In such cases, the number of
+leading zeros is determined by the second optional *integer* parameter. This
+integer sets the template for the leading zeros, the maximum string. The
+exact value is unimportant, only the number of digits is used.
+
+For example,
+
+[source]
+print *, ">>", TOSTR(10, 100), "<<"
+produces >>010<<
+
+[source]
+print *, ">>", TOSTR(10, 999), "<<"
+also produces >>010<<
+
+[source]
+print *, "File_" // TOSTR(10, 10000) // ".txt"
+produces File_00010.txt
+
+*Examples of arrays*
+
+It is possible to convert numeric arrays to their string representation.
+
+[source]
+--------------------------------------------------------------------------------
+real, dimension(6) :: RARR = [0.1,0.2,0.3,0.4,0.5,0.6]
+.....
+print *, ">>", TOSTR(RARR), "<<"
+produces > 0.100000001 0.200000003 0.300000012 0.400000006 0.500000000 0.600000024<<
+--------------------------------------------------------------------------------
+
+[source]
+--------------------------------------------------------------------------------
+real, dimension(6) :: RARR = [0.1,0.2,0.3,0.4,0.5,0.6]
+.....
+print *, ">>", TOSTR(RARR,"(f4.2)"), "<<"
+produces >> 0.10 0.20 0.30 0.40 0.50 0.60<<
+--------------------------------------------------------------------------------
+
+It is possible to use array slices and array constructors:
+
+[source]
+--------------------------------------------------------------------------------
+print *, ">>", TOSTR(RARR(1:4)), "<<"
+print *, ">>", TOSTR( (/(RARR(i), i=1,4)/) ), "<<"
+both produce >> 0.100000001 0.200000003 0.300000012 0.400000006<<
+--------------------------------------------------------------------------------
+
+or using the newer format with square brackets:
+
+[source]
+--------------------------------------------------------------------------------
+print *, ">>", TOSTR( [(RARR(i), i=1,4), 200.1, 400.5] ), "<<"
+produces >> 0.100000001 0.200000003 0.300000012 0.400000006 200.100006 400.500000<<
+--------------------------------------------------------------------------------
+
+the same with format:
+[source]
+--------------------------------------------------------------------------------
+print *, ">>", TOSTR( [(RARR(i), i=1,4), 200.1, 400.5], "(f9.3)" ), "<<"
+produces >> 0.100 0.200 0.300 0.400 200.100 400.500<<
+--------------------------------------------------------------------------------
+
+
