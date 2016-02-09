@@ -1,41 +1,116 @@
-Module: BASE_UTILS
-==================
+Modelling tools manual
+======================
 Sergey Budaev <sbudaev@gmail.com>
 v.1.0, Last updated 09/02/2016
+
+////////////////////////////////////////////////////////
+Note: asciidoc document, Generate pdf book with
+a2x -fpdf BASE_UTILS.adoc
+////////////////////////////////////////////////////////
+
+:language: fortran
+
+These modelling tools include two separate modules: *BASE_UTILS* and *CSV_IO*.
+BASE_UTILS contains a few utility functions. CSV_IO is for output of numerical
+data into the CSV (comma separated values) format files. CSV is good because it
+is human-readable but can still be easily imported into spreadsheets and stats
+packages.
+
+Invoking the modules requires the _use_ keyword in Fortran. _use_'s' should
+normally be the first statements before _implicit none_:
+
+[source]
+--------------------------------------------------------------------------------
+program TEST
+
+  use BASE_UTILS
+  use CSV_IO
+
+  implicit none
+
+  character (len=255) :: REC
+  integer :: i
+  real, dimension(6) :: RARR = [0.1,0.2,0.3,0.4,0.5,0.6]
+  character (len=4), dimension(6) :: STARR=["a1","a2","a3","a4","a5","a6"]
+--------------------------------------------------------------------------------
+
+Building the program with these modules using the command line is notmally a
+two-step process:
+
+build the modules, e.g.
+
+[source,bash]
+--------------------------------------------------------------------------------
+gfortran -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
+--------------------------------------------------------------------------------
+
+This step should only be done if the source code of the modules change, i.e.
+quite rarely.
+
+build the program (e.g. TEST.f90) with these modules
+
+[source,bash]
+--------------------------------------------------------------------------------
+gfortran -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
+--------------------------------------------------------------------------------
+
+or for a generic F95 compiler:
+
+[source,bash]
+--------------------------------------------------------------------------------
+f95 -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
+f95 -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
+--------------------------------------------------------------------------------
+
+[NOTE] The examples above assume that the module code is located in the
+upper-level directory, so ../.
+
+Module: BASE_UTILS
+------------------
 
 This module contains a few utility functions and subroutines. So far there are
 two useful things here: TOSTR and CLEANUP
 
-:language: fortran
-
 Function: TOSTR
-----------------
+~~~~~~~~~~~~~~~
 
-Convert a number to a strings. Accepts any numeric or non-numeric type,
+*TOSTR* converts a number to a strings. Accepts any numeric or non-numeric type,
 including integer and real (kind 4 and 8), logical and strings. Also accepts
 arrays of these numeric types. Outputs just the string representation of the
-number.
+number. Aliases: STR (same as TOSTR), NUMTOSTR (accepts only numeric input
+parameter, not logical or string)
+
+indexterm:[TOSTR,STR,NUMTOSTR]
 
 *Basic Examples:*
 
 Integer:
 
 [source]
+--------------------------------------------------------------------------------
 print *, TOSTR(12)
 produces string "12"
+--------------------------------------------------------------------------------
 
 Single precision real (type 4)footnote:[Note that float point calculations,
 especially single precision (real type 4) may introduce a rounding error]
 
 [source]
+--------------------------------------------------------------------------------
 print *, ">>", TOSTR(3.1415926), "<<"
 produces >>3.14159250<<
+--------------------------------------------------------------------------------
 
 Double precision real (type 8)
 
 [source]
+--------------------------------------------------------------------------------
 print *, ">>", TOSTR(3.1415926_8), "<<"
 produces >>3.1415926000000001<<
+--------------------------------------------------------------------------------
+
+TOSTR also converts logical type to the "TRUE" or "FALSE" strings and can also
+accept character string as input. In the latest case it just output the input.
 
 *Optional parameters*
 
@@ -108,10 +183,27 @@ produces >> 0.100000001 0.200000003 0.300000012 0.400000006 200.100006 400.50000
 --------------------------------------------------------------------------------
 
 the same with format:
+
 [source]
 --------------------------------------------------------------------------------
 print *, ">>", TOSTR( [(RARR(i), i=1,4), 200.1, 400.5], "(f9.3)" ), "<<"
 produces >> 0.100 0.200 0.300 0.400 200.100 400.500<<
 --------------------------------------------------------------------------------
 
+Function: CLEANUP
+~~~~~~~~~~~~~~~~~
 
+*CLEANUP* Removes all spaces, tabs, and control characters from the input string.
+
+Example:
+
+[source]
+--------------------------------------------------------------------------------
+print *, ">>", CLEANUP("This is along string blablabla"), "<<"
+both produce >>Thisisalongstringblablabla<<
+--------------------------------------------------------------------------------
+
+Module: CSV_IO
+--------------
+
+gvhgvhgvhg
