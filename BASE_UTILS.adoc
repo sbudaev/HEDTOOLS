@@ -1,7 +1,7 @@
 Modelling tools manual
 ======================
 Sergey Budaev <sbudaev@gmail.com>
-v.1.0, Last updated 09/02/2016
+v.1.0, Last updated 10/02/2016
 
 ////////////////////////////////////////////////////////
 Note: asciidoc document, Generate pdf book with
@@ -78,7 +78,7 @@ f95 -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
 f95 -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
 --------------------------------------------------------------------------------
 
-NOTE: The examples above assume that the module code is located in the
+IMPORTANT: The examples above assume that the module code is located in the
 upper-level directory, so ../ , also the build script or Makefile should
 normally care about all this automatically.
 
@@ -110,7 +110,7 @@ indexterm:[STDERR]
 represent messages placed to the output. Each parameter is printed on a new
 line. Trivial indeed:)
 
-NOTE: It is useful to have two separate subroutines for stdout and stderr as
+IMPORTANT: It is useful to have two separate subroutines for stdout and stderr as
 they could be easily separated (e.g. redirected to different files). Redirection
 could be done under Windows or Linux terminal in such a simple way:
 model_command 1 > output_file_stdout 2 > output_file_stderr
@@ -289,12 +289,15 @@ seed for the Fortran random number generator.
 Module: CSV_IO
 --------------
 
+Overview
+~~~~~~~~
 indexterm:[CSV_IO]
 
 This module contains subroutines and functions for outputting numerical data to
 the CSV (Comma separated values) format.
 
-* The typical workflow for output in CSV file format is like this:
+The typical workflow for output in CSV file format is like this:
+
 ** *CSV_OPEN_WRITE* - physically open CSV file for writing;
 ** *CSV_HEADER_WRITE* - physically write optional descriptive header (header
    is just the first line of the CSV file);
@@ -307,57 +310,350 @@ the CSV (Comma separated values) format.
     to the output file.
 ** end do -- end loop(1) -- go to producing next record;
 ** *CSV_CLOSE* - physically closes the output CSV file.
-  Thus, subs ending with *_WRITE* do physical write, as well as *_CLOSE*.
-* This module is most suited at this moment for CSV file _output_ rather than
-  input. Input CSV is to be done late if necessary.
-* This module widely uses optional arguments. They could be called irrespective
-  of the order using named parameters, e.g.
-** this way (the first optional parameter absent):
-   intNextunit = GET_FREE_FUNIT(file_status=logicalFlag)
-** or (both parameters present but swapped):
-   intNextunit = GET_FREE_FUNIT(file_status=logicalFlag, max_funit=200)
-** or (optional parameters absent altogether):
-   intNextunit = GET_FREE_FUNIT()
-** or (standard way)
-   intNextunit = GET_FREE_FUNIT(200, logicalFlag)
-* Files can be referred either by unit or by name, but unit has  precedence
-  (if both a provided, unit is used). There is also a derived type *csv_file*
-  that can be used as a single file handle.
 
-Here is an example:
+
+Thus, subs ending with *_WRITE* do physical write, as well as *_CLOSE*.
+
+This module is most suited at this moment for CSV file _output_ rather than
+input. Input CSV is to be done late if necessary.
+
+This module widely uses optional arguments. They could be called irrespective
+of the order using named parameters, e.g. this way (the first optional
+parameter absent):
+
+[source]
+intNextunit = GET_FREE_FUNIT(file_status=logicalFlag)
+
+or (both parameters present but swapped in order):
+
+[source]
+intNextunit = GET_FREE_FUNIT(file_status=logicalFlag, max_funit=200)
+
+or (optional parameters absent altogether):
+
+[source]
+intNextunit = GET_FREE_FUNIT()
+
+or the standard way:
+
+[source]
+intNextunit = GET_FREE_FUNIT(200, logicalFlag)
+
+Files can be referred either by unit or by name, but unit has  precedence (if
+both a provided, unit is used). There is also a derived type *csv_file*
+that can be used as a single file handle.
+
+Here is an example of the data saving workflow:
 
 [source]
 --------------------------------------------------------------------------------
+use CSV_IO  ! invoke this module first
 ........
-! 1. Generate fikle name for CSV output
-csv_file_append_data_name="data_genomeNR_" // TOSTR(i) // "_" // TOSTR(j) // "_" // TOSTR(k) // ".csv"
+........
+! 1. Generate file name for CSV output
+csv_file_append_data_name="data_genomeNR_" // TOSTR(i) // "_" // TOSTR(j) // &
+                          "_" // TOSTR(k) // ".csv"
 ........
 ! 2. open CSV file for writing
-call CSV_OPEN_WRITE (csv_file_append_data_name, csv_file_append_data_unit, csv_written_ok)
+call CSV_OPEN_WRITE (csv_file_append_data_name, csv_file_append_data_unit, &
+                     csv_written_ok)
 if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
+! 3. Write optional descriptive header for the file
+call CSV_HEADER_WRITE(csv_file_name = csv_file_append_data_name, &
+                      header = header_is_from_this_string, &
+                      csv_file_status = csv_written_ok)
 ........
-do l=1, Cdip
-  ! 3. NullifyPrepare an empty string for the current CSV record
+! 4. Generate a whole record of variable names for the header
+record_csv="" ! but first, prepare empty record string
+call CSV_RECORD_APPEND(record_csv,["VAR_001", ("VAR_" // TOSTR(i,100),i=2,Cdip)])
+........
+! 5. Now we can write records containing actual data values, we do this
+!    in two do-cycles
+CYCLE_OVER_RECORDS: do l=1, Cdip
+  ! 6. Prepare an empty string for the current CSV record
   record_csv=""
-  do m=1, CNRcomp
+  CYCLE_WITHIN_RECORD: do m=1, CNRcomp
     ....
     ! do some calculations...
     .....
-    ! append a single value to the current record
+    ! 7. append the next value (single number) to the current record
     call CSV_RECORD_APPEND ( record_csv, genomeNR(l,m) )
     .....
-  end do
-  ! physically write the current record
-  call CSV_RECORD_WRITE (record=record_csv, csv_file_name=csv_file_append_data_name,csv_file_status=csv_written_ok)
+  end do CYCLE_WITHIN_RECORD
+  ! 8. physically write the current record
+  call CSV_RECORD_WRITE ( record=record_csv, &
+                          csv_file_name=csv_file_append_data_name,&
+                          csv_file_status=csv_written_ok )
   if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
   .......
-end do
-call CSV_CLOSE( csv_file_name=csv_file_append_data_name, csv_file_status=csv_written_ok )
+end do CYCLE_OVER_RECORDS
+! 9. close the CSV file when done
+call CSV_CLOSE( csv_file_name=csv_file_append_data_name, &
+                csv_file_status=csv_written_ok )
 if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
 --------------------------------------------------------------------------------
 
+Although, there are several wrappers for the most typical cases that can shorten
+this procedure and write specific chunks of the data in fewer steps. For
+example, a whole array or matrix (2-dimensional table) can be exported to CSV
+in a single command:
+
+[source]
+--------------------------------------------------------------------------------
+! save the whole matrix/array d_matrix to some_file.csv
+call CSV_MATRIX_WRITE(d_matrix, "some_file.csv", fstat_csv)
+if (.not. fstat_csv) goto 1000
+--------------------------------------------------------------------------------
+
+Subroutine CSV_OPEN_WRITE
+~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[CSV_OPEN_WRITE]
+
+Open CSV file for reading. May have two forms:
+
+(1) either get three parameters:
+
+[source]
+--------------------------------------------------------------------------------
+character (len=*) :: csv_file_name  ! file name
+integer :: csv_file_unit            ! file unit
+logical :: csv_file_status          ! OPTIONAL status flag, TRUE if operation
+                                    !   successful
+--------------------------------------------------------------------------------
+
+(2) get one file handle object of the derived type +csv_file+
+
+[source]
+--------------------------------------------------------------------------------
+type(csv_file), intent(inout) :: csv_file_handle  ! file handle object
+--------------------------------------------------------------------------------
+
+Subroutine CSV_CLOSE
+~~~~~~~~~~~~~~~~~~~~
+indexterm:[CSV_CLOSE]
+
+Closes a CSV file for reading or writing. May have two forms:
+
+(1) either get three optional parameters:
+
+[source]
+--------------------------------------------------------------------------------
+character (len=*) :: csv_file_name  ! file name
+integer :: csv_file_unit            ! file unit
+logical :: csv_file_status          ! status flag, TRUE if operation successful
+--------------------------------------------------------------------------------
+
+IMPORTANT: At least *file name* or *unit* should be present in the subroutine
+           call.
 
 
+(2)  get one file handle object of the derived type +csv_file+
+
+[source]
+--------------------------------------------------------------------------------
+type(csv_file), intent(inout) :: csv_file_handle  ! file handle object
+--------------------------------------------------------------------------------
+
+Subroutine: CSV_HEADER_WRITE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[CSV_HEADER_WRITE]
+
+Writes an optional descriptive header to a CSV file. The header should normally
+be the first line of the file.
+
+May have two forms:
+
+(1) either get four parameters, only the header is mandatory, but the file
+    must be identified by name or unit:
+
+[source]
+--------------------------------------------------------------------------------
+character (len=*) :: csv_file_name  ! file name
+integer :: csv_file_unit            ! file unit
+character (len=*) :: header         ! header string
+logical :: csv_file_status          ! status flag, TRUE if operation successful
+--------------------------------------------------------------------------------
+
+IMPORTANT: At least *file name* or *unit* should be present in the subroutine
+           call.
+
+(2) get two parameters including the header string and the file handle object
+    of the type +csv_file+
+
+[source]
+--------------------------------------------------------------------------------
+character (len=*) :: header         ! mandatory CSV file header
+type(csv_file) :: csv_file_handle   ! file handle object
+--------------------------------------------------------------------------------
+
+Function: GET_FILE_UNIT
+~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[GET_FILE_UNIT]
+
+Returns file unit associated with an existing open file name, if no file unit
+is associated with this name (file is not opened), return unit=-1 and error
+status
+
+Input parameters:
+
+[source]
+--------------------------------------------------------------------------------
+character (len=*) :: csv_file_name    ! mandatory file name
+logical :: csv_file_status            ! OPTIONAL status flag, TRUE if operation
+                                      !   successful
+--------------------------------------------------------------------------------
+
+Output parameter (function value):
+
+[source]
+--------------------------------------------------------------------------------
+integer :: csv_file_unit              ! unit associated with open file name
+--------------------------------------------------------------------------------
+
+Function: GET_FREE_FUNIT
+~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[GET_FREE_FUNIT]
+
+Returns the next free/available Fortran file unit number. Can optionally search
+until a specific maximum unit number.
+
+Input parameters, optional:
+
+[source]
+--------------------------------------------------------------------------------
+logical :: file_status                ! operation success status
+integer :: max_funit                  ! maximum unit to search
+--------------------------------------------------------------------------------
+
+Output parameter (function value):
+
+[source]
+--------------------------------------------------------------------------------
+integer :: file_unit                  ! the first free/available file unit
+--------------------------------------------------------------------------------
+
+IMPORTANT: When optional input parameters are absent, the function uses a
+           hardwired maximum unit number, possibly depending on the computer
+           platform and compiler used.
+
+Function: CHECK_UNIT_VALID
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[CHECK_UNIT_VALID]
+
+Checks if file unit is valid, that is within the allowed range and doesn't
+include standard input/output/stderr units. The unit should not necessarily
+be linked to any file or be an open file.
+
+Input parameter:
+
+[source]
+--------------------------------------------------------------------------------
+integer :: file_unit                  ! Fortran file unit to check
+--------------------------------------------------------------------------------
+
+Output parameter (function value):
+[source]
+--------------------------------------------------------------------------------
+logical :: file_status                ! gets TRUE if the unit is valid
+--------------------------------------------------------------------------------
+
+Subroutine: CSV_RECORD_APPEND
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[CSV_RECORD_APPEND]
+
+Appends one of the possible data objects to the current CSV record. Data objects
+could be either a single value (integer, real with single or double
+precision, character string) or a one-dimensional array of the above
+types or still an arbitrary length list of the same data types from the above
+list.
+
+The first parameter of the subroutine is always character string record:
+
+[source]
+--------------------------------------------------------------------------------
+character (len=*) :: record           ! character string record to append data
+--------------------------------------------------------------------------------
+
+The other parameters may be of any of thee following types: +integer (kind=4)+,
++real(kind=4)+, +real(kind=8)+, +character+ string.
+
+IMPORTANT: The record keeping variable can be either fixed length string or an
+allocatable string. But it should fit the whole record. This might be a little
+bit tricky if record  is allocatable as +record_string=""+ it allocate it to an
+empty string. A good tip is to use the +repeat+ function in Fortran to allocate
+the record string to the necessary value, e.g. +record=repeat(" ", MAX_RECORD)+
+will produce a string consisting of +MAX_RECORD+ blank characters. +record+
+should not necessarily be an empty string initially, it could be just a whole
+blank string.
+
+Examples
+^^^^^^^^
+
+Append a single string to the current record:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, "ROW_NAMES")
+--------------------------------------------------------------------------------
+
+Append a single value (any of the supported types) to the current record:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, value)     ! some variable
+call CSV_RECORD_APPEND(record_csv, 123.5_8)   ! double precision literal value
+--------------------------------------------------------------------------------
+
+Append a list of values (any one of the supported types) to the current record:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, fish, age, stat, fecund)
+--------------------------------------------------------------------------------
+
+Append an array slice (any of the supported types) to the current record:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, RARR(1:4))
+--------------------------------------------------------------------------------
+
+Append an array using old-style array constructor with implied do
+(any of the supported types) to the current record:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv,(/(RARR(i), i=1,6)/))
+--------------------------------------------------------------------------------
+
+indexterm:[implied do]
+indexterm:[implied cycle]
+
+
+Append an array using new-style array constructor (square brackets) with
+implied do plus two other values (all values can have any of the supported
+types but should have the same type) to the current record:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, [(RARR(i), i=1,4), measur1, age(fish)])
+--------------------------------------------------------------------------------
+
+Append integers from 1 to 10 to the current record (using implied do):
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, [(i,i=1,10)])
+--------------------------------------------------------------------------------
+
+Append a string, an array of strings with implied do and finally another string
+to the record. This example shows how variable (column) names could be
+generated:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_RECORD_APPEND(record_csv, ["ROW_NAME", ("VAR_" // TOSTR(i),i=1,1000), "STATUS"])
+--------------------------------------------------------------------------------
 
 
 
