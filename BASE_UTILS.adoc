@@ -1,7 +1,9 @@
 Modelling tools manual
 ======================
 Sergey Budaev <sbudaev@gmail.com>
-v.1.0, Last updated 10/02/2016
+$Id: BASE_UTILS.adoc,v 1.0 2015/02/10 17:58:44 sbu062 Exp $
+
+// v.1.0, Last updated 10/02/2016
 
 ////////////////////////////////////////////////////////
 Note: asciidoc document, Generate pdf book with
