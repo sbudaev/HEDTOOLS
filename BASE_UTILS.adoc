@@ -43,8 +43,8 @@ data into the CSV (comma separated values) format files. CSV is good because it
 is human-readable but can still be easily imported into spreadsheets and stats
 packages.
 
-Invoking the modules requires the _use_ keyword in Fortran. _use_'s' should
-normally be the first statements before _implicit none_:
+Invoking the modules requires the _use_ keyword in Fortran. _use_' should
+normally be the first statements before +implicit none+:
 
 
 [source]
@@ -97,7 +97,7 @@ f95 -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
 A static library of the modules could also be built, so the other more
 changeable code can be just linked with the library.
 
-NOTE: The examples above assume that the module code is located in the +
+Note: The examples above assume that the module code is located in the +
 upper-level directory, so ../ , also the build script or Makefile should +
 normally care about all this automatically.
 
@@ -113,11 +113,11 @@ two useful things here: *STDOUT*, *STDERR*, *TOSTR*, *CLEANUP*, and
 Function: TOSTR
 ~~~~~~~~~~~~~~~
 
-*TOSTR* converts a number to a strings. Accepts any numeric or non-numeric type,
-including integer and real (kind 4 and 8), logical and strings. Also accepts
-arrays of these numeric types. Outputs just the string representation of the
-number. Aliases: STR (same as TOSTR), NUMTOSTR (accepts only numeric input
-parameter, not logical or string)
+*TOSTR* converts everything to a string. Accepts any numeric or non-numeric
+type, including integer and real (kind 4 and 8), logical and strings. Also
+accepts arrays of these numeric types. Outputs just the string representation
+of the number. Aliases: *STR* (same as *TOSTR*), *NUMTOSTR* (accepts only
+numeric input parameter, not logical or string)
 
 indexterm:[TOSTR]
 indexterm:[STR]
@@ -329,7 +329,7 @@ line. Trivial indeed:)
 IMPORTANT: It is useful to have two separate subroutines for stdout and stderr
 as they could be easily separated (e.g. redirected to different files).
 Redirection could be done under Windows/Linux terminal in such a simple way: +
-+model_command 1 > output_file_stdout 2 > output_file_stderr+ +
++model_command.exe 1>output_file_stdout 2>output_file_stderr+ +
 Here STDOUT is redirected to output_file_stdout, STDERR, to output_file_stderr.
 
 *Examples*
@@ -388,7 +388,7 @@ indexterm:[CSV_IO]
 
 This module contains subroutines and functions for outputting numerical data to
 the http://en.wikipedia.org/wiki/Comma-separated_values[CSV (Comma Separated
-Values) format] (http://tools.ietf.org/html/rfc4180/[RFC4180]).
+Values)] format (http://tools.ietf.org/html/rfc4180/[RFC4180]).
 
 The typical workflow for output in CSV file format is like this:
 indexterm:[workflow]
@@ -508,7 +508,7 @@ call CSV_MATRIX_WRITE(d_matrix, "some_file.csv", fstat_csv)
 if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
 
-Subroutine CSV_OPEN_WRITE
+Subroutine: CSV_OPEN_WRITE
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_OPEN_WRITE]
 
@@ -540,7 +540,7 @@ type(csv_file) :: file_occ      ! declare file handle object
 call CSV_OPEN_WRITE(file_occ)   ! use file handle object
 --------------------------------------------------------------------------------
 
-Subroutine CSV_CLOSE
+Subroutine: CSV_CLOSE
 ~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_CLOSE]
 
@@ -619,7 +619,7 @@ if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
 
 Here CSV file header is generated from several components, including the
-CSV_RECORD_SIZE function to count the record size.
++CSV_RECORD_SIZE+ function to count the record size.
 
 
 Function: GET_FILE_UNIT
@@ -770,7 +770,7 @@ Append a list of values (any one of the supported types) to the current record:
 
 [source]
 --------------------------------------------------------------------------------
-call CSV_RECORD_APPEND(record_csv, fish, age, stat, fecund)
+call CSV_RECORD_APPEND(record_csv, fish, age, stat4, fecund)
 --------------------------------------------------------------------------------
 
 Append an array slice (any of the supported types) to the current record:
@@ -815,7 +815,7 @@ generated:
 
 [source]
 --------------------------------------------------------------------------------
-call CSV_RECORD_APPEND(record_csv, ["ROW_NAME", ("VAR_" // TOSTR(i),i=1,1000), "STATUS"])
+call CSV_RECORD_APPEND(record_csv,["ROW_NAME",("VAR_" // TOSTR(i,1000),i=1,1000),"STATUS"])
 --------------------------------------------------------------------------------
 
 Function: CSV_RECORD_SIZE
@@ -892,6 +892,7 @@ Note, that file handle object is used in the above example.
 Subroutine: CSV_MATRIX_WRITE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_MATRIX_WRITE]
+indexterm:[CSV_ARRAY_WRITE]
 
 Writes a matrix of real (kind 4 or  8), integer or string values to a CSV data
 file. This is a shortcut allowing to write data ina single code instruction.
@@ -917,7 +918,7 @@ IMPORTANT: Note, that one-dimensional array is written to the file as a single
 
 [source]
 --------------------------------------------------------------------------------
-call CSV_MATRIX_WRITE ( ARRAY_Z, "test-file-001.csv", fstat_csv)
+call CSV_MATRIX_WRITE (ARRAY_Z, "test-file-001.csv", fstat_csv)
  if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
 
