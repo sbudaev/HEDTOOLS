@@ -1,4 +1,4 @@
-Modelling tools manual
+Modelling Tools Manual
 ======================
 Sergey Budaev <sbudaev@gmail.com>
 $Id$
@@ -295,15 +295,15 @@ else
 end if
 --------------------------------------------------------------------------------
 
-with much shorter and clear like this:
+to a much shorter and clear like this:
 
 [source]
 --------------------------------------------------------------------------------
-    !print new gene pool. First make file name      !BSA 18/11/13
-    string104 = "HED24-" // trim(MMDD) // trim(runtag) // "-E0" // &
-                TOSTR(expmt,10) // "-o104-genepool-" // &
-                "gen-" // TOSTR(gen, 10000000) //  "-" // &
-                "age-" // TOSTR(age, 10000) // f_exten
+!print new gene pool. First make file name      !BSA 18/11/13
+string104 = "HED24-" // trim(MMDD) // trim(runtag) // "-E0" // &
+            TOSTR(expmt,10) // "-o104-genepool-" // &
+            "gen-" // TOSTR(gen, 10000000) //  "-" // &
+            "age-" // TOSTR(age, 10000) // f_exten
 --------------------------------------------------------------------------------
 
 Subroutines: STDOUT and STDERR
@@ -388,7 +388,8 @@ indexterm:[CSV_IO]
 
 This module contains subroutines and functions for outputting numerical data to
 the http://en.wikipedia.org/wiki/Comma-separated_values[CSV (Comma Separated
-Values)] format (http://tools.ietf.org/html/rfc4180/[RFC4180]).
+Values)] format (http://tools.ietf.org/html/rfc4180/[RFC4180], 
+http://www.creativyst.com/Doc/Articles/CSV/CSV01.htm[CSV format]).
 
 The typical workflow for output in CSV file format is like this:
 indexterm:[workflow]
@@ -396,21 +397,22 @@ indexterm:[workflow]
 ** *CSV_OPEN_WRITE* - physically open CSV file for writing;
 ** *CSV_HEADER_WRITE* - physically write optional descriptive header (header
    is just the first line of the CSV file);
-** do -- loop (1) over records (rows of data file) +
-   do -- loop (2) over values within the same record +
+** do -- start loop (1) over records (rows of data file) +
+   do -- start loop (2) over values within the same record +
     *CSV_RECORD_APPEND* - produce record of data values of different types,
-    append single values, usually in a loop +
+    append single values, arrays or lists, usually in loop(s) +
     end do -- end loop (2) +
     *CSV_RECORD_WRITE* - physically write the current record of data +
     to the output file.
-** end do -- end loop(1) -- go to producing next record;
-** end do -- end loop(2) -- cycle over the records;
+** end do -- end loop (1) -- go to producing the next record;
 ** *CSV_CLOSE* - physically closes the output CSV file.
 
-Thus, subs ending with *_WRITE* do physical write, as well as *_CLOSE*.
+Thus, subs ending with *_WRITE* and *_CLOSE* do physical write.
 
 This module is most suited at this moment for CSV file _output_ rather than
-input. Input CSV is to be done late if necessary.
+input.
+
+//Input CSV is to be done later if necessary.
 
 This module widely uses optional arguments. They could be called irrespective
 of the order using named parameters, e.g. this way (the first optional
@@ -960,7 +962,7 @@ type, public :: csv_file
 end type csv_file
 --------------------------------------------------------------------------------
 
-If csv_file object is defined, the file name, unit and the latest operation
+If +csv_file+ object is defined, the file name, unit and the latest operation
 success flag can be accessed as +%name+, +%unit+, +%status+
 (e.g. +some_file%name+, +some_file%unit+).
 
@@ -979,8 +981,14 @@ call CSV_CLOSE(file_occ)                ! Close file
 
 IMPORTANT: The file name is set as a standard *non-allocatable* fixed string
 because allocatable strings may not be supported on all compiler types and
-versions. Notably, older GNU Fortran (prior to v.5) do not allow allocatable
-strings in derived types. Currently, +MAX_FILENAME=255+.
+versions. Notably, older GNU Fortran (prior to v.5) does not allow allocatable
+strings in derived types. Currently, +MAX_FILENAME=255+ (can be changed in the 
+code). There is one consequence of using fixed strings: you may have to use the
+Fortran +trim()+ function to cut off trailing blanks if strings are 
+concatenated. E.g. do +file_name = trim(String1) // trim(String2)+ instead of 
++file_name = String1 // String2+ or 
+use +file_name = CLEANUP(String1 // String2)+ to remove all blank and control 
+characters.
 
 
 Final Notes
