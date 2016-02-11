@@ -97,9 +97,16 @@ f95 -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
 A static library of the modules could also be built, so the other more
 changeable code can be just linked with the library.
 
-Note: The examples above assume that the module code is located in the +
-upper-level directory, so ../ , also the build script or Makefile should +
+// For some reason icons don't appear in output of admonition blocks on herring.
+// Workaround: do Important with caption Note.
+
+[IMPORTANT]
+.Note
+================================================================================
+The examples above assume that the module code is located in the
+upper-level directory, so ../ , also the build script or Makefile should
 normally care about all this automatically.
+================================================================================
 
 Module: BASE_UTILS
 ------------------
@@ -130,8 +137,8 @@ Integer:
 
 [source]
 --------------------------------------------------------------------------------
-print *, TOSTR(12)
-produces string "12"
+STRING = TOSTR(12)
+produces  "12"
 --------------------------------------------------------------------------------
 
 Single precision real (type 4)footnote:[Note that float point calculations,
@@ -254,24 +261,24 @@ old-style Fortran string constructions as this
 [source]
 --------------------------------------------------------------------------------
 !print new gene pool. First make file name      !BSA 18/11/13
-  if (gen < 10) then
-    write(gen1,2902) "gen-0000000",gen
-  else if (gen < 100) then
-    write(gen1,2903) "gen-0000000",gen
-  else if (gen < 1000) then
-    write(gen1,2904) "gen-000000",gen
-  else if (gen < 10000) then
-    write(gen1,2905) "gen-00000",gen
-  else if (gen < 100000) then
-    write(gen1,2906) "gen-0000",gen
-  else if (gen < 1000000) then
-    write(gen1,2907) "gen-000",gen
-  else if (gen < 10000000) then
-    write(gen1,2913) "gen-00",gen
-  else if (gen < 100000000) then
-    write(gen1,2914) "gen-0",gen
-  else
-    write(gen1,2915) "gen-",gen
+if (gen < 10) then
+  write(gen1,2902) "gen-0000000",gen
+else if (gen < 100) then
+  write(gen1,2903) "gen-0000000",gen
+else if (gen < 1000) then
+  write(gen1,2904) "gen-000000",gen
+else if (gen < 10000) then
+  write(gen1,2905) "gen-00000",gen
+else if (gen < 100000) then
+  write(gen1,2906) "gen-0000",gen
+else if (gen < 1000000) then
+  write(gen1,2907) "gen-000",gen
+else if (gen < 10000000) then
+  write(gen1,2913) "gen-00",gen
+else if (gen < 100000000) then
+  write(gen1,2914) "gen-0",gen
+else
+  write(gen1,2915) "gen-",gen
 end if
 
 if (age < 10) then
@@ -388,7 +395,7 @@ indexterm:[CSV_IO]
 
 This module contains subroutines and functions for outputting numerical data to
 the http://en.wikipedia.org/wiki/Comma-separated_values[CSV (Comma Separated
-Values)] format (http://tools.ietf.org/html/rfc4180/[RFC4180], 
+Values)] format (http://tools.ietf.org/html/rfc4180/[RFC4180],
 http://www.creativyst.com/Doc/Articles/CSV/CSV01.htm[CSV format]).
 
 The typical workflow for output in CSV file format is like this:
@@ -443,6 +450,7 @@ that can be used as a single file handle. If csv_file object is defined,
 the file name, unit and the latest operation success status can be accessed
 as +%name+, +%unit+, +%status+ (e.g. +some_file%name+, +some_file%unit+).
 indexterm:[csv_file]
+indexterm:[file handle, file handle object]
 
 The physical file operation error flag, +csv_file_status+ is of logical type.
 It is always an optional parameter.
@@ -537,6 +545,7 @@ type(csv_file), intent(inout) :: csv_file_handle  ! file handle object
 --------------------------------------------------------------------------------
 
 indexterm:[csv_file]
+indexterm:[file handle, file handle object]
 
 *Example*
 
@@ -579,6 +588,7 @@ type(csv_file), intent(inout) :: csv_file_handle  ! file handle object
 --------------------------------------------------------------------------------
 
 indexterm:[csv_file]
+indexterm:[file handle, file handle object]
 
 *Example*
 
@@ -627,6 +637,7 @@ type(csv_file) :: csv_file_handle   ! file handle object
 --------------------------------------------------------------------------------
 
 indexterm:[csv_file]
+indexterm:[file handle, file handle object]
 
 *Example*
 
@@ -767,6 +778,8 @@ the record string to the necessary value, e.g. +record=repeat(" ", MAX_RECORD)+
 will produce a string consisting of +MAX_RECORD+ blank characters. +record+
 should not necessarily be an empty string initially, it could be just a whole
 blank string.
+indexterm:[allocatable string]
+indexterm:[repeat]
 
 Examples
 ^^^^^^^^
@@ -899,6 +912,7 @@ type(csv_file) :: csv_file_handle         ! file handle object
 --------------------------------------------------------------------------------
 
 indexterm:[csv_file]
+indexterm:[file handle, file handle object]
 
 *Example*
 
@@ -952,6 +966,7 @@ indexterm:[csv_file]
 
 This type is used as a unitary file handle object. It has the following
 structure:
+indexterm:[file handle, file handle object]
 
 [source]
 --------------------------------------------------------------------------------
@@ -982,13 +997,14 @@ call CSV_CLOSE(file_occ)                ! Close file
 IMPORTANT: The file name is set as a standard *non-allocatable* fixed string
 because allocatable strings may not be supported on all compiler types and
 versions. Notably, older GNU Fortran (prior to v.5) does not allow allocatable
-strings in derived types. Currently, +MAX_FILENAME=255+ (can be changed in the 
+strings in derived types. Currently, +MAX_FILENAME=255+ (can be changed in the
 code). There is one consequence of using fixed strings: you may have to use the
-Fortran +trim()+ function to cut off trailing blanks if strings are 
-concatenated. E.g. do +file_name = trim(String1) // trim(String2)+ instead of 
-+file_name = String1 // String2+ or 
-use +file_name = CLEANUP(String1 // String2)+ to remove all blank and control 
+Fortran +trim()+ function to cut off trailing blanks if strings are
+concatenated. E.g. do +file_name=trim(String1) // trim(String2)+ instead of
++file_name=String1 // String2+ or
+use +file_name=CLEANUP(String1 // String2)+ to remove all blank and control
 characters.
+indexterm:[allocatable string]
 
 
 Final Notes
