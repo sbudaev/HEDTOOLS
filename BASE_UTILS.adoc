@@ -977,10 +977,10 @@ call CSV_OPEN_WRITE(file_occ)           ! Open file for writing
 call CSV_CLOSE(file_occ)                ! Close file
 --------------------------------------------------------------------------------
 
-NOTE: the file name is set as a standard *non-allocatable* fixed string because
-allocatable strings may not be supported on all compiler types and versions.
-Notably, older GNU Fortran (prior to v.5) do not allow allocatable strings in
-derived types.
+IMPORTANT: The file name is set as a standard *non-allocatable* fixed string
+because allocatable strings may not be supported on all compiler types and
+versions. Notably, older GNU Fortran (prior to v.5) do not allow allocatable
+strings in derived types. Currently, +MAX_FILENAME=255+.
 
 
 Final Notes
