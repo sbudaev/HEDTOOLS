@@ -440,6 +440,7 @@ both a provided, unit is used). There is also a derived type *csv_file*
 that can be used as a single file handle. If csv_file object is defined,
 the file name, unit and the latest operation success status can be accessed
 as +%name+, +%unit+, +%status+ (e.g. +some_file%name+, +some_file%unit+).
+indexterm:[csv_file]
 
 The physical file operation error flag, +csv_file_status+ is of logical type.
 It is always an optional parameter.
@@ -496,6 +497,8 @@ call CSV_CLOSE( csv_file_name=csv_file_append_data_name, &
 if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
 --------------------------------------------------------------------------------
 
+indexterm:[csv_file]
+
 Although, there is a wrapper for saving the whole chunk of the data at once.
 A whole array or matrix (2-dimensional table) can be exported to CSV
 in a single command:
@@ -530,6 +533,8 @@ logical :: csv_file_status          ! optional status flag, TRUE if operation
 --------------------------------------------------------------------------------
 type(csv_file), intent(inout) :: csv_file_handle  ! file handle object
 --------------------------------------------------------------------------------
+
+indexterm:[csv_file]
 
 *Example*
 
@@ -570,6 +575,8 @@ IMPORTANT: At least *file name* or *unit* should be present in the subroutine
 --------------------------------------------------------------------------------
 type(csv_file), intent(inout) :: csv_file_handle  ! file handle object
 --------------------------------------------------------------------------------
+
+indexterm:[csv_file]
 
 *Example*
 
@@ -616,6 +623,8 @@ IMPORTANT: At least *file name* or *unit* should be present in the subroutine
 character (len=*) :: header         ! mandatory CSV file header
 type(csv_file) :: csv_file_handle   ! file handle object
 --------------------------------------------------------------------------------
+
+indexterm:[csv_file]
 
 *Example*
 
@@ -887,6 +896,8 @@ character (len=*)  :: record              ! current CSV record (mandatory)
 type(csv_file) :: csv_file_handle         ! file handle object
 --------------------------------------------------------------------------------
 
+indexterm:[csv_file]
+
 *Example*
 
 [source]
@@ -933,8 +944,43 @@ call CSV_MATRIX_WRITE (ARRAY_Z, "test-file-001.csv", fstat_csv)
  if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
 
+Derived type: csv_file
+~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[csv_file]
 
+This type is used as a unitary file handle object. It has the following
+structure:
 
+[source]
+--------------------------------------------------------------------------------
+type, public :: csv_file
+  character (len=MAX_FILENAME) :: name  ! The name of the file
+  integer :: unit = -1                  ! Fortran unit associated with the file
+  logical :: status = .TRUE.            ! success flag for the latest operation
+end type csv_file
+--------------------------------------------------------------------------------
+
+If csv_file object is defined, the file name, unit and the latest operation
+success flag can be accessed as +%name+, +%unit+, +%status+
+(e.g. +some_file%name+, +some_file%unit+).
+
+*Example*
+
+[source]
+--------------------------------------------------------------------------------
+type(csv_file) :: file_occ              ! define the file handle object
+....
+file_occ%name="some_name.txt"           ! set file name value
+....
+call CSV_OPEN_WRITE(file_occ)           ! Open file for writing
+....
+call CSV_CLOSE(file_occ)                ! Close file
+--------------------------------------------------------------------------------
+
+NOTE: the file name is set as a standard *non-allocatable* fixed string because
+allocatable strings may not be supported on all compiler types and versions.
+Notably, older GNU Fortran (prior to v.5) do not allow allocatable strings in
+derived types.
 
 
 Final Notes
