@@ -15,6 +15,7 @@ program TEST_SCRATCH
 
   character (len=255) :: REC
   integer :: i
+  logical :: flag
   real, dimension(6) :: RARR = [0.1,0.2,0.3,0.4,0.5,0.6]
   character (len=4), dimension(6) :: STARR=["a1","a2","a3","a4","a5","a6"]
 
@@ -87,6 +88,15 @@ program TEST_SCRATCH
   print *, ">>", TOSTR( [(RARR(i), i=1,4), 200.1, 400.5] ), "<<"
 
   print *, ">>", TOSTR( [(RARR(i), i=1,4), 200.1, 400.5], "(f9.3)" ), "<<"
+
+  call CSV_ARRAY_WRITE([("XXX OOO 111 444",i=1,10000)], "zzz_vert.csv", .TRUE., flag)
+  print *, flag
+
+  call CSV_ARRAY_WRITE([("XXX 000 111 222",i=1,1000)], "zzz_hor.csv", .FALSE., flag)
+  print *, flag
+
+  print *, CSV_FILE_LINES_COUNT("zzz_vert.csv", flag)
+  print *,flag
 
 
 end program TEST_SCRATCH

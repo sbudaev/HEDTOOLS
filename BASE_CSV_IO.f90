@@ -809,12 +809,15 @@ function CSV_FILE_LINES_COUNT (csv_file_name, csv_file_status) &
   integer :: ierror
   integer :: input_status
   integer :: input_unit
-  character (len=:), allocatable :: line
+  character (len=2) :: line   ! We only need to count rows here
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "CSV_FILE_LINES_COUNT"
 
   !-----------------------------------------------------------------------------
+
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
 
   line_num = -1
 
@@ -836,7 +839,7 @@ function CSV_FILE_LINES_COUNT (csv_file_name, csv_file_status) &
   line_num = 0
 
   do
-    read (input_unit, '(a)', iostat = input_status) line
+    read (input_unit, '(a2)', iostat = input_status) line
     if (input_status /= 0) then
       ierror=line_num
       exit  ! leave the do loop here
@@ -910,9 +913,9 @@ subroutine CSV_FILE_RECORD_WRITE (csv_file_name, csv_file_unit, record, &
 
   ! Check IO errors and report back if optional args are present
   if (file_error_status==0) then
-      if (present(csv_file_status)) csv_file_status=.TRUE.  ! No error
-    else
-      if (present(csv_file_status)) csv_file_status=.FALSE. ! File error
+    if (present(csv_file_status)) csv_file_status=.TRUE.  ! No error
+  else
+    if (present(csv_file_status)) csv_file_status=.FALSE. ! File error
   end if
 
 end subroutine CSV_FILE_RECORD_WRITE
@@ -2553,6 +2556,10 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
 
   !-----------------------------------------------------------------------------
 
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
+
   LBndi=lbound(matrix, 1)   ! Determining bounds for out matrix
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
@@ -2624,6 +2631,10 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
   character (len=*), parameter :: PROCNAME = "CSV_MATRIX_WRITE_R4"
 
   !-----------------------------------------------------------------------------
+
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
 
   LBndi=lbound(matrix, 1)   ! Determining bounds for out matrix
   UBndi=ubound(matrix, 1)
@@ -2698,6 +2709,10 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
 
   !-----------------------------------------------------------------------------
 
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
+
   LBndi=lbound(matrix, 1)   ! Determining bounds for out matrix
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
@@ -2769,6 +2784,10 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
   character (len=*), parameter :: PROCNAME = "CSV_MATRIX_WRITE_S"
 
   !-----------------------------------------------------------------------------
+
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
 
   LBndi=lbound(matrix, 1)   ! Determining bounds for out matrix
   UBndi=ubound(matrix, 1)
@@ -2851,6 +2870,10 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
   character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_I4"
 
   !-----------------------------------------------------------------------------
+
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
 
   LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -2964,6 +2987,10 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
 
   !-----------------------------------------------------------------------------
 
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
+
   LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
@@ -3067,7 +3094,7 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
 
   ! Local variables
   integer :: funit
-  character (len=255) :: csv_record   ! TODO: make allocatable + allocate to necessary size
+  character (len=:), allocatable :: csv_record
   integer :: i, LBndi, Ubndi
   integer :: max_size_record
 
@@ -3075,6 +3102,10 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
   character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_R8"
 
   !-----------------------------------------------------------------------------
+
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
 
   LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -3187,6 +3218,10 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, vertical, csv_file_status)
   character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_S"
 
   !-----------------------------------------------------------------------------
+
+  ! May need initialise logical on some platforms/compilers
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
 
   LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
