@@ -185,7 +185,7 @@ interface CSV_RECORD_WRITE
 end interface CSV_RECORD_WRITE
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
-                                ! Private here to avoid possible name conflicts, 
+                                ! Private here to avoid possible name conflicts,
                                 ! do we need them outside?
 
 private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for debugging this
@@ -2817,13 +2817,14 @@ end subroutine CSV_MATRIX_WRITE_S
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
+subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_I4
 ! PURPOSE: Writes an array of integers to a CSV data file
 ! CALL PARAMETERS:
 !    Array of integers
 !    Character CSV_FILE_NAME, the name of the file.
+!    Logical VERTICAL, if .TRUE. (default if absent) write single column
 !    Logical CSV_FILE_STATUS, .TRUE. if successfull, no errors
 ! Modified by Sergey Budaev
 !*******************************************************************************
@@ -2833,9 +2834,11 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
   ! Calling parameters
   integer, dimension(:), intent(in) :: array        ! was matrix
   character (len=*), intent(in) :: csv_file_name
+  logical, optional, intent(in) :: vertical
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  logical :: vertical_here
   logical :: csv_file_status_here
 
   ! Local variables
@@ -2849,45 +2852,85 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, csv_file_status)
 
   !-----------------------------------------------------------------------------
 
-  ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
-  ! TODO: make option to write array in a single row
-  !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
-  max_size_record = ( I4_WIDTH(maxval(array))+2 )
-
-  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
-    if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+  if (present(vertical)) then ! If write array "vertically" (single column)
+    vertical_here=vertical
+  else
+    vertical_here=.TRUE.
   end if
 
-  do i=LBndi, UBndi
+  if (vertical_here) then
+    ! Write vertically, i.e. in single column
 
-    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
-    call CSV_RECORD_APPEND_I4 (csv_record, array(i))  ! write by rows (down)
+    ! Assess the maximum size of the whole record in advance, we
+    ! cannot make record allocatable
+    ! TODO: make option to write array in a single row
+    !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+    max_size_record = ( I4_WIDTH(maxval(array))+2 )
 
-    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
-                                csv_file_status_here)
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
     end if
 
-  end do
-  call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
+    do i=LBndi, UBndi
+
+      csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+      call CSV_RECORD_APPEND_I4 (csv_record, array(i))  ! write by rows (down)
+
+      call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+      if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+      end if
+
+    end do
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+  else ! Write horizontally, i.e. in a single row.
+
+    max_size_record = size(array) * ( I4_WIDTH(maxval(array))+4 )
+
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
+    end if
+
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+
+    do i=LBndi, UBndi
+      call CSV_RECORD_APPEND_I4 (csv_record, array(i))  ! write by cols (right)
+    end do
+
+    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
   end if
 
 end subroutine CSV_ARRAY_WRITE_I4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
+subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
 !*******************************************************************************
 ! CSV_ARRAY_WRITE_R4
 ! PURPOSE: Writes an array of integers to a CSV data file
@@ -2903,9 +2946,11 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
   ! Calling parameters
   real, dimension(:), intent(in) :: array        ! was matrix
   character (len=*), intent(in) :: csv_file_name
+  logical, optional, intent(in) :: vertical
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  logical :: vertical_here
   logical :: csv_file_status_here
 
   ! Local variables
@@ -2919,45 +2964,85 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, csv_file_status)
 
   !-----------------------------------------------------------------------------
 
-  ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
-  ! TODO: make option to write array in a single row
-  !max_size_record = size(array) * ( I4_WIDTH(int(maxval(array)))+10 )
-  max_size_record = I4_WIDTH(int(maxval(array)))+14
-
-  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
-    if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+  if (present(vertical)) then ! If write array "vertically" (single column)
+    vertical_here=vertical
+  else
+    vertical_here=.TRUE.
   end if
 
-  do i=LBndi, UBndi
+  if (vertical_here) then
+    ! Write vertically, i.e. in single column
 
-    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
-    call CSV_RECORD_APPEND_R4 (csv_record, array(i))  ! write by rows (down)
+    ! Assess the maximum size of the whole record in advance, we
+    ! cannot make record allocatable
+    ! TODO: make option to write array in a single row
+    !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+    max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
 
-    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
-                                csv_file_status_here)
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
     end if
 
-  end do
-  call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
+    do i=LBndi, UBndi
+
+      csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+      call CSV_RECORD_APPEND_R4 (csv_record, array(i))  ! write by rows (down)
+
+      call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+      if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+      end if
+
+    end do
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+  else ! Write horizontally, i.e. in a single row.
+
+    max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+14)
+
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
+    end if
+
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+
+    do i=LBndi, UBndi
+      call CSV_RECORD_APPEND_R4 (csv_record, array(i))  ! write by cols (right)
+    end do
+
+    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
   end if
 
 end subroutine CSV_ARRAY_WRITE_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
+subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
 !*******************************************************************************
 ! CSV_ARRAY_WRITE_R8
 ! PURPOSE: Writes an array of integers to a CSV data file
@@ -2973,9 +3058,11 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
   ! Calling parameters
   real (kind=8), dimension(:), intent(in) :: array        ! was matrix
   character (len=*), intent(in) :: csv_file_name
+  logical, optional, intent(in) :: vertical
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  logical :: vertical_here
   logical :: csv_file_status_here
 
   ! Local variables
@@ -2988,45 +3075,86 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, csv_file_status)
   character (len=*), parameter :: PROCNAME = "CSV_ARRAY_WRITE_R8"
 
   !-----------------------------------------------------------------------------
-  ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
-  ! TODO: make option to write array in a single row
-  max_size_record = size(array) * ( I4_WIDTH(int(maxval(array)))+1 )
-  max_size_record = I4_WIDTH(int(maxval(array)))+18
 
-  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
-    if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+  if (present(vertical)) then ! If write array "vertically" (single column)
+    vertical_here=vertical
+  else
+    vertical_here=.TRUE.
   end if
 
-  do i=LBndi, UBndi
+  if (vertical_here) then
+    ! Write vertically, i.e. in single column
 
-    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
-    call CSV_RECORD_APPEND_R8 (csv_record, array(i))  ! write by rows (down)
+    ! Assess the maximum size of the whole record in advance, we
+    ! cannot make record allocatable
+    ! TODO: make option to write array in a single row
+    !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+    max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
 
-    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
-                                csv_file_status_here)
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
     end if
 
-  end do
-  call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
+    do i=LBndi, UBndi
+
+      csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+      call CSV_RECORD_APPEND_R8 (csv_record, array(i))  ! write by rows (down)
+
+      call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+      if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+      end if
+
+    end do
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+  else ! Write horizontally, i.e. in a single row.
+
+    max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+14)
+
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
+    end if
+
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+
+    do i=LBndi, UBndi
+      call CSV_RECORD_APPEND_R8 (csv_record, array(i))  ! write by cols (right)
+    end do
+
+    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
   end if
 
 end subroutine CSV_ARRAY_WRITE_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
+subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, vertical, csv_file_status)
 !*******************************************************************************
 ! CSV_ARRAY_WRITE_S
 ! PURPOSE: Writes an array of integers to a CSV data file
@@ -3042,9 +3170,11 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
   ! Calling parameters
   character (len=*), dimension(:), intent(in) :: array        ! was matrix
   character (len=*), intent(in) :: csv_file_name
+  logical, optional, intent(in) :: vertical
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  logical :: vertical_here
   logical :: csv_file_status_here
 
   ! Local variables
@@ -3058,39 +3188,84 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, csv_file_status)
 
   !-----------------------------------------------------------------------------
 
-  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  LBndi=lbound(array, 1)      ! Determining bounds for out array
   UBndi=ubound(array, 1)
 
-  ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
-  max_size_record=0
-  do i=LBndi, UBndi
-    max_size_record=max_size_record+len(array(i))+1
-  end do
-
-  call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
-    if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+  if (present(vertical)) then ! If write array "vertically" (single column)
+    vertical_here=vertical
+  else
+    vertical_here=.TRUE.
   end if
 
-  do i=LBndi, UBndi
+  if (vertical_here) then
+    ! Write vertically, i.e. in single column
 
-    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
-    call CSV_RECORD_APPEND_S (csv_record, array(i))  ! write by rows (down)
+    ! Assess the maximum size of the whole record in advance, we
+    ! cannot make record allocatable
+    max_size_record=4
+    do i=LBndi, UBndi
+      max_size_record=max(max_size_record, len_trim(array(i))) + 4
+    end do
 
-    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
-                                csv_file_status_here)
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
     end if
 
-  end do
-  call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
-  if (.not. csv_file_status_here) then
+    do i=LBndi, UBndi
+
+      csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+      call CSV_RECORD_APPEND_S (csv_record, array(i))  ! write by rows (down)
+
+      call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+      if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+      end if
+
+    end do
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+  else ! Write horizontally, i.e. in a single row.
+
+    ! Assess the maximum size of the whole record in advance, we
+    ! cannot make record allocatable
+    max_size_record=8
+    do i=LBndi, UBndi
+      max_size_record = max_size_record + len_trim(array(i)) + 4
+    end do
+
+    call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
+    end if
+
+    csv_record=repeat(" ", max_size_record) ! allocate empty record of max len
+
+    do i=LBndi, UBndi
+      call CSV_RECORD_APPEND_S (csv_record, array(i))  ! write by cols (right)
+    end do
+
+    call CSV_FILE_RECORD_WRITE (csv_file_name, funit, csv_record, &
+                                  csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
+    call CSV_FILE_CLOSE(csv_file_name, funit, csv_file_status_here)
+    if (.not. csv_file_status_here) then
+        if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+
   end if
 
 end subroutine CSV_ARRAY_WRITE_S
