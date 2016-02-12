@@ -55,7 +55,7 @@ program TEST_SCRATCH
   ! using fortran array constructor to create strings
   ! Note that implicit constructor sets the constructed string length
   ! at first invocation. So, set maximum length first (7 rather than 5)
-  call CSV_RECORD_APPEND( REC, [ "VAR_001", ("VAR_" // TOSTR(i),i=2,10), "VAR_00X but this long part is lost" ] )
+  call CSV_RECORD_APPEND( REC, [ "VAR_001", ("VAR_" // TOSTR(i),i=2,10) ] )
   print *, ">>", trim(REC), "<<"
 
   ! TOSTR function can produce arbitrary number of leading zeroes

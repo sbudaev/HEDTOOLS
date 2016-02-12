@@ -66,7 +66,7 @@ program TEST
 end program TEST
 --------------------------------------------------------------------------------
 
-Building the program with these modules using the command line is notmally a
+Building the program with these modules using the command line is normally a
 two-step process:
 
 build the modules, e.g.
@@ -93,6 +93,8 @@ or for a generic F95 compiler:
 f95 -g -c ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
 f95 -g -o TEST.exe TEST.f90 ../BASE_UTILS.f90 ../BASE_CSV_IO.f90
 --------------------------------------------------------------------------------
+
+indexterm:[compiler,GNU,gfortran]
 
 A static library of the modules could also be built, so the other more
 changeable code can be just linked with the library.
@@ -231,6 +233,7 @@ It is possible to use array slices and array constructors with implicit do:
 indexterm:[implied do]
 indexterm:[implied cycle]
 indexterm:[array slice]
+indexterm:[array constructor]
 
 [source]
 --------------------------------------------------------------------------------
@@ -825,6 +828,7 @@ call CSV_RECORD_APPEND(record_csv,(/(RARR(i), i=1,6)/))
 
 indexterm:[implied do]
 indexterm:[implied cycle]
+indexterm:[array constructor]
 
 Append an array using new-style array constructor (square brackets) with
 implied do plus two other values (all values can have any of the supported
@@ -850,6 +854,17 @@ generated:
 --------------------------------------------------------------------------------
 call CSV_RECORD_APPEND(record_csv,["ROW_NAME",("VAR_" // TOSTR(i,1000),i=1,1000),"STATUS"])
 --------------------------------------------------------------------------------
+
+IMPORTANT: On some compilers (e.g. Oracle Solaris Studio f95 but not GNU
+gfortran), all strings within the array constructor must explicitly have the
+same length, otherwise the compiler issues an error. In gfortran, the first
+occurrence of the string (e.g. the first  iteration of the implied do loop)
+defines the default length and all extra characters are just silently dropped.
+The behaviour of other compilers may differ.
+indexterm:[array constructor,portability,compiler limitation]
+indexterm:[compiler,limitation]
+indexterm:[compiler,GNU,gfortran]
+
 
 Function: CSV_RECORD_SIZE
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -996,7 +1011,7 @@ call CSV_CLOSE(file_occ)                ! Close file
 
 IMPORTANT: The file name is set as a standard *non-allocatable* fixed string
 because allocatable strings may not be supported on all compiler types and
-versions. Notably, older GNU Fortran (prior to v.5) does not allow allocatable
+versions. Notably, older GNU gfortran (prior to v.5) does not allow allocatable
 strings in derived types. Currently, +MAX_FILENAME=255+ (can be changed in the
 code). There is one consequence of using fixed strings: you may have to use the
 Fortran +trim()+ function to cut off trailing blanks if strings are
@@ -1004,7 +1019,9 @@ concatenated. E.g. do +file_name=trim(String1) // trim(String2)+ instead of
 +file_name=String1 // String2+ or
 use +file_name=CLEANUP(String1 // String2)+ to remove all blank and control
 characters.
-indexterm:[allocatable string]
+indexterm:[allocatable string,portability,compiler limitation]
+indexterm:[compiler,GNU,gfortran]
+indexterm:[compiler,limitation]
 
 
 Final Notes
