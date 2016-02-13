@@ -424,28 +424,45 @@ input.
 
 //Input CSV is to be done later if necessary.
 
-This module widely uses optional arguments. They could be called irrespective
-of the order using named parameters, e.g. this way (the first optional
-parameter absent):
+This module widely uses *optional arguments*. They may or may not be present
+in the function/subroutine call. If not all parameters are passed, so called
+_named parameters_ are used. That is, the name of the parameter(s) within the
+function is explicitly stated when the function/subroutine is called.
 indexterm:[optional arguments]
+indexterm:[named arguments]
+
+For example, +GET_FREE_FUNIT+ has its both parameters optional (+max_funit+ and
++file_status+), it can be called in the standard way as below:
 
 [source]
-intNextunit = GET_FREE_FUNIT(file_status=logicalFlag)
+intNextunit = GET_FREE_FUNIT(200, logicalFlag)
 
-or (both parameters present but swapped in order):
-
-[source]
-intNextunit = GET_FREE_FUNIT(file_status=logicalFlag, max_funit=200)
-
-or (optional parameters absent altogether):
+It can lack any parameter:
 
 [source]
 intNextunit = GET_FREE_FUNIT()
 
-or the standard way:
+If the first optional parameter is absent, +GET_FREE_FUNIT+ is called as here:
 
 [source]
-intNextunit = GET_FREE_FUNIT(200, logicalFlag)
+intNextunit = GET_FREE_FUNIT(file_status=logicalFlag)
+
+If both parameters present but swapped in order, it should be
+
+[source]
+intNextunit = GET_FREE_FUNIT(file_status=logicalFlag, max_funit=200)
+
+of course, it can also be used this way:
+
+[source]
+intNextunit = GET_FREE_FUNIT(max_funit=200, file_status=logicalFlag)
+
+IMPORTANT: The standard way of using subroutine parameters (without explicitly
+  setting their names) when calling subroutine works only when their are not
+  missing and their order remains the same as in the subroutine declaration.
+  When a function / subroutine has many parameters and optional are
+  interspersed with mandatory, _it is probably just safer to use named
+  parameters anyway_.
 
 Files can be referred either by unit or by name, but unit has  precedence (if
 both a provided, unit is used). There is also a derived type *csv_file*
