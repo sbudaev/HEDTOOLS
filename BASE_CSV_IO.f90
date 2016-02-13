@@ -184,7 +184,8 @@ interface CSV_RECORD_WRITE
 
 end interface CSV_RECORD_WRITE
 
-private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
+private :: I4_WIDTH, I4_LOG_10, CLEANUP, STR_ITOA_LZ, STR_ITOA  ! They are
+                                !  identical in CSV_IO and BASE_UTILS.
                                 ! Private here to avoid possible name conflicts,
                                 ! do we need them outside?
 
@@ -3307,6 +3308,66 @@ end subroutine CSV_ARRAY_WRITE_S
 
 !-------------------------------------------------------------------------------
 
+subroutine CSV_COLNAMES(names_in, names_out)
+!*******************************************************************************
+! CSV_COLNAMES
+! PURPOSE: Composes column names across two string arrays, copies from names_in
+!          to names_out and fill possible insufficient names with "COL_XXX"
+! CALL PARAMETERS:
+! NOTE: Fortran does not pass exact limits to subroutines with assumed shape
+!          arrays, they use just the default start index (1). I discovered
+!          this only during debugging this sub. It works ok assuming both arrays
+!          start from 1 though. Do transform args to pointer?
+! Author Sergey Budaev
+!*******************************************************************************
+
+  ! Calling parameters
+  character (len=*), dimension (:), intent(in) :: names_in
+  character (len=*), dimension (:), intent(out) :: names_out
+
+  ! Local variables
+  integer :: LBndi_in, UBndi_in   ! bounds for col names
+  integer :: LBndi_out, UBndi_out !   arrays
+  integer :: LBndi_whl, UBndi_whl !   and full names array
+  integer :: maxdigits_whl        ! length of whole array
+  integer :: i                    ! counters
+  character (len=255), dimension(:), allocatable :: names_whole
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_COLNAMES"
+
+  !-----------------------------------------------------------------------------
+
+  LBndi_in=lbound(names_in, 1)      ! Determining bounds for out array
+  UBndi_in=ubound(names_in, 1)
+  LBndi_out=lbound(names_out, 1)    ! exact bounds do not seem to be passed
+  UBndi_out=ubound(names_out, 1)    ! only shape & size important
+
+  LBndi_whl=min(LBndi_in,LBndi_out)           ! set size for the whole array of
+  UBndi_whl=max(UBndi_in,UBndi_out)           !  names..
+
+  allocate(names_whole(LBndi_whl:UBndi_whl))  ! and allocate whole names array
+
+  maxdigits_whl=max(abs(LBndi_whl),abs(UBndi_whl)) ! max number of digits
+
+  do i=LBndi_whl, UBndi_whl
+    names_whole(i) ="COL_" // STR_ITOA_LZ(i, maxdigits_whl)
+  end do
+
+  do i=LBndi_in, UBndi_in
+    names_whole(i) = names_in(i)
+  end do
+
+  do i=LBndi_out, UBndi_out
+    names_out(i) = names_whole(i)
+  end do
+
+end subroutine CSV_COLNAMES
+
+!-------------------------------------------------------------------------------
+! Private objects follow:
+!-------------------------------------------------------------------------------
+
 function I4_WIDTH (i) result (i4width)
 !*******************************************************************************
 ! I4_WIDTH
@@ -3423,5 +3484,143 @@ function I4_LOG_10 (i) result(i4log10)
 end function I4_LOG_10
 
 !-------------------------------------------------------------------------------
+
+function STR_ITOA(i, formatstr) result (ToStrA)  ! PRIVATE HERE, from UTILS
+!*******************************************************************************
+! PURPOSE: Convert INTEGER to a string type.
+! CALL PARAMETERS: single integer value
+! EXAMPLE:
+!          Str_NAME = STR_ITOA(inumber)
+!          Str_HEADER = "MODEL_" // STR_ITOA(4)
+!*******************************************************************************
+
+! Convert INTEGER to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable  :: ToStrA
+
+  ! Calling parameters
+  integer, intent(in) :: i
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character(range(i)+2) :: tmpStr
+  character(len=:), allocatable :: tmpFormat
+
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ITOA"
+
+  !--------------------------------------------------
+
+  if (present(formatstr))  then
+    tmpFormat=formatstr
+    write(tmpStr, tmpFormat) i
+    ToStrA = trim(tmpStr)
+  else
+    write(tmpStr,'(i0)') i
+    ToStrA = CLEANUP(tmpStr)        ! see notes on _R and _R8 versions below
+  end if
+
+end function STR_ITOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ITOA_LZ(i, maxi) result (ToStrA)  ! PRIVATE HERE, from UTILS
+!*******************************************************************************
+! STR_ITOA_LZ
+! PURPOSE: Convert integer to a string type including leading zeros.
+!          Useful for generating file and variable names and other strings
+!          that contain a numerical part with fixed width.
+! CALL PARAMETERS: integer
+!                  integer setting the maximum length of the digit string
+! EXAMPLE:
+!          FileName = "File_" // STR_ITOA_LZ(10, 1000) // ".txt"
+!          results in: File_0010.txt
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable  :: ToStrA
+
+  ! Calling parameters
+  integer, intent(in) :: i
+  integer, intent(in) :: maxi
+
+  ! Local variables
+  integer :: iwidth, fwidth
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ITOA_LZ"
+
+  iwidth = I4_WIDTH(i)
+  fwidth = I4_WIDTH(maxi)
+
+  if ( i < 0 ) then
+    ToStrA = "-" // repeat("0", fwidth-iwidth+1) // STR_ITOA(abs(i))
+  else
+    ToStrA = repeat("0", fwidth-iwidth) // STR_ITOA(i)
+  end if
+
+end function STR_ITOA_LZ
+
+!-------------------------------------------------------------------------------
+
+function CLEANUP(instring) result (cleaned)  ! PRIVATE HERE, from UTILS
+!*******************************************************************************
+! PURPOSE: Removes spaces, tabs, and control characters in string
+! CALL PARAMETERS: Character string
+! NOTE: This is a modified version from the STRINGS module
+! (http://www.gbenthien.net/strings/index.html)
+!*******************************************************************************
+
+  ! Function value
+  character (len=:), allocatable :: cleaned
+
+  ! Calling parameters
+  character(len=*), intent(in) :: instring
+
+  ! Copies of calling parameters
+  character(len=:), allocatable :: str
+
+  ! Local variables
+  character(len=1):: ch
+  character(len=len_trim(instring))::outstr
+  integer :: i, k, ich, lenstr
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CLEANUP"
+
+  !-----------------------------------------------------------------------------
+
+  str=instring
+
+  str=adjustl(str)
+  lenstr=len_trim(str)
+  outstr=' '
+  k=0
+
+  do i=1,lenstr
+    ch=str(i:i)
+    ich=iachar(ch)
+    select case(ich)
+      case(0:32)  ! space, tab, or control character
+          cycle
+      case(33:)
+        k=k+1
+        outstr(k:k)=ch
+    end select
+  end do
+
+  cleaned=trim(outstr)
+
+end function CLEANUP
+
 
 end module CSV_IO
