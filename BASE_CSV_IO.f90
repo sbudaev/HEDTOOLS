@@ -2525,7 +2525,7 @@ end subroutine CSV_RECORD_APPEND_LST_S
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_I4 (matrix, colnames, csv_file_name, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_I4
 ! PURPOSE: Writes a matrix of integers to a CSV data file
@@ -2540,13 +2540,17 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
 
   ! Calling parameters
   integer, dimension(:,:), intent(in) :: matrix
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  character (len=255), dimension(:), allocatable :: colnames_here
   logical :: csv_file_status_here
 
   ! Local variables
+  character (len=255), dimension(:), allocatable :: colnames_output
+  logical :: write_colnames
   integer :: funit
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
@@ -2560,11 +2564,20 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
   ! May need initialise logical on some platforms/compilers
   if (present(csv_file_status)) csv_file_status = .TRUE.
 
-
   LBndi=lbound(matrix, 1)   ! Determining bounds for out matrix
   UBndi=ubound(matrix, 1)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
+
+  COLNAMES_CHK: if (present(colnames)) then
+    write_colnames=.TRUE.
+    allocate(colnames_here(lbound(colnames,1):ubound(colnames,1)))
+    allocate(colnames_output(LBndj:UBndj))
+    colnames_here=colnames
+    call CSV_COLNAMES(colnames_here, colnames_output)
+  else COLNAMES_CHK
+    write_colnames=.FALSE.
+  end if COLNAMES_CHK
 
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
@@ -2575,6 +2588,17 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
     if (present(csv_file_status)) csv_file_status=csv_file_status_here
     return
   end if
+
+  COLNAMES_WRT: if (write_colnames) then
+    csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(len_trim(colnames(1))+4))
+    call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
+    call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
+                               csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+  end if COLNAMES_WRT
 
   do i=LBndi, UBndi
 
@@ -2587,7 +2611,7 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, csv_file_status)
                                 csv_file_status_here)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
-    return
+      return
     end if
 
   end do
@@ -2601,7 +2625,7 @@ end subroutine CSV_MATRIX_WRITE_I4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_R4 (matrix, colnames, csv_file_name, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_R4
 ! PURPOSE: Writes a matrix of real type to a CSV data file
@@ -2616,13 +2640,17 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
 
   ! Calling parameters
   real, dimension(:,:), intent(in) :: matrix
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  character (len=255), dimension(:), allocatable :: colnames_here
   logical :: csv_file_status_here
 
   ! Local variables
+  character (len=255), dimension(:), allocatable :: colnames_output
+  logical :: write_colnames
   integer :: funit
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
@@ -2642,6 +2670,16 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
 
+  COLNAMES_CHK: if (present(colnames)) then
+    write_colnames=.TRUE.
+    allocate(colnames_here(lbound(colnames,1):ubound(colnames,1)))
+    allocate(colnames_output(LBndj:UBndj))
+    colnames_here=colnames
+    call CSV_COLNAMES(colnames_here, colnames_output)
+  else COLNAMES_CHK
+    write_colnames=.FALSE.
+  end if COLNAMES_CHK
+
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
   max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+14 )
@@ -2651,6 +2689,17 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, csv_file_status)
     if (present(csv_file_status)) csv_file_status=csv_file_status_here
     return
   end if
+
+  COLNAMES_WRT: if (write_colnames) then
+    csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(len_trim(colnames(1))+4))
+    call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
+    call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
+                               csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+  end if COLNAMES_WRT
 
   do i=LBndi, UBndi
 
@@ -2678,7 +2727,7 @@ end subroutine CSV_MATRIX_WRITE_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_R8 (matrix, colnames, csv_file_name, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_R8
 ! PURPOSE: Writes a matrix of real (kind 8), double, to a CSV data file
@@ -2693,13 +2742,17 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
 
   ! Calling parameters
   real (kind=8), dimension(:,:), intent(in) :: matrix
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  character (len=255), dimension(:), allocatable :: colnames_here
   logical :: csv_file_status_here
 
   ! Local variables
+  character (len=255), dimension(:), allocatable :: colnames_output
+  logical :: write_colnames
   integer :: funit
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
@@ -2719,6 +2772,16 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
 
+  COLNAMES_CHK: if (present(colnames)) then
+    write_colnames=.TRUE.
+    allocate(colnames_here(lbound(colnames,1):ubound(colnames,1)))
+    allocate(colnames_output(LBndj:UBndj))
+    colnames_here=colnames
+    call CSV_COLNAMES(colnames_here, colnames_output)
+  else COLNAMES_CHK
+    write_colnames=.FALSE.
+  end if COLNAMES_CHK
+
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
   max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+18 )
@@ -2728,6 +2791,17 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, csv_file_status)
     if (present(csv_file_status)) csv_file_status=csv_file_status_here
     return
   end if
+
+  COLNAMES_WRT: if (write_colnames) then
+    csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(len_trim(colnames(1))+4))
+    call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
+    call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
+                               csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+  end if COLNAMES_WRT
 
   do i=LBndi, UBndi
 
@@ -2754,7 +2828,7 @@ end subroutine CSV_MATRIX_WRITE_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_S (matrix, colnames, csv_file_name, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_S
 ! PURPOSE: Writes a matrix of character strings to a CSV data file
@@ -2769,13 +2843,17 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
 
   ! Calling parameters
   character (len=*), dimension(:,:), intent(in) :: matrix
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
+  character (len=255), dimension(:), allocatable :: colnames_here
   logical :: csv_file_status_here
 
   ! Local variables
+  character (len=255), dimension(:), allocatable :: colnames_output
+  logical :: write_colnames
   integer :: funit
   character (len=:), allocatable :: csv_record
   integer :: i, j, LBndi, Ubndi, Lbndj, Ubndj
@@ -2795,6 +2873,16 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
   LBndj=lbound(matrix, 2)
   UBndj=ubound(matrix, 2)
 
+  COLNAMES_CHK: if (present(colnames)) then
+    write_colnames=.TRUE.
+    allocate(colnames_here(lbound(colnames,1):ubound(colnames,1)))
+    allocate(colnames_output(LBndj:UBndj))
+    colnames_here=colnames
+    call CSV_COLNAMES(colnames_here, colnames_output)
+  else COLNAMES_CHK
+    write_colnames=.FALSE.
+  end if COLNAMES_CHK
+
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable
   max_size_record=0
@@ -2811,6 +2899,17 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, csv_file_status)
     if (present(csv_file_status)) csv_file_status=csv_file_status_here
     return
   end if
+
+  COLNAMES_WRT: if (write_colnames) then
+    csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(len_trim(colnames(1))+4))
+    call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
+    call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
+                               csv_file_status_here)
+    if (.not. csv_file_status_here) then
+      if (present(csv_file_status)) csv_file_status=csv_file_status_here
+      return
+    end if
+  end if COLNAMES_WRT
 
   do i=LBndi, UBndi
 
