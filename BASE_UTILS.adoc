@@ -686,7 +686,7 @@ Input parameters:
 [source]
 --------------------------------------------------------------------------------
 character (len=*) :: csv_file_name    ! mandatory file name
-logical :: csv_file_status            ! OPTIONAL status flag, TRUE if operation
+logical :: csv_file_status            ! optional status flag, TRUE if operation
                                       !   successful
 --------------------------------------------------------------------------------
 
@@ -780,6 +780,9 @@ precision, character string) or a one-dimensional array of the above
 types or still an arbitrary length list of the same data types from the above
 list.
 
+Overview
+^^^^^^^^
+
 The first parameter of the subroutine is always character string record:
 
 [source]
@@ -815,7 +818,7 @@ Append a single value (any of the supported types) to the current record:
 
 [source]
 --------------------------------------------------------------------------------
-call CSV_RECORD_APPEND(record_csv, value)     ! some variable
+call CSV_RECORD_APPEND(record_csv, value)     ! some variable of supported type
 call CSV_RECORD_APPEND(record_csv, 123.5_8)   ! double precision literal value
 --------------------------------------------------------------------------------
 
@@ -872,12 +875,12 @@ generated:
 call CSV_RECORD_APPEND(record_csv,["ROW_NAME",("VAR_" // TOSTR(i,1000),i=1,1000),"STATUS"])
 --------------------------------------------------------------------------------
 
-IMPORTANT: On some compilers (e.g. Oracle Solaris Studio f95 but not GNU
-gfortran), all strings within the array constructor must explicitly have the
-same length, otherwise the compiler issues an error. In gfortran, the first
-occurrence of the string (e.g. the first  iteration of the implied do loop)
-defines the default length and all extra characters are just silently dropped.
-The behaviour of other compilers may differ.
+IMPORTANT: On some compilers (e.g. Oracle Solaris Studio f95 v.12 but not GNU
+gfortran version >5), all strings within the array constructor must explicitly
+have the same length, otherwise the compiler issues an error. In gfortran (v>5,
+the first occurrence of the string (e.g. the first  iteration of the implied do
+loop) defines the default length and all extra characters are just silently
+dropped. The behaviour of other compilers and their versions may differ.
 indexterm:[array constructor,portability,compiler limitation]
 indexterm:[compiler,limitation]
 indexterm:[compiler,GNU,gfortran]
@@ -934,6 +937,8 @@ integer :: csv_file_lines_count     ! number of lines in file, -1 if file error
 Can actually calculate the number of lines in any text file. Does not
 distinguish header or variable names lines in the CSV file and does not
 recognize CSV format.
+
+*Example*
 
 [source]
 --------------------------------------------------------------------------------
@@ -1018,10 +1023,10 @@ indexterm:[matrix,column names]
 
 [source]
 --------------------------------------------------------------------------------
-integer, dimension(:,:) :: matrix   ! data object, array or 2-d matrix
-character, dimension(:) :: colnames ! optional array of column names
-character (len=*) :: csv_file_name  ! file name for output
-logical :: csv_file_status          ! operation status, TRUE if success
+[any supported], dimension(:,:) :: matrix ! data object, array or 2-d matrix
+character, dimension(:) :: colnames       ! optional array of column names
+character (len=*) :: csv_file_name        ! file name for output
+logical :: csv_file_status                ! operation status, TRUE if success
 --------------------------------------------------------------------------------
 
 *Example*
@@ -1053,7 +1058,7 @@ With one-dimensional array (vector), the subroutine gets (1) the array,
 "vertically" (as a single column, if +TRUE+) or "horizontally" (as a single
 row, if +FALSE+). If the +vertical+ parameter is absent, the default +TRUE+
 (i.e. "vertical" data output) is used. There is also an alias to this
-subroutine, +CSV_ARRAY_WRITE+.
+subroutine, *+CSV_ARRAY_WRITE+*.
 indexterm:[CSV_ARRAY_WRITE]
 
 indexterm:[array,one dimensional]
@@ -1062,11 +1067,11 @@ indexterm:[array,one dimensional,write horizontal]
 
 [source]
 --------------------------------------------------------------------------------
-integer, dimension(:) :: array        ! was matrix
-character (len=*) :: csv_file_name    ! file name for output
-logical :: vertical                   ! optional parameter defining how one-
-                                      !   dimensional array is saved
-logical :: csv_file_status            ! operation status, TRUE if success
+[any supported], dimension(:) :: array    ! data object, array
+character (len=*) :: csv_file_name        ! file name for output
+logical :: vertical                       ! optional parameter defining how one-
+                                          !   dimensional array is saved
+logical :: csv_file_status                ! operation status, TRUE if success
 --------------------------------------------------------------------------------
 
 *Example*
