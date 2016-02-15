@@ -42,7 +42,7 @@ module CSV_IO
 implicit none
 
 ! Public constants
-integer, public, parameter :: MAX_UNIT=99       ! Maximum unit number (in old
+integer, public, parameter :: MAX_UNIT=255      ! Maximum unit number (in old
                                                 ! Fortran units range 1 to 99)
 
 ! These constants are defined in the intrinsic module ISO_FORTRAN_ENV,
@@ -2525,7 +2525,7 @@ end subroutine CSV_RECORD_APPEND_LST_S
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_I4 (matrix, colnames, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, colnames, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_I4
 ! PURPOSE: Writes a matrix of integers to a CSV data file
@@ -2540,8 +2540,8 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, colnames, csv_file_name, csv_file_status
 
   ! Calling parameters
   integer, dimension(:,:), intent(in) :: matrix
-  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
@@ -2625,7 +2625,7 @@ end subroutine CSV_MATRIX_WRITE_I4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_R4 (matrix, colnames, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, colnames, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_R4
 ! PURPOSE: Writes a matrix of real type to a CSV data file
@@ -2640,8 +2640,8 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, colnames, csv_file_name, csv_file_status
 
   ! Calling parameters
   real, dimension(:,:), intent(in) :: matrix
-  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
@@ -2727,7 +2727,7 @@ end subroutine CSV_MATRIX_WRITE_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_R8 (matrix, colnames, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, colnames, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_R8
 ! PURPOSE: Writes a matrix of real (kind 8), double, to a CSV data file
@@ -2742,8 +2742,8 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, colnames, csv_file_name, csv_file_status
 
   ! Calling parameters
   real (kind=8), dimension(:,:), intent(in) :: matrix
-  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals
@@ -2828,7 +2828,7 @@ end subroutine CSV_MATRIX_WRITE_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_MATRIX_WRITE_S (matrix, colnames, csv_file_name, csv_file_status)
+subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, colnames, csv_file_status)
 !*******************************************************************************
 ! CSV_MATRIX_WRITE_S
 ! PURPOSE: Writes a matrix of character strings to a CSV data file
@@ -2843,8 +2843,8 @@ subroutine CSV_MATRIX_WRITE_S (matrix, colnames, csv_file_name, csv_file_status)
 
   ! Calling parameters
   character (len=*), dimension(:,:), intent(in) :: matrix
-  character (len=*), dimension(:), optional, intent(in) :: colnames
   character (len=*), intent(in) :: csv_file_name
+  character (len=*), dimension(:), optional, intent(in) :: colnames
   logical, optional, intent(out) :: csv_file_status
 
   ! Local variables, copies of optionals

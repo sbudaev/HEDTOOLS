@@ -1007,12 +1007,12 @@ array (vector). The behaviour is a little different in these cases.
 Two-dimensional matrix
 ^^^^^^^^^^^^^^^^^^^^^^
 
-It gets the following parameters: (1) two-dimensional data matrix (of any supported
-type), (2) optional vector of column names. If the column name vector is shorter
-than the "column" dimension of the data matrix, the remaining columns get
-"COL_XXX" names, where XXX is the consecutive column number (so they are
-unique). (3) mandatory name of the output file, and (4) logical file operation
-success status.
+It gets the following parameters: (1) two-dimensional data matrix (of any
+supported type), (2)  mandatory name of the output file; (3) optional vector
+of column names. If the column name vector is shorter than the "column"
+dimension of the data matrix, the remaining columns get "COL_XXX" names,
+where XXX is the consecutive column number (so they are unique). and
+(4) optional logical file operation success status.
 
 indexterm:[array,two dimensional]
 indexterm:[matrix]
@@ -1024,8 +1024,8 @@ indexterm:[matrix,column names]
 [source]
 --------------------------------------------------------------------------------
 [any supported], dimension(:,:) :: matrix ! data object, array or 2-d matrix
-character, dimension(:) :: colnames       ! optional array of column names
 character (len=*) :: csv_file_name        ! file name for output
+character, dimension(:) :: colnames       ! optional array of column names
 logical :: csv_file_status                ! operation status, TRUE if success
 --------------------------------------------------------------------------------
 
@@ -1082,6 +1082,23 @@ logical :: csv_file_status                ! operation status, TRUE if success
 call CSV_MATRIX_WRITE (ARRAY, "data_file.csv", .FALSE., fstat_csv)
  if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
+
+*Tip*
+
+In the simplest cases, with only the data object and the file name,
++CSV_MATRIX_WRITE+ can be used with a two-dimensional matrix or one-dimensional
+array in the same way (it's convenient during debugging):
+
+[source]
+---------------------------------------------------------------------------------
+real, dimension(1:100,1:20) :: MatrixX    ! Matrix, two dimensional
+real, dimension(1:100) :: Array_Y         ! Array, one-dimensional
+.......
+.......
+call CSV_MATRIX_WRITE(MatrixX, "file_matrixx.csv")      ! write 2-d matrix
+call CSV_MATRIX_WRITE(Array_Y, "file_array_y.csv")      ! write 1-d array
+---------------------------------------------------------------------------------
+
 
 Derived type: csv_file
 ~~~~~~~~~~~~~~~~~~~~~~
