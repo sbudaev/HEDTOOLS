@@ -497,31 +497,39 @@ call CSV_HEADER_WRITE(csv_file_name = csv_file_append_data_name, &
                       header = header_is_from_this_string, &
                       csv_file_status = csv_written_ok)
 ........
-! 4. Generate a whole record of variable names for the header
+........
+! 4. Generate a whole record of variable (column) names
 record_csv="" ! but first, prepare empty record string
 call CSV_RECORD_APPEND(record_csv,["VAR_001", ("VAR_" // TOSTR(i,100),i=2,Cdip)])
+! 5. physically write this variable header record to the file
+call CSV_RECORD_WRITE (record=record_csv, &
+                       csv_file_name=csv_file_append_data_name,&
+                       csv_file_status=csv_written_ok)
+if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
 ........
-! 5. Now we can write records containing actual data values, we do this
+........
+! 6. Now we can write records containing actual data values, we do this
 !    in two do-cycles
 CYCLE_OVER_RECORDS: do l=1, Cdip
-  ! 6. Prepare an empty string for the current CSV record
+  ! 7. Prepare an empty string for the current CSV record
   record_csv=""
   CYCLE_WITHIN_RECORD: do m=1, CNRcomp
     ....
     ! do some calculations...
     .....
-    ! 7. append the next value (single number) to the current record
+    .....
+    ! 8. append the next value (single number: genomeNR) to the current record
     call CSV_RECORD_APPEND ( record_csv, genomeNR(l,m) )
     .....
   end do CYCLE_WITHIN_RECORD
-  ! 8. physically write the current record
+  ! 9. physically write the current record
   call CSV_RECORD_WRITE ( record=record_csv, &
                           csv_file_name=csv_file_append_data_name,&
                           csv_file_status=csv_written_ok )
   if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
   .......
 end do CYCLE_OVER_RECORDS
-! 9. close the CSV file when done
+! 10. close the CSV file when done
 call CSV_CLOSE( csv_file_name=csv_file_append_data_name, &
                 csv_file_status=csv_written_ok )
 if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
