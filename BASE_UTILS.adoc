@@ -877,6 +877,7 @@ call CSV_RECORD_APPEND(record_csv, [(i,i=1,10)])
 Append a string, an array of strings with implied do and finally another string
 to the record. This example shows how variable (column) names could be
 generated:
+indexterm:[column names]
 
 [source]
 --------------------------------------------------------------------------------
@@ -1114,6 +1115,7 @@ indexterm:[csv_file]
 
 This type is used as a unitary file handle object. It has the following
 structure:
+indexterm:[derived type]
 indexterm:[file handle, file handle object]
 
 [source]
@@ -1129,7 +1131,8 @@ If +csv_file+ object is defined, the file name, unit and the latest operation
 success flag can be accessed as +%name+, +%unit+, +%status+
 (e.g. +some_file%name+, +some_file%unit+).
 
-*Example*
+Basic Example
+^^^^^^^^^^^^^
 
 [source]
 --------------------------------------------------------------------------------
@@ -1140,6 +1143,28 @@ file_occ%name="some_name.txt"           ! set file name value
 call CSV_OPEN_WRITE(file_occ)           ! Open file for writing
 ....
 call CSV_CLOSE(file_occ)                ! Close file
+--------------------------------------------------------------------------------
+
+Arrays of structures
+^^^^^^^^^^^^^^^^^^^^
+
+This derived type can be also used as an array. An example below shows how can
+this be done.
+indexterm:[derived type,array of]
+
+[source]
+--------------------------------------------------------------------------------
+type(csv_file), dimension(:), allocatable :: file_ABM ! define allocatable array
+........                                              !  of file handle objects
+........
+allocate(file_ABM(modulators))                        ! allocate this array
+........
+........
+! now, use the array to handle many files of the same type
+do j=1, modulators
+  file_ABM(j)%name = "file_name_no_" // TOSTR(j,10) // ".csv"
+  call CSV_OPEN_WRITE(file_ABM(j)%name)
+end do
 --------------------------------------------------------------------------------
 
 IMPORTANT: The file name is set as a standard *non-allocatable* fixed string
