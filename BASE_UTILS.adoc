@@ -1150,20 +1150,18 @@ Arrays of structures
 
 This derived type can be also used as an array. An example below shows how can
 this be done.
-indexterm:[derived type,array of]
+indexterm:[derived type,array of derived type]
 
 [source]
 --------------------------------------------------------------------------------
-type(csv_file), dimension(:), allocatable :: file_ABM ! define allocatable array
-........                                              !  of file handle objects
-........
-allocate(file_ABM(modulators))                        ! allocate this array
-........
+type(csv_file), dimension(:), allocatable :: file_ABM ! Define allocatable array
+........                                              !   of file handle objects
+allocate(file_ABM(modulators))                        ! Allocate this array
 ........
 ! now, use the array to handle many files of the same type
 do j=1, modulators
-  file_ABM(j)%name = "file_name_no_" // TOSTR(j,10) // ".csv"
-  call CSV_OPEN_WRITE(file_ABM(j)%name)
+  file_ABM(j)%name = "file_no_" // TOSTR(j,10) // ".csv"  ! Set file handle (j)
+  call CSV_OPEN_WRITE(file_ABM(j))                        !   and use it
 end do
 --------------------------------------------------------------------------------
 
