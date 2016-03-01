@@ -58,6 +58,8 @@ MODEL_PROTO: $(OBJ)
 	@echo "Build SVN revision    :: '$(SVN_VER)'"
 	@echo ----------------------------------------
 	$(FC) $(OBJ) -o MODEL_PROTO  $(LDFLAGS)
+lib: $(OBJ)
+	$(FC) -shared -O2 $(SRC) -o lib_hedutils.so -fPIC
 run: MODEL_PROTO
 	echo "Build platform is '$(PLATFORM)'"
 	./MODEL_PROTO
