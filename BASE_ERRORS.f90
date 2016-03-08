@@ -1,4 +1,6 @@
 !*******************************************************************************
+! SVN $Id$
+!*******************************************************************************
 ! Error-handling and reporting modules::
 !
 !   ASSERT: provides an interface to check for assertions and
