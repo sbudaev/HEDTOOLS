@@ -55,7 +55,7 @@
 ! Author: Michael Baudin, 2008, michael.baudin@gmail.com
 ! Changes: Arjen Markus, 2008, arjenmarkus@sourceforge.net
 !
-!     $Id: m_logger.f90,v 1.3 2008/06/18 08:55:45 relaxmike Exp $
+!     $Id$
 !
 module LOGGER
 

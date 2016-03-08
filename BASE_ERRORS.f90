@@ -172,7 +172,7 @@ module EXCEPTION
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: EXCEPTION.f90,v 1.4 2008/06/18 10:35:22 relaxmike Exp $
+! $Id$
 !*******************************************************************************
   implicit none
 
@@ -566,7 +566,7 @@ module ASSERT
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: ASSERT.f90,v 1.2 2008/05/06 08:39:47 relaxmike Exp $
+! $Id$
 !*******************************************************************************
   use EXCEPTION, only : &
        exception_raiseError , &
@@ -818,7 +818,7 @@ module THROWABLE
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: THROWABLE.f90,v 1.1 2008/04/09 07:29:23 relaxmike Exp $
+! $Id$
 !*******************************************************************************
 
   implicit none
