@@ -1,3 +1,12 @@
+README for IEEE utilities + tests
+
+
+Dr. Richard Hanson has written code to provide IEEE exception handling to 
+gfortran.  The code is here http://mathalacarte.com/hpcconsult
+He can be contacted at richard.koolhans@gmail.com. 
+
+--------------------------------------------------------------------------------
+
 The files are all located in IEEE.zip.  Unzip this file to get them.
 The compilation order:
 precision_m.f90
@@ -24,7 +33,8 @@ one in 'list'
 --------------------------------------------------------------------------------
 
 Compile test program::
-gfortran -o ZZZ IEEE_tests_gfortran.f90 precision_m.f90 messy_m.f90 IEEE_FEATURES.f90 IEEE_EXCEPTIONS.f90 IEEE_ARITHMETIC.f90 c_control.c
+gfortran -o ZZZ IEEE_tests_gfortran.f90 precision_m.f90 messy_m.f90 \
+    IEEE_FEATURES.f90 IEEE_EXCEPTIONS.f90 IEEE_ARITHMETIC.f90 c_control.c
 
 
 --------------------------------------------------------------------------------
