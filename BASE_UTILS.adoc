@@ -1228,8 +1228,8 @@ require non-intrinsic IEEE modules. It also has the Intel Fortran which has
 built-in (intrinsic) IEEE modules though.
 indexterm:[fimm]
 
-IEEE arithmetic and exceptions are fully described in chapter 14 of this book:
-Adams, et al., 2009 _The Fortran 2003 Handbook_. Springer.
+NOTE: IEEE arithmetic and exceptions are fully described in chapter 14 of this
+book: Adams, et al., 2009 _The Fortran 2003 Handbook_. Springer.
 
 IEEE Exceptions
 ~~~~~~~~~~~~~~~
@@ -1375,8 +1375,9 @@ Build system: GNU make
 The model currently uses a build system based on GNU make (Makefile). GNU make
 is an automated system for building source core (in fact, any digital project
 that requires keeping track of dependencies between multiple components.)
+indexterm:[Makefile]
 
-[quote, Managing Projects with GNU Make, by Robert Mecklenburg, 2005]
+[quote, Mecklenburg R., Managing Projects with GNU Make, 2005]
 The make program is intended to automate the mundane aspects of transforming
 source code into an executable. The advantages of make over scripts is that
 you can specify the relationships between the elements of your program to make,
@@ -1392,6 +1393,8 @@ GNU make is good because it works on diverse combinations of platforms and OSs
 (e.g. Linux and Windows).
 
 Most basic things with the standard +Makefile+ are simple.
+indexterm:[Makefile, make]
+indexterm:[make]
 
 *Building and running the model code*
 
@@ -1413,6 +1416,7 @@ The environment variable +DEBUG+ controls whether the build system produces the
 debug symbols (-g) or, if NOT defined, speed-optimised macine code (-O9,
 automatic loop parallelization etc.). To build with debug support just define
 DEBUG in the manner standard for the platform/OS. For example, on Linux use:
+indexterm:[DEBUG]
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -1471,7 +1475,7 @@ cluster. By editing the +Makefile+ provided, one can easily tweak the behaviour
 of the build process, e.g. add other modules, change names, compilation options
 and details etc.
 
-A good manual on the GNU Make is this book: Mecklenburg, R, 2005, _Managing
+NOTE: A good manual on the GNU Make is this book: Mecklenburg, R, 2005, _Managing
 Projects with GNU Make,_ Third edition. O’Reilly.
 
 Microsoft Studio, Oracle Solaris Studio and other similar IDEs actually
