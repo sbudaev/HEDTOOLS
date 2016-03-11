@@ -1179,6 +1179,309 @@ indexterm:[allocatable string,portability,compiler limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,limitation]
 
+Module: LOGGER
+--------------
+
+This module controls to log different messages during the execution of the
+program. The format of the messages is configutrable during the run time.
+
+To be done
+
+Error trapping modules: ERRORS, ASSERT, EXCEPTIONS
+--------------------------------------------------
+
+These modules can be used for error trapping and handling.
+
+To be done
+
+IEEE Arithmetics
+----------------
+
+Overview
+~~~~~~~~
+
+The model can now use the IEEE arithmetic  modules. They allow exact control
+of the CPU math features and exceptions caused by invalid calculations, such as
+dividion by zero, overflow, underflow etc. A potential issue is that they have
+an optional status in the Fortran standard, so compilers do not have to
+implement them, although many do.
+indexterm:[IEEE arithmetic]
+indexterm:[compiler,limitation]
+
+For example, Intel Fortran implements intrinsic IEEE arithmetics
+modules. GNU Fortran does not implement them untile version 5.footnote:[It was
+because GNU compiler collection is made for portability and supports many
+different processor architectures in addition to the most common x86 and
+implementation of IEEE modules is highly dependent on the CPU type and
+features.] However, there are external (non-intrinsic) IEEE modules for gfortran
+on the x86 (support both 32 and 64 bit) that are included into the *HEDTOOLS*
+bundle.
+indexterm:[compiler,limitation]
+indexterm:[compiler,GNU,gfortran]
+indexterm:[compiler,Intel Fortran]
+indexterm:[Intel Fortran]
+
+IMPORTANT: the
+https://docs.hpc.uib.no/wiki/Available_resources#Linux_cluster_fimm.hpc.uib.no[*fimm* HPC cluster],
+where calculations are normally performed, has GNU Fortran 4.8.1 and will
+require non-intrinsic IEEE modules. It also has the Intel Fortran which has
+built-in (intrinsic) IEEE modules though.
+indexterm:[fimm]
+
+IEEE arithmetic and exceptions are fully described in chapter 14 of this book:
+Adams, et al., 2009 _The Fortran 2003 Handbook_. Springer.
+
+IEEE Exceptions
+~~~~~~~~~~~~~~~
+
+There are several exception conditions:
+
+* +IEEE_DIVIDE_BY_ZERO+
+* +IEEE_INEXACT+
+* +IEEE_INVALID+
+* +IEEE_OVERFLOW+
+* +IEEE_UNDERFLOW+
+* +IEEE_USUAL+ (An array of three exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+)
+* +IEEE_ALL+ (An array of five exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+, +IEEE_UNDERFLOW+,  +IEEE_INEXACT+)
+
+indexterm:[IEEE arithmetic, exceptions]
+
+Halting the program that encounters specific condition is controlled via
++IEEE_GET_HALTING_MODE+ subroutine (returned logical parameter +IEEE_DEF_MODE+).
+For example, for +IEEE_INVALID+ it is:
+
+[source]
+--------------------------------------------------------------------------------
+call IEEE_GET_HALTING_MODE(IEEE_INVALID, IEEE_DEF_MODE)
+--------------------------------------------------------------------------------
+
+It is also possible to set the halting mode for specific condition. For example,
+to set halting ON (execution termination) on invalid arithmetic do this:
+
+[source]
+--------------------------------------------------------------------------------
+call IEEE_SET_HALTING_MODE(IEEE_INVALID, .TRUE.)  ! Will halt on IEEE_INVALID
+--------------------------------------------------------------------------------
+
+Normally, if the program encounters invalid arithmetic calculations, then it
+should crash or at least report the problem. Otherwise, correctness of
+calculations is not guaranteed. By default, many compilers just *ignore* invalid
+calculations (even many cases of division by zero, NaNfootnote:[Not a Number, a
+wrong arithmetic value that is not equal to itself, can result from many math
+errors] generation etc.). Turning arithmetic exception halting ON requires
+specific compiler options.
+
+[width="100%",cols="<3,<4,<10",options="header"]
+|===============================================================================
+| Compiler       | option        | example
+| GNU GCC        | +-ffpe-trap+  | +-ffpe-trap=zero,invalid,overflow,underflow+
+| Intel Fortran  | +-fpe (/fpe)+ | +-fpe0+ (+/fpe:0+ on Windows)
+| Solaris Studio | +--ftrap+     | +--ftrap=invalid,overflow,division+
+|===============================================================================
+indexterm:[IEEE arithmetic]
+indexterm:[IEEE arithmetic,exceptions]
+indexterm:[compiler,exception trapping]
+
+In most cases it should point to a bug. It is therefore wise to turn halting
+ON by default. But it could be possible to switch it OFF in specific parts
+of the code that can normally result in invalid calculations (division by zero,
+invalid, inexact etc.) and control each such occurrence specifically (e.g.
+provide a subroutine handling and fixing the calculations).
+
+Here is an example:
+
+[source]
+--------------------------------------------------------------------------------
+...
+! Invoke IEEE Arithmetics:
+! use, non_intrinsic :: IEEE_EXCEPTIONS ! if gfortran v<5
+
+! We normally use included auto-generated wrapper for the module
+include "IEEE_wrap.inc"
+
+IMPLICIT NONE
+
+REAL    r,c,C0,Ap,Vc,Ke,Eb
+REAL    FR1,FR2,F1,FDER
+
+....
+
+logical :: IEEE_MATH_FLAG, IEEE_DEF_MODE  ! values for IEEE math modules
+
+call IEEE_GET_HALTING_MODE(IEEE_INVALID, IEEE_DEF_MODE) ! Get default halting
+call IEEE_SET_HALTING_MODE(IEEE_INVALID, .FALSE.)       ! NO halting from here!
+
+...
+
+FR2=LOG(ABS(C0)*Ap*Vc)
+FR1=LOG(((Ke+Eb)/Eb)*r*r*EXP(c*r))
+F1 = FR1-FR2
+FDER = c + 2./r
+
+call IEEE_GET_FLAG(IEEE_INVALID, IEEE_MATH_FLAG) ! Get the error flag
+if(IEEE_MATH_FLAG) then
+  ! if IEEE exception is signalled, we cannot relay on the calculations
+  ! Report the error: remember there is no halting now, the program won't stop
+  write(10,*) "IEEE exception in DERIV ", r,F1,FDER,c,C0,Ap,Vc,Ke,Eb
+  ! We also have to fix the calculations, e.g. equate some values to zero
+  r=0.; F1=0.; FDER=0.
+  call IEEE_SET_FLAG(IEEE_INVALID, .FALSE.) ! Set the flag back to defaule value
+end if
+
+...
+
+call IEEE_SET_HALTING_MODE(IEEE_INVALID, IEEE_DEF_MODE) ! Set default halting
+
+END SUBROUTINE DERIV
+--------------------------------------------------------------------------------
+
+Implementation details
+~~~~~~~~~~~~~~~~~~~~~~
+We use an automatic build system (see below) which normally keeps track of the
+compiler and its version and IEEE modules support, there is no need to include
++use, intrinsic (or non_intrinsic) :: IEEE_EXCEPTIONS+ and tweak it manually
+depending on the compiler support. The build system automatically generates
+the correct include file +IEEE_wrap.inc+ which should be inserted into the
+code in place of +use ...+ statemen:
+
+[source]
+--------------------------------------------------------------------------------
+SUBROUTINE DERIV(r,F1,FDER,c,C0,Ap,Vc,Ke,Eb)
+!Derivation of equation for visual range of a predator
+
+! Invoke IEEE Arithmetics:
+! use, non_intrinsic :: IEEE_EXCEPTIONS ! if gfortran v<5
+
+! We normally use included auto-generated wrapper for the module
+include "IEEE_wrap.inc"
+
+REAL    r,c,C0,Ap,Vc,Ke,Eb
+....
+--------------------------------------------------------------------------------
+indexterm:[IEEE arithmetic]
+indexterm:[IEEE arithmetic,exceptions, implementation]
+indexterm:[compiler, exception trapping, implementation]
+indexterm:[include]
+indexterm:[IEEE_wrap.inc, include]
+
+Version control: Subversion (SVN)
+--------------------------------
+
+To be done
+
+Build system: GNU make
+----------------------
+
+The model currently uses a build system based on GNU make (Makefile). GNU make
+is an automated system for building source core (in fact, any digital project
+that requires keeping track of dependencies between multiple components.)
+
+[quote, Managing Projects with GNU Make, by Robert Mecklenburg, 2005]
+The make program is intended to automate the mundane aspects of transforming
+source code into an executable. The advantages of make over scripts is that
+you can specify the relationships between the elements of your program to make,
+and it knows through these relationships and timestamps exactly what steps
+need to be redone to produce the desired program each time. Using this
+information, make can also optimize the build process avoiding unnecessary steps.
+
+All the build rules for building the model executable are collected in the
+Makefile. If the model requires external components (e.g. non-intrinsic IEEE
+math modules), they will be automatically inserted.
+
+GNU make is good because it works on diverse combinations of platforms and OSs
+(e.g. Linux and Windows).
+
+Most basic things with the standard +Makefile+ are simple.
+
+*Building and running the model code*
+
+* Get a short help on the options: +make help+
+* Build the model executable using default compiler: +make+
+* Force rebuild the model executable with intel compiler: +make intel+
+* Run the current model: +make run+ (on the fimm HPC cluster, this will automatically start a new batch job)
+
+*Cleanup*
+
+There are also a few options for deteting the files and data generated by the
+build process.
+
+* Remove all the data generated by the model +make cleandata+
+* Remove all the data files generated by the model run as well as the model executable: +make clean+
+* Remove everything generated by the build system and all the data, retain the default state: +make distclean+
+
+The environment variable +DEBUG+ controls whether the build system produces the
+debug symbols (-g) or, if NOT defined, speed-optimised macine code (-O9,
+automatic loop parallelization etc.). To build with debug support just define
+DEBUG in the manner standard for the platform/OS. For example, on Linux use:
+
+[source,bash]
+--------------------------------------------------------------------------------
+$ DEBUG=1 make
+--------------------------------------------------------------------------------
+
+or (+DEBUG+ is now persistent)
+
+[source,bash]
+--------------------------------------------------------------------------------
+$ export DEBUG=1
+$ make
+--------------------------------------------------------------------------------
+
+on Windows:
+
+[source,bash]
+--------------------------------------------------------------------------------
+O:\WORK\MODEL\HED18>set DEBUG=1
+O:\WORK\MODEL\HED18>make
+--------------------------------------------------------------------------------
+
+or use +DEBUG+ as a parameter to make, this works on all platforms:
+
+[source,bash]
+--------------------------------------------------------------------------------
+$ make intel DEBUG=1
+--------------------------------------------------------------------------------
+
+The make system keeps track of all the code components. For example, if only
+one has been changed, it will recompile only this. It also keeps track of whether
+IEEE math modules are really necessary and if the intrinsic or non-intrinsic
+modules are used.
+
+For example, you may have built the model executable (make) and then edited
+the code of a module a little. Then just issue command to run batch (make run)
+on fimm. The make system will then automatically determine that the model
+executable is now out of date and recompile the changed module and build an
+updated executable, and only after this will start the batch job.
+
+Another example: you just checked-out or updated (e.g. +svn up+) the model
+source that is tested and known to be bug-free on the fimm cluster. Now you
+should compile components of the program, (e.g. tweak IEEE math modules),
+build the executable, and finally start the executable in the cluster's batch
+job system. All this is done using a single command: +make run+.
+
+[source,bash]
+--------------------------------------------------------------------------------
+$ svn update
+$ ... some output...
+$ make run
+--------------------------------------------------------------------------------
+
+The system should work the same way on Windows and Linux, including the fimm HPC
+cluster. By editing the +Makefile+ provided, one can easily tweak the behaviour
+of the build process, e.g. add other modules, change names, compilation options
+and details etc.
+
+A good manual on the GNU Make is this book: Mecklenburg, R, 2005, _Managing
+Projects with GNU Make,_ Third edition. O’Reilly.
+
+Microsoft Studio, Oracle Solaris Studio and other similar IDEs actually
+provide their own make systems (e.g. nmake or dmake) that work behind the
+scenes if the GUI is used.
+
+Coding style
+------------
+
+To be done
 
 Final Notes
 -----------
