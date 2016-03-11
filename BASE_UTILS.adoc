@@ -1208,6 +1208,9 @@ implement them, although many do.
 indexterm:[IEEE arithmetic]
 indexterm:[compiler,limitation]
 
+IMPORTANT: IEEE arithmetic and exceptions are fully described in chapter 14 of this
+book: Adams, et al., 2009 _The Fortran 2003 Handbook_. Springer.
+
 For example, Intel Fortran implements intrinsic IEEE arithmetics
 modules. GNU Fortran does not implement them untile version 5.footnote:[It was
 because GNU compiler collection is made for portability and supports many
@@ -1227,9 +1230,6 @@ where calculations are normally performed, has GNU Fortran 4.8.1 and will
 require non-intrinsic IEEE modules. It also has the Intel Fortran which has
 built-in (intrinsic) IEEE modules though.
 indexterm:[fimm]
-
-NOTE: IEEE arithmetic and exceptions are fully described in chapter 14 of this
-book: Adams, et al., 2009 _The Fortran 2003 Handbook_. Springer.
 
 IEEE Exceptions
 ~~~~~~~~~~~~~~~
@@ -1367,10 +1367,21 @@ indexterm:[IEEE_wrap.inc, include]
 Version control: Subversion (SVN)
 --------------------------------
 
+AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
+
+*Standard workflow*
+
+* *update* code from the server: +svn up+
+* edit the code using any favoured tools, build, etc...
+* *commit,* when ready (e.g. the piece has been implememnted): +svn commit+
+
 To be done
 
 Build system: GNU make
 ----------------------
+
+Overview
+~~~~~~~~
 
 The model currently uses a build system based on GNU make (Makefile). GNU make
 is an automated system for building source core (in fact, any digital project
@@ -1390,7 +1401,14 @@ Makefile. If the model requires external components (e.g. non-intrinsic IEEE
 math modules), they will be automatically inserted.
 
 GNU make is good because it works on diverse combinations of platforms and OSs
-(e.g. Linux and Windows).
+(e.g. Linux and Windows). Some proprietary Unix platforms could supply vendor's
++make+ utility that may not be compatible with the GNU +make+ (e.g. Oracle
+Solaris includes its own +make+ clone). There might be an option turning on GNU
+compatibility. But it is better to use the GNU +make+ (+gmake+ on Solaris)
+anyway.
+
+Using make
+~~~~~~~~~~
 
 Most basic things with the standard +Makefile+ are simple.
 indexterm:[Makefile, make]
@@ -1475,12 +1493,16 @@ cluster. By editing the +Makefile+ provided, one can easily tweak the behaviour
 of the build process, e.g. add other modules, change names, compilation options
 and details etc.
 
-NOTE: A good manual on the GNU Make is this book: Mecklenburg, R, 2005, _Managing
-Projects with GNU Make,_ Third edition. O’Reilly.
-
 Microsoft Studio, Oracle Solaris Studio and other similar IDEs actually
 provide their own make systems (e.g. nmake or dmake) that work behind the
-scenes if the GUI is used.
+scenes even if the GUI is used.
+
+Tweaking Makefile
+~~~~~~~~~~~~~~~~~
+To be done
+
+IMPORTANT: A good manual on the GNU Make is this book: http://www.oreilly.com/openbook/make3/book/index.csp[Mecklenburg, R, 2005,
+_Managing Projects with GNU Make,_ Third edition. O’Reilly].
 
 Coding style
 ------------
