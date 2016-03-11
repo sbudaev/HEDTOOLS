@@ -1243,32 +1243,19 @@ There are several exception conditions:
 * +IEEE_UNDERFLOW+
 * +IEEE_USUAL+ (An array of three exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+)
 * +IEEE_ALL+ (An array of five exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+, +IEEE_UNDERFLOW+,  +IEEE_INEXACT+)
-
 indexterm:[IEEE arithmetic, exceptions]
-
-Halting the program that encounters specific condition is controlled via
-+IEEE_GET_HALTING_MODE+ subroutine (returned logical parameter +IEEE_DEF_MODE+).
-For example, for +IEEE_INVALID+ it is:
-
-[source]
---------------------------------------------------------------------------------
-call IEEE_GET_HALTING_MODE(IEEE_INVALID, IEEE_DEF_MODE)
---------------------------------------------------------------------------------
-
-It is also possible to set the halting mode for specific condition. For example,
-to set halting ON (execution termination) on invalid arithmetic do this:
-
-[source]
---------------------------------------------------------------------------------
-call IEEE_SET_HALTING_MODE(IEEE_INVALID, .TRUE.)  ! Will halt on IEEE_INVALID
---------------------------------------------------------------------------------
 
 Normally, if the program encounters invalid arithmetic calculations, then it
 should crash or at least report the problem. Otherwise, correctness of
 calculations is not guaranteed. By default, many compilers just *ignore* invalid
 calculations (even many cases of division by zero, NaNfootnote:[Not a Number, a
 wrong arithmetic value that is not equal to itself, can result from many math
-errors] generation etc.). Turning arithmetic exception halting ON requires
+errors] generation etc.).
+
+In most cases NaNs and other invalid arithmetics strongly point to a bug. It is
+therefore wise to turn halting ON by default.
+
+Turning arithmetic exception halting ON during the compile time requires
 specific compiler options.
 
 [width="100%",cols="<3,<4,<10",options="header"]
@@ -1282,11 +1269,30 @@ indexterm:[IEEE arithmetic]
 indexterm:[IEEE arithmetic,exceptions]
 indexterm:[compiler,exception trapping]
 
-In most cases it should point to a bug. It is therefore wise to turn halting
-ON by default. But it could be possible to switch it OFF in specific parts
-of the code that can normally result in invalid calculations (division by zero,
+The IEEE module +IEEE_EXCEPTIONS+ allows to control halting during the run time.
+For example, it is cool to switch halting ON in specific troublesome parts of
+the code that can normally result in invalid calculations (division by zero,
 invalid, inexact etc.) and control each such occurrence specifically (e.g.
 provide a subroutine handling and fixing the calculations).
+indexterm:[IEEE_EXCEPTIONS,module]
+
+Halting the program that encounters specific condition is controlled via
++IEEE_GET_HALTING_MODE+ subroutine (returns logical parameter +IEEE_DEF_MODE+).
+For example, for +IEEE_INVALID+ it is:
+
+[source]
+--------------------------------------------------------------------------------
+call IEEE_GET_HALTING_MODE(IEEE_INVALID, IEEE_DEF_MODE)
+--------------------------------------------------------------------------------
+
+It is also possible to set specific halting mode for specific condition. For
+example, to set halting ON (execution termination) on invalid arithmetic do
+this:
+
+[source]
+--------------------------------------------------------------------------------
+call IEEE_SET_HALTING_MODE(IEEE_INVALID, .TRUE.)  ! Will halt on IEEE_INVALID
+--------------------------------------------------------------------------------
 
 Here is an example:
 
