@@ -2,7 +2,7 @@
 # SVN version info:
 # $Id$
 #-------------------------------------------------------------------------------
-# Build Modelling tools as a static library
+# Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 #-------------------------------------------------------------------------------
 
 # Supported Fortran compiler types
