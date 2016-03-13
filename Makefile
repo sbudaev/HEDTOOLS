@@ -103,7 +103,7 @@ VPATH = $(DOCDIR)
 
 #*******************************************************************************
 
-all: static shared
+all: static shared doc
 
 lib: $(LIB)
 
