@@ -88,14 +88,18 @@ ifdef DEBUG
 	SF_FFLAGS = -O0 -g -ftrap=%all $(SF_RCHECKS)
 endif
 
-# Determine this makefile's path. Be sure to place this BEFORE `include`s
-THIS_FILE := $(lastword $(MAKEFILE_LIST))
-
 #-------------------------------------------------------------------------------
 # Documentation builder parameters (asciidoc)
 
+DOCFIL = BASE_UTILS
 DOCFMT = pdf
 DOCDIR = doc/
+
+#-------------------------------------------------------------------------------
+
+# Determine this makefile's path. Be sure to place this BEFORE `include`s
+THIS_FILE := $(lastword $(MAKEFILE_LIST))
+VPATH = $(DOCDIR)
 
 #*******************************************************************************
 
@@ -107,12 +111,10 @@ static: $(LIB)
 
 shared: $(DIB)
 
-doc: BASE_UTILS.adoc
-	a2x -f$(DOCFMT) BASE_UTILS.adoc
-	mv BASE_UTILS.$(DOCFMT) $(DOCDIR)
+doc: $(DOCFIL).$(DOCFMT)
 
 distclean: neat
-	-rm -f $(OBJ) $(MOD) $(LIB) $(DIB)
+	-rm -f $(OBJ) $(MOD) $(LIB) $(DIB) $(DOCDIR)/BASE_UTILS.$(DOCFMT)
 
 clean: neat
 	-rm -f $(OBJ) $(MOD)
@@ -125,6 +127,10 @@ $(LIB): $(OBJ)
 
 $(DIB): $(SRC)
 	$(DYLIBBLD) $(SRC)
+
+$(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
+	a2x -f$(DOCFMT) BASE_UTILS.adoc
+	mv $(DOCFIL).$(DOCFMT) $(DOCDIR)
 
 BASE_UTILS.o: BASE_UTILS.f90
 	$(FC) $(FFLAGS) -c BASE_UTILS.f90
