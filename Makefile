@@ -95,9 +95,6 @@ DOCFIL = BASE_UTILS
 DOCFMT = pdf
 DOCDIR = doc/
 
-# Check if docbuilder is installed
-DOCBUILDER = $(which a2x | grep -c a2x)
-
 #-------------------------------------------------------------------------------
 
 # Determine this makefile's path. Be sure to place this BEFORE `include`s
@@ -106,7 +103,7 @@ VPATH = $(DOCDIR)
 
 #*******************************************************************************
 
-all: static shared doc
+all: static shared
 
 lib: $(LIB)
 
@@ -132,10 +129,8 @@ $(DIB): $(SRC)
 	$(DYLIBBLD) $(SRC)
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
-ifneq ($(DOCBUILDER),0)
 	a2x -f$(DOCFMT) BASE_UTILS.adoc
 	mv $(DOCFIL).$(DOCFMT) $(DOCDIR)
-endif
 
 BASE_UTILS.o: BASE_UTILS.f90
 	$(FC) $(FFLAGS) -c BASE_UTILS.f90
