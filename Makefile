@@ -97,16 +97,20 @@ DOCDIR = doc/
 
 #-------------------------------------------------------------------------------
 
+
 # Determine this makefile's path. Be sure to place this BEFORE `include`s
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
+
+# This is the search paths for looking for components, separated by blanks
 VPATH = $(DOCDIR)
 
 #*******************************************************************************
 
-all: static shared
+all: shared
 
 lib: $(LIB)
 
+# Static linking doesn't work well with gnu fortran
 static: $(LIB)
 
 shared: $(DIB)
@@ -116,8 +120,9 @@ doc: $(DOCFIL).$(DOCFMT)
 distclean: neat
 	-rm -f $(OBJ) $(MOD) $(LIB) $(DIB) $(DOCDIR)/BASE_UTILS.$(DOCFMT)
 
+# We don't clean .mod files as they are necessary for building with .so
 clean: neat
-	-rm -f $(OBJ) $(MOD)
+	-rm -f $(OBJ)
 
 neat:
 	-rm -f $(TMPFILES) *conflict*
