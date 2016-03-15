@@ -1520,6 +1520,44 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 Coding style
 ------------
 
+Software tools and requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Most tools needed for the m,odel are already available on Linux (e.g. gfortran,
+make, Subversion, console, midnight commander etc. On Windows they can be
+installed manually from their official web sites.
+
+*Fortran: Mandatory*
+
+Intel Fortran compiler
+
+Free GNU Fortran distribution along with make and other tools from the Equation
+solution http://www.equation.com/servlet/equation.cmd?fa=fortran
+
+*Subversion: Mandatory*
+
+Windows GUI for Subversion is TortoiseSVN: https://tortoisesvn.net/. It is very
+helpful to have also console subversion client software (Tortiuse includes
+console tools but does not install by default). A good one is SilkSVN
+https://sliksvn.com/download/.
+
+*Console terminal: Highly recommended*
+
+The Windows console (cmd) is extremely weak. Conemu https://conemu.github.io/ is
+a much better alternative, especially with the Far manager, a two-panel console
+file manager similar to the ancient Norton commander for DOS (or Midnight
+commander on Linux): http://www.farmanager.com/download.php?l=en
+
+*Geany: Recommended*
+
+Lightweight IDE, Editor for code and any text files. http://www.geany.org/
+Also need plugins: http://plugins.geany.org/
+
+*Code::Blocks for Fortran: Recommended*
+
+IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
+http://cbfortran.sourceforge.net/ Installation by unpacking into some directory.
+
 To be done
 
 Final Notes
