@@ -1379,12 +1379,17 @@ AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
 
 First time setup of the working directory:
 
-* For a new project (run/experiment etc.), make a new working directory 
-  (+mkdir+), get into it (+cd+) and *checkout:* get the model code (one branch, 
-  no need to get everything!) from the  server 
-  with +svn checkout https://path_to_branch+ 
-  (e.g. +svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18+)
-
+* For a new project (run/experiment etc.), get into the working directory where
+  the model code will reside (+cd+) (possibly make a new directory +mkdir+), 
+  and *checkout:* get the model code (one branch, no need to get everything!) 
+  from the  server with +svn checkout https://path_to_branch+ 
+  For example, 
+  +svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18+ will 
+  get the HED18 into the directory HED18 within the current working directory.
+  If we use HEDTOOLS, it should also be placed here with 
+  +svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS+.
+  So, we now get HED18 and HEDTOOLS in our workdir.
+  
 Now you can work in this directory
 
 * *update* code from the server: +svn up+
