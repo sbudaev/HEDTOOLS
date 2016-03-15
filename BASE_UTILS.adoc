@@ -1377,9 +1377,19 @@ AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
 
 *Standard workflow*
 
+First time setup of the working directory:
+
+* For a new project (run/experiment etc.), make a new working directory 
+  (+mkdir+), get into it (+cd+) and *checkout:* get the model code (one branch, 
+  no need to get everything!) from the  server 
+  with +svn checkout https://path_to_branch+ 
+  (e.g. +svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18+)
+
+Now you can work in this directory
+
 * *update* code from the server: +svn up+
 * edit the code using any favoured tools, build, etc...
-* *commit,* when ready (e.g. the piece has been implememnted): +svn commit+
+* *commit,* when ready (e.g. when a new has been implememnted): +svn commit+
 
 To be done
 
