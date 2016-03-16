@@ -34,10 +34,56 @@ $LastChangedDate$
 
 :numbered:
 
-Introduction
-------------
+Software tools and requirements
+-------------------------------
 
-These modelling tools include two separate modules: *BASE_UTILS* and *CSV_IO*.
+Most tools needed for the model are already available on Linux (e.g. gfortran,
+make, Subversion, console, midnight commander etc. On Windows they can be
+installed manually from their official web sites. Below are some details on the
+Windows software.
+
+*Fortran (Mandatory)*
+
+Intel Fortran compiler, a commercial software available at UiB.
+
+Free GNU Fortran distribution along with make and other tools from the Equation
+solution http://www.equation.com/servlet/equation.cmd?fa=fortran
+
+*Subversion (Mandatory)*
+
+Windows GUI for Subversion is TortoiseSVN: https://tortoisesvn.net/. It is very
+helpful to have also console subversion client software (Tortiuse includes
+console tools but does not install by default). A good one is SilkSVN
+https://sliksvn.com/download/.
+
+*Console terminal (Highly recommended)*
+
+The Windows console (cmd) is extremely weak. Conemu https://conemu.github.io/ is
+a much better alternative, especially with the Far manager, a two-panel console
+file manager similar to the ancient Norton commander for DOS (or Midnight
+commander on Linux): http://www.farmanager.com/download.php?l=en
+
+*Geany (Recommended)*
+
+Lightweight IDE, Editor for code and any text files. http://www.geany.org/
+Also need plugins: http://plugins.geany.org/
+
+*Code::Blocks for Fortran (Recommended)*
+
+IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
+http://cbfortran.sourceforge.net/ Installation by unpacking into some directory.
+
+Introduction the Fortran modules
+--------------------------------
+
+These modelling tools include several separate modules:
+
+* +BASE_UTILS+
+* +CSV_IO+
+* +LOGGER+
+* Error trapping  modules
+* IEEE Arithmetics module
+
 BASE_UTILS contains a few utility functions. CSV_IO is for output of numerical
 data into the CSV (comma separated values) format files. CSV is good because it
 is human-readable but can still be easily imported into spreadsheets and stats
@@ -45,7 +91,6 @@ packages.
 
 Invoking the modules requires the +use+ keyword in Fortran. +use+ should
 normally be the first statements before +implicit none+:
-
 
 [source]
 --------------------------------------------------------------------------------
@@ -1374,29 +1419,101 @@ Version control: Subversion (SVN)
 --------------------------------
 
 AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
+indexterm:[AHA repository]
 
-*Standard workflow*
+Overview
+~~~~~~~~
 
-First time setup of the working directory:
+Use version control not only for just managing versions, but also for organising
+your coding. For example, it would be good to commit changes to the server in
+pieces involving specific functions or parts of the model that are ready. Use
+the log messages to describe briefly what has been done.
+indexterm:[Subversion]
+indexterm:[svn]
+indexterm:[Subversion, log message]
+
+For example, imagine you have implemented a new sigmpoid function. Then, when
+it is ready, commit your change to the server with a log message like
+"New sigmoid function". And only after this go to the next piece of code. Then
+the versions yoi have will not be haphazard but organised into meaningful
+pieces. If you did several pieces in different files, e.g. sigmoid function in
+Hed18.f90 and a new Makefile  for building the code, do two commits:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn commit Hed18.f90 -m "New sigmoid function"
+...
+svn commit Makefile -m "Tweaked makefile, added PGI compiler build"
+--------------------------------------------------------------------------------
+
+First time setup of the working copy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First time setup of the working copy of the model (working directory):
 
 * For a new project (run/experiment etc.), get into the working directory where
-  the model code will reside (+cd+) (possibly make a new directory +mkdir+), 
-  and *checkout:* get the model code (one branch, no need to get everything!) 
-  from the  server with +svn checkout https://path_to_branch+ 
-  For example, 
-  +svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18+ will 
-  get the HED18 into the directory HED18 within the current working directory.
-  If we use HEDTOOLS, it should also be placed here with 
-  +svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS+.
-  So, we now get HED18 and HEDTOOLS in our workdir.
-  
-Now you can work in this directory
+  the model code will reside (+cd+) (possibly make a new directory +mkdir+),
+  and *checkout:* get the model code (one branch, no need to get everything!)
+  from the  server with +svn checkout https://path_to_branch+
+  For example,
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+--------------------------------------------------------------------------------
+
+This will get the +HED18+ into the directory +HED18+ within the current working
+directory. If we use +HEDTOOLS+, it should also be placed here:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+...
+svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS
+--------------------------------------------------------------------------------
+
+So, we now get +HED18+ and +HEDTOOLS+ in our working directory.
+indexterm:[Subversion,checkout]
+
+Standard workflow
+~~~~~~~~~~~~~~~~~
+
+Now you can work within this directory. This is the standard workflow.
 
 * *update* code from the server: +svn up+
-* edit the code using any favoured tools, build, etc...
+* edit the code using any favoured tools, build, run model etc...
 * *commit,* when ready (e.g. when a new has been implememnted): +svn commit+
+indexterm:[Subversion,update]
+indexterm:[Subversion,commit]
 
-To be done
++commit+ will ask you to provide a short descriptive log message. It will run
+the standard text editor for this by default (can be configured). But you can
+provide such a message just on the command line with the +-m+ option:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn commit Hed18.f90 -m "New sigmoid function"
+--------------------------------------------------------------------------------
+
+Both +update+ and +commit+ can be done for the working directory as well as for
+specific file. E.g. to commit only the model code +Hed18.f90+ do:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn commit Hed18.f90
+--------------------------------------------------------------------------------
+
+Both +update+ and +commit+ can be performed within any subdirectory of the
+working copy. In such cases they are limited to this subdirectory only.
+
+GUI Tools
+~~~~~~~~~
+
+Using the GUI tools like TortoiseSVN is similar. With GUI you should just
+select the appropriate item from the menu list.
+indexterm:[Subversion,GUI tools, TortoiseSVN]
+indexterm:[Subversion,TortoiseSVN]
+indexterm:[TortoiseSVN]
 
 Build system: GNU make
 ----------------------
@@ -1436,7 +1553,8 @@ Most basic things with the standard +Makefile+ are simple.
 indexterm:[Makefile, make]
 indexterm:[make]
 
-*Building and running the model code*
+Building and running the model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Get a short help on the options: +make help+
 * Build the model executable using default compiler: +make+
@@ -1445,7 +1563,8 @@ indexterm:[make]
 * Run the current model: +make run+ (on the fimm HPC cluster, this will
   automatically start a new batch job)
 
-*Cleanup*
+Cleanup
+^^^^^^^
 
 There are also a few options for deteting the files and data generated by the
 build process.
@@ -1454,7 +1573,8 @@ build process.
 * Remove all the data files generated by the model run as well as the model executable: +make clean+
 * Remove everything generated by the build system and all the data, retain the default state: +make distclean+
 
-*Debugging*
+Debugging
+^^^^^^^^^
 
 The environment variable +DEBUG+ controls whether the build system produces the
 debug symbols (-g) or, if NOT defined, speed-optimised machine code (-O3,
@@ -1534,44 +1654,6 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 
 Coding style
 ------------
-
-Software tools and requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Most tools needed for the m,odel are already available on Linux (e.g. gfortran,
-make, Subversion, console, midnight commander etc. On Windows they can be
-installed manually from their official web sites.
-
-*Fortran: Mandatory*
-
-Intel Fortran compiler
-
-Free GNU Fortran distribution along with make and other tools from the Equation
-solution http://www.equation.com/servlet/equation.cmd?fa=fortran
-
-*Subversion: Mandatory*
-
-Windows GUI for Subversion is TortoiseSVN: https://tortoisesvn.net/. It is very
-helpful to have also console subversion client software (Tortiuse includes
-console tools but does not install by default). A good one is SilkSVN
-https://sliksvn.com/download/.
-
-*Console terminal: Highly recommended*
-
-The Windows console (cmd) is extremely weak. Conemu https://conemu.github.io/ is
-a much better alternative, especially with the Far manager, a two-panel console
-file manager similar to the ancient Norton commander for DOS (or Midnight
-commander on Linux): http://www.farmanager.com/download.php?l=en
-
-*Geany: Recommended*
-
-Lightweight IDE, Editor for code and any text files. http://www.geany.org/
-Also need plugins: http://plugins.geany.org/
-
-*Code::Blocks for Fortran: Recommended*
-
-IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
-http://cbfortran.sourceforge.net/ Installation by unpacking into some directory.
 
 To be done
 
