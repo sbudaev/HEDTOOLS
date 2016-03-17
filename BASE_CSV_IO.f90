@@ -186,6 +186,13 @@ interface CSV_RECORD_WRITE
 
 end interface CSV_RECORD_WRITE
 
+interface CHECK_FILE_OPEN
+
+  module procedure CHECK_FILE_OPEN_S
+  module procedure CHECK_FILE_OPEN_T
+
+end interface CHECK_FILE_OPEN
+
 private :: I4_WIDTH, I4_LOG_10, CLEANUP, STR_ITOA_LZ, STR_ITOA  ! They are
                                 !  identical in CSV_IO and BASE_UTILS.
                                 ! Private here to avoid possible name conflicts,
@@ -426,6 +433,119 @@ function GET_FILE_UNIT (csv_file_name, csv_file_status) &
   if (present(csv_file_status)) csv_file_status=csv_file_status_here
 
 end function GET_FILE_UNIT
+
+!-------------------------------------------------------------------------------
+
+function CHECK_FILE_OPEN_S (csv_file_name, csv_file_unit, csv_file_status, &
+    get_csv_file_unit) result (file_opened)
+!*******************************************************************************
+! CHECK_FILE_OPEN
+! PURPOSE: Check if a file identified by name or unit is opened for
+!          reading/writing, returns TRUE if opened, FALSE otherwise
+!          If there was an error reading the file, returns
+!          csv_file_status FALSE. Optionally also return the file unit
+!          associated with the file name if it is open (-1 otherwise).
+! CALL PARAMETERS:
+!    Character file name or integer file unit,
+!    Optional logical execution error status (.TRUE.) and
+!    optional output file unit
+! RETURNS: Logical flag
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  logical :: file_opened ! file_exist
+
+  ! Calling parameters
+  character (len=*), optional, intent(in) :: csv_file_name
+  integer, optional, intent(in) :: csv_file_unit
+  logical, optional, intent(out) :: csv_file_status
+  integer, optional, intent(out) :: get_csv_file_unit
+
+  ! Local variables, copies of optionals and intent-in
+  character (len=:), allocatable :: csv_file_name_here
+  integer :: csv_file_unit_here
+  logical :: csv_file_status_here
+  integer :: get_csv_file_unit_here
+
+  ! Local variables
+  integer :: file_error_status
+  logical :: openedq
+  logical :: supplied_file_name ! whether the user supplied file (T) or unit (F)
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CHECK_FILE_OPEN"
+
+  !-----------------------------------------------------------------------------
+
+  ! exit if neither name nor unit given
+  if(.not. present(csv_file_name) .and. .not. present(csv_file_unit)) then
+    if (present(csv_file_status)) csv_file_status=.FALSE.
+    if (present(get_csv_file_unit)) get_csv_file_unit=-1
+    file_opened = .FALSE.
+    return
+  end if
+
+  if (present(csv_file_unit)) then  ! if we got unit, just ignore the name
+    csv_file_unit_here=csv_file_unit
+    get_csv_file_unit_here=csv_file_unit_here
+    inquire(unit=csv_file_unit_here, opened=openedq, iostat=file_error_status)
+  else
+    csv_file_name_here=csv_file_name
+    inquire(file=csv_file_name_here, number=get_csv_file_unit_here, &
+      opened=openedq, iostat=file_error_status)
+  end if
+
+  ! Check if there were errors inquiring
+  if (file_error_status==0) then
+    csv_file_status_here=.TRUE.
+  else                               ! if there was an error inquiring, go back
+    csv_file_status_here=.FALSE.     !   with error flag
+    if (present(csv_file_status)) csv_file_status=csv_file_status_here
+    if (present(get_csv_file_unit)) get_csv_file_unit=-1
+    file_opened = .FALSE.
+    return
+  end if
+
+  file_opened = openedq   ! get the logical flag
+
+  if (.not. file_opened) get_csv_file_unit_here=-1
+
+  if (present(get_csv_file_unit)) get_csv_file_unit=get_csv_file_unit_here
+  if (present(csv_file_status)) csv_file_status=csv_file_status_here
+
+end function CHECK_FILE_OPEN_S
+
+!-------------------------------------------------------------------------------
+
+function CHECK_FILE_OPEN_T (csv_file_handle) result (file_opened)
+!*******************************************************************************
+! CHECK_FILE_OPEN_T
+! PURPOSE: Check if a file identified by name or unit is opened for
+!          reading/writing, returns TRUE if opened, FALSE otherwise
+! CALL PARAMETERS:
+!    File handle object of the type csv_file
+! RETURNS: Logical flag
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  logical :: file_opened
+
+  ! Calling parameters
+  type(csv_file) :: csv_file_handle
+
+  file_opened = CHECK_FILE_OPEN_S(csv_file_name=csv_file_handle%name, &
+                                  csv_file_unit=csv_file_handle%unit, &
+                                  csv_file_status=csv_file_handle%status)
+
+end function CHECK_FILE_OPEN_T
 
 !-------------------------------------------------------------------------------
 
