@@ -823,6 +823,62 @@ if (.not. CHECK_UNIT_VALID(csv_file_unit)) then
 In this example, we check if the user provided unit is valid, if not, get the
 first available one.
 
+Function: CHECK_FILE_OPEN
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+indexterm:[CHECK_FILE_OPEN]
+
+Checks if a file is currently open, can optionally determine the Fortran unit
+associated with an open file (returns -1 if it is not open). Input parameters
+can be either raw form (file name or unit) or csv_file object. Optional
++csv_file_status+ can determine if the check proceeded without error (=TRUE)
+there was an error when trying to access the file (=FALSE). Input parameters
+must be either file name or unit.
+
+Standard (verbose) form:
+
+[source]
+--------------------------------------------------------------------------------
+! Calling parameters
+character (len=*), optional, intent(in) :: csv_file_name  ! file name to check
+integer, optional, intent(in) :: csv_file_unit            !  or unit to check
+logical, optional, intent(out) :: csv_file_status         ! error status
+integer, optional, intent(out) :: get_csv_file_unit       ! obtain file unit of
+                                                          !  an open file
+--------------------------------------------------------------------------------
+
+File object form:
+
+[source]
+--------------------------------------------------------------------------------
+type(csv_file) :: csv_file_handle
+--------------------------------------------------------------------------------
+
+Output of the function is logical type, returns TRUE if the file is currently
+opened, FALSE otherwise.
+
+*Examples:*
+
+[source]
+--------------------------------------------------------------------------------
+
+if (.not. CHECK_FILE_OPEN("file_out.csv")) call OPEN_OUTPUT
+...
+if (CHECK_FILE_OPEN(csv_file_unit=12)) goto 100
+...
+file_is_open = CHECK_FILE_OPEN(csv_file_name="data_out.csv", &
+                               get_csv_file_unit=fileunit, &
+                               csv_file_status=error_flag)
+--------------------------------------------------------------------------------
+
+[source]
+--------------------------------------------------------------------------------
+type (csv_file) :: output_handle
+...
+if (CHECK_FILE_OPEN(output_handle)) then
+...
+--------------------------------------------------------------------------------
+
 Subroutine: CSV_RECORD_APPEND
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_RECORD_APPEND]
