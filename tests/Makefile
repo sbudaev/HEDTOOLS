@@ -45,7 +45,7 @@ OFF = ../BASE_LOGGER.f90 ../BASE_CSV_IO.f90 ../BASE_UTILS.f90
 clean: neat
 	-rm -f .MODEL_PROTO.cppdefs $(OBJ) MODEL_PROTO *.csv *.log *.mod *.o
 neat:
-	-rm -f $(TMPFILES)
+	-rm -f $(TMPFILES) *conflict*
 localize: $(OFF)
 	cp $(OFF) .
 TAGS: $(SRC)
