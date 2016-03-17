@@ -1567,6 +1567,14 @@ GUI Tools
 
 Using the GUI tools like TortoiseSVN is similar. With GUI you should just
 select the appropriate item from the menu list.
+
+image:img_doc_tortoise.png[height=280,align="left"]
+
+Similar GUI tools exist for Linux. For example, there is +thunar-vcs-plugin+
+(Git and subversion integration into the Thunar file manager).
+
+image:img_doc_fxce_svn.png[height=280,align="left"]
+
 indexterm:[Subversion,GUI tools, TortoiseSVN]
 indexterm:[Subversion,TortoiseSVN]
 indexterm:[TortoiseSVN]
@@ -1712,6 +1720,55 @@ Coding style
 ------------
 
 To be done
+.Notes
+- write
+- write
+
+
+Work at high level, use these tools, use objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
+Isolate as much as possible into subroutines
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
+
+Use modules and loop/if labels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
+
+Use whole-array operations and array slices
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+instead of loops
+
+Use parallel instructions (where, forall and friends)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
+
+Use portable code / constructions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
+Use command line / terminal tools
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
+
+Use SVN to organise coding
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+bla bla
+
 
 Final Notes
 -----------
