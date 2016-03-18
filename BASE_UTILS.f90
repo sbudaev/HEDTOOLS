@@ -940,6 +940,49 @@ end subroutine RANDOM_SEED_INIT
 
 !-------------------------------------------------------------------------------
 
+function RAND_R4() result (randreal)
+! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
+
+  implicit none
+  real :: randreal
+
+  call random_number(randreal)
+
+end function RAND_R4
+
+function RAND_R8() result (randreal)
+! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
+
+  implicit none
+  real (kind=8) :: randreal
+
+  call random_number(randreal)
+
+end function RAND_R8
+
+function RAND_I(a, b) result (randint)
+! trivial random integer (a <= r <= b)
+
+  implicit none
+  integer :: randint
+  integer, intent(in) :: a, b
+  integer :: a_here, b_here, tmp
+
+  a_here = a
+  b_here = b
+
+  if (a_here > b_here) then ! just swap values
+    tmp=a_here
+    a_here = b_here
+    b_here = tmp
+  end if
+
+  randint = a + int(RAND_R4() * (b - a + 1))
+
+end function RAND_I
+
+!-------------------------------------------------------------------------------
+
 function TIMESTAMP_FULL() result (tstamp_string)
 !*******************************************************************************
 ! TIMESTAMP
