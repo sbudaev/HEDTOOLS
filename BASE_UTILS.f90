@@ -842,7 +842,7 @@ subroutine RANDOM_SEED_INIT_SIMPLE()
   integer, dimension(:), allocatable :: seed
 
   ! Subroutine name for DEBUG LOGGER
-  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
+  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT_SIMPLE"
 
   !-----------------------------------------------------------------------------
 
@@ -882,6 +882,9 @@ subroutine RANDOM_SEED_INIT()
   integer, allocatable :: seed(:)
   integer :: i, n, un, istat, dt(8), pid
   integer(int64) :: t
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
 
   !-----------------------------------------------------------------------------
 
@@ -946,6 +949,9 @@ function RAND_R4() result (randreal)
   implicit none
   real :: randreal
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RAND_R4"
+
   call random_number(randreal)
 
 end function RAND_R4
@@ -955,6 +961,9 @@ function RAND_R8() result (randreal)
 
   implicit none
   real (kind=8) :: randreal
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RAND_R8"
 
   call random_number(randreal)
 
@@ -967,6 +976,9 @@ function RAND_I(a, b) result (randint)
   integer :: randint
   integer, intent(in) :: a, b
   integer :: a_here, b_here, tmp
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RAND_I"
 
   a_here = a
   b_here = b
