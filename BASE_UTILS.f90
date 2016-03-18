@@ -878,11 +878,9 @@ end subroutine RANDOM_SEED_INIT
 !!   can result in poor quality random numbers being generated.
 !!*******************************************************************************
 
-!  use ISO_C_BINDING, only: C_INT64_T
+!  use ISO_FORTRAN_ENV, only: int64
 
 !  implicit none
-
-!  integer, parameter :: int64=C_INT64_T
 
 !  integer, allocatable :: seed(:)
 !  integer :: i, n, un, istat, dt(8), pid
