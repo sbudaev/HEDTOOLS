@@ -5,11 +5,10 @@ module BASE_RANDOM
 ! PURPOSE:
 !   Working with random numbers. Init random seed, generate random numbers
 !
-! CONTENTS:
-!
 ! NOTES:
 !  IMPORTANT: Subroutines here are non-portable and depend on the compiler
 !  and possibly the platform.
+!
 ! SUPPORTED COMPILERS:
 !  GNU Fortran, Intel Fortran, Oracle Solaris Studio Fortran
 !*******************************************************************************
@@ -60,26 +59,32 @@ subroutine RANDOM_SEED_INIT()
 !   can result in poor quality random numbers being generated.
 !*******************************************************************************
 
+  !*****************************************************************************
+  ! *** NON-PORTABLE CODE BEGIN ***
   ! int64 is defined in ISO_FORTRAN_ENV. But not in all compilers.
   ! Notably, Oracle Fortran doesn't have it and needs explicit typing:
   ! integer, parameter :: int64 = selected_int_kind(18)
-  use ISO_FORTRAN_ENV, only: int64 ! This works with GNU and Intel
+  ! use ISO_FORTRAN_ENV, only: int64 ! This works with GNU and Intel
 
   !use IFPORT, only : getpid         ! use IFPORT needed for the Intel Fortran
 
-  implicit none
+  !implicit none
 
-  integer, allocatable :: seed(:)
-  integer :: i, n, un, istat, dt(8), pid
+  !integer, allocatable :: seed(:)
+  !integer :: i, n, un, istat, dt(8), pid
   !integer, parameter :: int64 = selected_int_kind(18) ! needed for Oracle
-  integer(int64) :: t
+  !integer(int64) :: t
 
-  !include "system.inc"   ! Include non-intrinsic library headers for the Oracle Fortran
-  !interface              ! The interface is from Oracle Fortran system.inc
-  !  function getpid()    ! It does not differ between 32 and 64 bit systems
-  !  integer(4) getpid
-  !  end function getpid
-  !end interface
+  !include "system.inc"   ! Include non-intrinsic lib headers, Oracle Fortran
+
+  !-----------------------------------------------------------------------------
+  ! *** NOTE: ***
+  ! The above code is auto-generated in the include file by the build system
+  include "BASE_RANDOM.inc"
+  !-----------------------------------------------------------------------------
+
+  ! *** NON-PORTABLE CODE END ***
+  !*****************************************************************************
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT_FULL"
