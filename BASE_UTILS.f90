@@ -829,7 +829,7 @@ end subroutine OUT_FREE_STDERR
 
 !-------------------------------------------------------------------------------
 
-subroutine RANDOM_SEED_INIT()
+subroutine RANDOM_SEED_INIT_SIMPLE()
 !*******************************************************************************
 ! RANDOM_SEED_INIT_SIMPLE
 ! PURPOSE: initialises the random seed
@@ -856,93 +856,177 @@ subroutine RANDOM_SEED_INIT()
 
   deallocate(seed)
 
-end subroutine RANDOM_SEED_INIT
+end subroutine RANDOM_SEED_INIT_SIMPLE
 
 !-------------------------------------------------------------------------------
 
-!subroutine RANDOM_SEED_INIT()
-!!*******************************************************************************
-!! RANDOM_SEED_INIT
-!! PURPOSE: initialises the random seed
-!! CALL PARAMETERS: none
-!! NOTES:
-!!   This is a better and more advanced version of the RANDOM_SEED_INIT
-!!
-!!   BUT -- it is NOT PORTABLE, uses GNU EXTENSIONS (getpid)
-!!
-!!   Taken from http://gcc.gnu.org/onlinedocs/gfortran/RANDOM_005fSEED.html
-!!   ----------------------------------------------------------------------------
-!!   How to initialize the random seed with a varying seed in order to ensure
-!!   a different random number sequence for each invocation of the program.
-!!   Note that setting any of the seed values to zero should be avoided as it
-!!   can result in poor quality random numbers being generated.
-!!*******************************************************************************
+subroutine RANDOM_SEED_INIT()
+!*******************************************************************************
+! RANDOM_SEED_INIT
+! PURPOSE: initialises the random seed
+! CALL PARAMETERS: none
+! NOTES:
+!   This is a better and more advanced version of the RANDOM_SEED_INIT
+!
+!   BUT -- may NOT be PORTABLE, e.g. int64 may not be defined in ISO_FORTRAN_ENV
+!          getpid() integer function may not be defined. On Solaris Fortran
+!          getpid is defined in system.inc (interfaces for most non-intrinsic
+!          library routines). then, need this: include "system.inc"
+!
+!   Modified from http://gcc.gnu.org/onlinedocs/gfortran/RANDOM_005fSEED.html
+!   ----------------------------------------------------------------------------
+!   How to initialize the random seed with a varying seed in order to ensure
+!   a different random number sequence for each invocation of the program.
+!   Note that setting any of the seed values to zero should be avoided as it
+!   can result in poor quality random numbers being generated.
+!*******************************************************************************
 
-!  use ISO_FORTRAN_ENV, only: int64
+  !use ISO_FORTRAN_ENV, only: int64  ! This is defined not in all compilers
+                                     ! Notably, Oracle Fortran doesn't have it
+  implicit none
 
-!  implicit none
+  integer, allocatable :: seed(:)
+  integer :: i, n, un, istat, dt(8), pid
+  integer, parameter :: int64 = selected_int_kind(18)
+  integer(int64) :: t
 
-!  integer, allocatable :: seed(:)
-!  integer :: i, n, un, istat, dt(8), pid
-!  integer(int64) :: t
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
 
-!  ! Subroutine name for DEBUG LOGGER
-!  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
+  !include "system.inc"
+  !interface              ! The interface is taken from
+  !  function getpid()    !   Oracle Fortran system.inc
+  !  integer(4) getpid
+  !  end function getpid
+  !end interface
 
-!  !-----------------------------------------------------------------------------
+  !-----------------------------------------------------------------------------
 
-!  call random_seed(size=n)
-!  allocate(seed(n))
+  call random_seed(size=n)
+  allocate(seed(n))
 
-!  ! First try if the OS provides a standard random number generator (Linux/Unix)
-!  open(newunit=un, file="/dev/urandom", access="stream", &
-!    form="unformatted", action="read", status="old", iostat=istat)
+  ! First try if the OS provides a standard random number generator (Linux/Unix)
+  ! open(NEWUNIT= option, which returns a unique file unit - may not be
+  ! everywhere supported, so we use GET_FREE_FUNIT from CSV_IO
+  un=get_free_funit()
+  open(unit=un, file="/dev/urandom", access="stream", &
+    form="unformatted", action="read", status="old", iostat=istat)
 
-!  if (istat == 0) then
-!    read(un) seed
-!    close(un)
-!  else
-!    ! Fallback to XOR:ing the current time and pid. The PID is
-!    ! useful in case one launches multiple instances of the same
-!    ! program in parallel.
-!    call system_clock(t)
-!    if (t == 0) then
-!      call date_and_time(values=dt)
-!      t = (dt(1) - 1970) * 365_int64 * 24 * 60 * 60 * 1000 &
-!          + dt(2) * 31_int64 * 24 * 60 * 60 * 1000 &
-!          + dt(3) * 24_int64 * 60 * 60 * 1000 &
-!          + dt(5) * 60 * 60 * 1000 &
-!          + dt(6) * 60 * 1000 + dt(7) * 1000 &
-!          + dt(8)
-!    end if
-!    pid = getpid()
-!    t = ieor(t, int(pid, kind(t)))
-!    do i = 1, n
-!      seed(i) = lcg(t)
-!    end do
-!  end if
+  if (istat == 0) then
+    read(un) seed
+    close(un)
+  else
+    ! Fallback to XOR:ing the current time and pid. The PID is
+    ! useful in case one launches multiple instances of the same
+    ! program in parallel.
+    call system_clock(t)
+    if (t == 0) then
+      call date_and_time(values=dt)
+      t = (dt(1) - 1970) * 365_int64 * 24 * 60 * 60 * 1000 &
+          + dt(2) * 31_int64 * 24 * 60 * 60 * 1000 &
+          + dt(3) * 24_int64 * 60 * 60 * 1000 &
+          + dt(5) * 60 * 60 * 1000 &
+          + dt(6) * 60 * 1000 + dt(7) * 1000 &
+          + dt(8)
+    end if
+    pid = getpid()
+    t = ieor(t, int(pid, kind(t)))
+    do i = 1, n
+      seed(i) = lcg(t)
+    end do
+  end if
 
-!  call random_seed(put=seed)
+  call random_seed(put=seed)
 
-!!-------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------
 
-!contains
+contains
 
-!  ! This simple PRNG might not be good enough for real work, but is
-!  ! sufficient for seeding a better PRNG.
-!  function lcg(s)
-!    integer :: lcg
-!    integer(int64) :: s
-!    if (s == 0) then
-!      s = 104729
-!    else
-!      s = mod(s, 4294967296_int64)
-!    end if
-!    s = mod(s * 279470273_int64, 4294967291_int64)
-!    lcg = int(mod(s, int(huge(0), int64)), kind(0))
-!  end function
+  ! This simple PRNG might not be good enough for real work, but is
+  ! sufficient for seeding a better PRNG.
+  function lcg(s)
+    integer :: lcg
+    integer(int64) :: s
+    if (s == 0) then
+      s = 104729
+    else
+      s = mod(s, 4294967296_int64)
+    end if
+    s = mod(s * 279470273_int64, 4294967291_int64)
+    lcg = int(mod(s, int(huge(0), int64)), kind(0))
+  end function
 
-!end subroutine RANDOM_SEED_INIT
+  function get_free_funit (file_status, max_funit) result (file_unit)
+  !*******************************************************************************
+  ! GET_FREE_FUNIT
+  ! PURPOSE: returns the first free Fortran unit number (search in 1 to MAX_UNIT).
+  ! RETURNS:
+  !    Integer unit number
+  ! CALL PARAMETERS:
+  !    optional logical execution error status (.TRUE.)
+  !    optional integer max_funit to search (default MAX_UNIT defined in mudule)
+  !
+  ! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+  ! Modified by Sergey Budaev
+  !*******************************************************************************
+
+    use, intrinsic :: ISO_FORTRAN_ENV     ! Provides system-wide scalar constants
+                                          ! INPUT_UNIT OUTPUT_UNIT ERROR_UNIT
+    implicit none
+
+    ! Function value
+    integer :: file_unit
+
+    ! Calling parameters
+    logical, optional, intent(out) :: file_status
+    integer, optional, intent(in) :: max_funit
+
+    ! Local variables: copies of optional parameters we need co copy optional
+    logical  :: file_status_here    ! variables in case they are absent, so always
+    integer  :: max_funit_here      ! work with copies of optionals inside
+    ! Other local variables
+    integer :: i
+    integer :: ios
+    logical :: lopen
+
+    integer, parameter :: MAX_UNIT=500  ! Sufficiently great maximum unit,
+                                        ! in CSV_IO provided globally
+
+    ! Subroutine name for DEBUG LOGGER
+    character (len=*), parameter :: PROCNAME = "GET_FREE_FUNIT"
+
+    !-----------------------------------------------------------------------------
+
+    file_unit = 0
+    file_status_here = .FALSE.
+
+    if (present(max_funit)) then
+        max_funit_here=max_funit
+      else
+        max_funit_here=MAX_UNIT ! max from globals
+    end if
+
+    do i=1, max_funit_here
+      if (i /= INPUT_UNIT .and. i /= OUTPUT_UNIT .and. &
+            i /= ERROR_UNIT) then             ! exclude standard console units
+        inquire (unit=i, opened=lopen, iostat=ios)
+        if (ios == 0) then
+          if (.not. lopen) then
+            file_unit = i                     ! First free unit found
+            file_status_here=.TRUE.
+            if (present(file_status)) file_status=file_status_here
+            return
+          end if
+        end if
+      end if
+    end do
+
+    if (.not. file_status_here) file_unit=-1    ! if no free unit found return -1
+    if (present(file_status)) file_status=file_status_here ! and error flag
+
+  end function get_free_funit
+
+end subroutine RANDOM_SEED_INIT
 
 !-------------------------------------------------------------------------------
 
