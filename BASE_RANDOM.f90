@@ -1,5 +1,7 @@
 module BASE_RANDOM
 !*******************************************************************************
+! SVN $Id$
+!*******************************************************************************
 ! PURPOSE:
 !   Working with random numbers. Init random seed, generate random numbers
 !
