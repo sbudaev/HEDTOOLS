@@ -11,7 +11,7 @@ IF_FC = ifort
 SF_FC = f95
 
 # Choose the compiler type
-FC = $(SF_FC)
+FC = $(GF_FC)
 
 #*******************************************************************************
 
@@ -201,12 +201,13 @@ static: $(LIB)
 
 shared: $(DIB)
 
+inc: $(AUTOGEN_HEADER_RAND)
+
 doc: $(DOCFIL).$(DOCFMT)
 
 distclean: neat
 	-rm -f $(OBJ) $(MOD) $(LIB) $(DIB) $(DOCDIR)/BASE_UTILS.$(DOCFMT) \
-	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_COMMENT_RANDOM) \
-	       $(AUTOGEN_CODE_RANDOM)
+	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
 
 # We don't clean .mod files as they are necessary for building with .so
 clean: neat
@@ -227,15 +228,23 @@ $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
 	a2x -f$(DOCFMT) BASE_UTILS.adoc
 	mv $(DOCFIL).$(DOCFMT) $(DOCDIR)
 
+#-------------------------------------------------------------------------------
+
+# make include
+$(AUTOGEN_HEADER_RAND): $(BASE_RANDOM.f90) $(THIS_FILE)
+	$(AUTOGEN_COMMENT_RANDOM)
+	$(AUTOGEN_CODE_RANDOM)
+	@echo Generated include: $(AUTOGEN_HEADER_RAND) for $(FC)
+
+# compile modules
 BASE_UTILS.o: BASE_UTILS.f90
 	$(FC) $(FFLAGS) -c BASE_UTILS.f90
 BASE_CSV_IO.o: BASE_CSV_IO.f90
 	$(FC) $(FFLAGS) -c BASE_CSV_IO.f90
 BASE_LOGGER.o: BASE_LOGGER.f90
 	$(FC) $(FFLAGS) -c BASE_LOGGER.f90
-BASE_RANDOM.o: BASE_RANDOM.f90
-	$(AUTOGEN_COMMENT_RANDOM)
-	$(AUTOGEN_CODE_RANDOM)
+BASE_RANDOM.o: BASE_RANDOM.f90 $(THIS_FILE)
+	@$(MAKE) -f $(THIS_FILE) $(AUTOGEN_HEADER_RAND)
 	$(FC) $(FFLAGS) -c BASE_RANDOM.f90
 BASE_ERRORS.o: BASE_LOGGER.f90
 	$(FC) $(FFLAGS) -c BASE_ERRORS.f90
