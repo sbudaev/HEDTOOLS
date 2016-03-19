@@ -866,12 +866,16 @@ subroutine RANDOM_SEED_INIT()
 ! PURPOSE: initialises the random seed
 ! CALL PARAMETERS: none
 ! NOTES:
-!   This is a better and more advanced version of the RANDOM_SEED_INIT
-!
-!   BUT -- may NOT be PORTABLE, e.g. int64 may not be defined in ISO_FORTRAN_ENV
-!          getpid() integer function may not be defined. On Solaris Fortran
-!          getpid is defined in system.inc (interfaces for most non-intrinsic
-!          library routines). then, need this: include "system.inc"
+!   This is a better and more advanced version of the RANDOM_SEED_INIT, adapted
+!   for parallel processing (used PID of the current process).
+! PORTABILITY NOTES:
+!   BUT -- may NOT be PORTABLE, int64 may not be defined in ISO_FORTRAN_ENV
+!   getpid() integer function is GNU extension. On Intel Fortran it is
+!   defined by:
+!     use IFPORT, only : getpid
+!   On Solaris Fortran getpid is defined in system.inc (interfaces for
+!   most non-intrinsic library routines). Need this:
+!      include "system.inc"
 !
 !   Modified from http://gcc.gnu.org/onlinedocs/gfortran/RANDOM_005fSEED.html
 !   ----------------------------------------------------------------------------
@@ -881,21 +885,26 @@ subroutine RANDOM_SEED_INIT()
 !   can result in poor quality random numbers being generated.
 !*******************************************************************************
 
-  !use ISO_FORTRAN_ENV, only: int64  ! This is defined not in all compilers
-                                     ! Notably, Oracle Fortran doesn't have it
+  ! int64 is defined in ISO_FORTRAN_ENV. But not in all compilers.
+  ! Notably, Oracle Fortran doesn't have it and needs explicit typing:
+  ! integer, parameter :: int64 = selected_int_kind(18)
+  !use ISO_FORTRAN_ENV, only: int64 ! This works with GNU and Intel
+
+  use IFPORT, only : getpid         ! use IFPORT needed for the Intel Fortran
+
   implicit none
 
   integer, allocatable :: seed(:)
   integer :: i, n, un, istat, dt(8), pid
-  integer, parameter :: int64 = selected_int_kind(18)
+  integer, parameter :: int64 = selected_int_kind(18) ! needed for Oracle
   integer(int64) :: t
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
 
-  !include "system.inc"
-  !interface              ! The interface is taken from
-  !  function getpid()    !   Oracle Fortran system.inc
+  !include "system.inc"   ! Include non-intrinsic library headers for the Oracle Fortran
+  !interface              ! The interface is from Oracle Fortran system.inc
+  !  function getpid()    ! It does not differ between 32 and 64 bit systems
   !  integer(4) getpid
   !  end function getpid
   !end interface
