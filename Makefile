@@ -216,6 +216,8 @@ clean: neat
 neat:
 	-rm -f $(TMPFILES) *conflict*
 
+#-------------------------------------------------------------------------------
+
 $(LIB): $(OBJ)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(STLIBBLD)
