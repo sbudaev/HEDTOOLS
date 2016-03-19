@@ -899,15 +899,15 @@ subroutine RANDOM_SEED_INIT()
   integer, parameter :: int64 = selected_int_kind(18) ! needed for Oracle
   integer(int64) :: t
 
-  ! Subroutine name for DEBUG LOGGER
-  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
-
   !include "system.inc"   ! Include non-intrinsic library headers for the Oracle Fortran
   !interface              ! The interface is from Oracle Fortran system.inc
   !  function getpid()    ! It does not differ between 32 and 64 bit systems
   !  integer(4) getpid
   !  end function getpid
   !end interface
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT_FULL"
 
   !-----------------------------------------------------------------------------
 
