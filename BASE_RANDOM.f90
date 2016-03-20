@@ -216,7 +216,6 @@ end subroutine RANDOM_SEED_INIT
 
 !-------------------------------------------------------------------------------
 
-
 function RAND_R4() result (randreal)
 ! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
 
@@ -242,6 +241,8 @@ function RAND_R8() result (randreal)
   call random_number(randreal)
 
 end function RAND_R8
+
+!-------------------------------------------------------------------------------
 
 function RAND_I(a, b) result (randint)
 ! trivial random integer (a <= r <= b)
