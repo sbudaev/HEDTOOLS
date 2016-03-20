@@ -58,8 +58,10 @@ GC_FFLAGS = -O3 $(GF_STATIC)
 IF_STATIC = -static
 IF_TRAPS =-fpe3
 IF_RCHECKS = -warn -check bounds,pointers,format,uninit
-IF_FFLAGS = -sox -O3 -parallel $(IF_STATIC) $(IF_TRAPS)
+IF_FFLAGS = -sox -fast -parallel $(IF_STATIC) $(IF_TRAPS)
 # -fpe3 no traps; -fpe0 all traps
+# -O3
+# Aggressive optimizations: -fast = -O3 –ipo –static
 
 # Options for Sun/Oracle Solaris Studio
 SF_STATIC = –Bstatic –dn
