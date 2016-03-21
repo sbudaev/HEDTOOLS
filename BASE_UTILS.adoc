@@ -38,9 +38,10 @@ Software tools and requirements
 -------------------------------
 
 Most tools needed for the model are already available on Linux (e.g. gfortran,
-make, Subversion, console, midnight commander etc. On Windows they can be
-installed manually from their official web sites. Below are some details on the
-Windows software.
+make, Subversion, console, midnight commander etc) and are trivial to install
+using the standard package manager (e.g. +apt-get install gfortran+ on Ubuntu).
+On Windows they can be installed manually from their official web sites. On
+Mac use http://brew.sh[homebrew]. Below are some details on the Windows software.
 
 *Fortran (Mandatory)*
 
@@ -80,6 +81,7 @@ These modelling tools include several separate modules:
 
 * +BASE_UTILS+
 * +CSV_IO+
+* +BASE_RANDOM+
 * +LOGGER+
 * Error trapping  modules
 * IEEE Arithmetics module
@@ -1280,6 +1282,59 @@ indexterm:[allocatable string,portability,compiler limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,limitation]
 
+Module BASE_RANDOM
+------------------
+
+This module contains subroutines for generating random numbers. However, the
+code of this module depends on the platform and compiler used. The build
+system generates the appropriate header file automatically.
+indexterm:[compiler,limitation]
+indexterm:[BASE_RANDOM]
+indexterm:[PRNG]
+indexterm:[random number]
+
+RANDOM_SEED_INIT
+~~~~~~~~~~~~~~~~
+Initialise the random seed for random number generation. This module uses an
+improved random seed generation algorithm that uses the system entropy pool
+on Unix systems and XOR of the current time and PID on Windows. Therefore, it
+is *safe* for use on *parallel processing systems*.
+indexterm:[RANDOM_SEED_INIT]
+indexterm:[parallel computations]
+
+[source]
+--------------------------------------------------------------------------------
+call RANDOM_SEED_INIT()
+--------------------------------------------------------------------------------
+
+RAND_I
+~~~~~~
+
+Generates a random integer within the range A to B (the two parameters of the
+function).
+
+[source]
+--------------------------------------------------------------------------------
+ipos = RAND_I(1, len(ga_target))
+--------------------------------------------------------------------------------
+indexterm:[RAND_I]
+
+
+RAND_R4 and RAND_R8
+~~~~~~~~~~~~~~~~~~~
+
+Generates a random real (type 4 or 8). Has no parameters.
+
+[source]
+--------------------------------------------------------------------------------
+if ( RAND_R4() < ga_mutationrate ) then
+  call mutate(fish(i))
+end if
+--------------------------------------------------------------------------------
+indexterm:[RAND_R4]
+indexterm:[RAND_R8]
+
+
 Module: LOGGER
 --------------
 
@@ -1719,53 +1774,112 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 Coding style
 ------------
 
-To be done
-.Notes
-- write
-- write
+*Work at high level, use these tools, use objects*
 
+*Isolate as much as possible into subroutines*
 
-Work at high level, use these tools, use objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Use modules and loop/if labels*
 
-bla bla
+*Use whole-array operations and array slices instead of loops*
 
-Isolate as much as possible into subroutines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Use parallel instructions (+where+, +forall+ and friends)*
 
-bla bla
+Fortran 95, 2003 and 2008 has several looping/array assignment constructions
+that have been optimised for speed in multi-processor parallel environments.
+Never use loops to initialise arrays, and avoid using them to calculate
+array components. Whenever possible, _reverse the order of indices_ in nested
+loops, e.g. first looping should be over the columns, and then over the rows.
+Nested loops  may have huge speed overhead! Use +FORALL+, +WHERE+ and similar
+new "parallelized" Fortran constructions. Below is a little test conducted on
+an average amd64 system using GNU Fortran (timing is by Linux +time+).
+indexterm:[speed, execution speed]
+indexterm:[nested loops]
+indexterm:[array, nested loops,indices order]
 
+.Test 1: Multiple nested loops, execution time = 0m12.488s
+[source]
+--------------------------------------------------------------------------------
+use BASE_UTILS
+use BASE_RANDOM
+implicit none
+integer, parameter :: n=1000, a=100,b=100,c=100
+integer :: nn, i,j,k
+real :: random_r
+real, dimension(a,b,c) :: M   ! The above header part is the same in all tests
 
-Use modules and loop/if labels
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+call random_seed_init
 
-bla bla
+MATRLOOP: do nn=1,n
+  random_r = rand_r4()
+  do i=1,a                                          ! Multiple nested loops
+    do j=1,b
+      do k=1,c
+        M(i,j,k) = random_r
+      end do
+    end do
+  end do
+end do MATRLOOP
+--------------------------------------------------------------------------------
 
+.Test 2: Direct array assignment, execution time = 0m1.046s
+[source]
+--------------------------------------------------------------------------------
+! header the same as above...
+call random_seed_init
 
-Use whole-array operations and array slices
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MATRLOOP: do nn=1,n
+  random_r = rand_r4()
+  M=random_r                                        ! Direct array assignment
+end do MATRLOOP
+--------------------------------------------------------------------------------
+indexterm:[array, direct assignment]
 
-instead of loops
+.Test 3: +forall+ instruction, execution time = 0m1.042s
+[source]
+--------------------------------------------------------------------------------
+! header the same as above...
+call random_seed_init
 
-Use parallel instructions (where, forall and friends)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MATRLOOP: do nn=1,n
+  random_r = rand_r4()
+  forall (i=1:a, j=1:b, k=1:c) M(i,j,k) = random_r  ! Parallel instruction
+end do MATRLOOP
+--------------------------------------------------------------------------------
+indexterm:[FORALL]
 
-bla bla
+.Test 4: Reverse order of nested loops (cols then rows), execution time = 0m1.046s
+[source]
+--------------------------------------------------------------------------------
+! header the same as above...
+call random_seed_init
 
+MATRLOOP: do nn=1,n
+  random_r = RAND_R4()
+  do i=1,a
+    do j=1,b
+      do k=1,c
+        M(k,j,i) = random_r                         ! Order of looping is reversed
+      end do
+    end do
+  end do
+end do MATRLOOP
+--------------------------------------------------------------------------------
 
-Use portable code / constructions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Multiple nested loops with the most intuitive indices order had a _really huge_
+execution speed overhead, more than _ten times_ slower than the other methods.
+The same tests with Oracle Solaris Fortran turning on aggressive optimization
+and automatic loop parallelization run much faster, although the speed
+differences still remained impressive  (first test execution time = 0m0.010s,
+all other = 0m0.006s). So compiler-side aggressive CPU optimisation does work,
+although the tricks remain very useful.
 
-bla bla
+*Use SVN to organise coding*
 
-Use command line / terminal tools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Use command line / terminal tools*
 
-bla bla
+*Use portable code / constructions*
 
-
-Use SVN to organise coding
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO: a few notes & examples...
 
 bla bla
 
