@@ -249,6 +249,7 @@ VPATH = $(HEDTOOLSDIR) $(IEEEPATH)
 
 # Determine build platform
 PLATFORM = $(shell uname)
+IS_WINDOWS = $(shell uname | grep -ci windows)
 
 # Determine if we are running on HPC cluster
 RUNHOST_HPC = $(shell hostname | grep -c $(HOST_HPC_ROOT))
@@ -337,7 +338,7 @@ headtools: $(HTOOLOBJ)
 cleandata:
 	rm -f -r HED*.txt ?HED*.txt HED18*.log behaviour gene*
 	rm -f -r *.csv
-ifeq ($(PLATFORM),Windows_NT)
+ifeq ($(IS_WINDOWS),1)
 	rm -f -r "?HED*.txt" "HED*.txt"
 endif
 
