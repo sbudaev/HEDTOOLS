@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 471 2016-03-19 19:28:37Z sbu062 $
+# $Id$
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>
