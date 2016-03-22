@@ -41,38 +41,53 @@ Most tools needed for the model are already available on Linux (e.g. gfortran,
 make, Subversion, console, midnight commander etc) and are trivial to install
 using the standard package manager (e.g. +apt-get install gfortran+ on Ubuntu).
 On Windows they can be installed manually from their official web sites. On
-Mac use http://brew.sh[homebrew]. Below are some details on the Windows software.
+Mac use http://brew.sh[homebrew] to install many of the utils. Below are
+some details on the Windows software.
 
 *Fortran (Mandatory)*
 
-Intel Fortran compiler, a commercial software available at UiB.
-
-Free GNU Fortran distribution along with make and other tools from the Equation
-solution http://www.equation.com/servlet/equation.cmd?fa=fortran
+Intel Fortran compiler, a commercial software
+available at UiB. Intel Fortran is also installed on
+http://docs.hpc.uib.no/wiki/Available_resources#Linux_cluster_fimm.hpc.uib.no[fimm].
+Free GNU Fortran distribution along with make and other tools is available from
+the Equation solution http://www.equation.com/servlet/equation.cmd?fa=fortran.
 
 *Subversion (Mandatory)*
 
-Windows GUI for Subversion is TortoiseSVN: https://tortoisesvn.net/. It is very
-helpful to have also console subversion client software (Tortiuse includes
-console tools but does not install by default). A good one is SilkSVN
-https://sliksvn.com/download/.
+Windows GUI for Subversion is TortoiseSVN (supported by UiB IT):
+https://tortoisesvn.net/. It is very helpful to have also console subversion
+client software (Tortiuse includes console tools but does not install by
+default). A good one is SilkSVN https://sliksvn.com/download/.
 
 *Console terminal (Highly recommended)*
 
-The Windows console (cmd) is extremely weak. Conemu https://conemu.github.io/ is
-a much better alternative, especially with the Far manager, a two-panel console
-file manager similar to the ancient Norton commander for DOS (or Midnight
-commander on Linux): http://www.farmanager.com/download.php?l=en
+The Windows console (+cmd+) is extremely weak. *Conemu*
+https://conemu.github.io/ is a much better alternative, especially
+with the *Far manager*, a two-panel console file manager similar to
+the ancient Norton commander for DOS (or Midnight commander on Linux):
+http://www.farmanager.com/download.php?l=en
 
 *Geany (Recommended)*
 
-Lightweight IDE, Editor for code and any text files. http://www.geany.org/
-Also need plugins: http://plugins.geany.org/
+Lightweight IDE, Editor for code and any text files. Works on Linux, Windows
+and Mac. http://www.geany.org/ Also need plugins: http://plugins.geany.org/
 
 *Code::Blocks for Fortran (Recommended)*
 
 IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
-http://cbfortran.sourceforge.net/ Installation by unpacking into some directory.
+http://cbfortran.sourceforge.net/. Installation by unpacking into some
+directory.
+
+*Follow: A logfile reading program (Recommended)*
+
+Following a logfile while executing a program is done trivially on Linux:
+
+[source,bash]
+tail -f some_log_file.txt
+
+There is a Java GUI program for reading log files that works on all major
+platforms installs by just placing in some directory: Follow. Available
+from http://sourceforge.net/projects/follow/.
 
 Introduction the Fortran modules
 --------------------------------
@@ -1381,7 +1396,7 @@ indexterm:[compiler,Intel Fortran]
 indexterm:[Intel Fortran]
 
 IMPORTANT: the
-https://docs.hpc.uib.no/wiki/Available_resources#Linux_cluster_fimm.hpc.uib.no[*fimm* HPC cluster],
+http://docs.hpc.uib.no/wiki/Available_resources#Linux_cluster_fimm.hpc.uib.no[*fimm* HPC cluster],
 where calculations are normally performed, has GNU Fortran 4.8.1 and will
 require non-intrinsic IEEE modules. It also has the Intel Fortran which has
 built-in (intrinsic) IEEE modules though.
@@ -1397,8 +1412,10 @@ There are several exception conditions:
 * +IEEE_INVALID+
 * +IEEE_OVERFLOW+
 * +IEEE_UNDERFLOW+
-* +IEEE_USUAL+ (An array of three exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+)
-* +IEEE_ALL+ (An array of five exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+, +IEEE_UNDERFLOW+,  +IEEE_INEXACT+)
+* +IEEE_USUAL+ (An array of three exceptions +IEEE_OVERFLOW+,
+  +IEEE_DIVIDE_BY_ZERO+, +IEEE_INVALID+)
+* +IEEE_ALL+ (An array of five exceptions +IEEE_OVERFLOW+,+IEEE_DIVIDE_BY_ZERO+,
+  +IEEE_INVALID+, +IEEE_UNDERFLOW+,  +IEEE_INEXACT+)
 indexterm:[IEEE arithmetic, exceptions]
 
 Normally, if the program encounters invalid arithmetic calculations, then it
@@ -1866,12 +1883,13 @@ end do MATRLOOP
 --------------------------------------------------------------------------------
 
 Multiple nested loops with the most intuitive indices order had a _really huge_
-execution speed overhead, more than _ten times_ slower than the other methods.
-The same tests with Oracle Solaris Fortran turning on aggressive optimization
-and automatic loop parallelization run much faster, although the speed
-differences still remained impressive  (first test execution time = 0m0.010s,
-all other = 0m0.006s). So compiler-side aggressive CPU optimisation does work,
-although the tricks remain very useful.
+execution speed overhead, more than _ten times_ slower than the other methods
+(compare 12.5s and 1.0s!). The code is also more concise and easier to read. The
+same tests with Oracle Solaris Fortran turning on aggressive optimization and
+automatic loop parallelization run much faster, although the speed differences
+still remained impressive  (first test execution time = 0m0.010s, all other =
+0m0.006s). So compiler-side aggressive CPU optimisation does work, although
+the tricks remain very useful.
 
 *Use SVN to organise coding*
 
