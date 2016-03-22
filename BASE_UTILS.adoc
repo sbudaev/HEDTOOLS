@@ -81,13 +81,9 @@ directory.
 *Follow: A logfile reading program (Recommended)*
 
 Following a logfile while executing a program is done trivially on Linux:
-
-[source,bash]
-tail -f some_log_file.txt
-
-There is a Java GUI program for reading log files that works on all major
-platforms installs by just placing in some directory: Follow. Available
-from http://sourceforge.net/projects/follow/.
++tail -f some_log_file.txt+. There is a Java GUI program for reading log
+files that works on all major platforms installs by just placing in some
+directory: Follow. Available from http://sourceforge.net/projects/follow/.
 
 Introduction the Fortran modules
 --------------------------------
