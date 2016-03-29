@@ -249,11 +249,15 @@ define AUTOGEN_COMMENT_HEADER_F90
 	$(shell echo "!+-----------------------------------------------------+" >> $(AUTOGEN_HEADER_IEEE))
 endef
 
+# Now only use IEEE_EXCEPTIONS are managed. Other modules may be added:
+#  IEEE_FEATURES IEEE_ARITHMETIC IEEE_EXCEPTIONS
 define AUTOGEN_INTRINSIC
 	$(AUTOGEN_COMMENT_HEADER_F90)
 	$(shell echo "use, intrinsic :: IEEE_EXCEPTIONS" >> $(AUTOGEN_HEADER_IEEE))
 endef
 
+# Now only use IEEE_EXCEPTIONS are managed. Other modules may be added:
+#  IEEE_FEATURES IEEE_ARITHMETIC IEEE_EXCEPTIONS
 define AUTOGEN_NON_INTRINSIC
 	$(AUTOGEN_COMMENT_HEADER_F90)
 	$(shell echo "use, non_intrinsic :: IEEE_EXCEPTIONS" >> $(AUTOGEN_HEADER_IEEE))
