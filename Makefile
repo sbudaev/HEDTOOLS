@@ -17,10 +17,15 @@ FC = $(GF_FC)
 
 # Main building blocks, define
 SRC = BASE_UTILS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 BASE_RANDOM.f90 \
-      BASE_ERRORS.f90
-OBJ = BASE_UTILS.o BASE_CSV_IO.o BASE_LOGGER.o BASE_RANDOM.o BASE_ERRORS.o
+      BASE_ERRORS.f90 BASE_STRINGS.f90
+
+OBJ = BASE_UTILS.o BASE_CSV_IO.o BASE_LOGGER.o BASE_RANDOM.o BASE_ERRORS.o \
+      BASE_STRINGS.o
+
 MOD = base_utils.mod  csv_io.mod  logger.mod base_random.mod \
-      assert.mod errors.mod exception.mod throwable.mod
+      assert.mod errors.mod exception.mod throwable.mod precision_str.mod \
+      strings.mod
+
 DOC = BASE_UTILS.adoc
 LIB = lib_hedutils.a
 DIB = lib_hedutils.so
@@ -251,4 +256,6 @@ BASE_RANDOM.o: BASE_RANDOM.f90 $(THIS_FILE)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(FC) $(FFLAGS) -c $<
 BASE_ERRORS.o: BASE_ERRORS.f90
+	$(FC) $(FFLAGS) -c $<
+BASE_STRINGS.o: BASE_STRINGS.f90
 	$(FC) $(FFLAGS) -c $<
