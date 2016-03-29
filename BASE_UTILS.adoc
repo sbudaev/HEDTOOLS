@@ -1369,6 +1369,250 @@ These modules can be used for error trapping and handling.
 
 To be done
 
+
+Module: BASE_STRINGS
+--------------------
+
+////////////////////////////////////////////////////////////////////////////////
+Repeat the doc file included with the module
+////////////////////////////////////////////////////////////////////////////////
+
+_This module containing some useful string manipulation functions is borrowed
+from http://www.gbenthien.net/strings/index.html. The description below is
+just repeating the official doc file included with the module. Note that there
+are a couple of utils (+READLINE+, +WRITEQ+) in this module that work with
+files. These use the standard Fortran unit to refer for the file and unlike
+the other modules here are not adjusted (yet) to use the file handle object
+(+csv_file+)._
+indexterm:[BASE_STRINGS]
+indexterm:[strings]
+indexterm:[string manipulation]
+
+*Fortran Character String Utilities.* A collection of string manipulation
+routines is contained in the module ‘strings’ found in the file
+stringmod.f90. To obtain this module as well as some other string utilities,
+go to the website http://www.gbenthien.net/strings/index.html. To use the
+routines in the module ‘strings’ the user needs to add the statement +use
+strings+ to the top of the program. These routines were developed primarily
+to aid in the reading and manipulation of input data from an ASCII text
+file. The routines are described below.
+
+Subroutine: PARSE
+~~~~~~~~~~~~~~~~~
+
++SUBROUTINE PARSE(str, delims, args, nargs)+
+indexterm:[PARSE]
+
+This routine was originally designed to separate the arguments in a command
+line where the arguments are separated by certain delimiters (commas,
+spaces, etc.).  However, this routine can be used to separate other types
+of strings into their component parts. The first input is a string +str+
+(e.g., a command line). The second argument is a string +delims+ containing
+the allowed delimiters. For example, +delims+ might be the string +" ,"+
+consisting of a comma and a space. The third argument is a character array
++args+ that contains on output the substrings (arguments) separated by the
+delimiters. Initial spaces in the substrings (arguments) are deleted. The
+final argument is an integer +nargs+ that gives the number of separated parts
+(arguments).  To treat a delimiter in +str+ as an ordinary character precede
+it by a backslash (\). If a backslash character is desired in +str+, precede
+it by another backslash (\\). In addition, spaces that immediately precede
+or follow another delimiter are not considered delimiters. Multiple spaces
+or tabs are considered as a single space, i.e., +"a     b"+ is treated the
+same as +"a b"+. Backslashes can be removed from an argument by calling the
+routine +REMOVEBKSL+, i.e.,
+
++call REMOVEBKSL(<string>)+
+
+This routine converts double backslashes (\\) to single backslashes (\).
+
+*Example:* If the delimiters are a comma and a space (+delims = " ,"+),
+then the subroutine +PARSE+ applied to the string +"cmd arg1 arg\ 2 arg3"+
+produces the output:
+
+[source]
+--------------------------------------------------------------------------------
+args(1) = cmd
+args(2) = arg1
+args(3) = arg 2
+args(4) = arg3
+nargs = 4
+--------------------------------------------------------------------------------
+
+Subroutine: COMPACT
+~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE COMPACT(str)+
+indexterm:[COMPACT]
+
+This routine converts multiple spaces and tabs to single spaces and deletes
+control characters.
+
+Subroutine: REMOVESP
+~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE REMOVESP(str)+
+indexterm:[REMOVESP]
+
+This routine removes spaces, tabs, and control characters in string +str+.
+
+Subroutine: VALUE
+~~~~~~~~~~~~~~~~~
+
++SUBROUTINE VALUE(str, number, ios)+
+indexterm:[VALUE]
+
+This subroutine converts a number string to a number. The argument +str+ is
+a string representing a number. The argument number is the resulting real
+number or integer (single or double precision). The argument +ios+ is an error
+flag. If +ios+ is nonzero, then there was an error in the conversion.
+
+Subroutine: SHIFTSTR
+~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE SHIFTSTR(str, n)+
+indexterm:[SHIFTSTR]
+
+This routine shifts characters in the string +str+ by +n+ positions
+(positive values denote a right shift and negative values denote a left
+shift). Characters that are shifted off the end are lost. Positions opened
+up by the shift are replaced by spaces.
+
+Subroutine: INSERTSTR
+~~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE INSERTSTR(str, strins, loc)+
+indexterm:[INSERTSTR]
+
+This routine inserts the string strins into the string +str+ at position
++loc+. Characters in +str+ starting at position +loc+ are shifted right to make
+room for the inserted string.
+
+Subroutine: DELSUBSTR
+~~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE DELSUBSTR(str, substr)+
+indexterm:[DELSUBSTR]
+
+This subroutine deletes the first occurrence of substring +substr+ from string
++str+ and shifts characters left to fill hole.
+
+Subroutine: DELALL
+~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE DELALL(str, substr)+
+indexterm:[DELALL]
+
+This routine deletes all occurrences of substring +substr+ from string +str+
+and shifts characters left to fill holes.
+
+Function: UPPERCASE
+~~~~~~~~~~~~~~~~~~~
+
++FUNCTION UPPERCASE(str)+
+indexterm:[UPPERCASE]
+
+This function returns a string that is like the string +str+ with all characters
+that are not between a pair of quotes (+" "+ or +' '+) converted to uppercase.
+
+Function: LOWERCASE
+~~~~~~~~~~~~~~~~~~~~~
+
++FUNCTION LOWERCASE(str)+
+indexterm:[LOWERCASE]
+
+This function returns a string that is like the string +str+ with all
+characters that are not between a pair of quotes (+" "+ or +' '+) converted
+to lowercase.
+
+Subroutine: READLINE
+~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE READLINE(nunitr, line, ios)+
+indexterm:[READLINE]
+
+This routine reads a line from unit +nunitr+, ignoring blank lines and deleting
+comments beginning with an exclamation point(!). The line is placed in the
+string line. The argument +ios+ is an error flag. If +ios+ is not equal to zero,
+then there has been an error in the read operation. A negative value for
++ios+ denotes an end of file.
+
+Subroutine: MATCH
+~~~~~~~~~~~~~~~~~
+
++SUBROUTINE MATCH(str, ipos, imatch)+
+indexterm:[MATCH]
+
+This routine finds the delimiter in string +str+ that matches the delimiter
+in position +ipos+ of +str+. The argument +imatch+ contains the position of the
+matching delimiter.  Allowable delimiters are (), [], {}, <>.
+
+Subroutine: WRITENUM
+~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE WRITENUM(number, string, fmt)+
+indexterm:[WRITENUM]
+
+This routine writes a number to a string. The argument number is a real number
+or an integer (single or double precision). The number number is written to
+the character string string with format +fmt+ (e.g., "e15.6" or "i5").
+
+Subroutine: TRIMZERO
+~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE TRIMZERO(str)+
+indexterm:[TRIMZERO]
+
+This subroutine deletes nonsignificant trailing zeroes in a number string
++str+. A single zero following a decimal point is allowed. For example,
++"1.50000"+ is converted to +"1.5"+ and +"5."+ is converted to +"5.0"+.
+
+Subroutine: WRITEQ
+~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE WRITEQ(unit, name, value, fmt)+
+indexterm:[WRITEQ]
+
+This routine writes a string of the form +"name=value"+ to the unit
++unit+. Here +<name>+ is the input string name and value is the input number
+value converted to a string with the format +fmt+. The number value can be a
+real number or an integer (single or double precision).
+
+Function: IS_LETTER
+~~~~~~~~~~~~~~~~~~~
+
++FUNCTION IS_LETTER(ch)+
+indexterm:[IS_LETTER]
+
+This function returns the logical value +.TRUE.+ if the input character +ch+ is
+a letter (a–z or A–Z). It returns the value +.FALSE.+ otherwise.
+
+Subroutine: IS_DIGIT
+~~~~~~~~~~~~~~~~~~~~
+
++FUNCTION IS_DIGIT(ch)+
+indexterm:[IS_DIGIT]
+
+This function returns the logical value +.TRUE.+ if the input character +ch+ is
+a digit (0–9). It returns the value +.FALSE.+ otherwise.
+
+Subroutine: SPLIT
+~~~~~~~~~~~~~~~~~
+
++SUBROUTINE SPLIT(str, delims, before, sep)+
+indexterm:[SPLIT]
+
+This routine uses the first occurrence of a character from the string +delims+
+in the string +str+ to split the string into two parts. The portion of
++str+ before the found delimiter is output in before; the portion of +str+
+after the found delimiter is output in +str+ (+str+ is left justified). The
+output character +sep+ (optional) contains the found delimiter. To treat
+a delimiter in +str+ as an ordinary character precede it by a backslash
+(\). If a backslash is desired in +str+, precede it by another backslash
+(\\).  Repeated applications of +SPLIT+ can be used to parse a string into
+its component parts. Backslashes can be removed by calling the routine
++REMOVEBKSL+, i.e., +call REMOVEBKSL(string)+
+
+
 IEEE Arithmetics
 ----------------
 
@@ -1894,6 +2138,10 @@ more concise and easier to read. The same tests with Oracle Solaris Fortran
 run much faster, but the speed differences still remained quite impressive
 (first test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
 aggressive CPU optimisation does work, although the tricks remain very useful.
+
+Note that newer versions of Fortran compilers can become smart enough to adjust
+the order of looping in the machine code. Nonetheless it is better to write
+"optimised" code using the above tricks that works fast just everywhere.
 
 *Use SVN to organise coding*
 
