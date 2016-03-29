@@ -81,8 +81,6 @@ subroutine RANDOM_SEED_INIT()
   ! *** NOTE: ***
   ! The above code is auto-generated in the include file by the build system
   include "BASE_RANDOM.inc"
-  !-----------------------------------------------------------------------------
-
   ! *** NON-PORTABLE CODE END ***
   !*****************************************************************************
 
