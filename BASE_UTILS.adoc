@@ -1199,6 +1199,27 @@ call CSV_MATRIX_WRITE(matrix=MATRIX, csv_file_name="data_file.csv",
 if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
 
+*Higher-rank arrays* (with more than two dimensions)footnote:[CSV_IO code
+could be modified to save higher-rank arrays if this function is needed]
+can be saved into CSV files using array slices, for example:
+indexterm:[array slice]
+indexterm:[array, multidimensional]
+indexterm:[array, high-rank]
+
+[source]
+--------------------------------------------------------------------------------
+real, dimension(100,300,99) :: M3   ! Declare a 3D matrix M3
+....
+do i=lbound(M3,3), ubound(M3,3)     ! Cycle over the third index, min - max
+
+  ! Save separate slices of M3 into individual files file_01.csv .. file_99.csv
+  call CSV_MATRIX_WRITE(matrix=M3(:,:,i), &
+                        colnames=NAMES,   &
+                        csv_file_name="file_" // TOSTR(i,10) // ".csv", &
+                        csv_file_status=flag)
+
+end do
+--------------------------------------------------------------------------------
 
 One-dimensional arrays
 ^^^^^^^^^^^^^^^^^^^^^^
