@@ -44,7 +44,7 @@ On Windows they can be installed manually from their official web sites. On
 Mac use http://brew.sh[homebrew] to install many of the utils. Below are
 some details on the Windows software.
 
-*Fortran Compiler (Mandatory)*
+*Fortran Compiler* (Mandatory)
 
 *Intel Fortran* compiler, a commercial software available
 at UiB. Intel Fortran is also installed on the UiB HPC cluster
@@ -55,35 +55,50 @@ http://www.equation.com/servlet/equation.cmd?fa=fortran. There is also *Oracle
 Solaris Studio* combining Fortran compiler and an NetBeans-based IDE, freely
 available from http://www.oracle.com/technetwork/server-storage/solarisstudio,
 Linux and Solaris OSs only (no Windows or Mac).
+indexterm:[compiler,GNU,gfortran]
+indexterm:[compiler,Intel Fortran]
+indexterm:[compiler,Oracle Fortran]
 
-
-*Subversion (Mandatory)*
+*Subversion* (Mandatory)
 
 Windows GUI for Subversion is *TortoiseSVN* (supported by UiB IT):
 https://tortoisesvn.net/. It is very helpful to have also console subversion
 client software (Tortiuse includes console tools but does not install by
 default). A good one is SilkSVN https://sliksvn.com/download/.
 
-*Console terminal (Highly recommended)*
+*Console terminal* (Highly recommended)
 
 The Windows console (+cmd+) is extremely weak. *Conemu*
 https://conemu.github.io/ is a much better alternative, especially
 with the *Far manager*, a two-panel console file manager similar to
 the ancient Norton commander for DOS (or Midnight commander on Linux):
-http://www.farmanager.com/download.php?l=en
+http://www.farmanager.com/download.php?l=en.
 
-*Geany (Recommended)*
+It is also very helpful to have (on the Microsoft Windows) the
+https://en.wikipedia.org/wiki/GNU_Core_Utilities[GNU core utilities]
+(+grep+, +cut+, +sed+, +awk+ etc.). Some of them are used in the GNU make build
+system, and some are included with the Equation solutions gfortran (*TODO: have
+to check what is really necessary*). There are several distributions available,
+e.g.
+http://gnuwin32.sourceforge.net/[GnuWin32],
+http://www.cygwin.com/[Cygwin],
+http://www.mingw.org/[MinGW],
+http://unxutils.sourceforge.net/[UnxUtils],
+http://github.com/bmatzelle/gow/wiki[Gow],
+http://win-bash.sourceforge.net/[winbash].
+
+*Geany* (Recommended)
 
 Lightweight IDE, Editor for code and any text files. Works on Linux, Windows
 and Mac. http://www.geany.org/ Also need plugins: http://plugins.geany.org/
 
-*Code::Blocks for Fortran (Recommended)*
+*Code::Blocks for Fortran* (Recommended)
 
 IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
 http://cbfortran.sourceforge.net/. Installation by unpacking into some
 directory.
 
-*Follow: A logfile reading program (Recommended)*
+*Follow: A logfile reading program* (Recommended)
 
 Following a logfile while executing a program is done trivially on Linux:
 +tail -f some_log_file.txt+. There is a Java GUI program for reading log
@@ -98,9 +113,10 @@ These modelling tools include several separate modules:
 * +BASE_UTILS+
 * +CSV_IO+
 * +BASE_RANDOM+
+* +BASE_STRINGS+
 * +LOGGER+
 * Error trapping  modules
-* IEEE Arithmetics module
+* IEEE Arithmetics modules
 
 BASE_UTILS contains a few utility functions. CSV_IO is for output of numerical
 data into the CSV (comma separated values) format files. CSV is good because
@@ -439,12 +455,15 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
-Subroutine: RANDOM_SEED_INIT
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-indexterm:[RANDOM_SEED_INIT]
+Subroutine: RANDOM_SEED_INIT_SIMPLE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[RANDOM_SEED_INIT_SIMPLE]
 
-*RANDOM_SEED_INIT* is called without parameters and just initialises the random
-seed for the Fortran random number generator.
+*RANDOM_SEED_INIT_SIMPLE* is called without parameters and just initialises
+the random seed for the Fortran random number generator. But note that the
+module +BASE_RANDOM+ contains a much better subroutine +RANDOM_SEED_INIT+ that
+is also suitable for parallel processing systems (+RANDOM_SEED_INIT_SIMPLE+
+*cannot* be used in parallel calculations).
 
 *Example*
 
@@ -1015,7 +1034,7 @@ dropped. The behaviour of other compilers and their versions may differ.
 indexterm:[array constructor,portability,compiler limitation]
 indexterm:[compiler,limitation]
 indexterm:[compiler,GNU,gfortran]
-
+indexterm:[compiler,Oracle Fortran]
 
 Function: CSV_RECORD_SIZE
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1353,6 +1372,65 @@ end if
 indexterm:[RAND_R4]
 indexterm:[RAND_R8]
 
+Build details
+~~~~~~~~~~~~~
+
+When *not using* the automatic build system based on GNU make, the module
+subroutine +RANDOM_SEED_INIT+ should be tweaked according to the compiler
+and platform as follows:
+indexterm:[compiler,limitation]
+
+*GNU fortran:*
+
+indexterm:[compiler,GNU,gfortran]
+
+[source]
+--------------------------------------------------------------------------------
+use ISO_FORTRAN_ENV, only: int64   ! for GNU and Intel
+
+implicit none
+
+integer, allocatable :: seed(:)
+integer :: i, n, un, istat, dt(8), pid
+integer(int64) :: t
+--------------------------------------------------------------------------------
+
+*Intel Fortran*
+
+indexterm:[compiler,Intel Fortran]
+
+[source]
+--------------------------------------------------------------------------------
+use ISO_FORTRAN_ENV, only: int64  ! GNU and Intel
+
+use IFPORT, only : getpid         ! getpid is an extension defined in IFPORT
+
+implicit none
+
+integer, allocatable :: seed(:)
+integer :: i, n, un, istat, dt(8), pid
+integer(int64) :: t
+--------------------------------------------------------------------------------
+
+*Oracle Fortran*
+
+indexterm:[compiler,Oracle Fortran]
+
+[source]
+--------------------------------------------------------------------------------
+! Modules are not used on Oracle f95, but an include header should be included
+
+implicit none
+
+integer, allocatable :: seed(:)
+integer :: i, n, un, istat, dt(8), pid
+integer, parameter :: int64 = selected_int_kind(18) ! define int64
+integer(int64) :: t
+
+include "system.inc"  ! Include non-intrinsic library headers for the Oracle f95
+--------------------------------------------------------------------------------
+
+The build system based on GNU make does this automatically.
 
 Module: LOGGER
 --------------
@@ -1532,9 +1610,9 @@ indexterm:[READLINE]
 
 This routine reads a line from unit +nunitr+, ignoring blank lines and deleting
 comments beginning with an exclamation point(!). The line is placed in the
-string line. The argument +ios+ is an error flag. If +ios+ is not equal to zero,
-then there has been an error in the read operation. A negative value for
-+ios+ denotes an end of file.
+string +line+. The argument +ios+ is an error flag. If +ios+ is not equal to
+zero, then there has been an error in the read operation. A negative value
+for +ios+ denotes an end of file.
 
 Subroutine: MATCH
 ~~~~~~~~~~~~~~~~~
@@ -1554,7 +1632,7 @@ indexterm:[WRITENUM]
 
 This routine writes a number to a string. The argument number is a real number
 or an integer (single or double precision). The number number is written to
-the character string string with format +fmt+ (e.g., "e15.6" or "i5").
+the character string string with format +fmt+ (e.g., +"e15.6"+ or +"i5"+).
 
 Subroutine: TRIMZERO
 ~~~~~~~~~~~~~~~~~~~~
@@ -1573,7 +1651,7 @@ Subroutine: WRITEQ
 indexterm:[WRITEQ]
 
 This routine writes a string of the form +"name=value"+ to the unit
-+unit+. Here +<name>+ is the input string name and value is the input number
++unit+. Here +name+ is the input string name and value is the input number
 value converted to a string with the format +fmt+. The number value can be a
 real number or an integer (single or double precision).
 
@@ -1607,8 +1685,8 @@ in the string +str+ to split the string into two parts. The portion of
 after the found delimiter is output in +str+ (+str+ is left justified). The
 output character +sep+ (optional) contains the found delimiter. To treat
 a delimiter in +str+ as an ordinary character precede it by a backslash
-(\). If a backslash is desired in +str+, precede it by another backslash
-(\\).  Repeated applications of +SPLIT+ can be used to parse a string into
+(+\+). If a backslash is desired in +str+, precede it by another backslash
+(+\\+).  Repeated applications of +SPLIT+ can be used to parse a string into
 its component parts. Backslashes can be removed by calling the routine
 +REMOVEBKSL+, i.e., +call REMOVEBKSL(string)+
 
@@ -1769,7 +1847,7 @@ compiler and its version and IEEE modules support, there is no need to include
 +use, intrinsic (or non_intrinsic) :: IEEE_EXCEPTIONS+ and tweak it manually
 depending on the compiler support. The build system automatically generates
 the correct include file +IEEE_wrap.inc+ which should be inserted into the
-code in place of +use ...+ statemen:
+code in place of +use ...+ statement:
 
 [source]
 --------------------------------------------------------------------------------
@@ -1790,6 +1868,30 @@ indexterm:[IEEE arithmetic,exceptions, implementation]
 indexterm:[compiler, exception trapping, implementation]
 indexterm:[include]
 indexterm:[IEEE_wrap.inc, include]
+
+Without the GNU make-based build system, the rule is simple. Use
+*non-intrinsic* modules with GNU gfortran version <5.0 footnote:[e.g. gfortran
+on the fimm cluster] and build the modules beforehand:
+indexterm:[compiler,GNU,gfortran]
+
+[source]
+--------------------------------------------------------------------------------
+use, non_intrinsic :: IEEE_FEATURES
+use, non_intrinsic :: IEEE_ARITHMETIC
+use, non_intrinsic :: IEEE_EXCEPTIONS
+--------------------------------------------------------------------------------
+
+and *intrinsic* modules on GNU gfortran v>5, Intel Fortran or Oracle Fortran:
+indexterm:[compiler,GNU,gfortran]
+indexterm:[compiler,Intel Fortran]
+indexterm:[compiler,Oracle Fortran]
+
+[source]
+--------------------------------------------------------------------------------
+use, intrinsic :: IEEE_FEATURES
+use, intrinsic :: IEEE_ARITHMETIC
+use, intrinsic :: IEEE_EXCEPTIONS
+--------------------------------------------------------------------------------
 
 Version control: Subversion (SVN)
 --------------------------------
