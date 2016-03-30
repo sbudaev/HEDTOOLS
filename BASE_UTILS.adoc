@@ -1386,6 +1386,9 @@ indexterm:[compiler,GNU,gfortran]
 
 [source]
 --------------------------------------------------------------------------------
+!*****************************************************************************
+! *** NON-PORTABLE CODE BEGIN ***
+
 use ISO_FORTRAN_ENV, only: int64   ! for GNU and Intel
 
 implicit none
@@ -1393,6 +1396,9 @@ implicit none
 integer, allocatable :: seed(:)
 integer :: i, n, un, istat, dt(8), pid
 integer(int64) :: t
+
+! *** NON-PORTABLE CODE END ***
+!*****************************************************************************
 --------------------------------------------------------------------------------
 
 *Intel Fortran*
@@ -1401,6 +1407,9 @@ indexterm:[compiler,Intel Fortran]
 
 [source]
 --------------------------------------------------------------------------------
+!*****************************************************************************
+! *** NON-PORTABLE CODE BEGIN ***
+
 use ISO_FORTRAN_ENV, only: int64  ! GNU and Intel
 
 use IFPORT, only : getpid         ! getpid is an extension defined in IFPORT
@@ -1410,6 +1419,9 @@ implicit none
 integer, allocatable :: seed(:)
 integer :: i, n, un, istat, dt(8), pid
 integer(int64) :: t
+
+! *** NON-PORTABLE CODE END ***
+!*****************************************************************************
 --------------------------------------------------------------------------------
 
 *Oracle Fortran*
@@ -1418,7 +1430,10 @@ indexterm:[compiler,Oracle Fortran]
 
 [source]
 --------------------------------------------------------------------------------
-! Modules are not used on Oracle f95, but an include header should be included
+!*****************************************************************************
+! *** NON-PORTABLE CODE BEGIN ***
+
+! External Modules not used on Oracle f95, but an include header must be placed
 
 implicit none
 
@@ -1428,6 +1443,9 @@ integer, parameter :: int64 = selected_int_kind(18) ! define int64
 integer(int64) :: t
 
 include "system.inc"  ! Include non-intrinsic library headers for the Oracle f95
+
+! *** NON-PORTABLE CODE END ***
+!*****************************************************************************
 --------------------------------------------------------------------------------
 
 The build system based on GNU make does this automatically.
