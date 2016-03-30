@@ -2158,7 +2158,8 @@ array components. Whenever possible, _reverse the order of indices_ in nested
 loops, e.g. first looping should be over the columns, and then over the rows.
 Nested loops  may have huge speed overhead! Use +FORALL+, +WHERE+ and similar
 new "parallelized" Fortran constructions. Below is a little test conducted on
-an average amd64 system using GNU Fortran (timing is by Linux +time+).
+an average amd64 system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+
+timing is by Linux +time+).
 indexterm:[speed, execution speed]
 indexterm:[nested loops]
 indexterm:[array, nested loops,indices order]
@@ -2232,13 +2233,17 @@ MATRLOOP: do nn=1,n
 end do MATRLOOP
 --------------------------------------------------------------------------------
 
-Multiple nested loops with the most "natural and intuitive" indices order (rows
-then cols) had a _really huge_ execution speed overhead, more than _ten times_
-slower than the other methods (compare 12.5s and 1.0s!). The code is also
-more concise and easier to read. The same tests with Oracle Solaris Fortran
-(+f95+) turning on aggressive optimization and automatic loop parallelization
-run much faster, but the speed differences still remained quite impressive
-(first test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
+Multiple nested loops with the most "natural and intuitive"
+indices order (rows then cols) had a _really huge_ execution
+speed overhead footnote:[This is because allocation of arrays in
+the computer memory goes in an "index-reverse" order in Fortran, see
+http://www.fortran90.org/src/best-practices.html#multidimensional-arrays],
+more than _ten times_ slower than the other methods (compare 12.5s and
+1.0s!). The code is also more concise and easier to read. The same tests
+with Oracle Solaris Fortran (+f95+) turning on aggressive optimization and
+automatic loop parallelization (+-fast -autopar -depend=yes+) run much
+faster, but the speed differences still remained quite impressive (first
+test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
 aggressive CPU optimisation does work, although the tricks remain very useful.
 
 Note that newer versions of Fortran compilers can become smart enough to adjust
