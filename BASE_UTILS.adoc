@@ -1791,7 +1791,8 @@ a wrong arithmetic value that is not equal to itself, can result from many math
 errors] generation etc.).
 
 In most cases NaNs and other invalid arithmetics strongly point to a bug. It is
-therefore wise to turn halting ON by default.
+therefore wise to turn halting ON by default in model calculations (unlike 
+normal software that should ideally never crash on trivial math errors).
 
 Turning arithmetic exception halting ON during the compile time requires
 specific compiler options.
