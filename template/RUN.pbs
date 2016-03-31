@@ -1,0 +1,36 @@
+#! /bin/sh -
+#-------------------------------------------------------------------------------
+# SVN version info:
+# $Id: RUN.pbs 500 2016-03-31 12:58:24Z sbu062 $
+#-------------------------------------------------------------------------------
+#
+# Give the job a name (optional)
+#PBS -N "H18_MODEL_budaev"
+#
+# The job needs at most XXX hours wall-clock time on 1 core on one node. (obligatory)
+#PBS -l nodes=1:ppn=1,walltime=240:00:00
+#
+# The job needs at most 900mb of memory (obligatory)
+#PBS -l mem=900mb
+#
+# Write the standard output of the job to file 'seqjob.out' (optional)
+#PBS -o H18_MOD_OUT.log
+#
+# Write the standard error of the job to file 'seqjob.err' (optional)
+#PBS -e H18_MOD_ERR.log
+#
+# Send me an email on  a=abort, b=begin, e=end
+#PBS -m abe
+#  Use this email address (check that it is correct):
+#PBS -M sbu062@uib.no
+#
+# Make sure I am in the correct directory
+#####################################################################
+#cd ~/scratch
+
+# set unlimited stack size
+ulimit -s unlimited
+
+# Invoke the (sequential!) executable
+./model.exe
+
