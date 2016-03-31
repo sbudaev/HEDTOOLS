@@ -1399,6 +1399,8 @@ Build details
 When *not using* the automatic build system based on GNU make, the module
 subroutine +RANDOM_SEED_INIT+ should be tweaked according to the compiler
 and platform as follows:
+indexterm:[make,not using]
+indexterm:[build,manual build]
 indexterm:[compiler,limitation]
 
 *GNU fortran:*
@@ -1410,7 +1412,7 @@ indexterm:[compiler,GNU,gfortran]
 !*****************************************************************************
 ! *** NON-PORTABLE CODE BEGIN ***
 
-use ISO_FORTRAN_ENV, only: int64   ! for GNU and Intel
+use ISO_FORTRAN_ENV, only: int64   ! GNU and Intel
 
 implicit none
 
@@ -1791,8 +1793,8 @@ a wrong arithmetic value that is not equal to itself, can result from many math
 errors] generation etc.).
 
 In most cases NaNs and other invalid arithmetics strongly point to a bug. It is
-therefore wise to turn halting ON by default in model calculations (unlike 
-normal software that should ideally never crash on trivial math errors).
+therefore wise to turn halting ON by default in model calculations (unlike
+normal utility software that should ideally never crash on trivial math errors).
 
 Turning arithmetic exception halting ON during the compile time requires
 specific compiler options.
@@ -1912,13 +1914,19 @@ indexterm:[IEEE_wrap.inc, include]
 Without the GNU make-based build system, the rule is simple. Use
 *non-intrinsic* modules with GNU gfortran version <5.0 footnote:[e.g. gfortran
 on the fimm cluster] and build the modules beforehand:
+indexterm:[make,not using]
+indexterm:[build,manual build]
 indexterm:[compiler,GNU,gfortran]
 
 [source]
 --------------------------------------------------------------------------------
+!*****************************************************************************
+! *** NON-PORTABLE CODE BEGIN ***
 use, non_intrinsic :: IEEE_FEATURES
 use, non_intrinsic :: IEEE_ARITHMETIC
 use, non_intrinsic :: IEEE_EXCEPTIONS
+! *** NON-PORTABLE CODE END ***
+!*****************************************************************************
 --------------------------------------------------------------------------------
 
 and *intrinsic* modules on GNU gfortran v>5, Intel Fortran or Oracle Fortran:
@@ -1928,9 +1936,13 @@ indexterm:[compiler,Oracle Fortran]
 
 [source]
 --------------------------------------------------------------------------------
+!*****************************************************************************
+! *** NON-PORTABLE CODE BEGIN ***
 use, intrinsic :: IEEE_FEATURES
 use, intrinsic :: IEEE_ARITHMETIC
 use, intrinsic :: IEEE_EXCEPTIONS
+! *** NON-PORTABLE CODE END ***
+!*****************************************************************************
 --------------------------------------------------------------------------------
 
 Version control: Subversion (SVN)
@@ -2076,6 +2088,7 @@ Using make
 ~~~~~~~~~~
 
 Most basic things with the standard +Makefile+ are simple.
+indexterm:[GNU make, make, gmake]
 indexterm:[Makefile, make]
 indexterm:[make]
 
@@ -2171,7 +2184,16 @@ behind the scenes even if the IDE GUI is used.
 
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
-To be done
+
+
+Basic parameters
+^^^^^^^^^^^^^^^^
+
+Here go basic parameters of the Makefile
+
+Build options
+^^^^^^^^^^^^^
+Here build variables will be placed.
 
 IMPORTANT: A good manual on the GNU Make is this book:
 http://www.oreilly.com/openbook/make3/book/index.csp[Mecklenburg, R, 2005,
