@@ -124,6 +124,22 @@ ifeq ($(FC),f95)
 endif
 
 #*******************************************************************************
+# Determine what is the build platform, Windows / non-Windows
+
+# use uname -- but it may not be installed on Windows
+PLATFORM = $(shell uname)
+
+# A safer way to check platform if uname is not available, ComSpec on Windows
+# Note that ComSpec is (may be?) case-sensitive, check with env.exe
+ifdef ComSpec
+	PLATFORM_TYPE=Windows
+else
+	PLATFORM_TYPE=Unix
+endif
+
+IS_WINDOWS = $(shell uname | grep -ci windows)
+
+#*******************************************************************************
 # Generate the list of modules used in the source.
 # TODO: check which modules are really used in the source and compile only them
 
@@ -271,10 +287,6 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 # This is the search paths for looking for components, separated by blanks
 VPATH = $(HEDTOOLSDIR) $(IEEEPATH)
 
-# Determine build platform
-PLATFORM = $(shell uname)
-IS_WINDOWS = $(shell uname | grep -ci windows)
-
 # Determine if we are running on HPC cluster
 RUNHOST_HPC = $(shell hostname | grep -c $(HOST_HPC_ROOT))
 
@@ -317,7 +329,7 @@ help:
 	@echo "NOTES:"
 	@echo " IEEE non-intrinsic modules: make ieee, needed only for GCC<5"
 	@echo ------------------------------------------------------------------------
-	@echo PROJECT: Rev: $(SVN_VER), $(PLATFORM), HPC \($(HOST_HPC_ROOT)\) $(RUNHOST_HPC)
+	@echo PROJECT: Rev: $(SVN_VER), $(PLATFORM_TYPE), HPC \($(HOST_HPC_ROOT)\) $(RUNHOST_HPC)
 	@echo Source: $(SRC) -- $(OUT) -- $(OBJ)
 	@echo ------------------------------------------------------------------------
 
