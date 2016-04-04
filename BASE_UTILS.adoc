@@ -2005,6 +2005,8 @@ svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS
 So, we now get +HED18+ and +HEDTOOLS+ in our working directory.
 indexterm:[Subversion,checkout]
 
+image:img_doc_fimm_svn.png[height=280,align="left"]
+
 Standard workflow
 ~~~~~~~~~~~~~~~~~
 
