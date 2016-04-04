@@ -74,6 +74,8 @@ with the *Far manager*, a two-panel console file manager similar to
 the ancient Norton commander for DOS (or Midnight commander on Linux):
 http://www.farmanager.com/download.php?l=en.
 
+image:img_doc_far.png[height=280,align="left"]
+
 It is also very helpful to have (on the Microsoft Windows) the
 https://en.wikipedia.org/wiki/GNU_Core_Utilities[GNU core utilities]
 (+grep+, +cut+, +sed+, +awk+ etc.). Some of them are used in the GNU make build
