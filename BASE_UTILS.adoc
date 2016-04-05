@@ -1359,13 +1359,22 @@ RANDOM_SEED_INIT
 Initialise the random seed for random number generation. This module uses an
 improved random seed generation algorithm that uses the system entropy pool
 on Unix systems and XOR of the current time and PID on Windows. Therefore, it
-is *safe* for use on *parallel processing systems*.
+is *safe* for use on *parallel processing systems*. Normally has no parameters.
 indexterm:[RANDOM_SEED_INIT]
 indexterm:[parallel computations]
 
 [source]
 --------------------------------------------------------------------------------
 call RANDOM_SEED_INIT()
+--------------------------------------------------------------------------------
+
++RANDOM_SEED_INIT+ can optionally return the current (calculated) seed as two
+parameters: array +seed_here+ and integer size of this array +n_here+. This,
+however, is useful only for debugging.
+
+[source]
+--------------------------------------------------------------------------------
+call RANDOM_SEED_INIT(debug_seed_array, debug_seed_size)
 --------------------------------------------------------------------------------
 
 RAND_I

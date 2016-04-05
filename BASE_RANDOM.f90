@@ -34,7 +34,7 @@ integer, private, parameter :: MAX_UNIT=500
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
 
-subroutine RANDOM_SEED_INIT()
+subroutine RANDOM_SEED_INIT(seed_here, n_here)
 !*******************************************************************************
 ! RANDOM_SEED_INIT
 ! PURPOSE: initialises the random seed
@@ -77,12 +77,18 @@ subroutine RANDOM_SEED_INIT()
 
   !include "system.inc"   ! Include non-intrinsic lib headers, Oracle Fortran
 
+  !*****************************************************************************
+  ! *** NON-PORTABLE CODE CONTINUE ***
   !-----------------------------------------------------------------------------
   ! *** NOTE: ***
   ! The above code is auto-generated in the include file by the build system
+  ! Here this include file is referred only:
   include "BASE_RANDOM.inc"
   ! *** NON-PORTABLE CODE END ***
   !*****************************************************************************
+
+  integer, optional, allocatable, intent(out) :: seed_here(:)  !  output seed
+  integer, optional :: n_here
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT_FULL"
@@ -121,6 +127,12 @@ subroutine RANDOM_SEED_INIT()
     do i = 1, n
       seed(i) = lcg(t)
     end do
+  end if
+
+  if (present(seed_here) .and. present(n_here)) then    ! get output seed
+    allocate(seed_here(n))
+    n_here = n
+    seed_here = seed
   end if
 
   call random_seed(put=seed)
