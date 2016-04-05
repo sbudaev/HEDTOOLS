@@ -1369,12 +1369,15 @@ call RANDOM_SEED_INIT()
 --------------------------------------------------------------------------------
 
 +RANDOM_SEED_INIT+ can optionally return the current (calculated) seed as two
-parameters: array +seed_here+ and integer size of this array +n_here+. This,
-however, is useful only for debugging.
+parameters: integer dimension of the seed array +n_here+ and the array itself
++seed_here+. This, however, is useful only for debugging.
 
 [source]
 --------------------------------------------------------------------------------
-call RANDOM_SEED_INIT(debug_seed_array, debug_seed_size)
+integer :: debug_seed_size                      ! depends on compiler/platform
+integer, dimension (12) :: debug_seed_array
+...
+call RANDOM_SEED_INIT(debug_seed_size, debug_seed_array)
 --------------------------------------------------------------------------------
 
 RAND_I

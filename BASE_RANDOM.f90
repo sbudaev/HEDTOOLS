@@ -34,7 +34,7 @@ integer, private, parameter :: MAX_UNIT=500
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
 
-subroutine RANDOM_SEED_INIT(seed_here, n_here)
+subroutine RANDOM_SEED_INIT(n_here, seed_here)
 !*******************************************************************************
 ! RANDOM_SEED_INIT
 ! PURPOSE: initialises the random seed
@@ -87,8 +87,8 @@ subroutine RANDOM_SEED_INIT(seed_here, n_here)
   ! *** NON-PORTABLE CODE END ***
   !*****************************************************************************
 
-  integer, optional, allocatable, intent(out) :: seed_here(:)  !  output seed
-  integer, optional :: n_here
+  integer, optional, intent(out) :: n_here                   ! output seed
+  integer, optional, dimension(:), intent(out) :: seed_here  ! ... and N
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT_FULL"
@@ -129,8 +129,7 @@ subroutine RANDOM_SEED_INIT(seed_here, n_here)
     end do
   end if
 
-  if (present(seed_here) .and. present(n_here)) then    ! get output seed
-    allocate(seed_here(n))
+  if (present(seed_here) .and. present(n_here)) then    ! get output seed & N
     n_here = n
     seed_here = seed
   end if
