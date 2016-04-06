@@ -1375,11 +1375,14 @@ parameters: integer dimension of the seed array +n_here+ and the array itself
 [source]
 --------------------------------------------------------------------------------
 integer :: dbg_seed_size                      ! depends on compiler/platform
-integer, dimension (12) :: dbg_seed_array
+integer, dimension (12) :: dbg_seed_array     ! ... can be 12 or 2 on x86
 ...
 call RANDOM_SEED_INIT(dbg_seed_size, dbg_seed_array)
 print *, "Seed: ", dbg_seed_size, ", array: ", dbg_seed_array(:dbg_seed_size)
 --------------------------------------------------------------------------------
+
+The seed array size can be different: on GNU gfortran x86 it is *12*, on
+Intel and Oracle Fortran (both x86) it is *2*.
 
 RAND_I
 ~~~~~~
