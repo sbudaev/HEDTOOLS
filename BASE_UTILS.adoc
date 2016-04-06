@@ -1374,10 +1374,11 @@ parameters: integer dimension of the seed array +n_here+ and the array itself
 
 [source]
 --------------------------------------------------------------------------------
-integer :: debug_seed_size                      ! depends on compiler/platform
-integer, dimension (12) :: debug_seed_array
+integer :: dbg_seed_size                      ! depends on compiler/platform
+integer, dimension (12) :: dbg_seed_array
 ...
-call RANDOM_SEED_INIT(debug_seed_size, debug_seed_array)
+call RANDOM_SEED_INIT(dbg_seed_size, dbg_seed_array)
+print *, "Seed: ", dbg_seed_size, ", array: ", dbg_seed_array(:dbg_seed_size)
 --------------------------------------------------------------------------------
 
 RAND_I
