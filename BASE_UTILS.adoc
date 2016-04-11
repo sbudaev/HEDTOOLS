@@ -2416,8 +2416,8 @@ Note that newer versions of Fortran compilers can become smart enough to adjust
 the order of looping in the machine code. Nonetheless it is better to write
 "optimised" code using the above tricks that works fast just everywhere.
 
-Object-oriented modelling
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Object-oriented programming and modelling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 General principles
 ^^^^^^^^^^^^^^^^^^
@@ -2451,21 +2451,19 @@ At the most basic level the programmer defines both the *data structure*
 (user's type) as well as the types of *operations* (subroutines and functions)
 that are linked with and are be applied to the data structure.
 
-Object-oriented features of Fortran are described in recent Fortran books, e.g.:
 
-Brainerd, W.S. (2009). _Guide to Fortran 2003 Programming,_ Springer.
-
-Chapman, S.J. (2007) _Fortran 95/2003 for Scientists and Engineers,_ 3rd ed.,
+IMPORTANT: Object-oriented features of Fortran are described in recent Fortran
+books, e.g.:
+*Brainerd, W.S. (2009)*. _Guide to Fortran 2003 Programming,_ Springer.
+*Chapman, S.J. (2007)* _Fortran 95/2003 for Scientists and Engineers,_ 3rd ed.,
 McGraw-Hill
-
-Chivers, I. & Sleightholme, J. (2012) _Introduction to Programming with Fortran:
-With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer.
-
+*Chivers, I. & Sleightholme, J. (2012)* _Introduction to Programming with
+Fortran: With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer.
 Short introduction can also be found on the internet, e.g.
-
-Leai, M. _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
+*Leai, M.* _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
 http://www.pgroup.com/lit/articles/insider/v3n1a3.htm[Part 1: Code Reusability];
 http://www.pgroup.com/lit/articles/insider/v3n2a2.htm[Part 2: Data Polymorphism].
+
 
 Implementation of objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
