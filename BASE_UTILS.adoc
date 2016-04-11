@@ -110,7 +110,38 @@ directory: Follow. Available from http://sourceforge.net/projects/follow/.
 Introduction the Fortran modules
 --------------------------------
 
-These modelling tools include several separate modules:
+Module is just a piece of Fortran program that contains variable or constant
+declarations and functions and subroutines. Modules are defined in such a
+simple way:
+indexterm:[module]
+
+[source]
+--------------------------------------------------------------------------------
+module SOME_MODULE
+
+character (len=*), private, parameter :: text_string = "its value"
+integer :: some_variable
+real, dimension(:)
+
+contains                      ! subroutines and functions go after "contains"
+
+  subroutine SOME_SUBROUTINE(parameters)
+  ...
+  end subroutine SOME_SUBROUTINE
+
+end module SOME_MODULE
+--------------------------------------------------------------------------------
+
+To use any variable/constant/subroutine/function from the module, the program
+must include the use +MODULE_NAME+ statement:
+
+[source]
+--------------------------------------------------------------------------------
+use SOME_MODULE
+....
+--------------------------------------------------------------------------------
+
+The AHA modelling tools include several separate modules:
 
 * +BASE_UTILS+
 * +CSV_IO+
@@ -2223,15 +2254,68 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 Coding style
 ------------
 
-*Work at high level, use these tools, use objects*
+General guidelines
+~~~~~~~~~~~~~~~~~~
 
-*Isolate as much as possible into subroutines*
+*Work at high level, use these tools, use objects, isolate as much as possible
+into subroutines*
 
-*Use modules and loop/if labels*
+In this way of coding, it becomes more clear what each part of the program
+is really doing and it is also easier to modify components of the program
+so that they don't affect other irrelevant components.
 
-*Use whole-array operations and array slices instead of loops*
+[source]
+--------------------------------------------------------------------------------
+GENERATIONS_LOOP: do while &
+                  (realgen <= GENERATIONS .and. &
+                   parents(1)%fitness > 0)
 
-*Use parallel instructions (+where+, +forall+ and friends)*
+  call sort_by_fitness()
+
+  call selection()
+
+  call mate_reproduce()
+
+  call offspring_fitness()
+
+  call generations_swap()
+
+  realgen = realgen +1
+
+end do GENERATIONS_LOOP
+--------------------------------------------------------------------------------
+
+*Use meaningful labels*
+
+Using labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
+constructs may greatly improve the readability of the code and make it more
+easy to understand, especially if there are many nested loops +if..then.. end
+if+ constructs. Here is a couple of examples:
+
+[source]
+--------------------------------------------------------------------------------
+GENERATIONS_LOOP: do while &
+                  (realgen <= GENERATIONS .and. &
+                   parents(1)%fitness > 0)
+.....
+  realgen = realgen +1
+
+end do GENERATIONS_LOOP
+--------------------------------------------------------------------------------
+
+[source]
+--------------------------------------------------------------------------------
+SELECT_DEVIANT_CLASS: if (dev == 2) then
+.....
+else if (dev == 3) then SELECT_DEVIANT_CLASS
+.....
+else if (dev == 4) then SELECT_DEVIANT_CLASS
+......
+end if SELECT_DEVIANT_CLASS
+--------------------------------------------------------------------------------
+
+*Use whole-array operations and array slices instead of loops, as well as
+built-in parallel instructions (+where+, +forall+ etc.)*
 
 Fortran 95, 2003 and 2008 has several looping/array assignment constructions
 that have been optimised for speed in multi-processor parallel environments.
@@ -2322,8 +2406,8 @@ the computer memory goes in an "index-reverse" order in Fortran, see
 http://www.fortran90.org/src/best-practices.html#multidimensional-arrays],
 more than _ten times_ slower than the other methods (compare 12.5s and
 1.0s!). The code is also more concise and easier to read. The same tests
-with Oracle Solaris Fortran (+f95+) turning on aggressive optimization and
-automatic loop parallelization (+-fast -autopar -depend=yes+) run much
+with Oracle Solaris Fortran (+f95+) turning on aggressive optimization
+and automatic loop parallelization (+-fast -autopar -depend=yes+) run much
 faster, but the speed differences still remained quite impressive (first
 test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
 aggressive CPU optimisation does work, although the tricks remain very useful.
@@ -2332,16 +2416,115 @@ Note that newer versions of Fortran compilers can become smart enough to adjust
 the order of looping in the machine code. Nonetheless it is better to write
 "optimised" code using the above tricks that works fast just everywhere.
 
-*Use SVN to organise coding*
+Object-oriented modelling
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*Use command line / terminal tools*
+General principles
+^^^^^^^^^^^^^^^^^^
 
-*Use portable code / constructions*
+Modern Fortran (2003 and 2008 standards) allow to write programs in an
+object-oriented style, although does not require it. Object oriented style
+allows to define user's abstractions that mimic real world objects, isolate
+extra complexity of the objects and create extensions of objects.
+indexterm:[object-oriented programming]
 
-TODO: a few notes & examples...
+Object oriented programming is based on the following principles:
 
-bla bla
+*Abstraction:* defining and abstracting common features of objects and
+functions.
 
+*Modularity and hiding irrelevant information:* An object is written and
+treated separately from other objects. Details about internal functioning of
+the object are effectively hidden, what is important is the _interface_ of the
+object, i.e. how it interacts with the external world. This reduces complexity.
+
+*Encapsulation:* combining components of the object to create a new object.
+
+*Inheritance:* components of objects (both data and functions) can be
+inherited across objects, e.g. properties the "genome" object inherited by
+a more general object "the individual."
+
+*Polymorphism:* the provision of a single interface to objects of different
+types.
+
+At the most basic level the programmer defines both the *data structure*
+(user's type) as well as the types of *operations* (subroutines and functions)
+that are linked with and are be applied to the data structure.
+
+Object-oriented features of Fortran are described in recent Fortran books, e.g.:
+
+Brainerd, W.S. (2009). _Guide to Fortran 2003 Programming,_ Springer.
+
+Chapman, S.J. (2007) _Fortran 95/2003 for Scientists and Engineers,_ 3rd ed.,
+McGraw-Hill
+
+Chivers, I. & Sleightholme, J. (2012) _Introduction to Programming with Fortran:
+With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer.
+
+Short introduction can also be found on the internet, e.g.
+
+Leai, M. _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
+http://www.pgroup.com/lit/articles/insider/v3n1a3.htm[Part 1: Code Reusability];
+http://www.pgroup.com/lit/articles/insider/v3n2a2.htm[Part 2: Data Polymorphism].
+
+Implementation of objects
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It is the most convenient and natural to define a single object or closely
+related objects within the same Fortran module. Note also that components
+of an object or derived type are referred using the percent symbol +%+,
+e.g. +fish%sex+ refers to a component +sex+ of the object +fish+.
+indexterm:[module]
+indexterm:[derived type, object]
+
+Data structure (user-defined type) is defined in Fortran using the keywords:
++type ... end type+. An object can also include subroutines and/or functions.
+For example, the following object +INDIVIDUAL_GENOME+ includes a data structure
+consisting of a single character string +str+ and two subroutines that define
+its behaviour. The first subroutine has the internal name +init_genome_random+
+but is referenced outside of the object as +init_genome+ (i.e. +init_genome+
+is a part of the object's interface').
+
+[source]
+--------------------------------------------------------------------------------
+module THE_GENOME                            ! The module defines GENOME object
+....
+
+type, public :: INDIVIDUAL_GENOME            ! It is defined here
+  character(len=len(GA_TARGET)) :: str       !   we have user (derived) type
+  contains                                   !   ... and type-bound procedures.
+    procedure, public :: init_genome => init_genome_random
+    procedure, public :: mutate => mutate_genome
+end type INDIVIDUAL_GENOME
+
+private :: init_genome_random, mutate_genome ! Internal names are "private," so
+                                             !  the outside procedures can refer
+                                             !  the object subroutines by their
+                                             !  outer "interface" names set on
+contains                                     !  the left of "=>"
+
+  subroutine init_genome_random(this)        ! The subroutine is almost as usual
+    class(INDIVIDUAL_GENOME) :: this         ! Note the use of the CLASS keyword
+    ........
+  end subroutine init_genome_random
+....
+end module THE_GENOME
+--------------------------------------------------------------------------------
+
+Note that the subroutine part of the object +init_genome_random+  must have
+an item of the type definition (+this+) as its first argument. However,
+we must define it as +class()+ rather than +type()+. With +class,+ the
+subroutine will work not only with this specific +type,+ but also with any of
+its extension.
+indexterm:[class, object]
+indexterm:[type-bound procedure]
+
+
+TODO -- more text
+
+///////////////////////////
+// End of main text
+///////////////////////////
 
 Final Notes
 -----------
