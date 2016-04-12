@@ -2437,7 +2437,7 @@ Object-oriented programming and modelling
 General principles
 ~~~~~~~~~~~~~~~~~~
 
-Modern Fortran (2003 and 2008 standards) allow to write programs in an
+Modern Fortran (2003 and 2008 standards) allows coding in a true
 object-oriented style, although does not require it. Object oriented style
 allows to define user's abstractions that mimic real world objects, isolate
 extra complexity of the objects and create extensions of objects.
@@ -2468,12 +2468,11 @@ that are linked with and are be applied to the data structure.
 
 
 IMPORTANT: Object-oriented features of Fortran are described in recent Fortran
-books, e.g.:
-*Brainerd, W.S. (2009)*. _Guide to Fortran 2003 Programming,_ Springer.
-*Chapman, S.J. (2007)* _Fortran 95/2003 for Scientists and Engineers,_ 3rd ed.,
-McGraw-Hill
-*Chivers, I. & Sleightholme, J. (2012)* _Introduction to Programming with
-Fortran: With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer.
+books, e.g.: *Brainerd, W.S. (2009)*. _Guide to Fortran 2003 Programming,_
+Springer (Chapter 12).  *Chapman, S.J. (2007)* _Fortran 95/2003 for
+Scientists and Engineers,_ 3rd ed., McGraw-Hill (Chapter 16).  *Chivers,
+I. & Sleightholme, J. (2012)* _Introduction to Programming with Fortran:
+With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer (Chapter 26).
 Short introduction can also be found on the internet, e.g.
 *Leai, M.* _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
 http://www.pgroup.com/lit/articles/insider/v3n1a3.htm[Part 1: Code Reusability];
@@ -2492,7 +2491,7 @@ data objects can be combined into arrays as "normal" data. For example, the
 +sex+ component of the _i_-th element of the array of derived type +fish+
 is referred as +fish(i)%sex+. Note that derived types can also include arrays,
 so +predator%prey(j)+ can be _j_-th element of the +prey+ array component of
-the object +predator+. If we use an array of derived type that include
+the object +predator+. If we use an array of derived type that includes
 a three-dimensional array component, it could be something like
 +fish(i)%position(x,y,z)+.
 indexterm:[module]
@@ -2538,8 +2537,8 @@ Note that the subroutine part of the object +init_genome_random+  must have
 an item of the type definition (+this+) as its first argument. However,
 we must define it as +class()+ rather than +type()+. With +class,+ the
 subroutine will work not only with this specific +type,+ but also with any of
-its extension.
-indexterm:[class, object]
+its extension (i.e. it is a polymorphic type).
+indexterm:[class, object, polymorphic]
 indexterm:[type-bound procedure]
 
 We may then define an additional, more general, object extending the
