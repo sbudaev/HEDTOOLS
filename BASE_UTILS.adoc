@@ -2271,6 +2271,11 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 Coding style: General guidelines and tips
 -----------------------------------------
 
+IMPORTANT: A very helpful collection of advises and tips for efficient
+programming in Fortran can be found here:
+http://www.fortran90.org/src/best-practices.html[Fortran Best Practices]
+indexterm:[Fortran Best Practices]
+
 *Work at high level, use these tools, use objects, isolate as much as possible
 into subroutines*
 
@@ -2580,8 +2585,7 @@ we must _instantiate_ it, i.e. create its specific instance and set the
 values. This is analogous to having a specific data type, e.g. +integer+. We
 cannot use "just an integer," we need (1) to create a specific variable
 (variable is also an object though trivial!) of the type _integer_
-(e.g. +integer :: Var_A+) and (2) to asign a specific value to it (+Var_A
-= 1+).
+(e.g. +integer :: Var_A+) and (2) to assign a specific value to it (+Var_A=1+).
 indexterm:[object-oriented programming, object instance]
 indexterm:[instance]
 
@@ -2603,8 +2607,8 @@ of +generation_one+ array, e.g.
 
 [source]
 --------------------------------------------------------------------------------
-generation_one(i)%sex = "male"    ! assign values to individual components
-generation_one(i)%alive = .true.  ! of the object instance
+generation_one(i)%sex = "male"        ! assign values to individual components
+generation_one(i)%alive = .true.      ! of the object instance
 --------------------------------------------------------------------------------
 
 We can also use the subroutines and type-bound functions that we have defined
@@ -2617,8 +2621,8 @@ subroutine population_init()
 ....
 
   do i = 1, POPSIZE
-    call generation_one(i)%init()
-  end do
+    call generation_one(i)%init()     ! Initialise the i-th fish object in the
+  end do                              ! "generation_one" population array
 
 end subroutine population_init
 --------------------------------------------------------------------------------
