@@ -2544,7 +2544,7 @@ indexterm:[type-bound procedure]
 We may then define an additional, more general, object extending the
 +INDIVIDUAL_GENOME+. In this case, we use the word +extends+ in the
 new type definition (see code below). This says that the components
-of the +INDIVIDUAL_GENOME+ are also included into (the new object
+of the +INDIVIDUAL_GENOME+ are also included into the new object
 +INDIVIDUAL_NEURO_ARCH+ (i.e. +INDIVIDUAL_NEURO_ARCH+ inherits the
 +INDIVIDUAL_GENOME+ components).
 
