@@ -34,7 +34,8 @@ and tools for high performance parallel computations are readily available. As
 such, Fortran is one of the favourite languages for computation-intensive
 works.
 
-_Document date: {docdate}._
+_Document date: {docdate}._ The document is generated with the
+http://asciidoc.org/[AsciiDoc] markup processor.
 
 ////////////////////////////////////////////////////////////////////////////////
 Note: SVN tags need property setup:
@@ -124,8 +125,8 @@ Following a logfile while executing a program is done trivially on Linux:
 files that works on all major platforms installs by just placing in some
 directory: Follow. Available from http://sourceforge.net/projects/follow/.
 
-Introduction the Fortran modules
---------------------------------
+Introduction to the Fortran modules
+-----------------------------------
 
 Module is just a piece of Fortran program that contains variable or constant
 declarations and functions and subroutines. Modules are defined in such a
@@ -1394,9 +1395,10 @@ indexterm:[compiler,limitation]
 Module BASE_RANDOM
 ------------------
 
-This module contains subroutines for generating random numbers. However, the
-code of this module depends on the platform and compiler used. The build
-system generates the appropriate header file automatically.
+This module contains subroutines for generating random numbers (pseudo-random
+number generator, PRNG). However, the code of this module depends on the
+platform and compiler used. The build system (make) generates the appropriate
+header file automatically.
 indexterm:[compiler,limitation]
 indexterm:[BASE_RANDOM]
 indexterm:[PRNG]
@@ -2268,6 +2270,10 @@ http://www.oreilly.com/openbook/make3/book/index.csp[Mecklenburg, R, 2005,
 _Managing Projects with GNU Make,_ Third edition. O’Reilly]. There is also the
 official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 
+////////////////////////////////////////////////////////////////////////////////
+TODO: The text below should better be moved at start
+////////////////////////////////////////////////////////////////////////////////
+
 Coding style: General guidelines and tips
 -----------------------------------------
 
@@ -2309,7 +2315,9 @@ end do GENERATIONS_LOOP
 Using labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
 constructs may greatly improve the readability of the code and make it more
 easy to understand, especially if there are many nested loops +if..then.. end
-if+ constructs. Here is a couple of examples:
+if+ constructs. No need to label all such things (this will just increase 
+clutter), but those that are really important or very big must be. A couple of 
+examples are below:
 
 [source]
 --------------------------------------------------------------------------------
@@ -2591,10 +2599,14 @@ indexterm:[instance]
 
 For example, the following creates two instance arrays of the type
 +INDIVIDUAL_FISH+. Both arrays are one-dimensional and have +POPSIZE+
-elements. So we now have two fish populations, +generation_one+ and
-+generation_two+. But instead of being arrays of simple values they are
-arrays of complex data structures potentially consisting of many different
-data types and arrays:
+elements. So we now have two fish populations, +generation_one+
+and +generation_two+. Each individual value of such an array,
+e.g. +generation_one(1)+ is an instance of the object of the type
++INDIVIDUAL_FISH+ that can be quite a complex data structure including many
+different data types, even arrays and lower-order derived types (you can define
+derived types inside other derived types). So, instead of being arrays
+of simple values these object arrays are in fact arrays of complex data
+structures potentially consisting of many different data types and arrays:
 
 [source]
 --------------------------------------------------------------------------------
@@ -2607,8 +2619,9 @@ of +generation_one+ array, e.g.
 
 [source]
 --------------------------------------------------------------------------------
-generation_one(i)%sex = "male"        ! assign values to individual components
-generation_one(i)%alive = .true.      ! of the object instance
+generation_one(i)%sex = "male"          ! assign values to individual components
+generation_one(i)%alive = .true.        ! of the object instance
+generation_one(i)%food(j) = "spaghetti"
 --------------------------------------------------------------------------------
 
 We can also use the subroutines and type-bound functions that we have defined
@@ -2623,23 +2636,17 @@ subroutine population_init()
   do i = 1, POPSIZE
     call generation_one(i)%init()     ! Initialise the i-th fish object in the
   end do                              ! "generation_one" population array
-
+                                      ! using the object-bound subroutine init
 end subroutine population_init
 --------------------------------------------------------------------------------
 
 TODO -- more text later
 
-///////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // End of main text
-///////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 Final Notes
 -----------
 
-There are a few other modules. I will write similar documentation for them
-too... Hope it is soon. There is still much to to.
-
-The manual is generated with http://asciidoc.org/[AsciiDoc] markup processor. Later,
-an auto-generation of docs from the model code is planned (not first priority
-though).
-
+Nothing so far...
