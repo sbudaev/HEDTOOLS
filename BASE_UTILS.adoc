@@ -107,6 +107,16 @@ http://unxutils.sourceforge.net/[UnxUtils],
 http://github.com/bmatzelle/gow/wiki[Gow],
 http://win-bash.sourceforge.net/[winbash].
 
+*Doxygen: Automatically generate program documentation* (Highly Recommended)
+
+This is a tool for writing software reference documentation. The documentation
+is written within code using special markup and can include formatting,
+formulas, tables, graphics etc. Doxygen can cross reference documentation
+and code, so that the user/reader of a document can easily refer to the
+actual code. It is trivial to install on Linux, but probably not so on
+Windows. Using the full power of the tool is not trivial though. Available
+from http://doxygen.org/.
+
 *Geany* (Recommended)
 
 Lightweight IDE, Editor for code and any text files. Works on Linux, Windows
@@ -124,6 +134,453 @@ Following a logfile while executing a program is done trivially on Linux:
 +tail -f some_log_file.txt+. There is a Java GUI program for reading log
 files that works on all major platforms installs by just placing in some
 directory: Follow. Available from http://sourceforge.net/projects/follow/.
+
+////////////////////////////////////////////////////////////////////////////////
+FIRST, WE NEED A BRIEF INTRODUCTION TO THE PROGRAMMING / SOFTWARE TOOLS AND
+GENERAL INTRO ON PROGRAMMING STYLE, INCLUDING OBJECT-ORIENTED FORTRAN FEATURES.
+////////////////////////////////////////////////////////////////////////////////
+
+Coding style: General guidelines and tips
+-----------------------------------------
+
+General principles
+~~~~~~~~~~~~~~~~~~
+
+IMPORTANT: A very helpful collection of advises and tips for efficient
+programming in Fortran can be found here:
+http://www.fortran90.org/src/best-practices.html[Fortran Best Practices]
+indexterm:[Fortran Best Practices]
+
+*Work at high level, use these tools, use objects, isolate as much as possible
+into subroutines*
+
+In this way of coding, it becomes more clear what each part of the program
+is really doing and it is also easier to modify components of the program
+so that they don't affect other irrelevant components.
+
+[source]
+--------------------------------------------------------------------------------
+GENERATIONS_LOOP: do while &
+                  (realgen <= GENERATIONS .and. &
+                   parents(1)%fitness > 0)
+
+  call sort_by_fitness()
+
+  call selection()
+
+  call mate_reproduce()
+
+  call offspring_fitness()
+
+  call generations_swap()
+
+  realgen = realgen +1
+
+end do GENERATIONS_LOOP
+--------------------------------------------------------------------------------
+
+*Use meaningful labels*
+
+Using labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
+constructs may greatly improve the readability of the code and make it more
+easy to understand, especially if there are many nested loops +if..then.. end
+if+ constructs. No need to label all such things (this will just increase
+clutter), but those that are really important or very big must be. A couple of
+examples are below:
+
+[source]
+--------------------------------------------------------------------------------
+GENERATIONS_LOOP: do while &
+                  (realgen <= GENERATIONS .and. &
+                   parents(1)%fitness > 0)
+.....
+  realgen = realgen +1
+
+end do GENERATIONS_LOOP
+--------------------------------------------------------------------------------
+
+[source]
+--------------------------------------------------------------------------------
+SELECT_DEVIANT_CLASS: if (dev == 2) then
+.....
+else if (dev == 3) then SELECT_DEVIANT_CLASS
+.....
+else if (dev == 4) then SELECT_DEVIANT_CLASS
+......
+end if SELECT_DEVIANT_CLASS
+--------------------------------------------------------------------------------
+
+*Use whole-array operations and array slices instead of loops, as well as
+built-in parallel instructions (+where+, +forall+ etc.): it is faster*
+
+Fortran 95, 2003 and 2008 has several looping/array assignment constructions
+that have been optimised for speed in multi-processor parallel environments.
+Never use loops to initialise arrays, and avoid using them to calculate
+array components. Whenever possible, _reverse the order of indices_ in nested
+loops, e.g. first looping should be over the columns, and then over the rows.
+Nested loops  may have huge speed overhead! Use +FORALL+, +WHERE+ and similar
+new "parallelized" Fortran constructions. Below is a little test conducted on
+an average amd64 system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+
+timing is by Linux +time+).
+indexterm:[speed, execution speed]
+indexterm:[nested loops]
+indexterm:[array, nested loops,indices order]
+
+.Test 1: Multiple nested loops, execution time = 0m12.488s
+[source]
+--------------------------------------------------------------------------------
+use BASE_UTILS
+use BASE_RANDOM
+implicit none
+integer, parameter :: n=1000, a=100,b=100,c=100
+integer :: nn, i,j,k
+real :: random_r
+real, dimension(a,b,c) :: M   ! The above header part is the same in all tests
+
+call random_seed_init
+
+MATRLOOP: do nn=1,n
+  random_r = rand_r4()
+  do i=1,a                                          ! Multiple nested loops
+    do j=1,b
+      do k=1,c
+        M(i,j,k) = random_r
+      end do
+    end do
+  end do
+end do MATRLOOP
+--------------------------------------------------------------------------------
+
+.Test 2: Direct array assignment, execution time = 0m1.046s
+[source]
+--------------------------------------------------------------------------------
+! header the same as above...
+call random_seed_init
+
+MATRLOOP: do nn=1,n
+  random_r = rand_r4()
+  M=random_r                                        ! Direct array assignment
+end do MATRLOOP
+--------------------------------------------------------------------------------
+indexterm:[array, direct assignment]
+
+.Test 3: +forall+ instruction, execution time = 0m1.042s
+[source]
+--------------------------------------------------------------------------------
+! header the same as above...
+call random_seed_init
+
+MATRLOOP: do nn=1,n
+  random_r = rand_r4()
+  forall (i=1:a, j=1:b, k=1:c) M(i,j,k) = random_r  ! Parallel instruction
+end do MATRLOOP
+--------------------------------------------------------------------------------
+indexterm:[FORALL]
+
+.Test 4: Reverse order of nested loops (cols then rows), execution time = 0m1.046s
+[source]
+--------------------------------------------------------------------------------
+! header the same as above...
+call random_seed_init
+
+MATRLOOP: do nn=1,n
+  random_r = RAND_R4()
+  do i=1,a
+    do j=1,b
+      do k=1,c
+        M(k,j,i) = random_r                         ! Order of looping is reversed
+      end do
+    end do
+  end do
+end do MATRLOOP
+--------------------------------------------------------------------------------
+
+Multiple nested loops with the most "natural and intuitive"
+indices order (rows then cols) had a _really huge_ execution
+speed overhead footnote:[This is because allocation of arrays in
+the computer memory goes in an "index-reverse" order in Fortran, see
+http://www.fortran90.org/src/best-practices.html#multidimensional-arrays],
+more than _ten times_ slower than the other methods (compare 12.5s and
+1.0s!). The code is also more concise and easier to read. The same tests
+with Oracle Solaris Fortran (+f95+) turning on aggressive optimization
+and automatic loop parallelization (+-fast -autopar -depend=yes+) run much
+faster, but the speed differences still remained quite impressive (first
+test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
+aggressive CPU optimisation does work, although the tricks remain very useful.
+
+Note that newer versions of Fortran compilers can become smart enough to adjust
+the order of looping in the machine code. Nonetheless it is better to write
+"optimised" code using the above tricks that works fast just everywhere.
+
+Document code on the go with Doxygen
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Doxygen* is a very useful tool which allows to extract and produce
+documentation from the source code in a highly structured manner. Comments
+that can be parsed by Doxygen are inserted into the source code using special
+markup language. The basic usage is quite simple. You should start comment
+line with +!>+ rather than just +!+, continuing Doxygen comments is done
+with two exclamation marks: +!!+.
+indexterm:[Doxygen]
+
+[source]
+--------------------------------------------------------------------------------
+!> The module **COMMONDATA** is used for definine various global parameters like
+!! model name, tags, population size etc.
+module COMMONDATA
+
+  !> MODNAME always refers to the name of the current module for use by
+  !! the LOGGER function LOG_DBG. Note that in the debug mode (if IS_DEBUG=TRUE)
+  !! LOGGER should normally produce additional messages that are helpful for
+  !! debuging and locating possible sources of errors.
+  !! Each procedure should also have a similar private constant PROCNAME.
+  character (len=*), parameter, private :: MODNAME = "COMMONDATA"
+
+  !> Model name for tags, file names etc. Must be very short.
+  character (len=*), parameter, public :: MODEL_NAME = "HEDG2_01"
+
+  !> Model description - a longer descriptive text, used in text outputs etc.
+  character (len=*), parameter, public :: MODEL_DESCR= &
+    "Prototype object-oriented model with genetic algorithm."
+--------------------------------------------------------------------------------
+
+There are various options and keywords. A few of them are very frequently
+used in modelling:
+
++@param+ describes a function or subroutine parameter, may optionally include
++[in]+ (or out or in,out) specifier. An example is below
+
+[source]
+--------------------------------------------------------------------------------
+subroutine LOG_DBG(message_string, procname, modname)
+    implicit none
+    ! Calling parameters:
+    !> @param[in] message_string String text for the log message
+    character (len=*), intent(in) :: message_string
+    !> @param[in] procname Optional procedre name for debug messages
+    character (len=*), optional, intent(in) :: procname
+--------------------------------------------------------------------------------
+
++@returns+ describes a function return value.
+
+[source]
+--------------------------------------------------------------------------------
+function TAG_MMDD() result (MMDD)
+    implicit none
+    !> @returns MMDD Returns an 8-character string for YYYYMMDD
+    character(8) MMDD
+--------------------------------------------------------------------------------
+
+Doxygen parses the source code and produces highly structured documentation
+in different formats (html, rtf, latex, pdf):
+
+image:img_doc_doxygen.png[width=490,align="left"]
+
+Documenting a complex model is very important! And Doxygen allows inclusion
+of various markup commands and styles, LaTeX formulas and graphics. Doxygen
+documentation and howtos is available here: http://doxygen.org
+
+Object-oriented programming and modelling
+-----------------------------------------
+
+General principles
+~~~~~~~~~~~~~~~~~~
+
+Modern Fortran (2003 and 2008 standards) allows coding in a true
+object-oriented style, although does not require it. Object oriented style
+allows to define user's abstractions that mimic real world objects, isolate
+extra complexity of the objects and create extensions of objects.
+indexterm:[object-oriented programming]
+
+Object oriented programming is based on the following principles:
+
+*Abstraction:* defining and abstracting common features of objects and
+functions.
+
+*Modularity and hiding irrelevant information:* An object is written and
+treated separately from other objects. Details about internal functioning of
+the object are effectively hidden, what is important is the _interface_ of the
+object, i.e. how it interacts with the external world. This reduces complexity.
+
+*Encapsulation:* combining components of the object to create a new object.
+
+*Inheritance:* components of objects (both data and functions) can be
+inherited across objects, e.g. properties the "genome" object inherited by
+a more general object "the individual."
+
+*Polymorphism:* the provision of a single interface to objects of different
+types.
+
+At the most basic level the programmer defines both the *data structure*
+(user's type) as well as the types of *operations* (subroutines and functions)
+that are linked with and are be applied to the data structure.
+
+
+IMPORTANT: Object-oriented features of Fortran are described in recent Fortran
+books, e.g.: *Brainerd, W.S. (2009)*. _Guide to Fortran 2003 Programming,_
+Springer (Chapter 12).  *Chapman, S.J. (2007)* _Fortran 95/2003 for
+Scientists and Engineers,_ 3rd ed., McGraw-Hill (Chapter 16).  *Chivers,
+I. & Sleightholme, J. (2012)* _Introduction to Programming with Fortran:
+With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer (Chapter 26).
+Short introduction can also be found on the internet, e.g.
+*Leai, M.* _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
+http://www.pgroup.com/lit/articles/insider/v3n1a3.htm[Part 1: Code Reusability];
+http://www.pgroup.com/lit/articles/insider/v3n2a2.htm[Part 2: Data Polymorphism].
+
+
+Implementation of objects
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is the most convenient and natural to define a single object or closely
+related objects within the same Fortran module. Note also that components
+of an object or derived type are referred using the percent symbol +%+,
+e.g. +fish%sex+ refers to a component +sex+ of the object +fish+. Both derived
+type data components and functions are referred in this way. Derived type
+data objects can be combined into arrays as "normal" data. For example, the
++sex+ component of the _i_-th element of the array of derived type +fish+
+is referred as +fish(i)%sex+. Note that derived types can also include arrays,
+so +predator%prey(j)+ can be _j_-th element of the +prey+ array component of
+the object +predator+. If we use an array of derived type that includes
+a three-dimensional array component, it could be something like
++fish(i)%position(x,y,z)+.
+indexterm:[module]
+indexterm:[derived type, object]
+indexterm:[derived type,array of derived type]
+indexterm:[object-oriented programming]
+
+Data structure (user-defined type) is defined in Fortran using the keywords:
++type ... end type+. An object can also include subroutines and/or functions.
+For example, the following object +INDIVIDUAL_GENOME+ includes a data structure
+consisting of a single character string +str+ and two subroutines that define
+its behaviour. The first subroutine has the internal name +init_genome_random+
+but is referenced outside of the object as +init_genome+ (i.e. +init_genome+
+is a part of the object's interface').
+
+[source]
+--------------------------------------------------------------------------------
+module THE_GENOME                            ! The module defines GENOME object
+....
+
+type, public :: INDIVIDUAL_GENOME            ! It is defined here
+  character(len=len(GA_TARGET)) :: str       !   we have user (derived) type
+  contains                                   !   ... and type-bound procedures.
+    procedure, public :: init_genome => init_genome_random
+    procedure, public :: mutate => mutate_genome
+end type INDIVIDUAL_GENOME
+
+private :: init_genome_random, mutate_genome ! Internal names are "private," so
+                                             !  the outside procedures can refer
+                                             !  the object subroutines by their
+                                             !  outer "interface" names set on
+contains                                     !  the left of "=>"
+
+  subroutine init_genome_random(this)        ! The subroutine is almost as usual
+    class(INDIVIDUAL_GENOME) :: this         ! Note the use of the CLASS keyword
+    ........
+  end subroutine init_genome_random
+....
+end module THE_GENOME
+--------------------------------------------------------------------------------
+
+Note that the subroutine part of the object +init_genome_random+  must have
+an item of the type definition (+this+) as its first argument. However,
+we must define it as +class()+ rather than +type()+. With +class,+ the
+subroutine will work not only with this specific +type,+ but also with any of
+its extension (i.e. it is a polymorphic type).
+indexterm:[class, object, polymorphic]
+indexterm:[type-bound procedure]
+
+We may then define an additional, more general, object extending the
++INDIVIDUAL_GENOME+. In this case, we use the word +extends+ in the
+new type definition (see code below). This says that the components
+of the +INDIVIDUAL_GENOME+ are also included into the new object
++INDIVIDUAL_NEURO_ARCH+ (i.e. +INDIVIDUAL_NEURO_ARCH+ inherits the
++INDIVIDUAL_GENOME+ components).
+
+[source]
+--------------------------------------------------------------------------------
+module THE_NEUROBIO
+.....
+type, public, extends(INDIVIDUAL_GENOME) :: INDIVIDUAL_NEURO_ARCH
+  integer :: bundles
+  contains
+    procedure, public :: init_neuro => init_neurobio_random
+end type INDIVIDUAL_NEURO_ARCH
+
+private :: init_neurobio_random
+
+contains
+
+  subroutine init_neurobio_random(this)
+    class(INDIVIDUAL_NEURO_ARCH) :: this
+    ........
+  end subroutine init_neurobio_random
+
+end module THE_NEUROBIO
+--------------------------------------------------------------------------------
+
+In this way, it is easy to create new objects inheriting properties of
+other objects, for example, create several layers ranging from the *genome*
+through the *neurobiological architecture* and up to the *individual fish*
+and further to a *population* of fish.
+
+However, the above is just the _definition_ of an object. To use the object,
+we must _instantiate_ it, i.e. create its specific instance and set the
+values. This is analogous to having a specific data type, e.g. +integer+. We
+cannot use "just an integer," we need (1) to create a specific variable
+(variable is also an object though trivial!) of the type _integer_
+(e.g. +integer :: Var_A+) and (2) to assign a specific value to it (+Var_A=1+).
+indexterm:[object-oriented programming, object instance]
+indexterm:[instance]
+
+For example, the following creates two instance arrays of the type
++INDIVIDUAL_FISH+. Both arrays are one-dimensional and have +POPSIZE+
+elements. So we now have two fish populations, +generation_one+
+and +generation_two+. Each individual value of such an array,
+e.g. +generation_one(1)+ is an instance of the object of the type
++INDIVIDUAL_FISH+ that can be quite a complex data structure including many
+different data types, even arrays and lower-order derived types (you can define
+derived types inside other derived types). So, instead of being arrays
+of simple values these object arrays are in fact arrays of complex data
+structures potentially consisting of many different data types and arrays:
+
+[source]
+--------------------------------------------------------------------------------
+type(INDIVIDUAL_FISH), dimension(POPSIZE) :: generation_one
+type(INDIVIDUAL_FISH), dimension(POPSIZE) :: generation_two
+--------------------------------------------------------------------------------
+
+We can now assign concrete values to each of the previously defined components
+of +generation_one+ array, e.g.
+
+[source]
+--------------------------------------------------------------------------------
+generation_one(i)%sex = "male"          ! assign values to individual components
+generation_one(i)%alive = .true.        ! of the object instance
+generation_one(i)%food(j) = "spaghetti"
+--------------------------------------------------------------------------------
+
+We can also use the subroutines and type-bound functions that we have defined
+within the object definitions to do specific manipulations on the object
+and its components:
+
+[source]
+--------------------------------------------------------------------------------
+subroutine population_init()
+....
+
+  do i = 1, POPSIZE
+    call generation_one(i)%init()     ! Initialise the i-th fish object in the
+  end do                              ! "generation_one" population array
+                                      ! using the object-bound subroutine init
+end subroutine population_init
+--------------------------------------------------------------------------------
+
+TODO -- more text later
+
+////////////////////////////////////////////////////////////////////////////////
+BELOW START ACTUAL DESCRIPTION OF THE AHA PROGRAMMING FRAMEWORK
+////////////////////////////////////////////////////////////////////////////////
 
 Introduction to the Fortran modules
 -----------------------------------
@@ -2273,374 +2730,6 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 ////////////////////////////////////////////////////////////////////////////////
 TODO: The text below should better be moved at start
 ////////////////////////////////////////////////////////////////////////////////
-
-Coding style: General guidelines and tips
------------------------------------------
-
-IMPORTANT: A very helpful collection of advises and tips for efficient
-programming in Fortran can be found here:
-http://www.fortran90.org/src/best-practices.html[Fortran Best Practices]
-indexterm:[Fortran Best Practices]
-
-*Work at high level, use these tools, use objects, isolate as much as possible
-into subroutines*
-
-In this way of coding, it becomes more clear what each part of the program
-is really doing and it is also easier to modify components of the program
-so that they don't affect other irrelevant components.
-
-[source]
---------------------------------------------------------------------------------
-GENERATIONS_LOOP: do while &
-                  (realgen <= GENERATIONS .and. &
-                   parents(1)%fitness > 0)
-
-  call sort_by_fitness()
-
-  call selection()
-
-  call mate_reproduce()
-
-  call offspring_fitness()
-
-  call generations_swap()
-
-  realgen = realgen +1
-
-end do GENERATIONS_LOOP
---------------------------------------------------------------------------------
-
-*Use meaningful labels*
-
-Using labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
-constructs may greatly improve the readability of the code and make it more
-easy to understand, especially if there are many nested loops +if..then.. end
-if+ constructs. No need to label all such things (this will just increase 
-clutter), but those that are really important or very big must be. A couple of 
-examples are below:
-
-[source]
---------------------------------------------------------------------------------
-GENERATIONS_LOOP: do while &
-                  (realgen <= GENERATIONS .and. &
-                   parents(1)%fitness > 0)
-.....
-  realgen = realgen +1
-
-end do GENERATIONS_LOOP
---------------------------------------------------------------------------------
-
-[source]
---------------------------------------------------------------------------------
-SELECT_DEVIANT_CLASS: if (dev == 2) then
-.....
-else if (dev == 3) then SELECT_DEVIANT_CLASS
-.....
-else if (dev == 4) then SELECT_DEVIANT_CLASS
-......
-end if SELECT_DEVIANT_CLASS
---------------------------------------------------------------------------------
-
-*Use whole-array operations and array slices instead of loops, as well as
-built-in parallel instructions (+where+, +forall+ etc.): it is faster*
-
-Fortran 95, 2003 and 2008 has several looping/array assignment constructions
-that have been optimised for speed in multi-processor parallel environments.
-Never use loops to initialise arrays, and avoid using them to calculate
-array components. Whenever possible, _reverse the order of indices_ in nested
-loops, e.g. first looping should be over the columns, and then over the rows.
-Nested loops  may have huge speed overhead! Use +FORALL+, +WHERE+ and similar
-new "parallelized" Fortran constructions. Below is a little test conducted on
-an average amd64 system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+
-timing is by Linux +time+).
-indexterm:[speed, execution speed]
-indexterm:[nested loops]
-indexterm:[array, nested loops,indices order]
-
-.Test 1: Multiple nested loops, execution time = 0m12.488s
-[source]
---------------------------------------------------------------------------------
-use BASE_UTILS
-use BASE_RANDOM
-implicit none
-integer, parameter :: n=1000, a=100,b=100,c=100
-integer :: nn, i,j,k
-real :: random_r
-real, dimension(a,b,c) :: M   ! The above header part is the same in all tests
-
-call random_seed_init
-
-MATRLOOP: do nn=1,n
-  random_r = rand_r4()
-  do i=1,a                                          ! Multiple nested loops
-    do j=1,b
-      do k=1,c
-        M(i,j,k) = random_r
-      end do
-    end do
-  end do
-end do MATRLOOP
---------------------------------------------------------------------------------
-
-.Test 2: Direct array assignment, execution time = 0m1.046s
-[source]
---------------------------------------------------------------------------------
-! header the same as above...
-call random_seed_init
-
-MATRLOOP: do nn=1,n
-  random_r = rand_r4()
-  M=random_r                                        ! Direct array assignment
-end do MATRLOOP
---------------------------------------------------------------------------------
-indexterm:[array, direct assignment]
-
-.Test 3: +forall+ instruction, execution time = 0m1.042s
-[source]
---------------------------------------------------------------------------------
-! header the same as above...
-call random_seed_init
-
-MATRLOOP: do nn=1,n
-  random_r = rand_r4()
-  forall (i=1:a, j=1:b, k=1:c) M(i,j,k) = random_r  ! Parallel instruction
-end do MATRLOOP
---------------------------------------------------------------------------------
-indexterm:[FORALL]
-
-.Test 4: Reverse order of nested loops (cols then rows), execution time = 0m1.046s
-[source]
---------------------------------------------------------------------------------
-! header the same as above...
-call random_seed_init
-
-MATRLOOP: do nn=1,n
-  random_r = RAND_R4()
-  do i=1,a
-    do j=1,b
-      do k=1,c
-        M(k,j,i) = random_r                         ! Order of looping is reversed
-      end do
-    end do
-  end do
-end do MATRLOOP
---------------------------------------------------------------------------------
-
-Multiple nested loops with the most "natural and intuitive"
-indices order (rows then cols) had a _really huge_ execution
-speed overhead footnote:[This is because allocation of arrays in
-the computer memory goes in an "index-reverse" order in Fortran, see
-http://www.fortran90.org/src/best-practices.html#multidimensional-arrays],
-more than _ten times_ slower than the other methods (compare 12.5s and
-1.0s!). The code is also more concise and easier to read. The same tests
-with Oracle Solaris Fortran (+f95+) turning on aggressive optimization
-and automatic loop parallelization (+-fast -autopar -depend=yes+) run much
-faster, but the speed differences still remained quite impressive (first
-test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
-aggressive CPU optimisation does work, although the tricks remain very useful.
-
-Note that newer versions of Fortran compilers can become smart enough to adjust
-the order of looping in the machine code. Nonetheless it is better to write
-"optimised" code using the above tricks that works fast just everywhere.
-
-
-Object-oriented programming and modelling
------------------------------------------
-
-General principles
-~~~~~~~~~~~~~~~~~~
-
-Modern Fortran (2003 and 2008 standards) allows coding in a true
-object-oriented style, although does not require it. Object oriented style
-allows to define user's abstractions that mimic real world objects, isolate
-extra complexity of the objects and create extensions of objects.
-indexterm:[object-oriented programming]
-
-Object oriented programming is based on the following principles:
-
-*Abstraction:* defining and abstracting common features of objects and
-functions.
-
-*Modularity and hiding irrelevant information:* An object is written and
-treated separately from other objects. Details about internal functioning of
-the object are effectively hidden, what is important is the _interface_ of the
-object, i.e. how it interacts with the external world. This reduces complexity.
-
-*Encapsulation:* combining components of the object to create a new object.
-
-*Inheritance:* components of objects (both data and functions) can be
-inherited across objects, e.g. properties the "genome" object inherited by
-a more general object "the individual."
-
-*Polymorphism:* the provision of a single interface to objects of different
-types.
-
-At the most basic level the programmer defines both the *data structure*
-(user's type) as well as the types of *operations* (subroutines and functions)
-that are linked with and are be applied to the data structure.
-
-
-IMPORTANT: Object-oriented features of Fortran are described in recent Fortran
-books, e.g.: *Brainerd, W.S. (2009)*. _Guide to Fortran 2003 Programming,_
-Springer (Chapter 12).  *Chapman, S.J. (2007)* _Fortran 95/2003 for
-Scientists and Engineers,_ 3rd ed., McGraw-Hill (Chapter 16).  *Chivers,
-I. & Sleightholme, J. (2012)* _Introduction to Programming with Fortran:
-With Coverage of Fortran 90, 95, 2003, 2008 and 77,_ Springer (Chapter 26).
-Short introduction can also be found on the internet, e.g.
-*Leai, M.* _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
-http://www.pgroup.com/lit/articles/insider/v3n1a3.htm[Part 1: Code Reusability];
-http://www.pgroup.com/lit/articles/insider/v3n2a2.htm[Part 2: Data Polymorphism].
-
-
-Implementation of objects
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It is the most convenient and natural to define a single object or closely
-related objects within the same Fortran module. Note also that components
-of an object or derived type are referred using the percent symbol +%+,
-e.g. +fish%sex+ refers to a component +sex+ of the object +fish+. Both derived
-type data components and functions are referred in this way. Derived type
-data objects can be combined into arrays as "normal" data. For example, the
-+sex+ component of the _i_-th element of the array of derived type +fish+
-is referred as +fish(i)%sex+. Note that derived types can also include arrays,
-so +predator%prey(j)+ can be _j_-th element of the +prey+ array component of
-the object +predator+. If we use an array of derived type that includes
-a three-dimensional array component, it could be something like
-+fish(i)%position(x,y,z)+.
-indexterm:[module]
-indexterm:[derived type, object]
-indexterm:[derived type,array of derived type]
-indexterm:[object-oriented programming]
-
-Data structure (user-defined type) is defined in Fortran using the keywords:
-+type ... end type+. An object can also include subroutines and/or functions.
-For example, the following object +INDIVIDUAL_GENOME+ includes a data structure
-consisting of a single character string +str+ and two subroutines that define
-its behaviour. The first subroutine has the internal name +init_genome_random+
-but is referenced outside of the object as +init_genome+ (i.e. +init_genome+
-is a part of the object's interface').
-
-[source]
---------------------------------------------------------------------------------
-module THE_GENOME                            ! The module defines GENOME object
-....
-
-type, public :: INDIVIDUAL_GENOME            ! It is defined here
-  character(len=len(GA_TARGET)) :: str       !   we have user (derived) type
-  contains                                   !   ... and type-bound procedures.
-    procedure, public :: init_genome => init_genome_random
-    procedure, public :: mutate => mutate_genome
-end type INDIVIDUAL_GENOME
-
-private :: init_genome_random, mutate_genome ! Internal names are "private," so
-                                             !  the outside procedures can refer
-                                             !  the object subroutines by their
-                                             !  outer "interface" names set on
-contains                                     !  the left of "=>"
-
-  subroutine init_genome_random(this)        ! The subroutine is almost as usual
-    class(INDIVIDUAL_GENOME) :: this         ! Note the use of the CLASS keyword
-    ........
-  end subroutine init_genome_random
-....
-end module THE_GENOME
---------------------------------------------------------------------------------
-
-Note that the subroutine part of the object +init_genome_random+  must have
-an item of the type definition (+this+) as its first argument. However,
-we must define it as +class()+ rather than +type()+. With +class,+ the
-subroutine will work not only with this specific +type,+ but also with any of
-its extension (i.e. it is a polymorphic type).
-indexterm:[class, object, polymorphic]
-indexterm:[type-bound procedure]
-
-We may then define an additional, more general, object extending the
-+INDIVIDUAL_GENOME+. In this case, we use the word +extends+ in the
-new type definition (see code below). This says that the components
-of the +INDIVIDUAL_GENOME+ are also included into the new object
-+INDIVIDUAL_NEURO_ARCH+ (i.e. +INDIVIDUAL_NEURO_ARCH+ inherits the
-+INDIVIDUAL_GENOME+ components).
-
-[source]
---------------------------------------------------------------------------------
-module THE_NEUROBIO
-.....
-type, public, extends(INDIVIDUAL_GENOME) :: INDIVIDUAL_NEURO_ARCH
-  integer :: bundles
-  contains
-    procedure, public :: init_neuro => init_neurobio_random
-end type INDIVIDUAL_NEURO_ARCH
-
-private :: init_neurobio_random
-
-contains
-
-  subroutine init_neurobio_random(this)
-    class(INDIVIDUAL_NEURO_ARCH) :: this
-    ........
-  end subroutine init_neurobio_random
-
-end module THE_NEUROBIO
---------------------------------------------------------------------------------
-
-In this way, it is easy to create new objects inheriting properties of
-other objects, for example, create several layers ranging from the *genome*
-through the *neurobiological architecture* and up to the *individual fish*
-and further to a *population* of fish.
-
-However, the above is just the _definition_ of an object. To use the object,
-we must _instantiate_ it, i.e. create its specific instance and set the
-values. This is analogous to having a specific data type, e.g. +integer+. We
-cannot use "just an integer," we need (1) to create a specific variable
-(variable is also an object though trivial!) of the type _integer_
-(e.g. +integer :: Var_A+) and (2) to assign a specific value to it (+Var_A=1+).
-indexterm:[object-oriented programming, object instance]
-indexterm:[instance]
-
-For example, the following creates two instance arrays of the type
-+INDIVIDUAL_FISH+. Both arrays are one-dimensional and have +POPSIZE+
-elements. So we now have two fish populations, +generation_one+
-and +generation_two+. Each individual value of such an array,
-e.g. +generation_one(1)+ is an instance of the object of the type
-+INDIVIDUAL_FISH+ that can be quite a complex data structure including many
-different data types, even arrays and lower-order derived types (you can define
-derived types inside other derived types). So, instead of being arrays
-of simple values these object arrays are in fact arrays of complex data
-structures potentially consisting of many different data types and arrays:
-
-[source]
---------------------------------------------------------------------------------
-type(INDIVIDUAL_FISH), dimension(POPSIZE) :: generation_one
-type(INDIVIDUAL_FISH), dimension(POPSIZE) :: generation_two
---------------------------------------------------------------------------------
-
-We can now assign concrete values to each of the previously defined components
-of +generation_one+ array, e.g.
-
-[source]
---------------------------------------------------------------------------------
-generation_one(i)%sex = "male"          ! assign values to individual components
-generation_one(i)%alive = .true.        ! of the object instance
-generation_one(i)%food(j) = "spaghetti"
---------------------------------------------------------------------------------
-
-We can also use the subroutines and type-bound functions that we have defined
-within the object definitions to do specific manipulations on the object
-and its components:
-
-[source]
---------------------------------------------------------------------------------
-subroutine population_init()
-....
-
-  do i = 1, POPSIZE
-    call generation_one(i)%init()     ! Initialise the i-th fish object in the
-  end do                              ! "generation_one" population array
-                                      ! using the object-bound subroutine init
-end subroutine population_init
---------------------------------------------------------------------------------
-
-TODO -- more text later
 
 ////////////////////////////////////////////////////////////////////////////////
 // End of main text
