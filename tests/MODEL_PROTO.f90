@@ -84,7 +84,7 @@ subroutine LOGGER_INIT()
   call LOG_CONFIGURE("timestamp", .true.)      ! Produce timestamps in the log
   call LOG_CONFIGURE("writeonstdout" , .true.) ! Output log on screen AND file
 
-  call LOG_CONFIGURE("level_string_volume", "chapter" )  ! Set log level
+  call LOG_CONFIGURE("level_string_volume", "////////////////////" )  ! Set log level
   call LOG_DELIMITER                                     ! Issue log delimiter
 
   ! Send informative messages to the log..
@@ -100,17 +100,20 @@ subroutine LOGGER_INIT()
   call LOG_MSG("Mothers: " // TOSTR(Cfmothers))
   call LOG_MSG("")
   call LOG_MSG("Any other arbitrary messages can be produced..")
-  call LOG_DELIMITER()
+  call LOG_DELIMITER(1)
+  call LOG_DELIMITER(2)
+  call LOG_DELIMITER(3)
+  call LOG_DELIMITER(4)
 
   call LOG_MSG("We can switch off logging on the screen (stdout) using")
   call LOG_MSG("  the configure subroutine.")
 
   call LOG_CONFIGURE("writeonstdout" , .false.) ! do not write on screen further
 
-  call LOG_DELIMITER()
+  call LOG_DELIMITER(LOG_LEVEL_CHAPTER)
   call LOG_MSG("From now, log messages will go only to the log file and not")
   call LOG_MSG("  to the screen (stdout)...")
-  call LOG_DELIMITER()
+  call LOG_DELIMITER(LOG_LEVEL_CHAPTER)
 
 end subroutine LOGGER_INIT
 
@@ -178,7 +181,7 @@ subroutine FATAL_ERROR(message)
   character(len=*) :: message
 
   call LOG_CONFIGURE("writeonstdout" , .true.)  ! Enable log to the screen
-  call LOG_DELIMITER()                          ! Write delimiter
+  call LOG_DELIMITER(LOG_LEVEL_CHAPTER)                          ! Write delimiter
   call LOG_MSG("Encountered an error; Type: " // message // " will stop now...")
 
     ! May duplicate message to standard error
@@ -211,14 +214,14 @@ subroutine CHECK_ERROR_FILE ( file_status_flag, fatal )
     ! enable log output to the the screen as well as to the file
     call LOG_CONFIGURE("writeonstdout" , .true.)
     ! and log it
-    call LOG_DELIMITER()
+    call LOG_DELIMITER(LOG_LEVEL_CHAPTER)
     call LOG_DBG("ERROR:: File operation returned error status " // &
                   TOSTR(file_status_flag), PROCNAME)
     ! If the subroutine is called with the fatal flag = .true., stop execution
     if (present(fatal)) then
       if (fatal) then
         call LOG_DBG("We will go to FATAL_ERROR procedure now...")
-        call LOG_DELIMITER()
+        call LOG_DELIMITER(LOG_LEVEL_CHAPTER)
         call FATAL_ERROR ("Fatal file output error")
       end if
     end if
@@ -327,7 +330,7 @@ program MODEL_PROTO
 
   call LOG_DBG("About to Initialise random seed...", PROCNAME)
 
-  call RANDOM_SEED_INIT() ! Standard utility to init random seed from BASE_UTIL
+  call RANDOM_SEED_INIT_SIMPLE() ! Standard utility to init random seed from BASE_UTIL
 
   ! Do some calculations...
 
