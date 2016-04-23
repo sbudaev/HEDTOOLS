@@ -73,16 +73,25 @@ subroutine LOGGER_INIT()
 
   use LOGGER      ! We need it to get access to LOGGER
   use BASE_UTILS  ! need this for access to base utils
+  use CSV_IO, only : GET_FREE_FUNIT
 
   implicit none
+
+  integer :: query_unit
 
   !-----------------------------------------------------------------------------
 
   ! We first initialise the log and set log file name
-  call LOG_STARTUP (MODEL_NAME // "-LOG.log")
+  call LOG_STARTUP (MODEL_NAME // "-LOG.log", .FALSE.)
 
   call LOG_CONFIGURE("timestamp", .true.)      ! Produce timestamps in the log
   call LOG_CONFIGURE("writeonstdout" , .true.) ! Output log on screen AND file
+
+  call LOG_CONFIGURE("logfileunit", GET_FREE_FUNIT()) ! Set specific LOGGER unit
+
+  call LOG_CGET("logfileunit", query_unit)
+
+  print *, "LOGGER unit =", query_unit
 
   call LOG_CONFIGURE("level_string_volume", "////////////////////" )  ! Set log level
   call LOG_DELIMITER                                     ! Issue log delimiter
@@ -104,6 +113,7 @@ subroutine LOGGER_INIT()
   call LOG_DELIMITER(2)
   call LOG_DELIMITER(3)
   call LOG_DELIMITER(4)
+  call LOG_MSG("Logger unit is " // TOSTR(query_unit))
 
   call LOG_MSG("We can switch off logging on the screen (stdout) using")
   call LOG_MSG("  the configure subroutine.")
