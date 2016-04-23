@@ -9,6 +9,18 @@ a2x -fpdf BASE_UTILS.adoc
 manual on asciidoc is available at: http://asciidoc.org/userguide.html
 ////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////
+Notes: (within the comment block, so won't render in the final document)
+
+These are the top priorities for the modelling tools:
+
+1. make coding (writing, maintaining, modifying, reusing and understanding
+   code) simple -- OO + modular design + standard modules for data output.
+2. make understanding the model code easier -- modular design + extensive and
+   detailed documentation within both the code and as a separate html/pdf/epub
+   bundle.
+////////////////////////////////////////////////////////////////////////////////
+
 :description: Modelling tools/coding style for the new AHA! environment.
 
 :language: fortran
@@ -143,8 +155,10 @@ GENERAL INTRO ON PROGRAMMING STYLE, INCLUDING OBJECT-ORIENTED FORTRAN FEATURES.
 Coding style: General guidelines and tips
 -----------------------------------------
 
+////////////////////////////////////////////////////////////////////////////////
 General principles
 ~~~~~~~~~~~~~~~~~~
+////////////////////////////////////////////////////////////////////////////////
 
 IMPORTANT: A very helpful collection of advises and tips for efficient
 programming in Fortran can be found here:
@@ -313,16 +327,26 @@ the order of looping in the machine code. Nonetheless it is better to write
 "optimised" code using the above tricks that works fast just everywhere.
 
 Document code as you write it with Doxygen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------
 
 *Doxygen* is a very useful tool which allows to extract and produce
-documentation from the source code in a highly structured manner. Comments
-that can be parsed by Doxygen are inserted into the source code using special
-markup language. The basic usage is quite simple. You should start comment
-line with +!>+ rather than just +!+, continuing Doxygen comments is done
-with two exclamation marks: +!!+. Only comments formatted with this style are
-processed with Doxygen, you are free to insert "usual" comments, they are
-just ignored by the documentation generator.
+documentation from the source code in a highly structured manner. Prior to
+parsing the code to get the documentation, one has to provide a configuration
+file for Doxygen, although the +doxywizard+ generates a wizard-like GUI to
+make this configuration file easily.  There are many formatting symbols,
+Markdown codes are supported. Thus, it is easy to document the code extensively
+as it is being written.
+
+Comments that are parsed through Doxygen are inserted into the source code
+using special markup language. The basic usage is quite simple. You should
+start comment line with +!>+ rather than just +!+, continuing Doxygen comments
+is done with two exclamation marks: +!!+. Only comments formatted with this
+style are processed with Doxygen, you are free to insert "usual" comments,
+they are just ignored by the documentation generator.
+
+The documentation description for a particular unit of the program,
+e.g. module, subroutine, function or variable definition, should normally
+go _before_ this unit. Here is an example:
 indexterm:[Doxygen]
 indexterm:[documentation, autogeneration, Doxygen]
 
@@ -380,8 +404,8 @@ function TAG_MMDD() result (MMDD)
     character(8) MMDD
 --------------------------------------------------------------------------------
 
-+@brief+ Starts a paragraph that serves as a brief description. +@details+
-Starts the detailed description.
++@brief+ starts a paragraph that serves as a brief description. +@details+
+starts the detailed description.
 
 [source]
 --------------------------------------------------------------------------------
@@ -396,7 +420,7 @@ subroutine LOG_DBG(message_string, procname, modname)
   implicit none
 --------------------------------------------------------------------------------
 
-+@note+ Insert a note with special emphasis in the doc text.  +@par+ Start a
++@note+ insert a note with special emphasis in the doc text.  +@par+ start a
 new paragraph optionally with a title in parentheses. In the example above note
 also the use of *Markdown* formatting, such as double asterisks (*) for strong
 emphasis (bold) and reverse quote (+`+) for inline code (variable names etc.).
@@ -429,14 +453,124 @@ image:img_doc_doxygen_formula.png[width=490,align="left"]
 IMPORTANT: +LaTeX+, +dvips+ and +Ghostscript+ should be installed for the
 formula rendering to work correctly. These tools are trivial to get on Linux.
 
-Documenting a complex model is very important! It is also not _very_ difficult,
+Documenting a complex model is very important! It is also not really difficult,
 but requires some additional discipline. It is much easier to include Doxygen
-comments as you write the model code than to remember a month later what
-the code is actually doing. Thus, the model becomes much more understandable
-to the level of its finest details. And Doxygen allows inclusion of various
-markup commands and styles, LaTeX formulas and graphics. Doxygen documentation
-and howtos are available here: http://doxygen.org indexterm:[Doxygen]
+comments as you write the model code than to look through the whole (huge)
+amount of the code a month later just to recall what the code is actually
+doing. Thus, the model becomes much more understandable to the level of its
+finest details. And Doxygen allows inclusion of various markup commands and
+styles, LaTeX formulas and graphics. Doxygen documentation, faq's and howtos
+are available here: http://doxygen.org indexterm:[Doxygen]
 
+Version control: Subversion (SVN)
+--------------------------------
+
+AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
+indexterm:[AHA repository]
+
+Overview
+~~~~~~~~
+
+Use version control not only for just managing versions, but also for organising
+your coding. For example, it would be good to commit changes to the server in
+pieces involving specific functions or parts of the model that are ready. Use
+the log messages to describe briefly what has been done.
+indexterm:[Subversion]
+indexterm:[svn]
+indexterm:[Subversion, log message]
+
+For example, imagine you have implemented a new sigmoid function. Then, when
+it is ready, commit your change to the server with a log message like
+"New sigmoid function". And only after this go to the next piece of code. Then
+the versions yoi have will not be haphazard but organised into meaningful
+pieces. If you did several pieces in different files, e.g. sigmoid function in
+Hed18.f90 and a new Makefile  for building the code, do two commits:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn commit Hed18.f90 -m "New sigmoid function"
+...
+svn commit Makefile -m "Tweaked makefile, added PGI compiler build"
+--------------------------------------------------------------------------------
+
+First time setup of the working copy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First time setup of the working copy of the model (working directory):
+
+* For a new project (run/experiment etc.), get into the working directory where
+  the model code will reside (+cd+) (possibly make a new directory +mkdir+),
+  and *checkout:* get the model code (one branch, no need to get everything!)
+  from the  server with +svn checkout https://path_to_branch+
+  For example,
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+--------------------------------------------------------------------------------
+
+This will get the +HED18+ into the directory +HED18+ within the current working
+directory. If we use +HEDTOOLS+, it should also be placed here:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+...
+svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS
+--------------------------------------------------------------------------------
+
+So, we now get +HED18+ and +HEDTOOLS+ in our working directory.
+indexterm:[Subversion,checkout]
+
+image:img_doc_fimm_svn.png[height=280,align="left"]
+
+Standard workflow
+~~~~~~~~~~~~~~~~~
+
+Now you can work within this directory. This is the standard workflow.
+
+* *update* code from the server: +svn up+
+* edit the code using any favoured tools, build, run model etc...
+* *commit,* when ready (e.g. when a new has been implememnted): +svn commit+
+indexterm:[Subversion,update]
+indexterm:[Subversion,commit]
+
++commit+ will ask you to provide a short descriptive log message. It will run
+the standard text editor for this by default (can be configured). But you can
+provide such a message just on the command line with the +-m+ option:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn commit Hed18.f90 -m "New sigmoid function"
+--------------------------------------------------------------------------------
+
+Both +update+ and +commit+ can be done for the working directory as well as for
+specific file. E.g. to commit only the model code +Hed18.f90+ do:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn commit Hed18.f90
+--------------------------------------------------------------------------------
+
+Both +update+ and +commit+ can be performed within any subdirectory of the
+working copy. In such cases they are limited to this subdirectory only.
+
+GUI Tools
+~~~~~~~~~
+
+Using the GUI tools like TortoiseSVN is similar. With GUI you should just
+select the appropriate item from the menu list.
+
+image:img_doc_tortoise.png[height=280,align="left"]
+
+Similar GUI tools exist for Linux. For example, there is +thunar-vcs-plugin+
+(Git and subversion integration into the Thunar file manager).
+
+image:img_doc_fxce_svn.png[height=280,align="left"]
+
+indexterm:[Subversion,GUI tools, TortoiseSVN]
+indexterm:[Subversion,TortoiseSVN]
+indexterm:[TortoiseSVN]
 
 Object-oriented programming and modelling
 -----------------------------------------
@@ -2061,19 +2195,22 @@ Module: LOGGER
 Overview
 ~~~~~~~~
 
-This module controls to log different messages during the execution of the
-program. The format of the messages is configutrable during the run time.
-Thus, a trace of the execution can be read by the user during and after the
-execution. The module includes subroutines to connect a file to the logger,
-configure the logging process, for example disable the terminal (standard
-output) messages, issue actual log messages. There are four log levels
-(*volume*, *chapter*, *section* and *subsection*) that can differ a little
-in the visual representation, it can be useful for marking specific parts
-of the log.
+This module controls logging arbitrary messages during the execution of the
+program. The format and destination of the messages is configurable during
+the run time. Thus, a trace of the execution can be read by the user during
+and after the execution. The module includes subroutines to connect a file
+to the logger, configure the logging process, for example enable or disable
+the terminal (stdout) messages, issue actual log messages. There are four
+log levels (*volume*, *chapter*, *section* and *subsection*) that can differ
+a little in the visual representation, it can be useful for marking specific
+parts of the log. Logging is especially useful for simulation models that
+run for quite a long time like AHA. The user can then check the log from time
+to time to make sure everything is in order and get an idea about where it
+is running now.
 indexterm:[LOGGER module]
 
 Here is an example of a log file with timestamps (date and time printed on the
-left of the log strings) being displayed using the +Follow+ program.
+left of the log strings) being displayed using the *Follow* program.
 indexterm:[log timestamps]
 
 image:img_doc_log.png[width=490,align="left"]
@@ -2670,116 +2807,6 @@ use, intrinsic :: IEEE_EXCEPTIONS
 ! *** NON-PORTABLE CODE END ***
 !*****************************************************************************
 --------------------------------------------------------------------------------
-
-Version control: Subversion (SVN)
---------------------------------
-
-AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
-indexterm:[AHA repository]
-
-Overview
-~~~~~~~~
-
-Use version control not only for just managing versions, but also for organising
-your coding. For example, it would be good to commit changes to the server in
-pieces involving specific functions or parts of the model that are ready. Use
-the log messages to describe briefly what has been done.
-indexterm:[Subversion]
-indexterm:[svn]
-indexterm:[Subversion, log message]
-
-For example, imagine you have implemented a new sigmpoid function. Then, when
-it is ready, commit your change to the server with a log message like
-"New sigmoid function". And only after this go to the next piece of code. Then
-the versions yoi have will not be haphazard but organised into meaningful
-pieces. If you did several pieces in different files, e.g. sigmoid function in
-Hed18.f90 and a new Makefile  for building the code, do two commits:
-
-[source,bash]
---------------------------------------------------------------------------------
-svn commit Hed18.f90 -m "New sigmoid function"
-...
-svn commit Makefile -m "Tweaked makefile, added PGI compiler build"
---------------------------------------------------------------------------------
-
-First time setup of the working copy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-First time setup of the working copy of the model (working directory):
-
-* For a new project (run/experiment etc.), get into the working directory where
-  the model code will reside (+cd+) (possibly make a new directory +mkdir+),
-  and *checkout:* get the model code (one branch, no need to get everything!)
-  from the  server with +svn checkout https://path_to_branch+
-  For example,
-
-[source,bash]
---------------------------------------------------------------------------------
-svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
---------------------------------------------------------------------------------
-
-This will get the +HED18+ into the directory +HED18+ within the current working
-directory. If we use +HEDTOOLS+, it should also be placed here:
-
-[source,bash]
---------------------------------------------------------------------------------
-svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
-...
-svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS
---------------------------------------------------------------------------------
-
-So, we now get +HED18+ and +HEDTOOLS+ in our working directory.
-indexterm:[Subversion,checkout]
-
-image:img_doc_fimm_svn.png[height=280,align="left"]
-
-Standard workflow
-~~~~~~~~~~~~~~~~~
-
-Now you can work within this directory. This is the standard workflow.
-
-* *update* code from the server: +svn up+
-* edit the code using any favoured tools, build, run model etc...
-* *commit,* when ready (e.g. when a new has been implememnted): +svn commit+
-indexterm:[Subversion,update]
-indexterm:[Subversion,commit]
-
-+commit+ will ask you to provide a short descriptive log message. It will run
-the standard text editor for this by default (can be configured). But you can
-provide such a message just on the command line with the +-m+ option:
-
-[source,bash]
---------------------------------------------------------------------------------
-svn commit Hed18.f90 -m "New sigmoid function"
---------------------------------------------------------------------------------
-
-Both +update+ and +commit+ can be done for the working directory as well as for
-specific file. E.g. to commit only the model code +Hed18.f90+ do:
-
-[source,bash]
---------------------------------------------------------------------------------
-svn commit Hed18.f90
---------------------------------------------------------------------------------
-
-Both +update+ and +commit+ can be performed within any subdirectory of the
-working copy. In such cases they are limited to this subdirectory only.
-
-GUI Tools
-~~~~~~~~~
-
-Using the GUI tools like TortoiseSVN is similar. With GUI you should just
-select the appropriate item from the menu list.
-
-image:img_doc_tortoise.png[height=280,align="left"]
-
-Similar GUI tools exist for Linux. For example, there is +thunar-vcs-plugin+
-(Git and subversion integration into the Thunar file manager).
-
-image:img_doc_fxce_svn.png[height=280,align="left"]
-
-indexterm:[Subversion,GUI tools, TortoiseSVN]
-indexterm:[Subversion,TortoiseSVN]
-indexterm:[TortoiseSVN]
 
 Build system: GNU make
 ----------------------
