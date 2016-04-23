@@ -329,20 +329,25 @@ the order of looping in the machine code. Nonetheless it is better to write
 Document code as you write it with Doxygen
 ------------------------------------------
 
+////////////////////////////////////////////////////////////////////////////////
+Local documentation for Doxygen on Linux should be here:
+file:///usr/share/doc/doxygen/html/index.html
+////////////////////////////////////////////////////////////////////////////////
+
 *Doxygen* is a very useful tool which allows to extract and produce
 documentation from the source code in a highly structured manner. Prior to
 parsing the code to get the documentation, one has to provide a configuration
-file for Doxygen, although the +doxywizard+ generates a wizard-like GUI to
-make this configuration file easily.  There are many formatting symbols,
-Markdown codes are supported. Thus, it is easy to document the code extensively
-as it is being written.
+file for Doxygen. The +doxywizard+ generates a wizard-like GUI to make this
+configuration file easily.  There are many formatting symbols, Markdown
+codes are supported. Thus, it is easy to document the code extensively as
+it is being written.
 
 Comments that are parsed through Doxygen are inserted into the source code
 using special markup language. The basic usage is quite simple. You should
-start comment line with +!>+ rather than just +!+, continuing Doxygen comments
-is done with two exclamation marks: +!!+. Only comments formatted with this
-style are processed with Doxygen, you are free to insert "usual" comments,
-they are just ignored by the documentation generator.
+start comment line with *+"!>"+* rather than just *+"!"+*, continuing Doxygen
+comments is done with two exclamation marks: *+"!!"+*. Only comments formatted
+with this style are processed with Doxygen, you are free to insert "usual"
+comments, they are just ignored by the documentation generator.
 
 The documentation description for a particular unit of the program,
 e.g. module, subroutine, function or variable definition, should normally
@@ -2228,8 +2233,9 @@ indexterm:[LOG_STARTUP]
 
 [source]
 --------------------------------------------------------------------------------
-!> Set log file name from string parts and start logging
-call LOG_STARTUP("output_" // MODEL_NAME // "_" // TAG_MMDD() // "_MAIN.log")
+!> Set log file name from string parts and start logging, *overwrite* old log
+call LOG_STARTUP("output_" // MODEL_NAME // "_" // TAG_MMDD() // &
+                 "_MAIN.log", .FALSE.)
 --------------------------------------------------------------------------------
 
 Subroutine: LOG_CONFIGURE
@@ -2333,7 +2339,7 @@ call LOG_DELIMITER(LOG_LEVEL_SUBSECTION)  ! issues subsection "+++++++++++++++"
 Subroutine: LOG_SHUTDOWN
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-+LOG_SHUTDOWN+ The last thing to do is to shutdown logging with the
++LOG_SHUTDOWN:+ The last thing to do is to shut down logging with the
 +LOG_SHUTDOWN+ subroutine:
 indexterm:[LOG_SHUTDOWN]
 
@@ -2954,10 +2960,6 @@ IMPORTANT: A good manual on the GNU Make is this book:
 http://www.oreilly.com/openbook/make3/book/index.csp[Mecklenburg, R, 2005,
 _Managing Projects with GNU Make,_ Third edition. O’Reilly]. There is also the
 official https://www.gnu.org/software/make/manual/[GNU Make Manual].
-
-////////////////////////////////////////////////////////////////////////////////
-TODO: The text below should better be moved at start
-////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 // End of main text
