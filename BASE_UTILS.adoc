@@ -1,5 +1,5 @@
-Modelling Tools Manual
-======================
+AHA! Modelling Tools Manual
+===========================
 Sergey Budaev <sergey.budaev@uib.no>
 $Id$
 
@@ -320,15 +320,24 @@ documentation from the source code in a highly structured manner. Comments
 that can be parsed by Doxygen are inserted into the source code using special
 markup language. The basic usage is quite simple. You should start comment
 line with +!>+ rather than just +!+, continuing Doxygen comments is done
-with two exclamation marks: +!!+.
+with two exclamation marks: +!!+. Only comments formatted with this style are
+processed with Doxygen, you are free to insert "usual" comments, they are
+just ignored by the documentation generator.
 indexterm:[Doxygen]
+indexterm:[documentation, autogeneration, Doxygen]
 
 [source]
 --------------------------------------------------------------------------------
-!> The module **COMMONDATA** is used for definine various global parameters like
-!! model name, tags, population size etc.
+!-------------------------------------------------------------------------------
+!> @brief   Module **COMMONDATA** is used for definine various global
+!!          parameters like model name, tags, population size etc.
+!! @details Everything that has global scope and should be passed to many
+!!          subroutines/functions, should be defined in `COMMONDATA`.
+!!          It is also safe to include public keyword to declarations.
+!!          `COMMONDATA` may also include subroutines/functions that have
+!!          general scope and used by many other modules of the model.
 module COMMONDATA
-
+......
   !> MODNAME always refers to the name of the current module for use by
   !! the LOGGER function LOG_DBG. Note that in the debug mode (if IS_DEBUG=TRUE)
   !! LOGGER should normally produce additional messages that are helpful for
@@ -336,16 +345,15 @@ module COMMONDATA
   !! Each procedure should also have a similar private constant PROCNAME.
   character (len=*), parameter, private :: MODNAME = "COMMONDATA"
 
+  !> This is the target string, only for the prototype test
+  character(len=*), parameter, public :: GA_TARGET = "This is a test of genetic algorithm."
+
   !> Model name for tags, file names etc. Must be very short.
   character (len=*), parameter, public :: MODEL_NAME = "HEDG2_01"
-
-  !> Model description - a longer descriptive text, used in text outputs etc.
-  character (len=*), parameter, public :: MODEL_DESCR= &
-    "Prototype object-oriented model with genetic algorithm."
 --------------------------------------------------------------------------------
 
-There are various options and keywords. A few of them are very frequently
-used in modelling:
+There are various options and keywords. A few of them should be particularly
+useful in documenting the model(s) codes:
 
 +@param+ describes a function or subroutine parameter, may optionally include
 +[in]+ (or out or in,out) specifier. An example is below
@@ -361,24 +369,73 @@ subroutine LOG_DBG(message_string, procname, modname)
     character (len=*), optional, intent(in) :: procname
 --------------------------------------------------------------------------------
 
-+@returns+ describes a function return value.
++@returns+ describes a function return value. @retval is almost the same but
+starts with the function return value.
 
 [source]
 --------------------------------------------------------------------------------
 function TAG_MMDD() result (MMDD)
     implicit none
-    !> @returns MMDD Returns an 8-character string for YYYYMMDD
+    !> @retval MMDD Returns an 8-character string for YYYYMMDD
     character(8) MMDD
 --------------------------------------------------------------------------------
 
++@brief+ Starts a paragraph that serves as a brief description. +@details+
+Starts the detailed description.
+
+[source]
+--------------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
+!> @brief LOG_DBG - debug message to the log
+!! @details **PURPOSE:** This subroutine is a wrapper for writing debug
+!!          messages by the module `LOGGER`. The debug message message
+!!          defined by the `message_string` parameter is issued only
+!!          when the model runs in the debug mode, i.e. if `IS_DEBUG=.TRUE.`
+subroutine LOG_DBG(message_string, procname, modname)
+
+  implicit none
+--------------------------------------------------------------------------------
+
++@note+ Insert a note with special emphasis in the doc text.  +@par+ Start a
+new paragraph optionally with a title in parentheses. In the example above note
+also the use of *Markdown* formatting, such as double asterisks (*) for strong
+emphasis (bold) and reverse quote (+`+) for inline code (variable names etc.).
+indexterm:[Doxygen, Markdown]
+
 Doxygen parses the source code and produces highly structured documentation
-in different formats (html, rtf, latex, pdf):
+in different formats (e.g. html, rtf, latex, pdf) with cross-links and the
+code pieces:
 
 image:img_doc_doxygen.png[width=490,align="left"]
 
-Documenting a complex model is very important! And Doxygen allows inclusion
-of various markup commands and styles, LaTeX formulas and graphics. Doxygen
-documentation and howtos is available here: http://doxygen.org
+Here is an example of Latex formula in the autogenerated documentation
+file. Note that formulas are delimited with +@f$+ on both sides.
+indexterm:[Doxygen, LaTeX]
+
+[source]
+--------------------------------------------------------------------------------
+!> Fitness is just the "distance" between the agent's string and the target
+!! string: sum of all absolute differences between the numerical value of
+!! the symbol across the whole string: @f$ \sum |a_i - T_i| @f$
+this%fitness = sum([(abs(iachar(this%str(i:i)) - iachar(GA_TARGET(i:i))), &
+                     i = 1, len(GA_TARGET))])
+--------------------------------------------------------------------------------
+
+This is rendered as follows:
+
+image:img_doc_doxygen_formula.png[width=490,align="left"]
+
+IMPORTANT: +LaTeX+, +dvips+ and +Ghostscript+ should be installed for the
+formula rendering to work correctly. These tools are trivial to get on Linux.
+
+Documenting a complex model is very important! It is also not _very_ difficult,
+but requires some additional discipline. It is much easier to include Doxygen
+comments as you write the model code than to remember a month later what
+the code is actually doing. Thus, the model becomes much more understandable
+to the level of its finest details. And Doxygen allows inclusion of various
+markup commands and styles, LaTeX formulas and graphics. Doxygen documentation
+and howtos are available here: http://doxygen.org indexterm:[Doxygen]
+
 
 Object-oriented programming and modelling
 -----------------------------------------
@@ -426,7 +483,6 @@ Short introduction can also be found on the internet, e.g.
 *Leai, M.* _Object-oriented programming in Fortran 2003_ (PGI: www.pgroup.com).
 http://www.pgroup.com/lit/articles/insider/v3n1a3.htm[Part 1: Code Reusability];
 http://www.pgroup.com/lit/articles/insider/v3n2a2.htm[Part 2: Data Polymorphism].
-
 
 Implementation of objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2004,7 +2060,25 @@ Module: LOGGER
 This module controls to log different messages during the execution of the
 program. The format of the messages is configutrable during the run time.
 
-To be done
+Thus, a trace of the execution can be read by the user during and after the execution. The module includes subroutines to
+
+* connect a file to the logger,
+* configure the logging process, for example disable the standard
+  output messages,
+* actually log messages.
+
+The logger must be started up with the subroutine +LOG_STARTUP+ that has
+the log file name as a parameter.
+
+[source]
+--------------------------------------------------------------------------------
+!> Set log file name from string parts and start logging
+call LOG_STARTUP("output_" // MODEL_NAME // "_" // TAG_MMDD() // "_MAIN.log")
+--------------------------------------------------------------------------------
+
+
+The last thing to do is to shutdown logging with the +LOG_SHUTDOWN+ subroutine.
+
 
 Error trapping modules: ERRORS, ASSERT, EXCEPTIONS
 --------------------------------------------------
