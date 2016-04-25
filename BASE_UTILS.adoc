@@ -2054,7 +2054,7 @@ indexterm:[allocatable string,portability,compiler limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,limitation]
 
-Module BASE_RANDOM
+Module: BASE_RANDOM
 ------------------
 
 This module contains subroutines for generating random numbers (pseudo-random
