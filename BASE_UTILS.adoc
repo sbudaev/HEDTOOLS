@@ -127,7 +127,10 @@ formulas, tables, graphics etc. Doxygen can cross reference documentation
 and code, so that the user/reader of a document can easily refer to the
 actual code. It is trivial to install on Linux, but probably not so on
 Windows. Using the full power of the tool is not trivial though. Available
-from http://doxygen.org/.
+from http://doxygen.org/. On Windows is is also highly desirable to have a 
+Latex distribution, such as MikTeX (http://miktex.org) and Ghostscript 
+(http://www.ghostscript.com), both are free software. Latex and Ghostscript 
+are required to generate PDF.
 
 *Geany* (Recommended)
 
