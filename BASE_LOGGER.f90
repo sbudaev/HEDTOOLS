@@ -116,7 +116,7 @@ module LOGGER
   !
   ! Strings used as delimiters
   !
-  integer , parameter , public :: LOG_LEVEL_DELIMITER_LENGTH = 50
+  integer , parameter , public :: LOG_LEVEL_DELIMITER_LENGTH = 80
   character (len=LOG_LEVEL_DELIMITER_LENGTH) :: log_level_string_volume = "==============="
   character (len=LOG_LEVEL_DELIMITER_LENGTH) :: log_level_string_chapter = "---------------"
   character (len=LOG_LEVEL_DELIMITER_LENGTH) :: log_level_string_section = "***************"
@@ -292,15 +292,27 @@ contains
   !     level            Level to be written
   !
   subroutine log_delimiter( level )
-    integer , intent(in), optional :: level
-    character(len=40)              :: msg
-    integer                        :: used_level
+    integer , intent(in), optional            :: level
+    character(len=LOG_LEVEL_DELIMITER_LENGTH) :: msg
+    integer                                   :: used_level
     if (present(level)) then
        used_level = level
     else
        used_level = LOG_LEVEL_VOLUME
     endif
-    call log_get_delimiter( used_level , msg )
+    !call log_get_delimiter( used_level , msg )
+    !SB: this deprecated subroutine was used in the original
+    !    version, introducing a bug: non-configurable delimiters
+    select case ( used_level )
+    case ( LOG_LEVEL_VOLUME )
+      call log_cget("level_string_volume", msg)
+    case ( LOG_LEVEL_CHAPTER )
+      call log_cget("level_string_chapter", msg)
+    case ( LOG_LEVEL_SECTION )
+      call log_cget("level_string_section", msg)
+    case ( LOG_LEVEL_SUBSECTION )
+      call log_cget("level_string_subsection", msg)
+    end select
     call log_msg( msg )
   end subroutine log_delimiter
   !
