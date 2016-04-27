@@ -2358,7 +2358,7 @@ Using a user-defined delimiter string is illustrated below.
 
 [source]
 --------------------------------------------------------------------------------
-! Set delimiter as a 60-characters long line of = for volume delimiter
+! Set delimiter as a 60-characters long line of "======..." for volume delimiter
 call LOG_CONFIGURE("level_string_volume", repeat("=",60))
 .......
 call LOG_DELIMITER(LOG_LEVEL_VOLUME)      ! issues this long delimiter line
