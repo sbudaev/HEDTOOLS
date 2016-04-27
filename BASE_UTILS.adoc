@@ -127,10 +127,12 @@ formulas, tables, graphics etc. Doxygen can cross reference documentation
 and code, so that the user/reader of a document can easily refer to the
 actual code. It is trivial to install on Linux, but probably not so on
 Windows. Using the full power of the tool is not trivial though. Available
-from http://doxygen.org/. On Windows is is also highly desirable to have a 
-Latex distribution, such as MikTeX (http://miktex.org) and Ghostscript 
-(http://www.ghostscript.com), both are free software. Latex and Ghostscript 
+from http://doxygen.org/. On Windows is is also highly desirable to have a
+LaTeX distribution, such as MikTeX (http://miktex.org) and Ghostscript
+(http://www.ghostscript.com), both are free software. LaTeX and Ghostscript
 are required to generate PDF.
+indexterm:[LaTeX]
+indexterm:[Ghostscript]
 
 *Geany* (Recommended)
 
@@ -435,7 +437,7 @@ emphasis (bold) and reverse quote (+`+) for inline code (variable names etc.).
 indexterm:[Doxygen, Markdown]
 
 Doxygen parses the source code and produces highly structured documentation
-in different formats (e.g. html, rtf, latex, pdf).
+in different formats (e.g. html, rtf, latex, pdf etc.).
 
 There are different options to generate HTML documents. For example, a bundle
 of HTML files with images , cross-references, code syntax highlighting and
@@ -468,7 +470,9 @@ This is rendered as follows:
 image:img_doc_doxygen_formula.png[width=490,align="left"]
 
 IMPORTANT: +LaTeX+, +dvips+ and +Ghostscript+ should be installed for the
-formula rendering to work correctly. These tools are trivial to get on Linux.
+formula rendering to work correctly.
+indexterm:[LaTeX]
+indexterm:[Ghostscript]
 
 Documenting a complex model is very important! It is also not really difficult,
 but requires some additional discipline. It is much easier to include Doxygen
@@ -2324,7 +2328,9 @@ Subroutine: LOG_DELIMITER
 
 +LOG_DELIMITER+ issues a string delimiter to the log, it has an optional
 integer argument setting the kind of the delimiter, default is "volume"
-(1). This is useful to mark the log with visually different parts.
+(1). This is useful to mark the log with visually different parts. The
+maximum string length of the delimiter is *80* characters (set as a public
+integer parameter +LOG_LEVEL_DELIMITER_LENGTH+).
 
 The four levels of logging *volume*, *chapter*, *section* and *subsection*
 are defined in the module +LOGGER+ as constants, so these constant can be used
@@ -2343,9 +2349,19 @@ Below is a code example of issuing log delimiters:
 
 [source]
 --------------------------------------------------------------------------------
-call LOG_DELIMITER(1)                     ! issues volume "---------------"
+call LOG_DELIMITER(1)                     ! issues volume     "---------------"
 .....
 call LOG_DELIMITER(LOG_LEVEL_SUBSECTION)  ! issues subsection "+++++++++++++++"
+--------------------------------------------------------------------------------
+
+Using a user-defined delimiter string is illustrated below.
+
+[source]
+--------------------------------------------------------------------------------
+! Set delimiter as a 60-characters long line of = for volume delimiter
+call LOG_CONFIGURE("level_string_volume", repeat("=",60))
+.......
+call LOG_DELIMITER(LOG_LEVEL_VOLUME)      ! issues this long delimiter line
 --------------------------------------------------------------------------------
 
 Subroutine: LOG_SHUTDOWN
@@ -2869,6 +2885,7 @@ Building and running the model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Get a short help on the options: +make help+
+* Autogenerate model documentation with Doxygen: +make docs+
 * Build the model executable using default compiler: +make+
 * Force rebuild the model executable with Intel compiler: +make intel+
 * Force rebuild the model executable with GNU compiler: +make gnu+
