@@ -522,8 +522,21 @@ First time setup of the working copy of the model (working directory):
 * For a new project (run/experiment etc.), get into the working directory where
   the model code will reside (+cd+) (possibly make a new directory +mkdir+),
   and *checkout:* get the model code (one branch, no need to get everything!)
-  from the  server with +svn checkout https://path_to_branch+
-  For example,
+  from the  server with +svn checkout https://path_to_branch+. When a specific
+  repository is used for the first time, you should also include the user name
+  for this repository (+--username your_user_name+) and then the program asks
+  for the password. SVN server name, username and password is then saved, so
+  subsequently it is not necessary to state the username/password you connect
+  to the same SVN server. For example, first time checkout (for user +u01+):
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn --username u01 checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+--------------------------------------------------------------------------------
+
+image:img_doc_svn_first.png[width=400,align="left"]
+
+next, just this should work:
 
 [source,bash]
 --------------------------------------------------------------------------------
