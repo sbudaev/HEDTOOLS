@@ -2709,9 +2709,11 @@ calculations (even many cases of division by zero, NaNfootnote:["Not a Number,"
 a wrong arithmetic value that is not equal to itself, can result from many math
 errors] generation etc.).
 
-In most cases NaNs and other invalid arithmetics strongly point to a bug. It is
-therefore wise to turn halting ON by default in model calculations (unlike
-normal utility software that should ideally never crash on trivial math errors).
+In most cases NaNs and other invalid arithmetics strongly point to a bug. If 
+a NaN value is just left ignored during the calculations, it will likely 
+propagate further into some other calculations making them invalid. It is
+therefore wise to turn halting ON by default in _model_ calculations (unlike
+normal utility software that should never crash).
 
 Turning arithmetic exception halting ON during the compile time requires
 specific compiler options.
