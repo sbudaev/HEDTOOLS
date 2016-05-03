@@ -2010,6 +2010,56 @@ call CSV_MATRIX_WRITE(MatrixX, "file_matrixx.csv")      ! write 2-d matrix
 call CSV_MATRIX_WRITE(Array_Y, "file_array_y.csv")      ! write 1-d array
 ---------------------------------------------------------------------------------
 
+Combining multiple arrays with RESHAPE
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++RESHAPE+ is a powerful Fortran function that allows combining several arrays 
+in various ways. This could be very useful for saving multiple vectors (or 
+arrays) of the same type into a single CSV file using a single line of code.
+indexterm:[arrays,reshape]
+indexterm:[array constructor, reshape]
+indexterm:[arrays,combine,CSV_MATRIX_WRITE]
+indexterm:[RESHAPE]
+
+Suppose we have two integer object vectors +generation_one%individual%fitness+ 
+and +generation_one%individual%person_number+ each having POPSIZE elements 
+(these are just two one-dimensional vector components of a single object). 
+Each of these vectors can be saved using the standard +CSV_MATRIX_WRITE+ call:
+
+[source]
+--------------------------------------------------------------------------------
+call CSV_MATRIX_WRITE (generation_one%individual%fitness, "ZZZ1_F.csv")
+call CSV_MATRIX_WRITE (generation_one%individual%person_number, "ZZZ1_N.csv")
+--------------------------------------------------------------------------------
+
+image:img_doc_reshape1.png[height=200,align="left"]
+
+The code below reshapes these two vectors into a single two-column matrix (by
+columns), so in the final CSV file they represent two separate variables. Note
+that there is also an array of two descriptive column names of the same
+string length.
+
+[source]
+--------------------------------------------------------------------------------
+! Here we save two huge integer vectors reshaping them into a single matrix
+! by columns, see help on Fortran reshape function and array constructors.
+! It also creates a vector of two column names for the output file.
+call CSV_MATRIX_WRITE ( reshape(                                           &
+                         [generation_one%individual%fitness,               &
+                          generation_one%individual%person_number],        &
+                         [POPSIZE, 2], [2,1]),                             &
+                         "ZZZ1_all.csv",                                   &
+                         ["FITNESS  ","ID_NUMBER"]                         &
+                      )
+--------------------------------------------------------------------------------
+
+So the resulting data CSV file is like this:
+
+image:img_doc_reshape2.png[height=200,align="left"]
+
+And because we do not use several loops to combine the values manually, 
+automatic reshaping of the arrays is (usually) very fast, in many cases could 
+be automatically pareallelised.
 
 Derived type: csv_file
 ~~~~~~~~~~~~~~~~~~~~~~
