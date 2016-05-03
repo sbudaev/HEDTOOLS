@@ -2013,17 +2013,17 @@ call CSV_MATRIX_WRITE(Array_Y, "file_array_y.csv")      ! write 1-d array
 Combining multiple arrays with RESHAPE
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+RESHAPE+ is a powerful Fortran function that allows combining several arrays 
-in various ways. This could be very useful for saving multiple vectors (or 
++RESHAPE+ is a powerful Fortran function that allows combining several arrays
+in various ways. This could be very useful for saving multiple vectors (or
 arrays) of the same type into a single CSV file using a single line of code.
 indexterm:[arrays,reshape]
 indexterm:[array constructor, reshape]
 indexterm:[arrays,combine,CSV_MATRIX_WRITE]
 indexterm:[RESHAPE]
 
-Suppose we have two integer object vectors +generation_one%individual%fitness+ 
-and +generation_one%individual%person_number+ each having POPSIZE elements 
-(these are just two one-dimensional vector components of a single object). 
+Suppose we have two integer object vectors +generation_one%individual%fitness+
+and +generation_one%individual%person_number+ each having +POPSIZE+ elements
+(these are just two one-dimensional vector components of a single object).
 Each of these vectors can be saved using the standard +CSV_MATRIX_WRITE+ call:
 
 [source]
@@ -2034,10 +2034,10 @@ call CSV_MATRIX_WRITE (generation_one%individual%person_number, "ZZZ1_N.csv")
 
 image:img_doc_reshape1.png[height=200,align="left"]
 
-The code below reshapes these two vectors into a single two-column matrix (by
-columns), so in the final CSV file they represent two separate variables. Note
-that there is also an array of two descriptive column names of the same
-string length.
+The code below reshapes these two vectors into a single two-column matrix
+(by columns, array constructors are in square brackets +[]+), so in the final
+CSV file they represent two separate variables. Note that there is also an
+array constructor for two descriptive column names of the same string length.
 
 [source]
 --------------------------------------------------------------------------------
@@ -2057,9 +2057,8 @@ So the resulting data CSV file is like this:
 
 image:img_doc_reshape2.png[height=200,align="left"]
 
-And because we do not use several loops to combine the values manually, 
-automatic reshaping of the arrays is (usually) very fast, in many cases could 
-be automatically pareallelised.
+We do not combine multiple loops manually, and automatic reshaping of the
+arrays is (usually) very fast.
 
 Derived type: csv_file
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -2759,8 +2758,8 @@ calculations (even many cases of division by zero, NaNfootnote:["Not a Number,"
 a wrong arithmetic value that is not equal to itself, can result from many math
 errors] generation etc.).
 
-In most cases NaNs and other invalid arithmetics strongly point to a bug. If 
-a NaN value is just left ignored during the calculations, it will likely 
+In most cases NaNs and other invalid arithmetics strongly point to a bug. If
+a NaN value is just left ignored during the calculations, it will likely
 propagate further into some other calculations making them invalid. It is
 therefore wise to turn halting ON by default in _model_ calculations (unlike
 normal utility software that should never crash).
