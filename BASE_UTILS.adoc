@@ -2047,7 +2047,7 @@ array constructor for two descriptive column names of the same string length.
 call CSV_MATRIX_WRITE ( reshape(                                           &
                          [generation_one%individual%fitness,               &
                           generation_one%individual%person_number],        &
-                         [POPSIZE, 2], [2,1]),                             &
+                         [POPSIZE, 2]),                                    &
                          "ZZZ1_all.csv",                                   &
                          ["FITNESS  ","ID_NUMBER"]                         &
                       )
@@ -2057,8 +2057,32 @@ So the resulting data CSV file is like this:
 
 image:img_doc_reshape2.png[height=200,align="left"]
 
+If the arrays to be combined have different types, it is possible to use
+whole-array type conversions to get some common type for all of the arrays.
+For example, if we combine an integer array +A+ and a real array +B+ (both
+having +POPSIZE+ elements as above), it is wise to convert integer to real to
+avoid losing data precision:
+
+[source]
+--------------------------------------------------------------------------------
+! Here integer array A is converted to real so both A and B have the same type.
+call CSV_MATRIX_WRITE ( reshape(                                           &
+                         [real(A), B],                                     &
+                         [POPSIZE, 2]),                                    &
+                         "ZZZ1_all.csv",                                   &
+                         ["FITNESS  ","ID_NUMBER"]                         &
+                      )
+--------------------------------------------------------------------------------
+
 We do not combine multiple loops manually, and automatic reshaping of the
 arrays is (usually) very fast.
+
+////////////////////////////////////////////////////////////////////////////////
+IMPORTANT NOTE: we cannot use TOSTR in such cases because it can convert a
+numeric array to a single string, NOT array of strings. Do we need
+implementing such a conversion function?
+////////////////////////////////////////////////////////////////////////////////
+
 
 Derived type: csv_file
 ~~~~~~~~~~~~~~~~~~~~~~
