@@ -12,6 +12,9 @@ manual on asciidoc is available at: http://asciidoc.org/userguide.html
 ////////////////////////////////////////////////////////////////////////////////
 Notes: (within the comment block, so won't render in the final document)
 
+Workflow: do this doc in private branch. Reintegrate back to trunk when PDF is
+          issued.
+
 These are the top priorities for the modelling tools:
 
 1. make coding (writing, maintaining, modifying, reusing and understanding
@@ -510,7 +513,7 @@ indexterm:[Subversion, log message]
 For example, imagine you have implemented a new sigmoid function. Then, when
 it is ready, commit your change to the server with a log message like
 "New sigmoid function". And only after this go to the next piece of code. Then
-the versions yoi have will not be haphazard but organised into meaningful
+the versions you have will not be haphazard but organised into meaningful
 pieces. If you did several pieces in different files, e.g. sigmoid function in
 Hed18.f90 and a new Makefile  for building the code, do two commits:
 
@@ -613,35 +616,39 @@ svn commit Hed18.f90
 Both +update+ and +commit+ can be performed within any subdirectory of the
 working copy. In such cases they are limited to this subdirectory only.
 
-GUI Tools
-~~~~~~~~~
-
-Using the GUI tools like TortoiseSVN is similar. With GUI you should just
-select the appropriate item from the menu list.
-
-image:img_doc_tortoise.png[height=280,align="left"]
-
-Similar GUI tools exist for Linux. For example, there is +thunar-vcs-plugin+
-(Git and subversion integration into the Thunar file manager).
-
-image:img_doc_fxce_svn.png[height=280,align="left"]
-
-indexterm:[Subversion,GUI tools, TortoiseSVN]
-indexterm:[Subversion,TortoiseSVN]
-indexterm:[TortoiseSVN]
-
-Some Recipes
-~~~~~~~~~~~~
-Here are a couple of recipes for certain less obvious SVN commands that are
-not a part of standard everyday workflow but used nevertheless from time to
-time.
+Using branches
+~~~~~~~~~~~~~~
 
 Make a branch
 ^^^^^^^^^^^^^
+Making a branch is easy, use +svn copy source_svn_path destination_svn_path+
+to do this. For example, the following command makes a copy of the whole
+sub-tree for the model code +HED18+ from user +budaev+ private branch to the
+user +natasha+ private branch. Now +natasha+ can work on her own copy of the
+code and, when done, merge the changes back to +budaev+'s code. Finally,
++budaev+'s (and +natasha+'s) code can be reintegrated back to the *trunk*
+main line.
 
-Yet not done, will do when I next time do branching :) Shall just copy real
-commands and paste them here.
+[source,bash]
+--------------------------------------------------------------------------------
+svn copy https://svn.uib.no/aha-fortran/branches/budaev/HED18 \
+    https://svn.uib.no/aha-fortran/branches/natasha/HED18 \
+    -m "Creating private branch."
+--------------------------------------------------------------------------------
 indexterm:[Subversion,branch]
+
+If several people are simultaneously working on the project, it make sense to
+merge changes from the parent branch back to the current branch (e.g. from
+trunk to +budaev+ and +natasha+). Thus does not allow the code to diverge
+too far and reduces the chances to get version conflicts. Merging ongoing
+changes from the parent project is easy. For example, the following will merge
+changes from trunk back to the current branch (note that ^ substitutes the
+SVN repository web address):
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn merge ^/trunk/HEDTOOLS/
+--------------------------------------------------------------------------------
 
 Reintegrate your branch back to the trunk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -656,7 +663,7 @@ For this you need several simple steps:
 *Step 1.* Merge possible changes in trunk back to the branch:
 
 If someone is working on the trunk, you need to keep your branch in sync with
-it, e.g. all other files you are not working on are syncronised.
+it, e.g. all other files you are not working on are synchronised.
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -674,9 +681,10 @@ svn update
 svn merge ^/trunk/HEDTOOLS/ --dry-run
 # For example, if the working copy is not up to date (need commit or revert),
 # there may be issues like this:
-#  svn: E195016: Cannot merge into a working copy that has local modifications
-# to check what is wrong (modified), the command: svn diff is helpful
-# If everything is in order, do the real merge:
+#   svn: E195016: Cannot merge into a working copy that has local modifications
+# to check what is wrong (modified), the command: svn diff is helpful. Also,
+# commit local changes before merging.
+# When everything is in order, do the real merge:
 svn merge ^/trunk/HEDTOOLS/
 --------------------------------------------------------------------------------
 
@@ -700,6 +708,23 @@ svn merge --reintegrate ^/branches/budaev/HEDTOOLS --dry-run
 #   and finally do the real thing
 svn merge --reintegrate ^/branches/budaev/HEDTOOLS
 --------------------------------------------------------------------------------
+
+GUI Tools
+~~~~~~~~~
+
+Using the GUI tools like TortoiseSVN is similar. With GUI you should just
+select the appropriate item from the menu list.
+
+image:img_doc_tortoise.png[height=280,align="left"]
+
+Similar GUI tools exist for Linux. For example, there is +thunar-vcs-plugin+
+(Git and subversion integration into the Thunar file manager).
+
+image:img_doc_fxce_svn.png[height=280,align="left"]
+
+indexterm:[Subversion,GUI tools, TortoiseSVN]
+indexterm:[Subversion,TortoiseSVN]
+indexterm:[TortoiseSVN]
 
 
 Object-oriented programming and modelling
