@@ -193,6 +193,15 @@ interface CHECK_FILE_OPEN
 
 end interface CHECK_FILE_OPEN
 
+interface CSV_GUESS_RECORD_LENGTH
+
+  module procedure CSV_GUESS_RECORD_LEN_I4
+  module procedure CSV_GUESS_RECORD_LEN_R4
+  module procedure CSV_GUESS_RECORD_LEN_R8
+
+end interface CSV_GUESS_RECORD_LENGTH
+
+
 private :: I4_WIDTH, I4_LOG_10, CLEANUP, STR_ITOA_LZ, STR_ITOA  ! They are
                                 !  identical in CSV_IO and BASE_UTILS.
                                 ! Private here to avoid possible name conflicts,
@@ -3523,6 +3532,87 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, vertical, csv_file_status)
   end if
 
 end subroutine CSV_ARRAY_WRITE_S
+
+!-------------------------------------------------------------------------------
+
+function CSV_GUESS_RECORD_LEN_I4 (n_values, max_target_value) &
+    result (record_size_guess)
+!*******************************************************************************
+! CSV_GUESS_RECORD_LEN_I4
+! PURPOSE: Guesses the maximum length of the CSV character record
+! CALL PARAMETERS:
+!     Integer maximum number of values in the record, a target value, its
+!     exact value is not important, only type (integer or real) and number of
+!     characters matters.
+! Author Sergey Budaev
+!*******************************************************************************
+
+  ! Function value
+  integer :: record_size_guess
+
+  ! Calling parameters
+  integer :: n_values
+  integer :: max_target_value
+
+  !-----------------------------------------------------------------------------
+
+  record_size_guess = n_values * (I4_WIDTH(max_target_value)+4 )
+
+end function CSV_GUESS_RECORD_LEN_I4
+
+!-------------------------------------------------------------------------------
+
+function CSV_GUESS_RECORD_LEN_R4 (n_values, max_target_value) &
+    result (record_size_guess)
+!*******************************************************************************
+! CSV_GUESS_RECORD_LEN_R4
+! PURPOSE: Guesses the maximum length of the CSV character record
+! CALL PARAMETERS:
+!     Integer maximum number of values in the record, a target value, its
+!     exact value is not important, only type (integer or real) and number of
+!     characters matters. This is the real(type=4) version.
+! Author Sergey Budaev
+!*******************************************************************************
+
+  ! Function value
+  integer :: record_size_guess
+
+  ! Calling parameters
+  integer :: n_values
+  real :: max_target_value
+
+  !-----------------------------------------------------------------------------
+
+  record_size_guess = n_values * (I4_WIDTH(int(max_target_value))+14)
+
+end function CSV_GUESS_RECORD_LEN_R4
+
+!-------------------------------------------------------------------------------
+
+function CSV_GUESS_RECORD_LEN_R8 (n_values, max_target_value) &
+    result (record_size_guess)
+!*******************************************************************************
+! CSV_GUESS_RECORD_LEN_R8
+! PURPOSE: Guesses the maximum length of the CSV character record
+! CALL PARAMETERS:
+!     Integer maximum number of values in the record, a target value, its
+!     exact value is not important, only type (integer or real) and number of
+!     characters matters. This is the real(type=8) version.
+! Author Sergey Budaev
+!*******************************************************************************
+
+  ! Function value
+  integer :: record_size_guess
+
+  ! Calling parameters
+  integer :: n_values
+  real(kind=8) :: max_target_value
+
+  !-----------------------------------------------------------------------------
+
+  record_size_guess = n_values * (I4_WIDTH(int(max_target_value))+14)
+
+end function CSV_GUESS_RECORD_LEN_R8
 
 !-------------------------------------------------------------------------------
 

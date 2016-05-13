@@ -1897,6 +1897,38 @@ indexterm:[compiler,limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Oracle Fortran]
 
+Function: CSV_GUESS_RECORD_LENGTH
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[CSV_GUESS_RECORD_LENGTH]
+
+Guesses the maximum size for the string variable keeping the record being
+appended for +CSV_RECORD_APPEND+.
+
+It gets two parameters: integer record size (the number of separate
+numerical values in the record) and the maximum target value (integer,
+real, or double precision real (kind=8)) and  returns an integer value for a
+guess for the record size. The target value is used to estimate the number
+of characters and should have the same type as the values being appended
+with +CSV_RECORD_APPEND+.
+
+
+[source]
+--------------------------------------------------------------------------------
+! suppose we have a real matrix and like to save it to a CSV file
+real, dimension(1000,20) :: MATRX_A
+...
+! we declare the CSV record as allocatable string
+character(len=:), allocatable  :: record_for_csv
+...
+
+! As explained in the Important note to CSV_RECORD_APPEND above, we have to
+!   allocate the string record such that it fits the complete record;
+! this can be achieved as follows. Here 20 is the record size (number of rows)
+!   and the target value is the maximum numeric value of the matrix MATRX_A:
+record_for_csv = repeat(" ", CSV_GUESS_RECORD_LENGTH(20, maxval(MATRX_A)))
+--------------------------------------------------------------------------------
+
+
 Function: CSV_RECORD_SIZE
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_RECORD_SIZE]
