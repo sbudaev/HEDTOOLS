@@ -3111,7 +3111,6 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable
-    ! TODO: make option to write array in a single row
     !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
     max_size_record = ( I4_WIDTH(maxval(array))+2 )
 
@@ -3227,7 +3226,6 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable
-    ! TODO: make option to write array in a single row
     !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
     max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
 
@@ -3343,7 +3341,6 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable
-    ! TODO: make option to write array in a single row
     !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
     max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
 
