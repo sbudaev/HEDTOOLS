@@ -1,4 +1,6 @@
 !*******************************************************************************
+! SVN $Id$
+!*******************************************************************************
 ! PURPOSE:
 ! Fortran Character String Utilities
 ! A collection of string manipulation routines is contained in the module
