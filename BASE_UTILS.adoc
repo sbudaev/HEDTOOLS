@@ -66,7 +66,7 @@ NOTE: PDF svn path is ****** updated MANUALLY ******
 ////////////////////////////////////////////////////////////////////////////////
 
 Latest PDF version: +
-https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS/doc/BASE_UTILS.pdf
+https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/doc/BASE_UTILS.pdf
 
 ////////////////////////////////////////////////////////////////////////////////
 SVN: $LastChangedDate$
@@ -686,6 +686,10 @@ svn merge ^/trunk/HEDTOOLS/ --dry-run
 # commit local changes before merging.
 # When everything is in order, do the real merge:
 svn merge ^/trunk/HEDTOOLS/
+
+# if merge was used, commit changes back to the repository, even though the
+# files are unchanged, tags and properties may have changes
+svn commit -m "Will merge back to trunk now"
 --------------------------------------------------------------------------------
 
 *Step 2.* Actually do the reintegrate changes from your branch back to the
