@@ -711,6 +711,9 @@ svn update
 svn merge --reintegrate ^/branches/budaev/HEDTOOLS --dry-run
 #   and finally do the real thing
 svn merge --reintegrate ^/branches/budaev/HEDTOOLS
+
+# Finally, commit these changes back to the SVN repository
+svn commit -m "Merged my changes to trunk"
 --------------------------------------------------------------------------------
 
 GUI Tools
