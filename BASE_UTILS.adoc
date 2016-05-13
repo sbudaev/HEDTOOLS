@@ -521,6 +521,23 @@ svn commit Hed18.f90 -m "New sigmoid function"
 svn commit Makefile -m "Tweaked makefile, added PGI compiler build"
 --------------------------------------------------------------------------------
 
+A typical SVN repository organisation usually includes a *trunk* directory for
+the main development line and many *branches* for different purposes created by
+different developers. For example, the current AHA repo has this structure:
+
+[source,bash]
+--------------------------------------------------------------------------------
++-- branches
+|   +-- budaev
+|   +-- judy
+|   +-- ryan
+|
++-- trunk
+--------------------------------------------------------------------------------
+indexterm:[Subversion,trunk]
+indexterm:[Subversion,branch]
+
+
 First time setup of the working copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -612,6 +629,74 @@ image:img_doc_fxce_svn.png[height=280,align="left"]
 indexterm:[Subversion,GUI tools, TortoiseSVN]
 indexterm:[Subversion,TortoiseSVN]
 indexterm:[TortoiseSVN]
+
+Some Recipes
+~~~~~~~~~~~~
+Here are a couple of recipes for certain less obvious SVN commands that are
+not a part of standard everyday workflow but used nevertheless from time to
+time.
+
+Make a branch
+^^^^^^^^^^^^^
+
+Yet not done, will do when I next time do branching :) Shall just copy real
+commands and paste them here.
+indexterm:[Subversion,branch]
+
+Reintegrate your branch back to the trunk
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Suppose you have a private branch/branches +.../branches/budaev/HEDTOOLS+ where
+you work on the code. Now you are going to reintegrate your branch back to the
+trunk (the main development line: +.../trunk/HEDTOOLS+).
+indexterm:[Subversion,branch,reintegrate branch]
+
+For this you need several simple steps:
+
+*Step 1.* Merge possible changes in trunk back to the branch:
+
+If someone is working on the trunk, you need to keep your branch in sync with
+it, e.g. all other files you are not working on are syncronised.
+
+[source,bash]
+--------------------------------------------------------------------------------
+# First, make sure you are in the branch .../branches/budaev/HEDTOOLS
+pwd
+
+# Second, Do final check/update
+svn status
+svn update
+
+# Merge possible changes from trunk to the (current) branch working copy
+#   --dry-run does everything but does not change any data, it is good to run it
+#   first to make sure everything is okay (e.g. yo are really in the correct
+#   directory, there are no errors etc.):
+svn merge ^/trunk/HEDTOOLS/ --dry-run
+#   then do the real merge
+svn merge ^/trunk/HEDTOOLS/
+--------------------------------------------------------------------------------
+
+*Step 2.* Actually do the reintegrate changes from your branch back to the
+trunk. For this we need the code from the trunk.
+
+[source,bash]
+--------------------------------------------------------------------------------
+# First, make sure you are in the trunk local working copy .../trunk/HEDTOOLS
+#  if necessary, checkout this directory somewhere just for this merge... but
+#  you need the code for the trunk.
+pwd
+
+# Second, do final checks/updates
+svn status
+svn update
+
+# Do the reintegration of changes from branch back to (current) trunk working copy
+#   it is first good to try with --dry-run to make sure everything is okay
+svn merge --reintegrate ^/branches/budaev/HEDTOOLS --dry-run
+#   and finally do the real thing
+svn merge --reintegrate ^/branches/budaev/HEDTOOLS
+--------------------------------------------------------------------------------
+
 
 Object-oriented programming and modelling
 -----------------------------------------
