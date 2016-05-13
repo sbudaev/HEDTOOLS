@@ -675,6 +675,7 @@ svn merge ^/trunk/HEDTOOLS/ --dry-run
 # For example, if the working copy is not up to date (need commit or revert),
 # there may be issues like this:
 #  svn: E195016: Cannot merge into a working copy that has local modifications
+# to check what is wrong (modified), the command: svn diff is helpful
 # If everything is in order, do the real merge:
 svn merge ^/trunk/HEDTOOLS/
 --------------------------------------------------------------------------------
