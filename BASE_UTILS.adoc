@@ -530,12 +530,14 @@ different developers. For example, the current AHA repo has this structure:
 
 [source,bash]
 --------------------------------------------------------------------------------
-+-- branches
-|   +-- budaev
-|   +-- judy
-|   +-- ryan
+|-- branches
+|   |-- budaev
+|   |-- judy
+|   `-- ryan
 |
-+-- trunk
+|-- old_archived
+|
+`-- trunk
 --------------------------------------------------------------------------------
 indexterm:[Subversion,trunk]
 indexterm:[Subversion,branch]
@@ -599,6 +601,7 @@ indexterm:[Subversion,commit]
 +commit+ will ask you to provide a short descriptive log message. It will run
 the standard text editor for this by default (can be configured). But you can
 provide such a message just on the command line with the +-m+ option:
+indexterm:[Subversion,commit]
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -619,8 +622,40 @@ working copy. In such cases they are limited to this subdirectory only.
 Using branches
 ~~~~~~~~~~~~~~
 
-Make a branch
-^^^^^^^^^^^^^
+A *branch* in Subversion is just a directory on the SVN server. It can be
+thought of in the same way as common file system directory/folder. Creating
+a new folder is easy:
+indexterm:[Subversion,branch]
+
+[source,bash]
+--------------------------------------------------------------------------------
+# Making a new directory for old code -- use the mkdir command
+svn mkdir https://svn.uib.no/aha-fortran/old_archived
+--------------------------------------------------------------------------------
+indexterm:[Subversion,mkdir]
+
+It is also easy to move or copy parts of the repository across the repository:
+
+[source,bash]
+--------------------------------------------------------------------------------
+# Move a model branch to the archive folder -- use mv command
+svn mv https://svn.uib.no/aha-fortran/trunk/model_20151013 \
+      https://svn.uib.no/aha-fortran/old_archived/model_20151013
+--------------------------------------------------------------------------------
+
+Do not forget to update the local working copy after deleting/moving/copying
+directories on the SVN server, then local copy will be in sync with the server.
+
+indexterm:[Subversion,mv]
+
+Make a branch copying old code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The +copy+ command is very useful to create a copy of some repository part to
+a separate *branch.* Then some new features or functions can be implemented in
+the branch and then reintegrated back to the parent project. Or an independent
+new model can be initialised in such a way.
+
 Making a branch is easy, use +svn copy source_svn_path destination_svn_path+
 to do this. For example, the following command makes a copy of the whole
 sub-tree for the model code +HED18+ from user +budaev+ private branch to the
@@ -636,6 +671,7 @@ svn copy https://svn.uib.no/aha-fortran/branches/budaev/HED18 \
     -m "Creating private branch."
 --------------------------------------------------------------------------------
 indexterm:[Subversion,branch]
+indexterm:[Subversion,copy]
 
 If several people are simultaneously working on the project, it make sense to
 merge changes from the parent branch back to the current branch (e.g. from
@@ -649,6 +685,7 @@ SVN repository web address):
 --------------------------------------------------------------------------------
 svn merge ^/trunk/HEDTOOLS/
 --------------------------------------------------------------------------------
+indexterm:[Subversion,merge]
 
 Reintegrate your branch back to the trunk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
