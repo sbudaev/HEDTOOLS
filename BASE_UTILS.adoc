@@ -1960,7 +1960,7 @@ character(len=:), allocatable  :: record_for_csv
 
 ! As explained in the Important note to CSV_RECORD_APPEND above, we have to
 !   allocate the string record such that it fits the complete record;
-! this can be achieved as follows. Here 20 is the record size (number of rows)
+! this can be achieved as follows. Here 20 is the record size (number of cols)
 !   and the target value is the maximum numeric value of the matrix MATRX_A:
 record_for_csv = repeat(" ", CSV_GUESS_RECORD_LENGTH(20, maxval(MATRX_A)))
 --------------------------------------------------------------------------------
