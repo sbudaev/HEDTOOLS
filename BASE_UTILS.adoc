@@ -155,6 +155,12 @@ IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
 http://cbfortran.sourceforge.net/. Installation by unpacking into some
 directory.
 
+////////////////////////////////////////////////////////////////////////////////
+TODO: CSV editors -- do we need them? or just use Office?:
+http://recsveditor.sourceforge.net/
+https://sourceforge.net/projects/javacsveditor/
+////////////////////////////////////////////////////////////////////////////////
+
 *Follow: A logfile reading program* (Recommended)
 
 Following a logfile while executing a program is done trivially on Linux:
