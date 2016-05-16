@@ -2422,6 +2422,7 @@ and platform as follows:
 indexterm:[make,not using]
 indexterm:[build,manual build]
 indexterm:[compiler,limitation]
+[[BLD_MAN_RAND]]
 
 *GNU fortran:*
 
@@ -3092,6 +3093,7 @@ indexterm:[IEEE arithmetic,exceptions, implementation]
 indexterm:[compiler, exception trapping, implementation]
 indexterm:[include]
 indexterm:[IEEE_wrap.inc, include]
+[[BLD_MAN_IEEE]]
 
 Without the GNU make-based build system, the rule is simple. Use
 *non-intrinsic* modules with GNU gfortran version <5.0 footnote:[e.g. gfortran
@@ -3279,7 +3281,28 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 // End of main text
 ////////////////////////////////////////////////////////////////////////////////
 
-Final Notes
------------
+Final Notes: Manual builds
+--------------------------
 
-Nothing so far...
+If the model is built _without_ using the automatic *GNU make* utility and
+the supplied +Makefile+, you should take care about the dependencies and
+header files yourself. These are the modules that require manual source
+tweaking in such cases:
+indexterm:[build,manual build]
+indexterm:[make,not using]
+
+////////////////////////////////////////////////////////////////////////////////
+Note: The following tagged links might make problem compiling this document.
+      Check out anchors: BLD_MAN_RAND and BLD_MAN_IEEE
+      don't remove blank lines between list items below.
+////////////////////////////////////////////////////////////////////////////////
+
+* <<BLD_MAN_RAND, BASE_RANDOM>>
+
+* <<BLD_MAN_IEEE, IEEE Modules>>
+
+These pieces of code should be edited manually depending on the compiler
+and its version used. Please check your documentation. Make sure all source
+code files for the model as well as for the HEDTOOLS are included in the
+project. Many IDEs allow generating (importing) project from a supplied
++Makefile+ and recognize GNU make format. This could make work a little easier.
