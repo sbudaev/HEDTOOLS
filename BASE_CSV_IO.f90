@@ -2711,7 +2711,7 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, colnames, csv_file_status
   end if COLNAMES_CHK
 
   ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
+  ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
   max_size_record = size(matrix, 2) * ( I4_WIDTH(maxval(matrix))+2 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -2812,7 +2812,7 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, colnames, csv_file_status
   end if COLNAMES_CHK
 
   ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
+  ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
   max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+14 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -2914,7 +2914,7 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, colnames, csv_file_status
   end if COLNAMES_CHK
 
   ! Assess the maximum size of the whole record in advance, we
-  ! cannot make record allocatable
+  ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
   max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+18 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3119,8 +3119,7 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
     ! Write vertically, i.e. in single column
 
     ! Assess the maximum size of the whole record in advance, we
-    ! cannot make record allocatable
-    !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+    ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
     max_size_record = ( I4_WIDTH(maxval(array))+2 )
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3150,6 +3149,7 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
 
   else ! Write horizontally, i.e. in a single row.
 
+    ! now implemented CVS_GUESS_RECORD_LENGTH
     max_size_record = size(array) * ( I4_WIDTH(maxval(array))+4 )
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3234,8 +3234,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
     ! Write vertically, i.e. in single column
 
     ! Assess the maximum size of the whole record in advance, we
-    ! cannot make record allocatable
-    !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+    ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
     max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3265,6 +3264,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
 
   else ! Write horizontally, i.e. in a single row.
 
+    ! now implemented CVS_GUESS_RECORD_LENGTH
     max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+14)
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3349,8 +3349,7 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
     ! Write vertically, i.e. in single column
 
     ! Assess the maximum size of the whole record in advance, we
-    ! cannot make record allocatable
-    !max_size_record = size(array) * ( I4_WIDTH(maxval(array))+1 )
+    ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
     max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3380,6 +3379,7 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
 
   else ! Write horizontally, i.e. in a single row.
 
+    ! now implemented CVS_GUESS_RECORD_LENGTH
     max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+14)
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3554,6 +3554,9 @@ function CSV_GUESS_RECORD_LEN_I4 (n_values, max_target_value) &
   integer :: n_values
   integer :: max_target_value
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_GUESS_RECORD_LEN_I4"
+
   !-----------------------------------------------------------------------------
 
   record_size_guess = n_values * (I4_WIDTH(max_target_value)+4 )
@@ -3581,6 +3584,9 @@ function CSV_GUESS_RECORD_LEN_R4 (n_values, max_target_value) &
   integer :: n_values
   real :: max_target_value
 
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_GUESS_RECORD_LEN_R4"
+
   !-----------------------------------------------------------------------------
 
   record_size_guess = n_values * (I4_WIDTH(int(max_target_value))+14)
@@ -3607,6 +3613,9 @@ function CSV_GUESS_RECORD_LEN_R8 (n_values, max_target_value) &
   ! Calling parameters
   integer :: n_values
   real(kind=8) :: max_target_value
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_GUESS_RECORD_LEN_R8"
 
   !-----------------------------------------------------------------------------
 
