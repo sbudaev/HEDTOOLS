@@ -1433,7 +1433,7 @@ now only routines for data output to CSV, not (yet?) for input as we don't
 input much data. CSV *record* is a whole line (*row*) of numbers/strings (as in
 Excel), a single file can have quite many records (rows).
 
-image:img_doc_record_append.svg[width=400,align="left"]
+image:img_doc_record_append.svg[width=320,align="left"]
 
 For example, records (rows) can represent consecutive *generations* during
 the evolution or *individuals* for within-generation data.
@@ -1449,11 +1449,14 @@ indexterm:[record, CSV]
 Such a workflow can be like this:
 indexterm:[workflow]
 
+image:img_doc_records_work.svg[width=360,align="left"]
+
+////////////////////////////////////////////////////////////////////////////////
 ** *CSV_OPEN_WRITE* - physically open CSV file for writing;
 ** *CSV_HEADER_WRITE* - physically write optional descriptive header (header
    is just the first line of the CSV file);
-** do -- start loop (1) over records (rows of data file) +
-   do -- start loop (2) over values within the same record +
+** do -- start loop (1) over records (*rows* of data file) +
+   do -- start loop (2) over *column values* within the same record +
     *CSV_RECORD_APPEND* - produce record of data values of different types,
     append single values, arrays or lists, usually in loop(s) +
     end do -- end loop (2) +
@@ -1461,6 +1464,7 @@ indexterm:[workflow]
     to the output file.
 ** end do -- end loop (1) -- go to producing the next record;
 ** *CSV_CLOSE* - physically closes the output CSV file.
+////////////////////////////////////////////////////////////////////////////////
 
 Thus, subs ending with *_WRITE* and *_CLOSE* do physical write.
 
