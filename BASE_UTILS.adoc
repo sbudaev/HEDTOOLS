@@ -85,6 +85,7 @@ Mac use http://brew.sh[homebrew] to install many of the utils. Below are
 some details on the Windows software.
 
 *Fortran Compiler* (Mandatory)
+[[FORTRAN_GET]]
 
 *Intel Fortran* compiler, a commercial software available
 at UiB. Intel Fortran is also installed on the UiB HPC cluster
@@ -99,7 +100,21 @@ indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Intel Fortran]
 indexterm:[compiler,Oracle Fortran]
 
+*GNU Make* (Mandatory)
+[[MAKE_GET]]
+
+This is an automated program build system that keeps track of changes
+in different components of the source code and generates header files
+automatically depending on the platform and compiler used. It is possible to
+work without it, but in such a case everything should be tweaked manually. GNU
+make is trivial to install on Linux. For Windows, it goes bundled with the
+Equation solution
+http://www.equation.com/servlet/equation.cmd?fa=fortran[GNU Fortran].
+The official site with the code, manuals aec is here:
+https://www.gnu.org/software/make/
+
 *Subversion* (Mandatory)
+[[SVN_GET]]
 
 Windows GUI for Subversion is *TortoiseSVN* (supported by UiB IT):
 https://tortoisesvn.net/. It is very helpful to have also console subversion
@@ -107,6 +122,7 @@ client software (Tortiuse includes console tools but does not install by
 default). A good one is SilkSVN https://sliksvn.com/download/.
 
 *Console terminal* (Highly recommended)
+[[CONSOLE_GET]]
 
 The Windows console (+cmd+) is extremely weak. *Conemu*
 https://conemu.github.io/ is a much better alternative, especially
@@ -130,6 +146,7 @@ http://github.com/bmatzelle/gow/wiki[Gow],
 http://win-bash.sourceforge.net/[winbash].
 
 *Doxygen: Automatically generate program documentation* (Highly Recommended)
+[[DOXY_GET]]
 
 This is a tool for writing software reference documentation. The documentation
 is written within code using special markup and can include formatting,
@@ -146,8 +163,11 @@ indexterm:[Ghostscript]
 
 *Geany* (Recommended)
 
-Lightweight IDE, Editor for code and any text files. Works on Linux, Windows
+Lightweight IDE, Editor for code and any text files (including
+http://asciidoc.org/[AsciiDoc]). Works on Linux, Windows
 and Mac. http://www.geany.org/ Also need plugins: http://plugins.geany.org/
+(The Geany SVN plugin for Windows _requires_ command line tools like
+https://sliksvn.com/download/[SilkSvn] to work.)
 
 *Code::Blocks for Fortran* (Recommended)
 
@@ -162,6 +182,7 @@ https://sourceforge.net/projects/javacsveditor/
 ////////////////////////////////////////////////////////////////////////////////
 
 *Follow: A logfile reading program* (Recommended)
+[[FOLLOW_GET]]
 
 Following a logfile while executing a program is done trivially on Linux:
 +tail -f some_log_file.txt+. There is a Java GUI program for reading log
@@ -355,7 +376,8 @@ Local documentation for Doxygen on Linux should be here:
 file:///usr/share/doc/doxygen/html/index.html
 ////////////////////////////////////////////////////////////////////////////////
 
-*Doxygen* is a very useful tool which allows to extract and produce
+
+<<DOXY_GET, Doxygen>> is a very useful tool which allows to extract and produce
 documentation from the source code in a highly structured manner. Prior to
 parsing the code to get the documentation, one has to provide a configuration
 file for Doxygen. The +doxywizard+ generates a wizard-like GUI to make this
@@ -499,6 +521,14 @@ finest details. And Doxygen allows inclusion of various markup commands and
 styles, LaTeX formulas and graphics. Doxygen documentation, faq's and howtos
 are available here: http://doxygen.org indexterm:[Doxygen]
 
+In the AHA <<MAKE_OVERVIEW, GNU make>> system used to build the executables,
+documentation is generated using this simple command:
+
+[source,bash]
+--------------------------------------------------------------------------------
+make docs
+--------------------------------------------------------------------------------
+
 Version control: Subversion (SVN)
 --------------------------------
 
@@ -508,10 +538,13 @@ indexterm:[AHA repository]
 Overview
 ~~~~~~~~
 
-Use version control not only for just managing versions, but also for organising
-your coding. For example, it would be good to commit changes to the server in
-pieces involving specific functions or parts of the model that are ready. Use
-the log messages to describe briefly what has been done.
+<<SVN_GET, Subversion>> (SVN) is a version control system used in the AHA
+project. Use version control not only for just managing versions, but also
+for organising your coding. For example, it would be good to commit changes
+to the server in pieces involving specific functions or parts of the model
+that are ready. Use the log messages to describe briefly what has been done.
+The examples below assume you use a terminal <<CONSOLE_GET, console>>, but
+most SVN commands can also be easily performed from a GUI tool.
 indexterm:[Subversion]
 indexterm:[svn]
 indexterm:[Subversion, log message]
@@ -558,11 +591,12 @@ First time setup of the working copy of the model (working directory):
   the model code will reside (+cd+) (possibly make a new directory +mkdir+),
   and *checkout:* get the model code (one branch, no need to get everything!)
   from the  server with +svn checkout https://path_to_branch+. When a specific
-  repository is used for the first time, you should also include the user name
+  repository is used _for the first time,_ you should also include the user name
   for this repository (+--username your_user_name+) and then the program asks
   for the password. SVN server name, username and password is then saved, so
   subsequently it is not necessary to state the username/password you connect
-  to the same SVN server. For example, first time checkout (for user +u01+):
+  to the same SVN server from the same workstation. For example, first time
+  checkout (for user +u01+):
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -600,8 +634,12 @@ Now you can work within this directory. This is the standard workflow.
 
 * *update* code from the server: +svn up+
 * edit the code using any favoured tools, build, run model etc...
-* *commit,* when ready (e.g. when a new has been implememnted): +svn commit+
+* *diff* (+svn diff+) to check what are the differences between the local
+  file(s) or directory and those in the repository
+* *commit* when ready (e.g. when a new piece of code has been implememnted):
+  +svn commit+
 indexterm:[Subversion,update]
+indexterm:[Subversion,diff]
 indexterm:[Subversion,commit]
 
 +commit+ will ask you to provide a short descriptive log message. It will run
@@ -734,6 +772,10 @@ svn merge ^/trunk/HEDTOOLS/
 # files are unchanged, tags and properties may have changes
 svn commit -m "Will merge back to trunk now"
 --------------------------------------------------------------------------------
+
+Obviously, this first step is not always necessary. In many cases you can be
+sure that no one did changes in the trunk (or the other directoy to which
+merge is planned).
 
 *Step 2.* Actually do the reintegrate changes from your branch back to the
 trunk. For this we need the code from the trunk.
@@ -978,12 +1020,12 @@ TODO -- more text later
 BELOW START ACTUAL DESCRIPTION OF THE AHA PROGRAMMING FRAMEWORK
 ////////////////////////////////////////////////////////////////////////////////
 
-Introduction to the Fortran modules
------------------------------------
+Introduction to the AHA Fortran modules
+---------------------------------------
 
-Module is just a piece of Fortran program that contains variable or constant
-declarations and functions and subroutines. Modules are defined in such a
-simple way:
+Module is just a piece of <<FORTRAN_GET, Fortran>> program that contains
+variable or constant declarations and functions and subroutines. Modules
+are defined in such a simple way:
 indexterm:[module]
 
 [source]
@@ -1388,9 +1430,23 @@ data to the http://en.wikipedia.org/wiki/Comma-separated_values[CSV (Comma
 Separated Values)] format (http://tools.ietf.org/html/rfc4180/[RFC4180],
 http://www.creativyst.com/Doc/Articles/CSV/CSV01.htm[CSV format]). There are
 now only routines for data output to CSV, not (yet?) for input as we don't
-input much data.
+input much data. CSV *record* is a whole line (*row*) of numbers/strings (as in
+Excel), a single file can have quite many records (rows).
 
-The typical workflow for output in CSV file format is like this:
+image:img_doc_record_append.svg[width=400,align="left"]
+
+For example, records (rows) can represent consecutive *generations* during
+the evolution or *individuals* for within-generation data.
+
+In a typical workflow, within-column variables (i.e those that belong to the
+same row of data file) are appended to the same record. When the record is
+full (i.e.  the number of values appended is equal to the number of columns
+in the CSV file), the record is written physically to the disk file and we
+can go to writing the next record (row) of the data.
+indexterm:[CSV record]
+indexterm:[record, CSV]
+
+Such a workflow can be like this:
 indexterm:[workflow]
 
 ** *CSV_OPEN_WRITE* - physically open CSV file for writing;
@@ -1826,6 +1882,7 @@ if (CHECK_FILE_OPEN(output_handle)) then
 Subroutine: CSV_RECORD_APPEND
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_RECORD_APPEND]
+indexterm:[record, CSV]
 
 Appends one of the possible data objects to the current CSV record. Data objects
 could be either a single value (integer, real with single or double
@@ -1943,6 +2000,7 @@ indexterm:[compiler,Oracle Fortran]
 Function: CSV_GUESS_RECORD_LENGTH
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_GUESS_RECORD_LENGTH]
+indexterm:[record, CSV]
 
 Guesses the maximum size for the string variable keeping the record being
 appended for +CSV_RECORD_APPEND+.
@@ -1966,15 +2024,20 @@ character(len=:), allocatable  :: record_for_csv
 
 ! As explained in the Important note to CSV_RECORD_APPEND above, we have to
 !   allocate the string record such that it fits the complete record;
-! this can be achieved as follows. Here 20 is the record size (number of cols)
-!   and the target value is the maximum numeric value of the matrix MATRX_A:
+! This can be achieved as follows. Here 20 is the record size (number of cols,
+!   can be determined as ubound(MATRX_A,2)), and the target value is the
+!   maximum numeric value of the matrix MATRX_A:
 record_for_csv = repeat(" ", CSV_GUESS_RECORD_LENGTH(20, maxval(MATRX_A)))
 --------------------------------------------------------------------------------
 
+IMPORTANT: Use this function with caution, especially if long strings are also
+added to the CSV file. In such a case, make additional allowance for the added
+string(s).
 
 Function: CSV_RECORD_SIZE
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_RECORD_SIZE]
+indexterm:[record, CSV]
 
 Counts the number of values in a CSV record.
 
@@ -2035,10 +2098,11 @@ Subroutine: CSV_RECORD_WRITE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_RECORD_WRITE]
 indexterm:[physical disk write]
+indexterm:[record, CSV]
 
 Physically writes a complete record of data to a CSV file. A record is a
 single row of data in the file.
-indexterm:[record]
+indexterm:[record, CSV]
 
 This subroutine has two forms:
 
@@ -2521,7 +2585,8 @@ is running now.
 indexterm:[LOGGER module]
 
 Here is an example of a log file with timestamps (date and time printed on the
-left of the log strings) being displayed using the *Follow* program.
+left of the log strings) being displayed using the <<FOLLOW_GET, Follow>>
+program.
 indexterm:[log timestamps]
 
 image:img_doc_log.png[width=490,align="left"]
@@ -2925,6 +2990,8 @@ IEEE Arithmetics
 Overview
 ~~~~~~~~
 
+[[IEEE_OVERVIEW]]
+
 The model can now use the IEEE arithmetic  modules. They allow exact control
 of the CPU math features and exceptions caused by invalid calculations, such as
 dividion by zero, overflow, underflow etc. A potential issue is that they have
@@ -3140,9 +3207,10 @@ Build system: GNU make
 
 Overview
 ~~~~~~~~
+[[MAKE_OVERVIEW]]
 
 The model currently uses a build system based on
-https://www.gnu.org/software/make/[GNU make] (Makefile). GNU make
+<<MAKE_GET, GNU make>> (Makefile). https://www.gnu.org/software/make/[GNU make]
 is an automated system for building source core (in fact, any digital project
 that requires keeping track of dependencies between multiple components.)
 indexterm:[Makefile]
@@ -3169,7 +3237,8 @@ Solaris) anyway.
 Using make
 ~~~~~~~~~~
 
-Most basic things with the standard +Makefile+ are simple.
+Most basic things with the standard +Makefile+ are simple. The commands are
+issued on the terminal <<CONSOLE_GET, console>>.
 indexterm:[GNU make, make, gmake]
 indexterm:[Makefile, make]
 indexterm:[make]
@@ -3290,10 +3359,10 @@ official https://www.gnu.org/software/make/manual/[GNU Make Manual].
 Final Notes: Manual builds
 --------------------------
 
-If the model is built _without_ using the automatic *GNU make* utility and
-the supplied +Makefile+, you should take care about the dependencies and
-header files yourself. These are the modules that require manual source
-tweaking in such cases:
+If the model is built _without_ using the automatic <<MAKE_OVERVIEW, GNU
+make>> utility and the supplied +Makefile+, you should take care about the
+dependencies and header files yourself. These are the modules that require
+manual source tweaking in such cases:
 indexterm:[build,manual build]
 indexterm:[make,not using]
 
