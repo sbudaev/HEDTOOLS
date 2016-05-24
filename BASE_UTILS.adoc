@@ -818,14 +818,15 @@ svn commit -m "Merged my changes to trunk"
 Other features
 ~~~~~~~~~~~~~~
 
-Subversion has a very useful feature: you can set various properties
-(+svn propset+). For example, one can set tags on files or directories. A very
-interesting feature is that  properties can be incorporated into the source
-files under SVN control. For example, you can include specific tags into
-the Fortran (or any other managed) source code so that they are updated
-automatically.
+Subversion has a very useful feature: you can set various properties (+svn
+propset+). For example, one can set tags on files or directories. A very
+interesting feature is that  +svn:keyword+ properties can be incorporated into
+the source files under SVN control. For example, you can include specific
+tags into the Fortran (or any other managed) source code so that they are
+updated automatically.
 indexterm:[Subversion,propset]
 indexterm:[Subversion,properties]
+indexterm:[Subversion,keywords]
 indexterm:[Subversion,tags]
 
 One user case for this is this. Define special +$Id+ tag. This tag includes
@@ -866,18 +867,29 @@ keywords for a particular file:
 svn propset svn:keywords "Id Date Revision HeadURL LastChangedDate" file_name.f90
 --------------------------------------------------------------------------------
 
-Check out full documentation in the SVN manual about +propset+.
+Check out full documentation in the SVN manual about +propset+ and
++svn:keyword+.
+
+IMPORTANT: Subversion keywords are case sensitive, so +$ID+ or +$id+ won't work.
+
 
 GUI Tools
 ~~~~~~~~~
 
-Using the GUI tools like <<SVN_GET, TortoiseSVN>> is similar. With GUI you
-should just select the appropriate item from the menu list.
+Using the GUI tools like <<SVN_GET, TortoiseSVN>> is similar to using the
+terminal commands. With GUI you should just select the appropriate item from
+the menu list.
 
 image:img_doc_tortoise.png[height=200,align="left"]
 
-Similar GUI tools exist for Linux. For example, there is +thunar-vcs-plugin+
-(Git and Subversion integration into the
+Checking changes, diff-ing, setting properties and keywords etc. is also very
+easy and visual with the built-in tool. Another useful feature is the revision
+graphs showing sequence of versions and pattern of branching. TortoiseSVN
+is incorporated into the Windows explorer and uses small overlay icons to
+show the status of the files and directories.
+
+Similar GUI tools, although not as mature as TortoiseSVN, exist for Linux. For
+example, there is +thunar-vcs-plugin+ (Git and Subversion integration into the
 https://en.wikipedia.org/wiki/Thunar[Thunar] file manager).
 
 image:img_doc_fxce_svn.png[height=200,align="left"]
