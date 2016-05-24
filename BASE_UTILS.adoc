@@ -10,7 +10,7 @@ manual on asciidoc is available at: http://asciidoc.org/userguide.html
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-Notes: (within the comment block, so won't render in the final document)
+Notes: (within the comment block ///// , so won't render in the final document)
 
 Workflow: do this doc in private branch. Reintegrate back to trunk when PDF is
           issued.
@@ -537,6 +537,9 @@ Version control: Subversion (SVN)
 AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
 indexterm:[AHA repository]
 
+AHA Tools stable version (trunk): https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/
+[https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/]
+
 Overview
 ~~~~~~~~
 
@@ -811,6 +814,59 @@ svn merge --reintegrate ^/branches/budaev/HEDTOOLS
 # Finally, commit these changes back to the SVN repository
 svn commit -m "Merged my changes to trunk"
 --------------------------------------------------------------------------------
+
+Other features
+~~~~~~~~~~~~~~
+
+Subversion has a very useful feature: you can set various properties
+(+svn propset+). For example, one can set tags on files or directories. A very
+interesting feature is that  properties can be incorporated into the source
+files under SVN control. For example, you can include specific tags into
+the Fortran (or any other managed) source code so that they are updated
+automatically.
+indexterm:[Subversion,propset]
+indexterm:[Subversion,properties]
+indexterm:[Subversion,tags]
+
+One user case for this is this. Define special +$Id+ tag. This tag includes
+the file name, last changed revision number, revision date and time and the
+user who did the revision. This is how it will appear in the source code:
+
+[source]
+--------------------------------------------------------------------------------
+! The comment below incorporates SVN revision ID, it should apparently be
+!   inserted into a comment, so does not affect the compiler:
+! $Id$
+!                                                          other code follows...
+......
+implicit none
+......
+! Public constants
+integer, public, parameter :: MAX_UNIT=255      ! Maximum unit number (in old
+--------------------------------------------------------------------------------
+
+To set up this tag we just have to issue such command:
+
+[source, bash]
+--------------------------------------------------------------------------------
+svn propset svn:keywords "Id" file_name_to_set_keyword.f90
+--------------------------------------------------------------------------------
+
+and include two strings +$Id anything in between initially $+ in this source
+text to set where the keywords should be placed. Obviously, we have to *commit*
+change to the server after this. From now on, the information will be updated
+automatically between the +$id ...+ and +$+ symbols. So the source code itself
+will have comments indicating the revision number etc. There are many useful
+tags that can be placed in such a way. For example +$Date $Revision $HeadURL
+$LastChangedDate+. If several tags should be placed, one can set up several
+keywords for a particular file:
+
+[source, bash]
+--------------------------------------------------------------------------------
+svn propset svn:keywords "Id Date Revision HeadURL LastChangedDate" file_name.f90
+--------------------------------------------------------------------------------
+
+Check out full documentation in the SVN manual about +propset+.
 
 GUI Tools
 ~~~~~~~~~
