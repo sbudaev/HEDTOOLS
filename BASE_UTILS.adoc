@@ -120,7 +120,8 @@ Windows GUI for Subversion is *TortoiseSVN* (supported by UiB IT):
 https://tortoisesvn.net/. It is very helpful to have also console Subversion
 client software: TortoiseSVN includes console tools but they are not
 installed by default. A good command-line-only Windows tool is SilkSVN
-https://sliksvn.com/download/.
+https://sliksvn.com/download/. There are many other GUI tools, e.g.
+http://www.twobarleycorns.net/tkcvs.html[TkCVS] for Windows, Linux and Mac.
 
 *Console terminal* (Highly recommended)
 [[CONSOLE_GET]]
