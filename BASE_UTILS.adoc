@@ -2521,8 +2521,8 @@ indexterm:[BASE_RANDOM]
 indexterm:[PRNG]
 indexterm:[random number]
 
-RANDOM_SEED_INIT
-~~~~~~~~~~~~~~~~
+Subroutine: RANDOM_SEED_INIT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Initialise the random seed for random number generation. This module uses an
 improved random seed generation algorithm that uses the system entropy pool
 on Unix systems and XOR of the current time and PID on Windows. Therefore, it
@@ -2551,11 +2551,11 @@ print *, "Seed: ", dbg_seed_size, ", array: ", dbg_seed_array(:dbg_seed_size)
 The seed array size can be different: on GNU gfortran x86 it is *12*, on
 Intel and Oracle Fortran (both x86) it is *2*.
 
-RAND_I
-~~~~~~
+Function: RAND_I
+~~~~~~~~~~~~~~~~
 
-Generates a random integer within the range A to B (the two parameters of the
-function).
+Generates a random integer (uniform distribution) within the range A to B
+(the two parameters of the function).
 
 [source]
 --------------------------------------------------------------------------------
@@ -2564,10 +2564,10 @@ ipos = RAND_I(1, len(ga_target))
 indexterm:[RAND_I]
 
 
-RAND_R4 and RAND_R8
-~~~~~~~~~~~~~~~~~~~
+Functions: RAND_R4 and RAND_R8
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Generates a random real (type 4 or 8). Has no parameters.
+Generates a random real (kind 4 or 8, uniform distribution). Has no parameters.
 
 [source]
 --------------------------------------------------------------------------------
@@ -2577,6 +2577,22 @@ end if
 --------------------------------------------------------------------------------
 indexterm:[RAND_R4]
 indexterm:[RAND_R8]
+
+
+Function: RNORM
+~~~~~~~~~~~~~~~
+
+Generates a normally distributed +real+ (kind 4) random number with *zero mean*
+and *standard deviation = 1.0.* Has no parameters. Based on algorithm 712,
+_Transactions on Mathematical Software,_ 18, 4, 434-435 (1992); (Kinderman &
+Monahan, augmented with quadratic bounding curves).
+
+[source]
+--------------------------------------------------------------------------------
+ga_mutation = RNORM()
+--------------------------------------------------------------------------------
+indexterm:[RNORM]
+
 
 Build details
 ~~~~~~~~~~~~~
