@@ -2593,6 +2593,21 @@ ga_mutation = RNORM()
 --------------------------------------------------------------------------------
 indexterm:[RNORM]
 
+Generating arrays of random numbers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The subroutines +RAND_ARRAY+ and +RNORM_ARRAY+ generate arrays (up to
+5-dimensions) of uniform and gaussian random numbers. The only parameter of
+these subroutines is the +real+ +(kind=4)+ array to fill random numbers with.
+
+[source]
+--------------------------------------------------------------------------------
+real, dimension(200,500) ARRAY_X, ARRAY_Y
+....
+call RAND_ARRAY(ARRAY_X)    ! produce 2D array of uniform random numbers
+...
+call RNORM_ARRAY(ARRAY_Y)   ! prodiuce 2D array of gaussian numbers
+--------------------------------------------------------------------------------
 
 Build details
 ~~~~~~~~~~~~~
