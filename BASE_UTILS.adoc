@@ -2597,7 +2597,7 @@ Generating arrays of random numbers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The subroutines +RAND_ARRAY+ and +RNORM_ARRAY+ generate arrays (up to
-5-dimensions) of uniform and gaussian random numbers. The only parameter of
+6-dimensions) of uniform and gaussian random numbers. The only parameter of
 these subroutines is the +real+ +(kind=4)+ array to fill random numbers with.
 There are also aliases +RAND_MATRIX+ and +RNORM_MATRIX+ for two- to
 six-dimensional matrices.
