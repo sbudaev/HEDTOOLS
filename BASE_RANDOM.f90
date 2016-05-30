@@ -43,6 +43,14 @@ interface RAND_ARRAY    ! Arrays of uniform random numbers, wrapper to RAND_R4
   module procedure RAND_ARRAY_6
 end interface RAND_ARRAY
 
+interface RAND_MATRIX    ! Matrices of uniform random numbers, wrapper to RAND_R4
+  module procedure RAND_ARRAY_2
+  module procedure RAND_ARRAY_3
+  module procedure RAND_ARRAY_4
+  module procedure RAND_ARRAY_5
+  module procedure RAND_ARRAY_6
+end interface RAND_MATRIX
+
 interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
   module procedure RNORM_ARRAY_1
   module procedure RNORM_ARRAY_2
@@ -51,6 +59,14 @@ interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
   module procedure RNORM_ARRAY_5
   module procedure RNORM_ARRAY_6
 end interface RNORM_ARRAY
+
+interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
+  module procedure RNORM_ARRAY_2
+  module procedure RNORM_ARRAY_3
+  module procedure RNORM_ARRAY_4
+  module procedure RNORM_ARRAY_5
+  module procedure RNORM_ARRAY_6
+end interface RNORM_MATRIX
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
