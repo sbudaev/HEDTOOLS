@@ -3472,6 +3472,11 @@ behind the scenes even if the IDE GUI is used.
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
 
+IMPORTANT: In most cases only the model source code file(s) may need tweaking.
+           This is <<DEF_SRC_MAKE, defined>> in the variable +SRC+ of the
+           +Makefile+. Also, path to the Modelling tools, +HEDTOOLSDIR+, may
+           need an update. Everything else should work out of the box.
+
 Concepts
 ^^^^^^^^
 
@@ -3607,15 +3612,14 @@ the file name(s) for the model code: +SRC+ and the name of the executable +OUT+
 
 The variable +SRC+ defines *the main source code* file(s) for the model
 (HEDTOOLS are separate).
+
+[[DEF_SRC_MAKE]]
+
 indexterm:[Makefile, SRC]
 indexterm:[Makefile, OUT]
 
 [source,bash]
 --------------------------------------------------------------------------------
-#*******************************************************************************
-# Main building blocks, define the main program source, executable name (-o)
-# and possible module (.mod) names.
-
 # These names should be set for particular project,
 # Most probably they should be edited manually for each specific project
 # SRC is the name of the main source code (can be several files). Note that
@@ -3651,11 +3655,9 @@ code and the HEDTOOLS code are in separate subdirectories.
 Workdir
  |
  |-- Model1   # Directory for Model 1
- |
  |-- Model2   # Directory for Model 2
  |
  `-- HEDTOOLS # Directory for modelling tools
-      |
       `--IEEE
 --------------------------------------------------------------------------------
 
