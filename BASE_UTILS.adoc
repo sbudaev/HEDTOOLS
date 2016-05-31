@@ -3481,19 +3481,12 @@ that build _targets_ from their _prerequisites_ using _variables_ and _macros_.
 
 Everything that starts from +#+ is considered a comment.
 
-*Variables* are defined as:
+*Variables* are defined as in shell scripts, for example:
 indexterm:[Makefile, variables]
 
 [source,bash]
 --------------------------------------------------------------------------------
-# Some variable
-variable_name = some_text
---------------------------------------------------------------------------------
-
-for example:
-
-[source,bash]
---------------------------------------------------------------------------------
+# This variable defines the compiler command
 GF_FC = gfortran
 --------------------------------------------------------------------------------
 
@@ -3607,24 +3600,13 @@ two macros (or variables): +$(AUTOGEN_COMMENT)+ and +$(AUTOGEN_CODE)+.
 Basic parameters
 ^^^^^^^^^^^^^^^^
 
-The start of the Makefile contains several variables defining basic parameters
-of the build process. For example, here it defines the three supported compilers
-(e.g. +GF_FC+ GNU gfortran) and sets the default compiler that is used is +make+
-is called without parameters.
+There are only few parameters in the Makefile that may need manual
+tweaking. The two variables that always need tweaking are, understandably,
+the file name(s) for the model code: +SRC+ and the name of the executable +OUT+
+(although the latter may always be +MODEL.exe+).
 
-[source,bash]
---------------------------------------------------------------------------------
-# Supported Fortran compiler types
-GF_FC = gfortran
-IF_FC = ifort
-SF_FC = f95
-
-# Choose the default compiler type
-FC = $(GF_FC)
---------------------------------------------------------------------------------
-
-The variable SRC defines the main source code file(s) for the model (without
-HEDTOOLS).
+The variable +SRC+ defines *the main source code* file(s) for the model
+(HEDTOOLS are separate).
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -3639,31 +3621,56 @@ HEDTOOLS).
 # OUT is the executable file
 
 SRC = HEDG2_03.f90
-#     HEDG2_02.f90
 
 OUT = MODEL_00.exe
 --------------------------------------------------------------------------------
 
-This variable can define several files, e.g.
+everal files of the model source code cen be defined, e.g.
 
 [source,bash]
 --------------------------------------------------------------------------------
 SRC = HEDG2_03.f90 HEDG2_03U1.f90 HEDG2_03U2.f90 HEDG2_03U3.f90
 --------------------------------------------------------------------------------
 
-or wildcards for files in the current directory:
+or wildcards for files in the current directory (or several wildcards) can be
+used:
 
 [source,bash]
 --------------------------------------------------------------------------------
 SRC = HEDG2*.f90
 --------------------------------------------------------------------------------
 
-Build options
-^^^^^^^^^^^^^
+The variable +HEDTOOLSDIR+ defines the location of the source code for the
+*modelling tools/modules*. In most cases the file hierarchy is simple, model
+code and the HEDTOOLS code are in separate subdirectories.
+
+[source,bash]
+--------------------------------------------------------------------------------
+Workdir
+ |
+ |-- Model1   # Directory for Model 1
+ |
+ |-- Model2   # Directory for Model 2
+ |
+ `-- HEDTOOLS # Directory for modelling tools
+      |
+      `--IEEE
+--------------------------------------------------------------------------------
+
+In such a case, +HEDTOOLSDIR+ is defined in the Makefile as follows:
+
+[source,bash]
+--------------------------------------------------------------------------------
+# Path to HEDTOOLS and IEEE non-intrinsic libs
+HEDTOOLSDIR = ../HEDTOOLS
+IEEEPATH = $(HEDTOOLSDIR)/IEEE
+--------------------------------------------------------------------------------
+
+Here are some of the variables that might need re-definition:
 
 * +FC+ is the default compiler,
 
-* +SRC+ is the source file name(s) for the model,
+* +SRC+ is the source file name(s) for the model (almost always needed!),
 
 * +OUT+ is the executable name to be built,
 
@@ -3686,8 +3693,23 @@ Build options
 * +IF_+ - Intel compiler options with the same purposes as the above
   +GF_+-flags.
 
+
+The definition of the supported compilers and the *the default compiler* (that
+is used if +make+ is called without parameters) is like this:
+
+[source,bash]
+--------------------------------------------------------------------------------
+# Supported Fortran compiler types
+GF_FC = gfortran
+IF_FC = ifort
+SF_FC = f95
+
+# Choose the default compiler type
+FC = $(GF_FC)
+--------------------------------------------------------------------------------
+
 So, to tweak the +Makefile+ to use the Intel compiler as default, just change
-it like this:
+this:
 
 [source,bash]
 --------------------------------------------------------------------------------
