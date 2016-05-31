@@ -3561,7 +3561,7 @@ exist and are newer than the target (by the file modification time), and
 then rebuilds the +target_0+ using +commands+. The system may go to other
 targets that are difened by the prerequisites to update them.
 
-IMPORTANT: The commands in the Makefile must start from the +TAB+ symbol.
+IMPORTANT: The commands in the +Makefile+ must start from the +TAB+ symbol.
 
 For example, the part below has the target +BASE_UTILS.o+ (compiled object
 file), the prerequisite for compiling this file is Fortran source code
@@ -3600,13 +3600,15 @@ two macros (or variables): +$(AUTOGEN_COMMENT)+ and +$(AUTOGEN_CODE)+.
 Basic parameters
 ^^^^^^^^^^^^^^^^
 
-There are only few parameters in the Makefile that may need manual
+There are only few parameters in the +Makefile+ that may need manual
 tweaking. The two variables that always need tweaking are, understandably,
 the file name(s) for the model code: +SRC+ and the name of the executable +OUT+
 (although the latter may always be +MODEL.exe+).
 
 The variable +SRC+ defines *the main source code* file(s) for the model
 (HEDTOOLS are separate).
+indexterm:[Makefile, SRC]
+indexterm:[Makefile, OUT]
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -3657,7 +3659,7 @@ Workdir
       `--IEEE
 --------------------------------------------------------------------------------
 
-In such a case, +HEDTOOLSDIR+ is defined in the Makefile as follows:
+In such a case, +HEDTOOLSDIR+ is defined in the +Makefile+ as follows:
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -3665,6 +3667,8 @@ In such a case, +HEDTOOLSDIR+ is defined in the Makefile as follows:
 HEDTOOLSDIR = ../HEDTOOLS
 IEEEPATH = $(HEDTOOLSDIR)/IEEE
 --------------------------------------------------------------------------------
+indexterm:[Makefile, HEDTOOLSDIR]
+indexterm:[Makefile, IEEEPATH]
 
 Here are some of the variables that might need re-definition:
 
@@ -3716,7 +3720,11 @@ this:
 FC = $(IF_FC)
 --------------------------------------------------------------------------------
 
-IMPORTANT: The Makefile code is documented, just read the comments and
+indexterm:[Makefile, FC]
+indexterm:[Makefile, compiler]
+
+
+IMPORTANT: The +Makefile+ code is documented, just read the comments and
            explanations for the different variables and macros.
 
 ////////////////////////////////////////////////////////////////////////////////
