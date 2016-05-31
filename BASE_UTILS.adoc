@@ -3631,7 +3631,7 @@ SRC = HEDG2_03.f90
 OUT = MODEL_00.exe
 --------------------------------------------------------------------------------
 
-everal files of the model source code cen be defined, e.g.
+Several files of the model source code can be defined, e.g.
 
 [source,bash]
 --------------------------------------------------------------------------------
