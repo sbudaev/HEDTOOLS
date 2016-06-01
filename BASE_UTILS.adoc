@@ -2307,11 +2307,13 @@ real, dimension(100,300,99) :: M3   ! Declare a 3D matrix M3
 ....
 do i=lbound(M3,3), ubound(M3,3)     ! Cycle over the third index, min - max
 
-  ! Save separate slices of M3 into individual files file_01.csv .. file_99.csv
+  ! Save separate slices of M3 to individual files file_001.csv .. file_999.csv
+  !  note that the second parameter to TOSTR, ubound.., is the maximum size
+  !  of the first dimension, it is uded here to set the number of leading zeros
   call CSV_MATRIX_WRITE(matrix=M3(:,:,i), &
-                        colnames=NAMES,   &
-                        csv_file_name="file_" // TOSTR(i,10) // ".csv", &
-                        csv_file_status=flag)
+                      colnames=NAMES,   &
+                      csv_file_name="file_" // TOSTR(i,ubound(M3,3)) // ".csv",&
+                      csv_file_status=flag)
 
 end do
 --------------------------------------------------------------------------------
@@ -2596,21 +2598,28 @@ indexterm:[RNORM]
 Generating arrays of random numbers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The subroutines +RAND_ARRAY+ and +RNORM_ARRAY+ generate arrays (up to
-6-dimensions) of uniform and gaussian random numbers. The only parameter of
-these subroutines is the +real+ +(kind=4)+ array to fill random numbers with.
-There are also aliases +RAND_MATRIX+ and +RNORM_MATRIX+ for two- to
-six-dimensional matrices.
+The subroutines +RAND_ARRAY+ and +RNORM_ARRAY+ generate arrays
+(up to 6-dimensions) of _uniform_ and _normal (gaussian)_ random numbers,
+respectively. +RAND_ARRAY+ can generate real (kind=4) and integer
+arrays. +RAND_ARRAY+ produces values ranging within 0.0 and 1.0, +RNORM_ARRAY+,
+normal values with zero mean and unity standard deviation.
+
+In case of _integer arrays_, the subroutine also requires two additional
+integers that set the range of the integers generated. There are aliases
++RAND_MATRIX+ and +RNORM_MATRIX+ for two- to six-dimensional matrices.
 
 [source]
 --------------------------------------------------------------------------------
-real, dimension(200,500) ARRAY_X, ARRAY_Y
+real, dimension(200,500)  :: ARRAY_X, ARRAY_Y
+integer, dimension(20,20) :: ARRAY_I
 ....
-call RAND_ARRAY(ARRAY_X)    ! produce 2D array of uniform random numbers
+call RAND_ARRAY(ARRAY_X)        ! produce 2D array of uniform random numbers
 ...
-call RNORM_ARRAY(ARRAY_Y)   ! produce 2D array of gaussian numbers
+call RAND_ARRAY(ARRAY_I,1,10)   ! produce 2D array of integers ranging 1 to 10
 ...
-call RNORM_MATRIX(ARRAY_Y)  ! produce 2D matrix of gaussian numbers (as above)
+call RNORM_ARRAY(ARRAY_Y)       ! produce 2D array of gaussian numbers
+...
+call RNORM_MATRIX(ARRAY_Y)      ! produce 2D matrix of gaussian numbers (as above)
 --------------------------------------------------------------------------------
 
 Build details

@@ -34,38 +34,49 @@ interface RNORM         ! We can use RNORM as an alias to RNORM_R4
   module procedure RNORM_R4
 end interface RNORM
 
-interface RAND_ARRAY    ! Arrays of uniform random numbers, wrapper to RAND_R4
-  module procedure RAND_ARRAY_1
-  module procedure RAND_ARRAY_2
-  module procedure RAND_ARRAY_3
-  module procedure RAND_ARRAY_4
-  module procedure RAND_ARRAY_5
-  module procedure RAND_ARRAY_6
+interface RAND_ARRAY                  ! Arrays of uniform random numbers,
+  module procedure RAND_ARRAY_1_I     ! wrapper to RAND_R4 and RAND_I
+  module procedure RAND_ARRAY_2_I
+  module procedure RAND_ARRAY_3_I
+  module procedure RAND_ARRAY_4_I
+  module procedure RAND_ARRAY_5_I
+  module procedure RAND_ARRAY_6_I
+  module procedure RAND_ARRAY_1_R4
+  module procedure RAND_ARRAY_2_R4
+  module procedure RAND_ARRAY_3_R4
+  module procedure RAND_ARRAY_4_R4
+  module procedure RAND_ARRAY_5_R4
+  module procedure RAND_ARRAY_6_R4
 end interface RAND_ARRAY
 
-interface RAND_MATRIX    ! Matrices of uniform random numbers, wrapper to RAND_R4
-  module procedure RAND_ARRAY_2
-  module procedure RAND_ARRAY_3
-  module procedure RAND_ARRAY_4
-  module procedure RAND_ARRAY_5
-  module procedure RAND_ARRAY_6
+interface RAND_MATRIX                 ! Matrices of uniform random numbers,
+  module procedure RAND_ARRAY_2_I     ! wrapper to RAND_R4 and RAND_I
+  module procedure RAND_ARRAY_3_I
+  module procedure RAND_ARRAY_4_I
+  module procedure RAND_ARRAY_5_I
+  module procedure RAND_ARRAY_6_I
+  module procedure RAND_ARRAY_2_R4
+  module procedure RAND_ARRAY_3_R4
+  module procedure RAND_ARRAY_4_R4
+  module procedure RAND_ARRAY_5_R4
+  module procedure RAND_ARRAY_6_R4
 end interface RAND_MATRIX
 
 interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
-  module procedure RNORM_ARRAY_1
-  module procedure RNORM_ARRAY_2
-  module procedure RNORM_ARRAY_3
-  module procedure RNORM_ARRAY_4
-  module procedure RNORM_ARRAY_5
-  module procedure RNORM_ARRAY_6
+  module procedure RNORM_ARRAY_1_R4
+  module procedure RNORM_ARRAY_2_R4
+  module procedure RNORM_ARRAY_3_R4
+  module procedure RNORM_ARRAY_4_R4
+  module procedure RNORM_ARRAY_5_R4
+  module procedure RNORM_ARRAY_6_R4
 end interface RNORM_ARRAY
 
 interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
-  module procedure RNORM_ARRAY_2
-  module procedure RNORM_ARRAY_3
-  module procedure RNORM_ARRAY_4
-  module procedure RNORM_ARRAY_5
-  module procedure RNORM_ARRAY_6
+  module procedure RNORM_ARRAY_2_R4
+  module procedure RNORM_ARRAY_3_R4
+  module procedure RNORM_ARRAY_4_R4
+  module procedure RNORM_ARRAY_5_R4
+  module procedure RNORM_ARRAY_6_R4
 end interface RNORM_MATRIX
 
 !-------------------------------------------------------------------------------
@@ -372,7 +383,7 @@ end function RNORM_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNORM_ARRAY_1(random_array)
+subroutine RNORM_ARRAY_1_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 1-dimensional
 ! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
@@ -388,11 +399,11 @@ do i=1, ubound(random_array,1)
   random_array(i) = RNORM_R4()
 end do
 
-end subroutine RNORM_ARRAY_1
+end subroutine RNORM_ARRAY_1_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNORM_ARRAY_2(random_array)
+subroutine RNORM_ARRAY_2_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 2-dimensional
 ! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
@@ -410,11 +421,11 @@ do i=1, ubound(random_array,2)
   end do
 end do
 
-end subroutine RNORM_ARRAY_2
+end subroutine RNORM_ARRAY_2_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNORM_ARRAY_3(random_array)
+subroutine RNORM_ARRAY_3_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 3-dimensional
 ! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
@@ -434,11 +445,11 @@ do i=1, ubound(random_array,3)
   end do
 end do
 
-end subroutine RNORM_ARRAY_3
+end subroutine RNORM_ARRAY_3_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNORM_ARRAY_4(random_array)
+subroutine RNORM_ARRAY_4_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 4-dimensional
 ! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
@@ -460,11 +471,11 @@ do i=1, ubound(random_array,4)
   end do
 end do
 
-end subroutine RNORM_ARRAY_4
+end subroutine RNORM_ARRAY_4_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNORM_ARRAY_5(random_array)
+subroutine RNORM_ARRAY_5_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 5-dimensional
 ! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
@@ -488,11 +499,11 @@ do i=1, ubound(random_array,5)
   end do
 end do
 
-end subroutine RNORM_ARRAY_5
+end subroutine RNORM_ARRAY_5_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNORM_ARRAY_6(random_array)
+subroutine RNORM_ARRAY_6_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 6-dimensional
 ! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
@@ -518,14 +529,14 @@ do i=1, ubound(random_array,6)
   end do
 end do
 
-end subroutine RNORM_ARRAY_6
+end subroutine RNORM_ARRAY_6_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_1(random_array)
+subroutine RAND_ARRAY_1_R4(random_array)
 !*******************************************************************************
 ! RANDOM_ARRAY_1, 1-dimensional
-! PURPOSE: Wrapper to RAND_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
 !*******************************************************************************
 
 ! parameters
@@ -538,14 +549,14 @@ do i=1, ubound(random_array,1)
   random_array(i) = RAND_R4()
 end do
 
-end subroutine RAND_ARRAY_1
+end subroutine RAND_ARRAY_1_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_2(random_array)
+subroutine RAND_ARRAY_2_R4(random_array)
 !*******************************************************************************
 ! RAND_ARRAY, 2-dimensional
-! PURPOSE: Wrapper to RAND_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
 !*******************************************************************************
 
 ! parameters
@@ -560,14 +571,14 @@ do i=1, ubound(random_array,2)
   end do
 end do
 
-end subroutine RAND_ARRAY_2
+end subroutine RAND_ARRAY_2_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_3(random_array)
+subroutine RAND_ARRAY_3_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 3-dimensional
-! PURPOSE: Wrapper to RAND_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
 !*******************************************************************************
 
 ! parameters
@@ -584,14 +595,14 @@ do i=1, ubound(random_array,3)
   end do
 end do
 
-end subroutine RAND_ARRAY_3
+end subroutine RAND_ARRAY_3_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_4(random_array)
+subroutine RAND_ARRAY_4_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 4-dimensional
-! PURPOSE: Wrapper to RAND_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
 !*******************************************************************************
 
 ! parameters
@@ -610,14 +621,14 @@ do i=1, ubound(random_array,4)
   end do
 end do
 
-end subroutine RAND_ARRAY_4
+end subroutine RAND_ARRAY_4_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_5(random_array)
+subroutine RAND_ARRAY_5_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 5-dimensional
-! PURPOSE: Wrapper to RAND_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
 !*******************************************************************************
 
 ! parameters
@@ -638,14 +649,14 @@ do i=1, ubound(random_array,5)
   end do
 end do
 
-end subroutine RAND_ARRAY_5
+end subroutine RAND_ARRAY_5_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_6(random_array)
+subroutine RAND_ARRAY_6_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 6-dimensional
-! PURPOSE: Wrapper to RAND_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
 !*******************************************************************************
 
 ! parameters
@@ -668,7 +679,169 @@ do i=1, ubound(random_array,6)
   end do
 end do
 
-end subroutine RAND_ARRAY_6
+end subroutine RAND_ARRAY_6_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_1_I(random_array, a, b)
+!*******************************************************************************
+! RANDOM_ARRAY_1, 1-dimensional
+! PURPOSE: Wrapper to RAND_I to produce array of uniformly distributed integers
+! PARAMETERS: Integer array, minimum cvalue, maximum value
+!*******************************************************************************
+
+! parameters
+integer, dimension(:) :: random_array
+integer :: a, b
+
+! local variables
+integer :: i
+
+do i=1, ubound(random_array,1)
+  random_array(i) = RAND_I(a, b)
+end do
+
+end subroutine RAND_ARRAY_1_I
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_2_I(random_array, a, b)
+!*******************************************************************************
+! RAND_ARRAY, 2-dimensional
+! PURPOSE: Wrapper to RAND_I to produce array of uniformly distributed integers
+! PARAMETERS: Integer array, minimum cvalue, maximum value
+!*******************************************************************************
+
+! parameters
+integer, dimension(:,:) :: random_array
+integer :: a, b
+
+! local variables
+integer :: i, j
+
+do i=1, ubound(random_array,2)
+  do j=1, ubound(random_array,1)
+    random_array(j,i) = RAND_I(a, b)
+  end do
+end do
+
+end subroutine RAND_ARRAY_2_I
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_3_I(random_array, a, b)
+!*******************************************************************************
+! RNORM_ARRAY, 3-dimensional
+! PURPOSE: Wrapper to RAND_I to produce array of uniformly distributed integers
+! PARAMETERS: Integer array, minimum cvalue, maximum value
+!*******************************************************************************
+
+! parameters
+integer, dimension(:,:,:) :: random_array
+integer :: a, b
+
+! local variables
+integer :: i, j, k
+
+do i=1, ubound(random_array,3)
+  do j=1, ubound(random_array,2)
+    do k=1, ubound(random_array,1)
+      random_array(k,j,i) = RAND_I(a, b)
+    end do
+  end do
+end do
+
+end subroutine RAND_ARRAY_3_I
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_4_I(random_array, a, b)
+!*******************************************************************************
+! RNORM_ARRAY, 4-dimensional
+! PURPOSE: Wrapper to RAND_I to produce array of uniformly distributed integers
+! PARAMETERS: Integer array, minimum cvalue, maximum value
+!*******************************************************************************
+
+! parameters
+integer, dimension(:,:,:,:) :: random_array
+integer :: a, b
+
+! local variables
+integer :: i, j, k, l
+
+do i=1, ubound(random_array,4)
+  do j=1, ubound(random_array,3)
+    do k=1, ubound(random_array,2)
+      do l=1, ubound(random_array,1)
+        random_array(l,k,j,i) = RAND_I(a, b)
+      end do
+    end do
+  end do
+end do
+
+end subroutine RAND_ARRAY_4_I
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_5_I(random_array, a, b)
+!*******************************************************************************
+! RNORM_ARRAY, 5-dimensional
+! PURPOSE: Wrapper to RAND_I to produce array of uniformly distributed integers
+! PARAMETERS: Integer array, minimum cvalue, maximum value
+!*******************************************************************************
+
+! parameters
+integer, dimension(:,:,:,:,:) :: random_array
+integer :: a, b
+
+! local variables
+integer :: i, j, k, l, m
+
+do i=1, ubound(random_array,5)
+  do j=1, ubound(random_array,4)
+    do k=1, ubound(random_array,3)
+      do l=1, ubound(random_array,2)
+        do m=1, ubound(random_array,1)
+          random_array(m,l,k,j,i) = RAND_I(a, b)
+        end do
+      end do
+    end do
+  end do
+end do
+
+end subroutine RAND_ARRAY_5_I
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_6_I(random_array, a, b)
+!*******************************************************************************
+! RNORM_ARRAY, 6-dimensional
+! PURPOSE: Wrapper to RAND_I to produce array of uniformly distributed integers
+! PARAMETERS: Integer array, minimum cvalue, maximum value
+!*******************************************************************************
+
+! parameters
+integer, dimension(:,:,:,:,:,:) :: random_array
+integer :: a, b
+
+! local variables
+integer :: i, j, k, l, m, n
+
+do i=1, ubound(random_array,6)
+  do j=1, ubound(random_array,5)
+    do k=1, ubound(random_array,4)
+      do l=1, ubound(random_array,3)
+        do m=1, ubound(random_array,2)
+          do n=1, ubound(random_array,1)
+            random_array(n,m,l,k,j,i) = RAND_I(a, b)
+          end do
+        end do
+      end do
+    end do
+  end do
+end do
+
+end subroutine RAND_ARRAY_6_I
 
 !-------------------------------------------------------------------------------
 
