@@ -12,6 +12,13 @@ manual on asciidoc is available at: http://asciidoc.org/userguide.html
 ////////////////////////////////////////////////////////////////////////////////
 Notes: (within the comment block ///// , so won't render in the final document)
 
+We need a name for the toolbox of the modules, does the
+Bergen Evolutiuonary Agents Simulation Toolbox (BEAST) seem okay?
+others:
+    Bergen Evolutiuonary Agents Simulation Toolbox in Fortran (BEAST-F or F-BEAST)
+    Bergen Evolutiuonary Agents Simulation Toolbox in OO Fortran (BEAST-OOF)
+    Fortran Evolutiuonary Agents Simulation Toolbox (FEAST)
+
 Workflow: do this doc in private branch. Reintegrate back to trunk when PDF is
           issued.
 
