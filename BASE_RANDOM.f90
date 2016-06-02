@@ -331,6 +331,49 @@ end function RAND_I
 
 !-------------------------------------------------------------------------------
 
+function RAND_STRING(length, char_start, char_end) result (out_string)
+!*******************************************************************************
+! RAND_STRING
+! PURPOSE: returns a string composed of random characters.
+! PARAMETERS: integer string length, optional integers defining the range
+!             of the ASCII character codes for the string, if they are not set,
+!             the character range is defined in the ASCII codes 48:122 (i.e.
+!             numbers, 48:57, sime special symbols and Latin alphanumeric
+!             characters 65:122)
+!*******************************************************************************
+
+  ! Parameters
+  integer, intent(in) :: length
+  integer, optional, intent(in) :: char_start, char_end
+
+  ! Function value
+  character(len=length) :: out_string
+
+  ! local variables
+  integer :: i
+  integer :: char_start_here, char_end_here
+
+  if (present(char_start)) then
+    char_start_here = char_start
+  else
+    char_start_here = 32
+  end if
+
+  if (present(char_end)) then
+    char_end_here = char_end
+  else
+    char_end_here = 122
+  end if
+
+  ! produce the random string
+  do i = 1, length
+    out_string(i:i) = achar(RAND_I(char_start_here, char_end_here))
+  end do
+
+end function RAND_STRING
+
+!-------------------------------------------------------------------------------
+
 function RNORM_R4() result(fn_val)
 !*******************************************************************************
 ! RNORM

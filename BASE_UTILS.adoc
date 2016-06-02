@@ -2595,6 +2595,24 @@ ga_mutation = RNORM()
 --------------------------------------------------------------------------------
 indexterm:[RNORM]
 
+Function: RAND_STRING
+~~~~~~~~~~~~~~~~~~~~~
+
+indexterm:[RAND_STRING]
+
+Generates a string composed of random characters. It has a single mandatory
+integer parameter, the string length. There are also two optional integer
+parameters defining the range of the ASCII character codes for this string.
+
+Some useful ranges: numbers 48:122, Latin alphanumeric characters 65:122,
+uppercase Latin letters 65:90, lowercase Latin letters: 97:122.
+
+[source]
+--------------------------------------------------------------------------------
+LABEL = RAND_STRING(24,97,122) ! Set a random label of 24 lowercase letters
+--------------------------------------------------------------------------------
+
+
 Generating arrays of random numbers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
