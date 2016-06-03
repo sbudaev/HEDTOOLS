@@ -3601,7 +3601,8 @@ exist and are newer than the target (by the file modification time), and
 then rebuilds the +target_0+ using +commands+. The system may go to other
 targets that are difened by the prerequisites to update them.
 
-IMPORTANT: The commands in the +Makefile+ must start from the +TAB+ symbol.
+IMPORTANT: The commands that are defined to build a target in the +Makefile+
+          (i.e. below the colon +:+ part) must start from the +TAB+ symbol.
 
 For example, the part below has the target +BASE_UTILS.o+ (compiled object
 file), the prerequisite for compiling this file is Fortran source code
