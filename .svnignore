@@ -1,6 +1,14 @@
+# Don't forget to set ignore properties for this to work:
+#  svn propset svn:ignore -F .svnignore .
+#---------------------------------------------------------
+
 # Git files
 .git
 .gitignore
+
+# Mercurial files
+.hg
+.hgignore
 
 # AHA output
 outputs_*
@@ -15,5 +23,18 @@ errors.txt
 # exe files
 *.exe
 
-# syncthing conflicting
+# compiler and Fortran-specific temporary files
+*.mod
+*.o
+*.obj
+
+# codeblocks project files
+*.bmark
+*.layout
+*.cbp
+
+# Geany project files
+*_PRJ?
+
+# syncthing conflicting files
 *.sync-conflict-*
