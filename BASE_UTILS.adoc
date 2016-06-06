@@ -221,11 +221,9 @@ http://www.fortran90.org/src/best-practices.html[Fortran Best Practices]
 indexterm:[Fortran Best Practices]
 
 *Work at high level, use these tools, use objects, isolate as much as possible
-into subroutines*
-
-In this way of coding, it becomes more clear what each part of the program
-is really doing and it is also easier to modify components of the program
-so that they don't affect other irrelevant components.
+into subroutines* In this way of coding, it becomes more clear what each part
+of the program is really doing and it is also easier to modify components
+of the program so that they don't affect other irrelevant components.
 
 [source]
 --------------------------------------------------------------------------------
@@ -248,14 +246,57 @@ GENERATIONS_LOOP: do while &
 end do GENERATIONS_LOOP
 --------------------------------------------------------------------------------
 
-*Use meaningful labels*
+*Modularise* everything: many small subroutines are easier to code, test,
+understand, reuse, and maintain that a single monolithic piece or very few
+general subroutines. Modularity can also involve hierarchical organisation, it
+is sometimes quite useful to define subroutines within subroutines (the
+keyword +contains+ can be used within other subroutines and functions!)
 
-Using labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
-constructs may greatly improve the readability of the code and make it more
-easy to understand, especially if there are many nested loops +if..then.. end
-if+ constructs. No need to label all such things (this will just increase
-clutter), but those that are really important or very big must be. A couple of
-examples are below:
+[source]
+--------------------------------------------------------------------------------
+! This is the main module
+module THE_GENOME
+
+  use COMMONDATA
+
+  implicit none
+
+  .....
+  .....
+
+  contains
+
+  ! It contains this subroutine...
+  subroutine chromosome_sort_rank_id(this)
+    class(CHROMOSOME) :: this
+    .....
+    call qsort(this%allele)
+    .....
+
+    contains
+
+    ! And the above subroutine contains two further subroutines
+    recursive subroutine qsort(A)
+    .....
+    .....
+    end subroutine qsort
+
+    subroutine qs_partition_rank_id(A, marker)
+    .....
+    .....
+    end subroutine qs_partition_rank_id
+
+  end subroutine chromosome_sort_rank_id
+
+end module THE_GENOME
+--------------------------------------------------------------------------------
+
+*Use meaningful labels* Using labels to mark +do.. end do+, +if .. end if+,
++forall+ and other similar constructs may greatly improve the readability of
+the code and make it more easy to understand, especially if there are many
+nested loops +if..then.. end if+ constructs. No need to label all such things
+(this will just increase clutter), but those that are really important or
+very big must be. A couple of examples are below:
 
 [source]
 --------------------------------------------------------------------------------
@@ -279,9 +320,8 @@ else if (dev == 4) then SELECT_DEVIANT_CLASS
 end if SELECT_DEVIANT_CLASS
 --------------------------------------------------------------------------------
 
-*Use whole-array operations and array slices instead of loops, as well as
-built-in parallel instructions (+where+, +forall+ etc.): it is faster*
-
+*Use whole-array operations and array slices instead of loops, as well
+as built-in parallel instructions (+where+, +forall+ etc.): it is faster*
 Fortran 95, 2003 and 2008 has several looping/array assignment constructions
 that have been optimised for speed in multi-processor parallel environments.
 Never use loops to initialise arrays, and avoid using them to calculate
@@ -379,7 +419,8 @@ aggressive CPU optimisation does work, although the tricks remain very useful.
 
 Note that newer versions of Fortran compilers can become smart enough to adjust
 the order of looping in the machine code. Nonetheless it is better to write
-"optimised" code using the above tricks that works fast just everywhere.
+"optimised" code, preferably *not* requiring hand-optimisation of the looping
+order, such as *loop-free array constructions,* that works fast just everywhere.
 
 Document code as you write it with Doxygen
 ------------------------------------------
