@@ -249,8 +249,9 @@ end do GENERATIONS_LOOP
 *Modularise* everything: many small subroutines are easier to code, test,
 understand, reuse, and maintain that a single monolithic piece or very few
 general subroutines. Modularity can also involve hierarchical organisation, it
-is sometimes quite useful to define subroutines within subroutines (the
-keyword +contains+ can be used within other subroutines and functions!)
+is sometimes quite useful, when a limited scope is required, to define
+subroutines within subroutines (the keyword +contains+ can be used within
+other subroutines and functions!):
 
 [source]
 --------------------------------------------------------------------------------
@@ -320,8 +321,8 @@ else if (dev == 4) then SELECT_DEVIANT_CLASS
 end if SELECT_DEVIANT_CLASS
 --------------------------------------------------------------------------------
 
-*Use whole-array operations and array slices instead of loops, as well
-as built-in parallel instructions (+where+, +forall+ etc.): it is faster*
+*Use whole-array operations* and array slices instead of loops, *prefer
+built-in parallel instructions* (+where+, +forall+ etc.): it is faster
 Fortran 95, 2003 and 2008 has several looping/array assignment constructions
 that have been optimised for speed in multi-processor parallel environments.
 Never use loops to initialise arrays, and avoid using them to calculate
@@ -416,6 +417,70 @@ and automatic loop parallelization (+-fast -autopar -depend=yes+) run much
 faster, but the speed differences still remained quite impressive (first
 test execution time = 0m0.010s, all other = 0m0.006s). So compiler-side
 aggressive CPU optimisation does work, although the tricks remain very useful.
+
+Fortran has many built-in functions that work on *whole arrays* and these
+would be faster than multiple nested loops coded manually. For example,
+many arithmetic functions (+abs+, ... +cos+,... +log+, ... +sin+... ) work
+with arrays as well as scalars. These are also useful: +where+, +forall+, as
+well as array logical operators with mask: +all+, +any+, +count+, +maxloc+,
++minloc+, +maxval+, +minval+, +merge+, +pack+, +unpack+, +product+, +sum+. The
+code below illustrates some loop-free constructions:
+
+[source]
+--------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------
+! This program illustrates some loop-free Fortran constructions
+!-------------------------------------------------------------------------------
+program LOOP_FREE
+  ! Declare arrays and variables we need
+  implicit none
+  character(len=*), parameter :: fmt_str_r = "(3F8.1)"
+  character(len=*), parameter :: fmt_str_i = "(3I8)"
+
+  ! Assign 2-D array values from a 1-D vector using 'reshape'
+  real, dimension(3,4) :: A  = reshape( [ 1.1 , 2.1 , 3.1 ,&
+                                          1.2 , 2.2 , 3.2 ,&
+                                          1.3 , 2.3 , 3.3 ,&
+                                          1.4 , 2.4 , 3.4 ] , [ 3 , 4 ] )
+  integer, dimension(3,4) :: B = 0
+  integer, dimension(3)   :: S = 0
+  logical, dimension(3)   :: AB
+  !-----------------------------------------------------------------------------
+  ! Print original arrays
+  print (fmt_str_r), A(:,1)  !     1.1     2.1     3.1
+  print (fmt_str_r), A(:,2)  !     1.2     2.2     3.2
+  print (fmt_str_r), A(:,3)  !     1.3     2.3     3.3
+  print (fmt_str_r), A(:,4)  !     1.4     2.4     3.4
+
+! *** Example 1: Assign values based on logical condition in 'where'
+  where( A > 3. )
+    A=100.
+  elsewhere
+    B=10
+  end where
+  ! Here is the result of this array operation:
+  print *, "---------------------------"
+  print (fmt_str_r), A(:,1)  !     1.1     2.1   100.0
+  print (fmt_str_r), A(:,2)  !     1.2     2.2   100.0
+  print (fmt_str_r), A(:,3)  !     1.3     2.3   100.0
+  print (fmt_str_r), A(:,4)  !     1.4     2.4   100.0
+  print *, "---------------------------"
+  print (fmt_str_i), B(:,1)  !      10      10       0
+  print (fmt_str_i), B(:,2)  !      10      10       0
+  print (fmt_str_i), B(:,3)  !      10      10       0
+  print (fmt_str_i), B(:,4)  !      10      10       0
+
+! *** Example 2: Calculate sums of elements over the fixed (second) dimension
+  S = sum(A, dim=2)
+  print *, "---------------------------"
+  print (fmt_str_i), S       !       5       9     400
+
+! *** Example 3: Find if the condition holds, for the fixed (second) dimension.
+  AB = all(A > B, dim=2)
+  print *, AB                ! F F T
+
+end program LOOP_FREE
+--------------------------------------------------------------------------------
 
 Note that newer versions of Fortran compilers can become smart enough to adjust
 the order of looping in the machine code. Nonetheless it is better to write
