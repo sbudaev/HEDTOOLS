@@ -322,16 +322,16 @@ end if SELECT_DEVIANT_CLASS
 --------------------------------------------------------------------------------
 
 *Use whole-array operations* and array slices instead of loops, *prefer
-built-in parallel instructions* (+where+, +forall+ etc.): it is faster
-Fortran 95, 2003 and 2008 has several looping/array assignment constructions
-that have been optimised for speed in multi-processor parallel environments.
-Never use loops to initialise arrays, and avoid using them to calculate
-array components. Whenever possible, _reverse the order of indices_ in nested
-loops, e.g. first looping should be over the columns, and then over the rows.
-Nested loops  may have huge speed overhead! Use +FORALL+, +WHERE+ and similar
-new "parallelized" Fortran constructions. Below is a little test conducted on
-an average amd64 system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+
-timing is by Linux +time+).
+built-in loop-free and parallel instructions* (+where+, +forall+ etc.):
+it is faster. Fortran 95, 2003 and 2008 has several looping/array assignment
+constructions that have been optimised for speed in multi-processor parallel
+environments.  Never use loops to initialise arrays, and avoid using them to
+calculate array components. Whenever possible, _reverse the order of indices_
+in nested loops, e.g. first looping should be over the columns, and then
+over the rows.  Nested loops  may have huge speed overhead! Use +FORALL+,
++WHERE+ and similar new "parallelized" Fortran constructions. Below is a
+little test conducted on an average amd64 system using GNU Fortran (+-O3
+-funroll-loops -fforce-addr,+ timing is by Linux +time+).
 indexterm:[speed, execution speed]
 indexterm:[nested loops]
 indexterm:[array, nested loops,indices order]
@@ -425,26 +425,30 @@ with arrays as well as scalars. These are also useful: +where+, +forall+, as
 well as array logical operators with mask: +all+, +any+, +count+, +maxloc+,
 +minloc+, +maxval+, +minval+, +merge+, +pack+, +unpack+, +product+, +sum+. The
 code below illustrates some loop-free constructions:
+indexterm:[nested loops]
+indexterm:[loop-free functions]
+indexterm:[whole-array functions]
 
 [source]
 --------------------------------------------------------------------------------
 !-------------------------------------------------------------------------------
-! This program illustrates some loop-free Fortran constructions
+! This program illustrates some loop-free Fortran constructions.
+! Note that the order of indices here is: (column, row).
 !-------------------------------------------------------------------------------
 program LOOP_FREE
   ! Declare arrays and variables we need
   implicit none
-  character(len=*), parameter :: fmt_str_r = "(3F8.1)"
-  character(len=*), parameter :: fmt_str_i = "(3I8)"
+  character(len=*), parameter :: fmt_str_r = "(3F8.1)"  ! these are just for
+  character(len=*), parameter :: fmt_str_i = "(3I8)"    ! output formatting
 
   ! Assign 2-D array values from a 1-D vector using 'reshape'
   real, dimension(3,4) :: A  = reshape( [ 1.1 , 2.1 , 3.1 ,&
                                           1.2 , 2.2 , 3.2 ,&
                                           1.3 , 2.3 , 3.3 ,&
                                           1.4 , 2.4 , 3.4 ] , [ 3 , 4 ] )
-  integer, dimension(3,4) :: B = 0
-  integer, dimension(3)   :: S = 0
-  logical, dimension(3)   :: AB
+  integer, dimension(3,4) ::  B = 0
+  integer, dimension(3)   ::  S = 0
+  logical, dimension(3)   :: AB = F ! logical, can be either .TRUE. of .FALSE.
   !-----------------------------------------------------------------------------
   ! Print original arrays
   print (fmt_str_r), A(:,1)  !     1.1     2.1     3.1
@@ -453,10 +457,10 @@ program LOOP_FREE
   print (fmt_str_r), A(:,4)  !     1.4     2.4     3.4
 
 ! *** Example 1: Assign values based on logical condition in 'where'
-  where( A > 3. )
-    A=100.
-  elsewhere
-    B=10
+  where( A > 3. )            ! 'where' clearly produces much simpler and
+    A=100.                   ! more concise code than two nested loops,
+  elsewhere                  ! it is also easier for the compiler to optimise
+    B=10                     ! and therefore result in faster machine code.
   end where
   ! Here is the result of this array operation:
   print *, "---------------------------"
@@ -470,13 +474,14 @@ program LOOP_FREE
   print (fmt_str_i), B(:,3)  !      10      10       0
   print (fmt_str_i), B(:,4)  !      10      10       0
 
-! *** Example 2: Calculate sums of elements over the fixed (second) dimension
+! *** Example 2: Calculate sums of elements over the second (= rows) dimension
   S = sum(A, dim=2)
   print *, "---------------------------"
   print (fmt_str_i), S       !       5       9     400
 
-! *** Example 3: Find if the condition holds, for the fixed (second) dimension.
-  AB = all(A > B, dim=2)
+! *** Example 3: Find if the condition holds, for all values over the second (rows)
+!                dimension, similar function 'any' evaluates for any of these values.
+  AB = all(A > B, dim=2)     ! Here we output values .TRUE. as T or .FALSE. as F
   print *, AB                ! F F T
 
 end program LOOP_FREE
@@ -485,7 +490,9 @@ end program LOOP_FREE
 Note that newer versions of Fortran compilers can become smart enough to adjust
 the order of looping in the machine code. Nonetheless it is better to write
 "optimised" code, preferably *not* requiring hand-optimisation of the looping
-order, such as *loop-free array constructions,* that works fast just everywhere.
+order, such as *loop-free array constructions,* that works fast just
+everywhere. Many of the Fortran loop-free constructions actually resemble
+similar Matlab functions.
 
 Document code as you write it with Doxygen
 ------------------------------------------
