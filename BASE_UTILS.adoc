@@ -2743,6 +2743,10 @@ respectively. +RAND_ARRAY+ can generate real (kind=4) and integer
 arrays. +RAND_ARRAY+ produces values ranging within 0.0 and 1.0, +RNORM_ARRAY+,
 normal values with zero mean and unity standard deviation.
 
+Note that +RAND_ARRAY+ is just a trivial wrapper to the standard intrinsic
++random_number+ subroutine and runs equally fast, it is here for compatibility
+only.
+
 In case of _integer arrays_, the subroutine also requires two additional
 integers that set the range of the integers generated. There are aliases
 +RAND_MATRIX+ and +RNORM_MATRIX+ for two- to six-dimensional matrices.
