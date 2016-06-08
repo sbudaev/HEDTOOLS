@@ -425,9 +425,9 @@ with arrays as well as scalars. These are also useful: +where+, +forall+, as
 well as array logical operators with mask: +all+, +any+, +count+, +maxloc+,
 +minloc+, +maxval+, +minval+, +merge+, +pack+, +unpack+, +product+, +sum+. The
 code below illustrates some loop-free constructions:
-indexterm:[nested loops]
-indexterm:[loop-free functions]
-indexterm:[whole-array functions]
+indexterm:[array, nested loops]
+indexterm:[array, loop-free functions]
+indexterm:[array, whole-array functions]
 
 [source]
 --------------------------------------------------------------------------------
