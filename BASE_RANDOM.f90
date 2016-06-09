@@ -7,7 +7,10 @@ module BASE_RANDOM
 !
 ! NOTES:
 !  IMPORTANT: Subroutines here are non-portable and depend on the compiler
-!  and possibly the platform.
+!  and possibly the platform. They use the standard-conforming
+!  intrinsic subroutines RANDOM_SEED to initialize the pseudo-random number
+!  generator and RANDOM_NUMBER to generate pseudo-random numbers. It is
+!  recommended that these subroutines should be used in all new codes.
 !
 ! SUPPORTED COMPILERS:
 !  GNU Fortran, Intel Fortran, Oracle Solaris Studio Fortran
