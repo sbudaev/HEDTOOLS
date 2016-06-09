@@ -280,7 +280,11 @@ function RAND_R4() result (randreal)
 ! Notes: On some systems the several PRNGs functions may use different
 !        algorithms e.g see ran (standard, from DEC) as well as lcrans and
 !        addrans (better but slower). This uses the standard implementation
-!        random_number.
+!        random_number. In particular, for GNU gfortran ran is provided for
+!        backwards compatibility with GNU Fortran 77. It implements a simple
+!        modulo generator as provided by g77. For new code, one should
+!        consider the use of random_number as it implements a superior
+!        algorithm. This random_number is just used in this function.
 
   implicit none
   real :: randreal
