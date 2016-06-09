@@ -696,16 +696,26 @@ A typical SVN repository organisation usually includes a *trunk* directory for
 the main development line and many *branches* for different purposes created by
 different developers. For example, the current AHA repo has this structure:
 
+////////////////////////////////////////////////////////////////////////////////
+Command to produce directory tree in ascii, no utf pseudographics
+tree --prune --charset ascii -dxL 2
+////////////////////////////////////////////////////////////////////////////////
+
 [source,bash]
 --------------------------------------------------------------------------------
-|-- branches
+|-- branches          # Branches are the private workspace for users
 |   |-- budaev
+|   |-- christian
 |   |-- judy
 |   `-- ryan
 |
-|-- old_archived
+|-- old_archived      # Some old code
 |
-`-- trunk
+`-- trunk             # Place for the main, "production-ready" model codes
+    |-- DOC           # Docs that do not change, e.g. Fortran Handbook
+    |-- HEDTOOLS      # Stable version of the modelling tools
+    |-- hormonemodel  # One of the models, ""production-ready""
+    `-- scripts       # Templates of scripts and makefiles for reuse
 --------------------------------------------------------------------------------
 indexterm:[Subversion,trunk]
 indexterm:[Subversion,branch]
