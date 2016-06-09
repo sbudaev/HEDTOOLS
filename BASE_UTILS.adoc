@@ -2701,6 +2701,12 @@ end if
 indexterm:[RAND_R4]
 indexterm:[RAND_R8]
 
+IMPORTANT: These functions are just wrappers to the standard Fortran subroutine
+           +random_number+. Note that such intrinsic functions as +RAN+ are
+           provided for backwards compatibility with the old _Fortran 77_
+           standard. They are usually implemented as a simple modulo generator
+           (as in +f77+). The new standard +random_number+ implements a
+           superior algorithm and should be used for all new codes.
 
 Function: RNORM
 ~~~~~~~~~~~~~~~
