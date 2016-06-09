@@ -277,6 +277,10 @@ end subroutine RANDOM_SEED_INIT
 
 function RAND_R4() result (randreal)
 ! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
+! Notes: On some systems the several PRNGs functions may use different
+!        algorithms e.g see ran (standard, from DEC) as well as lcrans and
+!        addrans (better but slower). This uses the standard implementation
+!        random_number.
 
   implicit none
   real :: randreal
