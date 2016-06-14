@@ -136,6 +136,8 @@ available for Windows, Linux and Mac.
 *Console terminal* (Highly recommended)
 [[CONSOLE_GET]]
 
+indexterm:[ConEmu terminal]
+
 The Windows console (+cmd+) is extremely weak. *Conemu*
 https://conemu.github.io/ is a much better alternative, especially
 with the *Far manager*, a two-panel console file manager similar to
@@ -712,9 +714,9 @@ tree --prune --charset ascii -dxL 2
 |-- old_archived      # Some old code
 |
 `-- trunk             # Place for the main, "production-ready" model codes
-    |-- DOC           # Docs that do not change, e.g. Fortran Handbook
+    |-- DOC           # Docs that do not change but handy, e.g. Fortran Handbook
     |-- HEDTOOLS      # Stable version of the modelling tools
-    |-- hormonemodel  # One of the models, ""production-ready""
+    |-- hormonemodel  # One of the models, "production-ready"
     `-- scripts       # Templates of scripts and makefiles for reuse
 --------------------------------------------------------------------------------
 indexterm:[Subversion,trunk]
@@ -3636,6 +3638,60 @@ and details etc.
 Microsoft Studio, Oracle Solaris Studio and other similar IDEs actually
 provide their own make systems (e.g. +nmake+, +make+ or +dmake+) that work
 behind the scenes even if the IDE GUI is used.
+
+Using Intel Parallel Studio on Windows
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Using +Makefile+ with the *Intel Parallel Studio XE 2013* Fortran compiler
+(+ifort.exe+) (and probably other versions of Intel Fortran on Windows)
+*requires* setting up the Microsoft Studio environment. This is normally done
+by calling the *Command Prompt* from the menu:
+
+indexterm:[Intel Fortran on Windows]
+indexterm:[Intel Parallel Studio]
+indexterm:[Makefile, Intel Fortran on Windows]
+
+image:img_doc_intel_win_menu.png[height=280,align="left"]
+
+Or if you right click on the shortcut, copy the commend line set in the menu
+and run it in the terminal. Such a command may look like this:
+
+[source,bash]
+--------------------------------------------------------------------------------
+C:\Windows\SysWOW64\cmd.exe /E:ON /V:ON /K ""C:\Program Files (x86)\Intel\Composer XE 2013\bin\ipsxe-comp-vars.bat" intel64 vs2010"
+--------------------------------------------------------------------------------
+
+Then running this command will result in this:
+
+image:img_doc_intel_win_term.png[height=245,align="left"]
+
+Once the Intel command prompt environment is set, we can use the +make+ command
+as normal with the Intel Fortran compiler, e.g. build using the Intel +ifort+
+on Windows:
+
+[source,bash]
+--------------------------------------------------------------------------------
+make intel
+--------------------------------------------------------------------------------
+
+IMPORTANT: It is crucial to set up the Intel Fortran command prompt build
+           environment on the Windows platform, otherwise make would not find
+           all the necessary Intel Parallel Studio and Microsoft Studio
+           compiler and linker components. This is not necessary on the Linux
+           Intel Fortran compiler.
+
+If you use the <<CONSOLE_GET, ConEmu>> terminal, the command to set up the
+Intel Parallel Studio environment can be inserted in the *Startup -> Tasks ->
+Commands* menu:
+
+indexterm:[ConEmu terminal]
+
+image:img_doc_intel_win_conemu.png[height=245,align="left"]
+
+Then, all the Intel build environment commands will be run automatically every
+time the +ConEmu+ terminal is started, so you would not need to do this
+manually.
+
 
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
