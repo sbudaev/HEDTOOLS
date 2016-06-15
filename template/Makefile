@@ -164,8 +164,8 @@ endif
 # Check if we build on Windows platform with Intel Compiler. It is specific in
 # two ways: (1) build options are different, start with slash and often have Q
 # and (2) .obj is used as the extension for object files rather than .o
-# here we check if with AND condition. Do this by simply concatenating two
-# things Windowsifort.
+# here we check if with an emulated AND condition. Do this by simply
+# concatenating two things into Windowsifort.
 ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
 	OBJEXT=obj
 	OBJ = $(basename $(SRC)).$(OBJEXT)
@@ -176,14 +176,6 @@ else
 	OBJEXT=o
 	OBJ = $(basename $(SRC)).$(OBJEXT)
 endif
-
-# Macros to prepare Intel Parallel Studio XE 2013 -- Intel Fortran
-# it is based on this command line batch script:
-#   C:\Windows\SysWOW64\cmd.exe /E:ON /V:ON /K "
-#   "C:\Program Files (x86)\Intel\Composer XE 2013\bin\ipsxe-comp-vars.bat" intel64 vs2010"
-#ifdef INSPECTOR_XE_2013_DIR
-#	 ZZZ=$(NSPECTOR_XE_2013_DIR)
-#endif
 
 #*******************************************************************************
 # Generate the list of modules used in the source.
@@ -351,10 +343,6 @@ SVN_VER = $(shell svn info | grep Revision: | cut -d " " -f 2)
 
 # Default build target = executable
 all: exec
-
-zzz:
-	@echo $(MOD_LIST) $(DOXYPATH)
-	@echo Intel:  '$(INSPECTOR_XE_2013_DIR)'
 
 docs: $(DOXYCFG)
 	doxygen $(DOXYCFG)
