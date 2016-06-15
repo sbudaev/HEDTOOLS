@@ -3681,17 +3681,37 @@ IMPORTANT: It is crucial to set up the Intel Fortran command prompt build
            Intel Fortran compiler.
 
 If you use the <<CONSOLE_GET, ConEmu>> terminal, the command to set up the
-Intel Parallel Studio environment can be inserted in the *Startup -> Tasks ->
-Commands* menu:
+Intel Parallel Studio environment can be inserted in the ConEmu startup command
+line or script.
 
 indexterm:[ConEmu terminal]
 
-image:img_doc_intel_win_conemu.png[height=245,align="left"]
+image:img_doc_intel_win_conemu.png[height=265,align="left"]
 
-Then, all the Intel build environment commands will be run automatically every
-time the +ConEmu+ terminal is started, so you would not need to do this
-manually.
+In the simplest case, the *Startup* command line or startup script might
+contain something like this (note that it is a single line with commands
+separated by ampersands +&+):
 
+[source, bash]
+--------------------------------------------------------------------------------
+cmd.exe /C call "C:\Program Files (x86)\Intel\Composer XE 2013\bin\ipsxe-comp-vars.bat" intel64 vs2010 & "C:\Program Files\Far Manager\far.exe"
+--------------------------------------------------------------------------------
+
+The exact path to the +ipsxe-comp-vars.bat+ should be taken from the menu
+shortcut. In the above case, <<CONSOLE_GET, ConEmu>> will call the command
+prompt setup script +ipsxe-comp-vars.bat+ (with full path) and then run the
+Far Manager (also full path is here).
+
+If you like to use different *tasks* in <<CONSOLE_GET, ConEmu>>, such
+initialisation command, tweaked for particular task can be also inserted the
+*Startup -> Tasks -> Commands* menu; here is an almost identical example
+calling Far Manager:
+
+image:img_doc_intel_win_conemu2.png[height=265,align="left"]
+
+Then, all the Intel build environment commands will be run automatically
+every time the <<CONSOLE_GET, ConEmu>> terminal is started (or the task is
+started), so you would not need to do this manually.
 
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
