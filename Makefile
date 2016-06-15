@@ -3,6 +3,10 @@
 # $Id$
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
+# Note that linking the model code with shared libraries does not look like a
+#      good idea as they will have some runtime loading-unloading overhead.
+#      Also, building shared dll's might be problematic with Intel Fortran on
+#      Windows.
 #-------------------------------------------------------------------------------
 
 # Supported Fortran compiler types
@@ -14,46 +18,93 @@ SF_FC = f95
 FC = $(GF_FC)
 
 #*******************************************************************************
+# Determine what is the build platform, Windows / non-Windows
+# Use uname -- but it may not be installed on Windows. Probably the method
+# based on ComSpec is safer. Note that the -c switch on grep suppresses normal
+# output and just prints count.
+PLATFORM = $(shell uname)
+#IS_WINDOWS = $(shell uname | grep -ci windows)
 
+# A safer way to check platform if uname is not available, ComSpec on Windows
+# Note that ComSpec is (may be?) case-sensitive, check with env.exe
+ifdef ComSpec
+	PLATFORM_TYPE=Windows
+	IS_WINDOWS=1
+else
+	PLATFORM_TYPE=Unix
+	IS_WINDOWS=0
+endif
+
+# Check if we build on Windows platform with Intel Compiler. It is specific in
+# two ways: (1) build options are different, start with slash and often have Q
+# and (2) .obj is used as the extension for object files rather than .o
+# here we check if with AND condition. Do this by simply concatenating two
+# things Windowsifort.
+ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
+	OBJEXT=obj
+	LIBEXT=lib
+	DIBEXT=dll
+	CCMD=/c
+else
+	OBJEXT=o
+	LIBEXT=a
+	DIBEXT=so
+	CCMD=-c
+endif
+
+#*******************************************************************************
 # Main building blocks, define
 SRC = BASE_UTILS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 BASE_RANDOM.f90 \
       BASE_ERRORS.f90 BASE_STRINGS.f90
 
-OBJ = BASE_UTILS.o BASE_CSV_IO.o BASE_LOGGER.o BASE_RANDOM.o BASE_ERRORS.o \
-      BASE_STRINGS.o
+OBJ = BASE_UTILS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) BASE_LOGGER.$(OBJEXT) \
+      BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT) BASE_STRINGS.$(OBJEXT)
 
 MOD = base_utils.mod  csv_io.mod  logger.mod base_random.mod \
       assert.mod errors.mod exception.mod throwable.mod precision_str.mod \
       strings.mod
 
 DOC = BASE_UTILS.adoc
-LIB = lib_hedutils.a
-DIB = lib_hedutils.so
+
+LIBNAME = lib_hedutils
+LIB = $(LIBNAME).$(LIBEXT)
+DIB = $(LIBNAME).$(DIBEXT)
 
 #  Header file setting compiler/platform specific code for PRNG module
 AUTOGEN_HEADER_RAND = BASE_RANDOM.inc
 
 #-------------------------------------------------------------------------------
+# We normally do not include _TRAPS and _CHECKS into the build command (_FFLAGS)
+# because they may have overhead, and the library tool routines are supposed to
+# be well tested.
 
 # Options for GNU Fortran
 GF_STATIC = -static-libgfortran -static -static-libgcc
 GF_TRAPS = -ffpe-trap=
 GF_RCHECKS = -Wall -fbounds-check
-GF_FFLAGS = $(GF_STATIC) $(GF_TRAPS) $(GF_RCHECKS) -O3 -fPIC
+GF_FFLAGS = $(GF_STATIC) -O3 -funroll-loops -fPIC
 GF_STLIBBLD = ar rc $(LIB) $(OBJ)
 GF_DYLIBBLD = $(FC) $(GF_TRAPS) -O3 -fPIC -shared -o $(DIB)
 #-ffpe-trap=zero,invalid,overflow,underflow
-GF_INFO = "Include the library file or -Ldir"
 
 # Options for Intel Fortran
 IF_STATIC = -static
 IF_TRAPS =-fpe3
 IF_RCHECKS = -warn -check bounds,pointers,format,uninit
-IF_FFLAGS = -sox -O3 -parallel -fpic $(IF_STATIC) $(IF_TRAPS) $(IF_RCHECKS)
+IF_FFLAGS = -sox -O3 -parallel -fpic $(IF_STATIC)
 IF_STLIBBLD = ar cr $(LIB) $(OBJ)
 IF_DYLIBBLD = $(FC) -sox -O3 -parallel -fpic $(IF_TRAPS) -shared -o $(DIB)
 # -fpe3 no traps; -fpe0 all traps
-IF_INFO = "Include the library file or -Ldir"
+
+# Options for Intel Fortran on Windows, they are different from Unix
+# /Qsox produces extra warnings  warning LNK4229: invalid directive '/comment
+# /fast breaks linking under Windows
+IF_STATIC_WINDOWS = /static
+IF_TRAPS_WINDOWS =/fpe:3
+IF_RCHECKS_WINDOWS = /warn /check bounds,pointers,format,uninit
+IF_FFLAGS_WINDOWS = /c /O3 /parallel $(IF_STATIC_WINDOWS)
+IF_STLIBBLD_WINDOWS = lib /out:$(LIB) $(OBJ)
+IF_DYLIBBLD_WINDOWS = $(FC) /dll $(IF_FFLAGS_WINDOWS)
 
 # Options for Sun/Oracle Solaris Studio
 SF_STATIC = –Bstatic –dn
@@ -65,7 +116,6 @@ SF_DYLIBBLD = $(FC) -fast -autopar -depend=yes -pic $(SF_TRAPS) -G -o $(DIB)
 # -fast = O5
 # -ftrap=common is a macro for -ftrap=invalid,overflow,division.
 # -ftrap=%all, %none, common
-SF_INFO = "Include the library file or use -l and -L compile options"
 
 #-------------------------------------------------------------------------------
 # Set other build options depending on the specific compiler
@@ -74,27 +124,32 @@ ifeq ($(FC),gfortran)
 	FFLAGS = $(GF_FFLAGS)
 	STLIBBLD =  $(GF_STLIBBLD)
 	DYLIBBLD =  $(GF_DYLIBBLD)
-	INFO = $(GF_INFO)
 endif
 
 ifeq ($(FC),ifort)
 	FFLAGS = $(IF_FFLAGS)
 	STLIBBLD = $(IF_STLIBBLD)
 	DYLIBBLD = $(IF_DYLIBBLD)
-	INFO = $(IF_INFO)
+endif
+
+ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
+	FFLAGS = $(IF_FFLAGS_WINDOWS)
+	STLIBBLD = $(IF_STLIBBLD_WINDOWS)
+	DYLIBBLD = $(IF_DYLIBBLD_WINDOWS)
 endif
 
 ifeq ($(FC),f95)
 	FFLAGS = $(SF_FFLAGS)
 	STLIBBLD = $(SF_STLIBBLD)
 	DYLIBBLD = $(SF_DYLIBBLD)
-	INFO = $(SF_INFO)
 endif
 
 # DEBUG turns off all optimisations and keeps debug symbols.
 ifdef DEBUG
 	GF_FFLAGS = -O0 -g -ffpe-trap=zero,invalid,overflow,underflow $(GF_RCHECKS)
 	IF_FFLAGS = -O0 -g -fpe0 $(IF_RCHECKS)
+	IF_FFLAGS_WINDOWS = /c /Zi /Od /debug:full /fpe:0 /nopdbfile
+	#$(IF_RCHECKS_WINDOWS)
 	SF_FFLAGS = -O0 -g -ftrap=%all $(SF_RCHECKS)
 endif
 
@@ -112,21 +167,43 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
 # This is the search paths for looking for components, separated by blanks
 VPATH = $(DOCDIR)
-# Determine build platform
-PLATFORM = $(shell uname)
 
 #-------------------------------------------------------------------------------
-
-# Autogenerated README.txt
+# Zipfile distro to be generated
 ZIPFILE = LIBHEDUTILS_$(PLATFORM).zip
+
+# Autogenerated README.txt for static library ZIP AUTOGEN_README
 AUTOGEN_README_FILE = Readme.txt
-define AUTOGEN_README
+define AUTOGEN_README_LIB
+	$(shell echo "HEDTOOLS:" > $(AUTOGEN_README_FILE))
+	$(shell echo "This is a static library binary build of the modelling tools." >> $(AUTOGEN_README_FILE))
+	$(shell echo "Note that .mod files are needed for compiling." >> $(AUTOGEN_README_FILE))
+	$(shell echo "Compile command using the library is two-step:" >> $(AUTOGEN_README_FILE))
+	$(shell echo "" >> $(AUTOGEN_README_FILE))
+	$(shell echo "  1. compile the code producing object file .$(OBJEXT):" >> $(AUTOGEN_README_FILE))
+	$(shell echo "    $(FC) $(CCMD) file.f90" >> $(AUTOGEN_README_FILE))
+	$(shell echo "  2. link the library with the object tode producing executable:" >> $(AUTOGEN_README_FILE))
+	$(shell echo "    $(FC) $(LIB) file.$(OBJEXT)" >> $(AUTOGEN_README_FILE))
+	$(shell echo "" >> $(AUTOGEN_README_FILE))
+	$(shell echo "IMPORTANT: Use exactly the same platform and compiler that" >> $(AUTOGEN_README_FILE))
+	$(shell echo "           was used to generate the static library!" >> $(AUTOGEN_README_FILE))
+endef
+
+# Autogenerated README.txt for dynamic library. Note that I had difficulties
+#  building and using shared libraries on cerrain platforms, e.g building on
+#  ifort for Windows is broken
+AUTOGEN_README_FILE = Readme.txt
+define AUTOGEN_README_DIB
 	$(shell echo "HEDTOOLS:" > $(AUTOGEN_README_FILE))
 	$(shell echo "This is the shared library binary build of the modelling tools" >> $(AUTOGEN_README_FILE))
-	$(shell echo "Note that .mod files are needed for compiling and linking." >> $(AUTOGEN_README_FILE))
+	$(shell echo "Note that .mod files are needed for compiling." >> $(AUTOGEN_README_FILE))
 	$(shell echo "Compile command:" >> $(AUTOGEN_README_FILE))
 	$(shell echo "    $(FC) $(DIB) file.f90" >> $(AUTOGEN_README_FILE))
+	$(shell echo "   ifort Windows produces both .dll and .lib files" >> $(AUTOGEN_README_FILE))
+	$(shell echo "   .lib file should be used for building: " >> $(AUTOGEN_README_FILE))
+	$(shell echo "    $(FC) $(LIB) file.f90" >> $(AUTOGEN_README_FILE))
 endef
+
 
 #-------------------------------------------------------------------------------
 # Autogenerated include file setting compiler/platform specific code for PRNG
@@ -197,13 +274,14 @@ endif
 
 #*******************************************************************************
 
-all: shared
+all: static
 
 lib: $(LIB)
 
 # Static linking doesn't work well with gnu fortran
 static: $(LIB)
 
+# Dynamic linking, this might also not work well on all platforms / compilers
 shared: $(DIB)
 
 inc: $(AUTOGEN_HEADER_RAND)
@@ -211,12 +289,12 @@ inc: $(AUTOGEN_HEADER_RAND)
 doc: $(DOCFIL).$(DOCFMT)
 
 distclean: neat
-	-rm -f $(OBJ) $(MOD) $(LIB) $(DIB) $(DOCDIR)/BASE_UTILS.$(DOCFMT) \
+	-rm -f *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/BASE_UTILS.$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
 
 # We don't clean .mod files as they are necessary for building with .so
 clean: neat
-	-rm -f $(OBJ)
+	-rm -f *.o *.obj
 
 neat:
 	-rm -f $(TMPFILES) *conflict*
@@ -226,11 +304,13 @@ neat:
 $(LIB): $(OBJ)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(STLIBBLD)
+	$(AUTOGEN_README_LIB)
+	zip $(ZIPFILE) $(MOD) $(LIB) $(AUTOGEN_README_FILE)
 
 $(DIB): $(SRC)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(DYLIBBLD) $(SRC)
-	$(AUTOGEN_README)
+	$(AUTOGEN_README_DIB)
 	zip $(ZIPFILE) $(MOD) $(DIB) $(AUTOGEN_README_FILE)
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
@@ -246,16 +326,16 @@ $(AUTOGEN_HEADER_RAND): $(BASE_RANDOM.f90) $(THIS_FILE)
 	@echo Generated include: $(AUTOGEN_HEADER_RAND) for $(FC)
 
 # compile modules
-BASE_UTILS.o: BASE_UTILS.f90
+BASE_UTILS.$(OBJEXT): BASE_UTILS.f90
 	$(FC) $(FFLAGS) -c $<
-BASE_CSV_IO.o: BASE_CSV_IO.f90
+BASE_CSV_IO.$(OBJEXT): BASE_CSV_IO.f90
 	$(FC) $(FFLAGS) -c $<
-BASE_LOGGER.o: BASE_LOGGER.f90
+BASE_LOGGER.$(OBJEXT): BASE_LOGGER.f90
 	$(FC) $(FFLAGS) -c $<
-BASE_RANDOM.o: BASE_RANDOM.f90 $(THIS_FILE)
+BASE_RANDOM.$(OBJEXT): BASE_RANDOM.f90 $(THIS_FILE)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(FC) $(FFLAGS) -c $<
-BASE_ERRORS.o: BASE_ERRORS.f90
+BASE_ERRORS.$(OBJEXT): BASE_ERRORS.f90
 	$(FC) $(FFLAGS) -c $<
-BASE_STRINGS.o: BASE_STRINGS.f90
+BASE_STRINGS.$(OBJEXT): BASE_STRINGS.f90
 	$(FC) $(FFLAGS) -c $<
