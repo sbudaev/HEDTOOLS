@@ -4023,13 +4023,14 @@ indexterm:[Intel Parallel Studio]
 [[BUILD_HEDTOOLS_STATLIB]]
 
 An easier and more convenient way to include the +HEDTOOLS+ modelling tools
-to a Microsoft Visual Studio / Intel Parallel Studio Project is to build the
-tools as a *static library* that is then included into the current model coding
-project. This method does not require manual tweaking of the modelling tools
-source code and takes full advantage of the automatic make system. Also, the
-same library file can be included into many different Visual Studio
-projects. However, the tools library must be built using exactly the same
-platform and compiler.
+to a Microsoft Visual Studio / Intel Parallel Studio Project is to build
+the tools as a *static library* that is then included into the current
+model coding project. This method does not require manual tweaking of the
+modelling tools source code and takes full advantage of the automatic make
+system footnote:[Although, if <<BLD_MAN_IEEE, IEEE Modules>> are used in
+the code, the code should be tweaked]. Also, the same library file can be
+included into many different Visual Studio projects. However, the tools
+library must be built using exactly the same platform and compiler.
 
 IMPORTANT: Never mix static library produced with GNU fortran into Intel
            Parallel Studio projects or vice versa, or even different versions
