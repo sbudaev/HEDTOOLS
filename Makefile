@@ -185,7 +185,7 @@ define AUTOGEN_README_LIB
 	$(shell echo "" >> $(AUTOGEN_README_FILE))
 	$(shell echo "  1. compile the code producing object file .$(OBJEXT):" >> $(AUTOGEN_README_FILE))
 	$(shell echo "    $(FC) $(CCMD) file.f90" >> $(AUTOGEN_README_FILE))
-	$(shell echo "  2. link the library with the object tode producing executable:" >> $(AUTOGEN_README_FILE))
+	$(shell echo "  2. link the library with the object code producing executable:" >> $(AUTOGEN_README_FILE))
 	$(shell echo "    $(FC) $(LIB) file.$(OBJEXT)" >> $(AUTOGEN_README_FILE))
 	$(shell echo "" >> $(AUTOGEN_README_FILE))
 	$(shell echo "IMPORTANT: Use exactly the same platform and compiler that" >> $(AUTOGEN_README_FILE))

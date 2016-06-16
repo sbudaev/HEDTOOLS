@@ -4169,8 +4169,8 @@ indexterm:[column names]
 ! test_lib.f90 :: Small test of the HEDTOOLS
 program test_library
 
-  use CSV_IO        ! we use these two modules
-  use BASE_UTILS    ! from HEDTOOLS
+  use CSV_IO        ! we use these modules
+  use BASE_UTILS    !   from HEDTOOLS
   use BASE_RANDOM
 
   implicit none
