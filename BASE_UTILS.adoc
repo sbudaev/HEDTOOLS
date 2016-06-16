@@ -18,7 +18,7 @@ others:
     Bergen Evolutiuonary Agents Simulation Toolbox in Fortran (BEAST-F or
     F-BEAST or AHA-BEAST)
     Bergen Evolutiuonary Agents Simulation Toolbox in OO Fortran (BEAST-OOF)
-    Fortran Evolutiuonary Agents Simulation Toolbox (FEAST)
+    Fortran Evolutiuonary Agents Simulation Toolbox (FEAST) or FOO-BEAST?
 
 Workflow: do this doc in private branch. Reintegrate back to trunk when PDF is
           issued.
@@ -3642,6 +3642,8 @@ behind the scenes even if the IDE GUI is used.
 Using Intel Parallel Studio on Windows (command line)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+[[VISUAL_STUDIO_CMDBLD]]
+
 Using +Makefile+ with the *Intel Parallel Studio XE 2013* Fortran compiler
 (+ifort.exe+) (and probably other versions of Intel Fortran on Windows)
 *requires* setting up the Microsoft Studio environment. This is normally done
@@ -3699,8 +3701,9 @@ cmd.exe /C call "C:\Program Files (x86)\Intel\Composer XE 2013\bin\ipsxe-comp-va
 
 The exact path to the +ipsxe-comp-vars.bat+ should be taken from the menu
 shortcut. In the above case, <<CONSOLE_GET, ConEmu>> will call the command
-prompt setup script +ipsxe-comp-vars.bat+ (with full path) and then run the
-Far Manager (also full path is here).
+prompt setup batch script +ipsxe-comp-vars.bat+ (with full path and platform
+parameters +intel64 vs2010+) and then run the Far Manager (also full path
+is here).
 
 If you like to use different *tasks* in <<CONSOLE_GET, ConEmu>>, such
 initialisation command, tweaked for particular task can be also inserted the
@@ -3711,7 +3714,7 @@ image:img_doc_intel_win_conemu2.png[height=265,align="left"]
 
 Then, all the Intel build environment commands will be run automatically
 every time the <<CONSOLE_GET, ConEmu>> terminal is started (or the task is
-started), so you would not need to do this manually.
+started), so you would not need to runt it manually.
 
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
@@ -3974,9 +3977,128 @@ indexterm:[Makefile, compiler]
 IMPORTANT: The +Makefile+ code is documented, just read the comments and
            explanations for the different variables and macros.
 
-////////////////////////////////////////////////////////////////////////////////
-// End of main text
-////////////////////////////////////////////////////////////////////////////////
+
+Using Microsoft Visual Studio
+-----------------------------
+
+Working with the source code of the Modelling Tools
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*This is a _difficult_ but flexible method.*
+
+Developing and debugging the code that uses the source code of the HEDTOOLS
+modelling tools with Microsoft Visual Studio on the Windows platform should
+follow such a workflow.
+
+1. Create the model project in Microsoft Visual Studio as usual.
+
+2. Include the source +.f90+ files from HEDTOOLS that are used in the project
+   into the current Microsoft Studio project. Source files can be just copied
+   into the model source code directory for convenience.
+
+3. Manually *tweak* the source code for these non-portable modules, that make
+   use of auto-generated include files in the make system. Currently, there
+   are two such modules: <<BLD_MAN_RAND, BASE_RANDOM>> and <<BLD_MAN_IEEE,
+   IEEE Modules>>
+
+4. Compile/Build/Debug and work with the model code(s) as normal from within
+   the Misrosoft Studio
+
+5. The model code can be (re)built using the command line tools and the
+   +make+-based system. Just do not forget to point to the location of the
+   *original unedited* HEADTOOLS code within the +Makefile+. The Modelling
+   tools code tweaked manually as a part of the Visual Studio Project cannot
+   be used by the make system.
+
+Building the Modelling Tools as a static library
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*This is the _easiest_ method not requiring any manual tweaks.*
+
+indexterm:[Microsoft Visual Studio]
+indexterm:[static library]
+indexterm:[Intel Fortran on Windows]
+indexterm:[Intel Parallel Studio]
+
+[[BUILD_HEDTOOLS_STATLIB]]
+
+An easier and more convenient way to include the +HEDTOOLS+ modelling tools
+to a Microsoft Visual Studio / Intel Parallel Studio Project is to build the
+tools as a *static library* that is then included into the current model coding
+project. This method does not require manual tweaking of the modelling tools
+source code and takes full advantage of the automatic make system. Also, the
+same library file can be included into many different Visual Studio
+projects. However, the tools library must be built using exactly the same
+platform and compiler.
+
+IMPORTANT: Never mix static library produced with GNU fortran into Intel
+           Parallel Studio projects or vice versa, or even different versions
+           of Intel Parallel Studio Fortran--the library and the project
+           code must be built using the same compiler.
+
+First, build the HEDTOOLS modelling tools as a static library using the make system
+with +FC=ifort+, this is the default +make+ target. Do not forget to make sure
+the Intel Parallel Studio *Command Prompt Environment* has been correctly
+<<VISUAL_STUDIO_CMDBLD, prepared>> prior to the build process.
+
+[source,bash]
+--------------------------------------------------------------------------------
+make FC=ifort
+--------------------------------------------------------------------------------
+
+On the Windows platform with Intel Fortran compiler, this will produce a
+static library file with this name: *lib_hedutils.lib* as well as many *.mod*
+header files. For convenience, the make system also produces a *zip* archive
+containing all the re-distributable tool files.
+
+Now, insert the *lib_hedutils.lib* static library file into the project,
+use the menu *Add -> Existing Item* menu. The easiest way is to add the
+library directly from the HEDTOOLS directory, it should work (i.e. no real need
+to copy the library and +.mod+ files to the current Visual Studio Project
+folder).
+
+image:img_doc_ms_studio_add_lib.png[height=245,align="left"]
+
+Now the code should build successfully (calling the modelling tools code from
+the library) as normal (e.g. *Build -> Build Solution*). There may be problem
+with the *LIBCMTD.lib* library in the *Debug* solution (I have not encountered
+the same issue in the *Release* solution though):
+
+indexterm:[Intel Parallel Studio, LIBCMTD.lib]
+indexterm:[Microsoft Visual Studio, LIBCMTD.lib]
+
+image:img_doc_ms_studio_fail.png[height=275,align="left"]
+
+If there is such a problem, go to *Properties -> Linker -> Input* and insert
+the problem library +LIBCMTD.lib+ to the *Ignore Specific Library* field:
+
+image:img_doc_ms_studio_ignore.png[height=350,align="left"]
+
+From now, it should (hopefully) build without further issues. The modelling
+tools are now automatically inserted by the compiler into the executable
+code from the static library provided as if the subroutines and functions
+were intrinsic.
+
+*Using the static library tools for command line building*
+
+Finally, if you like to build code with the static library from the command
+prompt rather than Visual Studio IDE, it is also easy:
+
+indexterm:[static library]
+
+[source,bash]
+--------------------------------------------------------------------------------
+ifort /c file.f90
+ifort lib_hedutils.lib file.obj
+--------------------------------------------------------------------------------
+
+The first line compiles the code without producing executable (+/c+), the
+second, links the code with the library. The static library can be built on
+any of the supported platforms (Windows, Linux, Mac) and compilers (e.g. GNU
+gfortra and Intel Fortran). But note that on Unix systems and GNU gfortran on
+Windows the library has an +.a+ rather than +.lib+ file extension and +-c+
+is used as the compile flag (not +/c+). The redistributable *zip* file that
+is produced whan building the library contains a small +Readme.txt+ file.
 
 Manual builds
 -------------
@@ -4004,108 +4126,61 @@ code files for the model as well as for the HEDTOOLS are included in the
 project. Many IDEs allow generating (importing) project from a supplied
 +Makefile+ and recognize GNU make format. This could make work a little easier.
 
-Using Microsoft Visual Studio
------------------------------
-
-Working with the source code of the Modelling Tools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-*This is a difficult but flexible method.*
-
-Developing and debugging the code that uses the source code of the HEDTOOLS
-modelling tools with Microsoft Visual Studio on the Windows platform should
-follow such a workflow.
-
-1. Create the model project in Microsoft Visual Studio as usual.
-
-2. Include the source f90 files from HEDTOOLS that are used in the project
-   into the current Microsoft Studio project. Source files can be just copied
-   into the model source code directory for convenience.
-
-3. Manually *tweak* the source code for these non-portable modules, that make
-   use of auto-generated include files in the make system. Currently, there
-   are two such modules: <<BLD_MAN_RAND, BASE_RANDOM>> and <<BLD_MAN_IEEE,
-   IEEE Modules>>
-
-4. Compile/Build/Debug and work with the model code(s) as normal from within
-   the Misrosoft Studio
-
-5. The model code can be (re)built using the command line tools and the
-   +make+-based system. Just do not forget to point to the location of the
-   *original unedited* HEADTOOLS code within the +Makefile+. The Modelling
-   tools code tweaked manually as a part of the Visual Studio Project cannot
-   be used by the make system.
-
-Building the Modelling Tools as a static library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-*This is the easiest method not requiring any manual tweaking.*
-
-indexterm:[Microsoft Visual Studio]
-indexterm:[static library]
-indexterm:[Intel Fortran on Windows]
-indexterm:[Intel Parallel Studio]
-
-An easier and more convenient way to include the +HEDTOOLS+ modelling tools
-to a Microsoft Visual Studio / Intel Parallel Studio Project is to build the
-tools as a *static library* that is then included into the current model coding
-project. This method does not require manual tweaking of the modelling tools
-source code and takes full advantage of the automatic make system. Also, the
-same library file can be included into many different Visual Studio
-projects. However, the tools library must be built using exactly the same
-platform and compiler.
-
-IMPORTANT: Never mix static library produced with GNU fortran into Intel
-           Parallel Studio projects or vice versa, or even different versions
-           of Intel Parallel Studio Fortran--the library and the project
-           code must be built using the same compiler.
-
-First, build the HEDTOOLS modelling tools as a static library using the make system
-with +FC=ifort+, this is the default +make+ target:
+Another option is (1) to build the *modelling tools* as a static
+<<BUILD_HEDTOOLS_STATLIB, library>> using the +make+ system. (2) Compile
+the model and link the tools in from the library. Then, no manual edits may
+be required. Refer to the +Readme.txt+ file that is produced with the static
+library.
 
 [source,bash]
 --------------------------------------------------------------------------------
-make FC=ifort
+# (1) in the modelling tools directory
+HEDTOOLS]$ make             # make the static library of the Modelling Tools
+...
+# (2) in the model code directory (make sure .mod and library files are placed there)
+test_library]$ gfortran -c test_lib.f90           # compile model code
+test_library]$ gfortran test_lib.o lib_hedutils.a # link with the library
+                                                  # producing the executable
 --------------------------------------------------------------------------------
 
-On the Windows platform with Intel Fortran compiler, this will produce a
-static library file with this name: *lib_hedutils.lib* as well as many *.mod*
-header files. For convenience, the make system also produces a *zip* archive
-containing all the re-distributable tool files.
+This is a small test program code producing two random matrices and saving them
+to CSV:
 
-Now, insert the *lib_hedutils.lib* static library file into the project,
-use the menu *Add -> Existing Item* menu. The easiest way is to add the
-library directly from the HEDTOOLS directory, it should work (i.e. no real need
-to copy the library and +.mod+ files to the current Visual Studio Project
-folder).
+indexterm:[column names]
 
-image:img_doc_ms_studio_add_lib.png[height=245,align="left"]
-
-Now the code should build successfully (calling the modelling tools code from
-the library) as normal (e.g. *Build -> Build Solution*). There may be problem
-with the *LIBCMTD.lib* library in the *Debug* solution (I have not encountered
-the same issue in the *Release* solution though):
-
-image:img_doc_ms_studio_fail.png[height=275,align="left"]
-
-If there is such a problem, go to *Properties -> Linker -> Input* and insert
-the problem library +LIBCMTD.lib+ to the *Ignore Specific Library* field:
-
-image:img_doc_ms_studio_ignore.png[height=350,align="left"]
-
-From now, it should (hopefully) build without further issues. The modelling
-tools are now automatically inserted by the compiler into the executable
-code from the static library provided as if the subroutines and functions
-were intrinsic.
-
-Finally, if you like to build code with the static library from the command
-prompt rather than Visual Studio IDE, it is also easy:
-
-[source,bash]
+[source]
 --------------------------------------------------------------------------------
-ifort /c file.f90
-ifort lib_hedutils.lib file.obj
+! test_lib.f90 :: Small test of the HEDTOOLS
+program test_library
+
+  use CSV_IO        ! we use these two modules
+  use BASE_UTILS    ! from HEDTOOLS
+  use BASE_RANDOM
+
+  implicit none
+  integer, parameter :: ROWS=1000,  COLS=20
+  integer :: i
+  real, dimension(ROWS,COLS)    :: A
+  integer, dimension(ROWS,COLS) :: B
+
+  call RANDOM_SEED_INIT()        ! This subroutine is safe on parallel systems
+
+  call RNORM_ARRAY(A)            ! Generate a matrix of random normal variates
+
+  call CSV_MATRIX_WRITE(A, "file_matrix_a.csv",& ! Save the matrix to CSV file
+        [("VAR_" // TOSTR(i,COLS),i=1,COLS)])    ! Column names are generated
+                                                 ! in this implicit-cycle array
+
+  call RAND_ARRAY(B,10,100)      ! Generate a random integer matrix with range
+
+  call CSV_MATRIX_WRITE(B, "file_matrix_b.csv",& ! Save the matrix to CSV file
+        [("VAR_" // TOSTR(i,COLS),i=1,COLS)])    ! Column names are generated
+                                                 ! in this implicit-cycle array
+end program test_library
 --------------------------------------------------------------------------------
 
-The first line compiles the code without producing executable (+/c+), the
-second, links the code with the library.
+End of the document.
+
+////////////////////////////////////////////////////////////////////////////////
+// End of main text
+////////////////////////////////////////////////////////////////////////////////

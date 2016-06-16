@@ -301,6 +301,33 @@ neat:
 
 #-------------------------------------------------------------------------------
 
+help:
+	@echo ""
+	@echo ------------------------------------------------------------------------
+	@echo "Building Model Tools as libratry ------ via $(THIS_FILE)"
+	@echo ------------------------------------------------------------------------
+	@echo "Normal build: make (uses $(FC) by default)"
+	@echo ""
+	@echo "Build the library with Intel Fortran Compiler:"
+	@echo "    make FC=ifort"
+	@echo ""
+	@echo "Autogenerate documentation -- requires the asciidoc tool!"
+	@echo "    make doc"
+	@echo ""
+	@echo "Cleaning:"
+	@echo "    make clean, make cleandata (removes object files but not library),"
+	@echo "    make distclean (everything, leaving the distro state!)"
+	@echo ------------------------------------------------------------------------
+	@echo "NOTES:"
+	@echo " 1. Intel Fortran compiler under Windows: set up environment for "
+	@echo "    Microsoft Visual Studio 2010 x64 tools before calling make."
+	@echo "    Check the Command Prompt menu under Intel Parallel Studio XE"
+	@echo ------------------------------------------------------------------------
+	@echo Platform: $(PLATFORM_TYPE)
+	@echo ------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+
 $(LIB): $(OBJ)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(STLIBBLD)
