@@ -4028,9 +4028,9 @@ the tools as a *static library* that is then included into the current
 model coding project. This method does not require manual tweaking of the
 modelling tools source code and takes full advantage of the automatic make
 system footnote:[Although, if <<BLD_MAN_IEEE, IEEE Modules>> are used in
-the code, the code should be tweaked]. Also, the same library file can be
-included into many different Visual Studio projects. However, the tools
-library must be built using exactly the same platform and compiler.
+the code, the code should be tweaked manually]. Also, the same library
+file can be included into many different Visual Studio projects. However,
+the tools library must be built using exactly the same platform and compiler.
 
 IMPORTANT: Never mix static library produced with GNU fortran into Intel
            Parallel Studio projects or vice versa, or even different versions
@@ -4052,13 +4052,28 @@ static library file with this name: *lib_hedutils.lib* as well as many *.mod*
 header files. For convenience, the make system also produces a *zip* archive
 containing all the re-distributable tool files.
 
-Now, insert the *lib_hedutils.lib* static library file into the project,
-use the menu *Add -> Existing Item* menu. The easiest way is to add the
-library directly from the HEDTOOLS directory, it should work (i.e. no real need
-to copy the library and +.mod+ files to the current Visual Studio Project
-folder).
+First, copy +.mod+ files to the current Visual Studio Project folder
+containing the source code +.f90+ files. The library itself should be
+also placed there. It is convenient to just unzip the whole content of the
+redistributable *zip* file created by the make system.
+
+Then, insert the *lib_hedutils.lib* static library file into the project,
+use the menu *Add -> Existing Item* menu.
 
 image:img_doc_ms_studio_add_lib.png[height=245,align="left"]
+
+It is also possible to add the library into the project directly from the
+HEDTOOLS directory, in such case, also add all the +.mod+ from HEDTOOLS to
+the project. Then, the library and +.mod+ files are accessed directly from the
+Modelling Tools folder and should not be copied to the current project
+folder and can be included from their own directory to several Visual
+Studio projects.
+
+image:img_doc_ms_studio_solution.png[width=510,align="left"]
+
+////////////////////////////////////////////////////////////////////////////////
+set maximum width for images (whole page width) 510
+////////////////////////////////////////////////////////////////////////////////
 
 Now the code should build successfully (calling the modelling tools code from
 the library) as normal (e.g. *Build -> Build Solution*). There may be problem
@@ -4068,12 +4083,12 @@ the same issue in the *Release* solution though):
 indexterm:[Intel Parallel Studio, LIBCMTD.lib]
 indexterm:[Microsoft Visual Studio, LIBCMTD.lib]
 
-image:img_doc_ms_studio_fail.png[height=275,align="left"]
+image:img_doc_ms_studio_fail.png[width=510,align="left"]
 
 If there is such a problem, go to *Properties -> Linker -> Input* and insert
 the problem library +LIBCMTD.lib+ to the *Ignore Specific Library* field:
 
-image:img_doc_ms_studio_ignore.png[height=350,align="left"]
+image:img_doc_ms_studio_ignore.png[width=510,align="left"]
 
 From now, it should (hopefully) build without further issues. The modelling
 tools are now automatically inserted by the compiler into the executable

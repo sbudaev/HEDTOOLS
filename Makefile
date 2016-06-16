@@ -102,7 +102,7 @@ IF_DYLIBBLD = $(FC) -sox -O3 -parallel -fpic $(IF_TRAPS) -shared -o $(DIB)
 IF_STATIC_WINDOWS = /static
 IF_TRAPS_WINDOWS =/fpe:3
 IF_RCHECKS_WINDOWS = /warn /check bounds,pointers,format,uninit
-IF_FFLAGS_WINDOWS = /c /O3 /parallel $(IF_STATIC_WINDOWS)
+IF_FFLAGS_WINDOWS = /c /O3 /Qparallel $(IF_STATIC_WINDOWS)
 IF_STLIBBLD_WINDOWS = lib /out:$(LIB) $(OBJ)
 IF_DYLIBBLD_WINDOWS = $(FC) /dll $(IF_FFLAGS_WINDOWS)
 
