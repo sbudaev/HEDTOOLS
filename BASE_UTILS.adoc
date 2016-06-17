@@ -4052,6 +4052,13 @@ static library file with this name: *lib_hedutils.lib* as well as many *.mod*
 header files. For convenience, the make system also produces a *zip* archive
 containing all the re-distributable tool files.
 
+IMPORTANT: The +Makefile+ producing the library requires two command line GNU
+           utilities: +uname+ and +zip+. Windows versions are available from
+           http://gnuwin32.sourceforge.net/[GnuWin32] and
+           <<CONSOLE_GET, other distributions>>. If these utilities are not
+           available, the static library is still produced although the handy
+           *zip* file distribution is not generated.
+
 First, copy +.mod+ files to the current Visual Studio Project folder
 containing the source code +.f90+ files. The library itself should be
 also placed there. It is convenient to just unzip the whole content of the

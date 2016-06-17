@@ -7,6 +7,8 @@
 #      good idea as they will have some runtime loading-unloading overhead.
 #      Also, building shared dll's might be problematic with Intel Fortran on
 #      Windows.
+# Requires the following command line utilities
+#      (may NOT be available on Windows): make, uname, zip, svn
 #-------------------------------------------------------------------------------
 
 # Supported Fortran compiler types
@@ -22,6 +24,9 @@ FC = $(GF_FC)
 # Use uname -- but it may not be installed on Windows. Probably the method
 # based on ComSpec is safer. Note that the -c switch on grep suppresses normal
 # output and just prints count.
+# We use PLATFORM only for outputting the OS in zipfile and other things that
+# are unimportant if uname is absent on the system (Windows), for real
+# OS/platform check better use a safer mechanism based on ComSpec (below).
 PLATFORM = $(shell uname)
 #IS_WINDOWS = $(shell uname | grep -ci windows)
 
@@ -323,7 +328,9 @@ help:
 	@echo "    make distclean (everything, leaving the distro state!)"
 	@echo ------------------------------------------------------------------------
 	@echo "NOTES:"
-	@echo " 1. Intel Fortran compiler under Windows: set up environment for "
+	@echo " 1. Required command line utilities: uname, zip. Available from: "
+	@echo "    http://gnuwin32.sourceforge.net/packages.html"
+	@echo " 2. Intel Fortran compiler under Windows: set up environment for "
 	@echo "    Microsoft Visual Studio 2010 x64 tools before calling make."
 	@echo "    Check the Command Prompt menu under Intel Parallel Studio XE"
 	@echo ------------------------------------------------------------------------
