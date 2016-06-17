@@ -185,10 +185,12 @@ and Mac. http://www.geany.org/ Also need plugins: http://plugins.geany.org/
 https://sliksvn.com/download/[SilkSvn] to work.)
 
 *Code::Blocks for Fortran* (Recommended)
+[[CODEBLOCKS_GET]]
 
 IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
 http://cbfortran.sourceforge.net/. Installation by unpacking into some
-directory.
+directory (i.e. does not require administrative rights).
+indexterm:[Code::Blocks]
 
 ////////////////////////////////////////////////////////////////////////////////
 TODO: CSV editors -- do we need them? or just use Office?:
@@ -4122,6 +4124,32 @@ gfortra and Intel Fortran). But note that on Unix systems and GNU gfortran on
 Windows the library has an +.a+ rather than +.lib+ file extension and +-c+
 is used as the compile flag (not +/c+). The redistributable *zip* file that
 is produced whan building the library contains a small +Readme.txt+ file.
+
+Using Code::Blocks IDE
+----------------------
+
+Working with the <<CODEBLOCKS_GET, Code::Blocks IDE>> is similar to that in
+Microsoft Studio. The simplest way to get it running is to (1) build HEDTOOLS
+using the make system, (2) copy all the static library +lib_hedutils.a+ (or
++lib_hedutils.lib+) and all the +.mod+ files produced by the make build into
+the working project directory, add the library file to the project file using
+the *Project -> Add Files* menu. After this it should build within the IDE.
+
+indexterm:[Code::Blocks]
+
+image:img_doc_cb_add_lib.png[width=510,align="left"]
+
+When building, a link order issue may appear, but this does not affect anything,
+so in most cases just ignore it.
+
+image:img_doc_cb_link_order.png[width=314,align="left"]
+
+Alternatively, the library can be inserted using the *Project -> Build
+Options -> Linker settings*. Using this method, you might get an issue
+with the compiler not being able to find the library (as it is not in the
+LIBPATH). Not keeping relative path to the library will solve the problem.
+
+image:img_doc_cb_relative.png[width=400,align="left"]
 
 Manual builds
 -------------
