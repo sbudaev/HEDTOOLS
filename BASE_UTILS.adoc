@@ -4128,14 +4128,16 @@ is produced whan building the library contains a small +Readme.txt+ file.
 Using Code::Blocks IDE
 ----------------------
 
-Working with the <<CODEBLOCKS_GET, Code::Blocks IDE>> is similar to that in
-Microsoft Studio. The simplest way to get it running is to (1) build HEDTOOLS
-using the make system, (2) copy all the static library +lib_hedutils.a+ (or
-+lib_hedutils.lib+) and all the +.mod+ files produced by the make build into
-the working project directory, add the library file to the project file using
-the *Project -> Add Files* menu. After this it should build within the IDE.
+Working with the <<CODEBLOCKS_GET, Code::Blocks IDE>> is similar to
+that with Microsoft Studio. The simplest way to get it running is to (1)
+build HEDTOOLS as a static library using the make system, (2) copy the
+library file +lib_hedutils.a+ (or +lib_hedutils.lib+) and all the +.mod+
+files produced by the make build system into the working project directory,
+add the library file to the project file using the *Project -> Add Files*
+menu. After this it should build within the IDE.
 
 indexterm:[Code::Blocks]
+indexterm:[static library]
 
 image:img_doc_cb_add_lib.png[width=510,align="left"]
 
