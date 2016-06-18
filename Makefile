@@ -336,8 +336,8 @@ help:
 	@echo "    make distclean (everything, leaving the distro state!)"
 	@echo ------------------------------------------------------------------------
 	@echo "NOTES:"
-	@echo " 1. Required command line utilities: uname, zip. Available from: "
-	@echo "    http://gnuwin32.sourceforge.net/packages.html"
+	@echo " 1. Required command line utilities: uname, zip. For Windows available"
+	@echo "     from: http://gnuwin32.sourceforge.net/packages.html"
 	@echo " 2. Intel Fortran compiler under Windows: set up environment for "
 	@echo "    Microsoft Visual Studio 2010 x64 tools before calling make."
 	@echo "    Check the Command Prompt menu under Intel Parallel Studio XE"
