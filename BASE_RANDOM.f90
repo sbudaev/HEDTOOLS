@@ -82,11 +82,15 @@ interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
   module procedure RNORM_ARRAY_6_R4
 end interface RNORM_MATRIX
 
-interface RAND_RENORMALISE ! Renormalise a variable with range 0:1 to range A:B
-  module procedure RAND_RENORMALISE_R4
-  module procedure RAND_RENORMALISE_R8
-end interface RAND_RENORMALISE
+interface RAND_R4                 ! Uniform random numbers, standard and
+  module procedure RAND_VAL_R4    ! renormalised to arbitrary range
+  module procedure RAND_RENORMALISED_R4
+end interface RAND_R4
 
+interface RAND_R8                 ! Uniform random numbers, standard and
+  module procedure RAND_VAL_R8    ! renormalised to arbitrary range
+  module procedure RAND_RENORMALISED_R8
+end interface RAND_R8
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
@@ -284,7 +288,7 @@ end subroutine RANDOM_SEED_INIT
 
 !-------------------------------------------------------------------------------
 
-function RAND_R4() result (randreal)
+function RAND_VAL_R4() result (randreal)
 ! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
 ! Notes: On some systems the several PRNGs functions may use different
 !        algorithms e.g see ran (standard, from DEC) as well as lcrans and
@@ -303,11 +307,11 @@ function RAND_R4() result (randreal)
 
   call random_number(randreal)
 
-end function RAND_R4
+end function RAND_VAL_R4
 
 !-------------------------------------------------------------------------------
 
-function RAND_R8() result (randreal)
+function RAND_VAL_R8() result (randreal)
 ! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
 
   implicit none
@@ -318,7 +322,7 @@ function RAND_R8() result (randreal)
 
   call random_number(randreal)
 
-end function RAND_R8
+end function RAND_VAL_R8
 
 !-------------------------------------------------------------------------------
 
@@ -918,37 +922,37 @@ end subroutine RAND_ARRAY_6_I
 
 !-------------------------------------------------------------------------------
 
-function RAND_RENORMALISE_R4(RN, A, B) result(s_val)
+function RAND_RENORMALISED_R4(A, B) result(s_val)
 !*******************************************************************************
 ! RAND_RENORMALISE_R4
-! PURPOSE: renormalise variable with range 0..1 to any arbitrary range A..B
-!          useful for renormalising random variables
+! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+!          range A..B.
 !*******************************************************************************
 
   implicit none
   real:: s_val
-  real:: RN, A, B
+  real:: A, B
 
-  s_val = A+RN*(B-A)
+  s_val = A+RAND_VAL_R4()*(B-A)
 
-end function RAND_RENORMALISE_R4
+end function RAND_RENORMALISED_R4
 
 !-------------------------------------------------------------------------------
 
-function RAND_RENORMALISE_R8(RN, A, B) result(s_val)
+function RAND_RENORMALISED_R8(A, B) result(s_val)
 !*******************************************************************************
 ! RAND_RENORMALISE_R8
-! PURPOSE: renormalise variable with range 0..1 to any arbitrary range A..B
-!          useful for renormalising random variables
+! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+!          range A..B.
 !*******************************************************************************
 
   implicit none
   real(kind=8):: s_val
-  real(kind=8):: RN, A, B
+  real(kind=8):: A, B
 
-  s_val = A+RN*(B-A)
+  s_val = A+RAND_VAL_R8()*(B-A)
 
-end function RAND_RENORMALISE_R8
+end function RAND_RENORMALISED_R8
 
 !-------------------------------------------------------------------------------
 
