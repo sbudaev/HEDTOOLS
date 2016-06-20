@@ -85,11 +85,13 @@ end interface RNORM_MATRIX
 interface RAND_R4                 ! Uniform random numbers, standard and
   module procedure RAND_VAL_R4    ! renormalised to arbitrary range
   module procedure RAND_RENORMALISED_R4
+  module procedure RAND_RENORMALISED_R4I
 end interface RAND_R4
 
 interface RAND_R8                 ! Uniform random numbers, standard and
   module procedure RAND_VAL_R8    ! renormalised to arbitrary range
   module procedure RAND_RENORMALISED_R8
+  module procedure RAND_RENORMALISED_R8I
 end interface RAND_R8
 
 !-------------------------------------------------------------------------------
@@ -937,6 +939,21 @@ function RAND_RENORMALISED_R4(A, B) result(s_val)
 
 end function RAND_RENORMALISED_R4
 
+function RAND_RENORMALISED_R4I(A, B) result(s_val)
+!*******************************************************************************
+! RAND_RENORMALISE_R4 for integer range
+! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+!          range A..B.
+!*******************************************************************************
+
+  implicit none
+  real:: s_val
+  integer:: A, B
+
+  s_val = real(A)+RAND_VAL_R4()*(real(B)-real(A))
+
+end function RAND_RENORMALISED_R4I
+
 !-------------------------------------------------------------------------------
 
 function RAND_RENORMALISED_R8(A, B) result(s_val)
@@ -954,7 +971,23 @@ function RAND_RENORMALISED_R8(A, B) result(s_val)
 
 end function RAND_RENORMALISED_R8
 
+function RAND_RENORMALISED_R8I(A, B) result(s_val)
+!*******************************************************************************
+! RAND_RENORMALISE_R8
+! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+!          range A..B.
+!*******************************************************************************
+
+  implicit none
+  real(kind=8):: s_val
+  integer :: A, B
+
+  s_val = real(A,8)+RAND_VAL_R8()*(real(B,8)-real(A,8))
+
+end function RAND_RENORMALISED_R8I
+
 !-------------------------------------------------------------------------------
+
 
 
 end module BASE_RANDOM ! <EOF>
