@@ -605,7 +605,7 @@ end subroutine RNORM_ARRAY_6_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_1_R4(random_array)
+subroutine RAND_ARRAY_1_R4(random_array, A, B)
 !*******************************************************************************
 ! RANDOM_ARRAY_1, 1-dimensional
 ! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
@@ -613,6 +613,7 @@ subroutine RAND_ARRAY_1_R4(random_array)
 
 ! parameters
 real, dimension(:) :: random_array
+real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i
@@ -620,15 +621,20 @@ integer :: i
 !do i=1, ubound(random_array,1)
 !  random_array(i) = RAND_R4()
 !end do
+! We do not need extra overhead for uniform numbers
 
-! We do not need extra overhead for uniform numbers:
-call random_number(random_array)
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
 
 end subroutine RAND_ARRAY_1_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_2_R4(random_array)
+subroutine RAND_ARRAY_2_R4(random_array, A, B)
 !*******************************************************************************
 ! RAND_ARRAY, 2-dimensional
 ! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
@@ -636,6 +642,7 @@ subroutine RAND_ARRAY_2_R4(random_array)
 
 ! parameters
 real, dimension(:,:) :: random_array
+real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j
@@ -646,13 +653,18 @@ integer :: i, j
 !  end do
 !end do
 
-call random_number(random_array)
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
 
 end subroutine RAND_ARRAY_2_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_3_R4(random_array)
+subroutine RAND_ARRAY_3_R4(random_array, A, B)
 !*******************************************************************************
 ! RNORM_ARRAY, 3-dimensional
 ! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
@@ -660,6 +672,7 @@ subroutine RAND_ARRAY_3_R4(random_array)
 
 ! parameters
 real, dimension(:,:,:) :: random_array
+real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j, k
@@ -672,13 +685,18 @@ integer :: i, j, k
 !  end do
 !end do
 
-call random_number(random_array)
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
 
 end subroutine RAND_ARRAY_3_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_4_R4(random_array)
+subroutine RAND_ARRAY_4_R4(random_array, A, B)
 !*******************************************************************************
 ! RNORM_ARRAY, 4-dimensional
 ! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
@@ -686,6 +704,7 @@ subroutine RAND_ARRAY_4_R4(random_array)
 
 ! parameters
 real, dimension(:,:,:,:) :: random_array
+real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j, k, l
@@ -700,13 +719,18 @@ integer :: i, j, k, l
 !  end do
 !end do
 
-call random_number(random_array)
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
 
 end subroutine RAND_ARRAY_4_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_5_R4(random_array)
+subroutine RAND_ARRAY_5_R4(random_array, A, B)
 !*******************************************************************************
 ! RNORM_ARRAY, 5-dimensional
 ! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
@@ -714,6 +738,7 @@ subroutine RAND_ARRAY_5_R4(random_array)
 
 ! parameters
 real, dimension(:,:,:,:,:) :: random_array
+real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j, k, l, m
@@ -730,13 +755,18 @@ integer :: i, j, k, l, m
 !  end do
 !end do
 
-call random_number(random_array)
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
 
 end subroutine RAND_ARRAY_5_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RAND_ARRAY_6_R4(random_array)
+subroutine RAND_ARRAY_6_R4(random_array, A, B)
 !*******************************************************************************
 ! RNORM_ARRAY, 6-dimensional
 ! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
@@ -744,6 +774,7 @@ subroutine RAND_ARRAY_6_R4(random_array)
 
 ! parameters
 real, dimension(:,:,:,:,:,:) :: random_array
+real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j, k, l, m, n
@@ -762,7 +793,12 @@ integer :: i, j, k, l, m, n
 !  end do
 !end do
 
-call random_number(random_array)
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
 
 end subroutine RAND_ARRAY_6_R4
 
