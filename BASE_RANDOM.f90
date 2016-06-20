@@ -82,6 +82,12 @@ interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
   module procedure RNORM_ARRAY_6_R4
 end interface RNORM_MATRIX
 
+interface RAND_RENORMALISE ! Renormalise a variable with range 0:1 to range A:B
+  module procedure RAND_RENORMALISE_R4
+  module procedure RAND_RENORMALISE_R8
+end interface RAND_RENORMALISE
+
+
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
@@ -911,5 +917,40 @@ end do
 end subroutine RAND_ARRAY_6_I
 
 !-------------------------------------------------------------------------------
+
+function RAND_RENORMALISE_R4(RN, A, B) result(s_val)
+!*******************************************************************************
+! RAND_RENORMALISE_R4
+! PURPOSE: renormalise variable with range 0..1 to any arbitrary range A..B
+!          useful for renormalising random variables
+!*******************************************************************************
+
+  implicit none
+  real:: s_val
+  real:: RN, A, B
+
+  s_val = A+RN*(B-A)
+
+end function RAND_RENORMALISE_R4
+
+!-------------------------------------------------------------------------------
+
+function RAND_RENORMALISE_R8(RN, A, B) result(s_val)
+!*******************************************************************************
+! RAND_RENORMALISE_R8
+! PURPOSE: renormalise variable with range 0..1 to any arbitrary range A..B
+!          useful for renormalising random variables
+!*******************************************************************************
+
+  implicit none
+  real(kind=8):: s_val
+  real(kind=8):: RN, A, B
+
+  s_val = A+RN*(B-A)
+
+end function RAND_RENORMALISE_R8
+
+!-------------------------------------------------------------------------------
+
 
 end module BASE_RANDOM ! <EOF>
