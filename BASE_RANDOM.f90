@@ -33,8 +33,14 @@ logical, private, parameter :: IS_DEBUG = .FALSE.
 ! Sufficiently great maximum unit, in CSV_IO provided globally
 integer, private, parameter :: MAX_UNIT=500
 
+interface RNORM_R4      ! Gaussian normals
+  module procedure RNORM_VAL_R4
+  module procedure RNORM_RENORMALISED_R4
+end interface RNORM_R4
+
 interface RNORM         ! We can use RNORM as an alias to RNORM_R4
-  module procedure RNORM_R4
+  module procedure RNORM_VAL_R4
+  module procedure RNORM_RENORMALISED_R4
 end interface RNORM
 
 interface RAND_ARRAY                  ! Arrays of uniform random numbers,
@@ -397,7 +403,7 @@ end function RAND_STRING
 
 !-------------------------------------------------------------------------------
 
-function RNORM_R4() result(fn_val)
+function RNORM_VAL_R4() result(fn_val)
 !*******************************************************************************
 ! RNORM
 ! PURPOSE: Returns a normally distributed pseudo-random number with zero mean
@@ -445,14 +451,14 @@ END DO
 fn_val = v/u
 RETURN
 
-end function RNORM_R4
+end function RNORM_VAL_R4
 
 !-------------------------------------------------------------------------------
 
 subroutine RNORM_ARRAY_1_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 1-dimensional
-! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
 !*******************************************************************************
 
 ! parameters
@@ -462,7 +468,7 @@ real, dimension(:) :: random_array
 integer :: i
 
 do i=1, ubound(random_array,1)
-  random_array(i) = RNORM_R4()
+  random_array(i) = RNORM_VAL_R4()
 end do
 
 end subroutine RNORM_ARRAY_1_R4
@@ -472,7 +478,7 @@ end subroutine RNORM_ARRAY_1_R4
 subroutine RNORM_ARRAY_2_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 2-dimensional
-! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
 !*******************************************************************************
 
 ! parameters
@@ -483,7 +489,7 @@ integer :: i, j
 
 do i=1, ubound(random_array,2)
   do j=1, ubound(random_array,1)
-    random_array(j,i) = RNORM_R4()
+    random_array(j,i) = RNORM_VAL_R4()
   end do
 end do
 
@@ -494,7 +500,7 @@ end subroutine RNORM_ARRAY_2_R4
 subroutine RNORM_ARRAY_3_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 3-dimensional
-! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
 !*******************************************************************************
 
 ! parameters
@@ -506,7 +512,7 @@ integer :: i, j, k
 do i=1, ubound(random_array,3)
   do j=1, ubound(random_array,2)
     do k=1, ubound(random_array,1)
-      random_array(k,j,i) = RNORM_R4()
+      random_array(k,j,i) = RNORM_VAL_R4()
     end do
   end do
 end do
@@ -518,7 +524,7 @@ end subroutine RNORM_ARRAY_3_R4
 subroutine RNORM_ARRAY_4_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 4-dimensional
-! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
 !*******************************************************************************
 
 ! parameters
@@ -531,7 +537,7 @@ do i=1, ubound(random_array,4)
   do j=1, ubound(random_array,3)
     do k=1, ubound(random_array,2)
       do l=1, ubound(random_array,1)
-        random_array(l,k,j,i) = RNORM_R4()
+        random_array(l,k,j,i) = RNORM_VAL_R4()
       end do
     end do
   end do
@@ -544,7 +550,7 @@ end subroutine RNORM_ARRAY_4_R4
 subroutine RNORM_ARRAY_5_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 5-dimensional
-! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
 !*******************************************************************************
 
 ! parameters
@@ -558,7 +564,7 @@ do i=1, ubound(random_array,5)
     do k=1, ubound(random_array,3)
       do l=1, ubound(random_array,2)
         do m=1, ubound(random_array,1)
-          random_array(m,l,k,j,i) = RNORM_R4()
+          random_array(m,l,k,j,i) = RNORM_VAL_R4()
         end do
       end do
     end do
@@ -572,7 +578,7 @@ end subroutine RNORM_ARRAY_5_R4
 subroutine RNORM_ARRAY_6_R4(random_array)
 !*******************************************************************************
 ! RNORM_ARRAY, 6-dimensional
-! PURPOSE: Wrapper to RNORM_R4 to produce array of normally distributed values
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
 !*******************************************************************************
 
 ! parameters
@@ -587,7 +593,7 @@ do i=1, ubound(random_array,6)
       do l=1, ubound(random_array,3)
         do m=1, ubound(random_array,2)
           do n=1, ubound(random_array,1)
-            random_array(n,m,l,k,j,i) = RNORM_R4()
+            random_array(n,m,l,k,j,i) = RNORM_VAL_R4()
           end do
         end do
       end do
@@ -927,7 +933,7 @@ end subroutine RAND_ARRAY_6_I
 function RAND_RENORMALISED_R4(A, B) result(s_val)
 !*******************************************************************************
 ! RAND_RENORMALISE_R4
-! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+! PURPOSE: Produce uniform random number renormalised from 0..1 to any arbitrary
 !          range A..B.
 !*******************************************************************************
 
@@ -942,7 +948,7 @@ end function RAND_RENORMALISED_R4
 function RAND_RENORMALISED_R4I(A, B) result(s_val)
 !*******************************************************************************
 ! RAND_RENORMALISE_R4 for integer range
-! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+! PURPOSE: Produce uniform random number renormalised from 0..1 to any arbitrary
 !          range A..B.
 !*******************************************************************************
 
@@ -959,7 +965,7 @@ end function RAND_RENORMALISED_R4I
 function RAND_RENORMALISED_R8(A, B) result(s_val)
 !*******************************************************************************
 ! RAND_RENORMALISE_R8
-! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+! PURPOSE: Produce uniform random number renormalised from 0..1 to any arbitrary
 !          range A..B.
 !*******************************************************************************
 
@@ -974,7 +980,7 @@ end function RAND_RENORMALISED_R8
 function RAND_RENORMALISED_R8I(A, B) result(s_val)
 !*******************************************************************************
 ! RAND_RENORMALISE_R8
-! PURPOSE: Produce uniform random number renormalised ftom 0..1 to any arbitrary
+! PURPOSE: Produce uniform random number renormalised from 0..1 to any arbitrary
 !          range A..B.
 !*******************************************************************************
 
@@ -988,6 +994,33 @@ end function RAND_RENORMALISED_R8I
 
 !-------------------------------------------------------------------------------
 
+function RNORM_RENORMALISED_R4(mean, variance) result (fn_val)
+!*******************************************************************************
+! RNORM_RENORMALISED_R4
+! PURPOSE: Produce Gaussian random number renormalised from X=0 s=1 to any
+!          arbitrary mean and variance
+! THEORY and DETAILS: if x is a random variable whose mean is μx and variance
+!          is σ^2x, then the random variable, y, defined by y = ax + b,
+!          where a and b are constants, has mean μy = a μx + b
+!          and variance σ^2y = a^2 σ^2x.
+!          Solving the system for specific case when μx=0 and σ^2x=1 (standard
+!          Gaussian generator), we get (using wxMaxima)
+!             solve ([a*0+b=my, a^2*1^2=sy] , [a,b]);
+!             [[a=−sqrt(sy),b=my],[a=sqrt(sy),b=my]]
+!*******************************************************************************
+
+  implicit none
+  real :: fn_val
+  real, intent(in) :: mean, variance
+
+  real :: A, B
+
+  A = sqrt(variance)
+  B = mean
+
+  fn_val = A * RNORM_VAL_R4() + B
+
+end function RNORM_RENORMALISED_R4
 
 
 end module BASE_RANDOM ! <EOF>

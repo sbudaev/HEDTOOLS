@@ -2711,13 +2711,18 @@ indexterm:[RAND_I]
 Functions: RAND_R4 and RAND_R8
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Generates a random real (kind 4 or 8, uniform distribution). Has no parameters.
+Generates a random real (kind 4 or 8) number with the _uniform_
+distribution. If the function has no parameters, it calculates a uniform
+random number ranging from *0* to *1*. May have two real or integer parameters
+defining the desired range (*minimum*, *maximum*) of the random numbers.
 
 [source]
 --------------------------------------------------------------------------------
 if ( RAND_R4() < ga_mutationrate ) then
   call mutate(fish(i))
 end if
+.....
+rate = RAND_R4(10,100) ! this generates a random number within 10..100
 --------------------------------------------------------------------------------
 indexterm:[RAND_R4]
 indexterm:[RAND_R8]
@@ -2732,14 +2737,17 @@ IMPORTANT: These functions are just wrappers to the standard Fortran subroutine
 Function: RNORM
 ~~~~~~~~~~~~~~~
 
-Generates a normally distributed +real+ (kind 4) random number with *zero mean*
-and *standard deviation = 1.0.* Has no parameters. Based on algorithm 712,
-_Transactions on Mathematical Software,_ 18, 4, 434-435 (1992); (Kinderman &
-Monahan, augmented with quadratic bounding curves).
+In absence of any parameters, generates a normally distributed +real+
+(kind 4) random number with *zero mean* and *standard deviation = 1.0.*
+May also have two real parameters defining the desired *mean* and *variance*.
+
+Based on algorithm 712, _Transactions on Mathematical Software,_ 18, 4, 434-435
+(1992); (Kinderman & Monahan, augmented with quadratic bounding curves).
 
 [source]
 --------------------------------------------------------------------------------
 ga_mutation = RNORM()
+ga_i_length = RNORM(100., 10.)
 --------------------------------------------------------------------------------
 indexterm:[RNORM]
 
