@@ -618,11 +618,6 @@ real, optional, intent(in) :: A, B
 ! local variables
 integer :: i
 
-!do i=1, ubound(random_array,1)
-!  random_array(i) = RAND_R4()
-!end do
-! We do not need extra overhead for uniform numbers
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -646,12 +641,6 @@ real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j
-
-!do i=1, ubound(random_array,2)
-!  do j=1, ubound(random_array,1)
-!    random_array(j,i) = RAND_R4()
-!  end do
-!end do
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -677,14 +666,6 @@ real, optional, intent(in) :: A, B
 ! local variables
 integer :: i, j, k
 
-!do i=1, ubound(random_array,3)
-!  do j=1, ubound(random_array,2)
-!    do k=1, ubound(random_array,1)
-!      random_array(k,j,i) = RAND_R4()
-!    end do
-!  end do
-!end do
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -708,16 +689,6 @@ real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j, k, l
-
-!do i=1, ubound(random_array,4)
-!  do j=1, ubound(random_array,3)
-!    do k=1, ubound(random_array,2)
-!      do l=1, ubound(random_array,1)
-!        random_array(l,k,j,i) = RAND_R4()
-!      end do
-!    end do
-!  end do
-!end do
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -743,18 +714,6 @@ real, optional, intent(in) :: A, B
 ! local variables
 integer :: i, j, k, l, m
 
-!do i=1, ubound(random_array,5)
-!  do j=1, ubound(random_array,4)
-!    do k=1, ubound(random_array,3)
-!      do l=1, ubound(random_array,2)
-!        do m=1, ubound(random_array,1)
-!          random_array(m,l,k,j,i) = RAND_R4()
-!        end do
-!      end do
-!    end do
-!  end do
-!end do
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -778,20 +737,6 @@ real, optional, intent(in) :: A, B
 
 ! local variables
 integer :: i, j, k, l, m, n
-
-!do i=1, ubound(random_array,6)
-!  do j=1, ubound(random_array,5)
-!    do k=1, ubound(random_array,4)
-!      do l=1, ubound(random_array,3)
-!        do m=1, ubound(random_array,2)
-!          do n=1, ubound(random_array,1)
-!            random_array(n,m,l,k,j,i) = RAND_R4()
-!          end do
-!        end do
-!      end do
-!    end do
-!  end do
-!end do
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
