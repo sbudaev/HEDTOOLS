@@ -197,9 +197,10 @@ define AUTOGEN_README_LIB
 	$(shell echo "Compile command using the library is two-step:" >> $(AUTOGEN_README_FILE))
 	$(shell echo "" >> $(AUTOGEN_README_FILE))
 	$(shell echo "  1. compile the code producing object file .$(OBJEXT):" >> $(AUTOGEN_README_FILE))
-	$(shell echo "    $(FC) $(CCMD) file.f90" >> $(AUTOGEN_README_FILE))
-	$(shell echo "  2. link the library with the object code producing executable:" >> $(AUTOGEN_README_FILE))
-	$(shell echo "    $(FC) $(LIB) file.$(OBJEXT)" >> $(AUTOGEN_README_FILE))
+	$(shell echo "     $(FC) $(CCMD) file.f90" >> $(AUTOGEN_README_FILE))
+	$(shell echo "  2. link the library with the object code or .f90 source" >> $(AUTOGEN_README_FILE))
+	$(shell echo "     producing the executable:" >> $(AUTOGEN_README_FILE))
+	$(shell echo "     $(FC) file.$(OBJEXT) $(LIB)" >> $(AUTOGEN_README_FILE))
 	$(shell echo "" >> $(AUTOGEN_README_FILE))
 	$(shell echo "IMPORTANT: Use exactly the same platform and compiler that" >> $(AUTOGEN_README_FILE))
 	$(shell echo "           was used to generate the static library!" >> $(AUTOGEN_README_FILE))
@@ -218,7 +219,7 @@ define AUTOGEN_README_DIB
 	$(shell echo "    $(FC) $(DIB) file.f90" >> $(AUTOGEN_README_FILE))
 	$(shell echo "   ifort Windows produces both .dll and .lib files" >> $(AUTOGEN_README_FILE))
 	$(shell echo "   .lib file should be used for building: " >> $(AUTOGEN_README_FILE))
-	$(shell echo "    $(FC) $(LIB) file.f90" >> $(AUTOGEN_README_FILE))
+	$(shell echo "    $(FC) file.f90 $(LIB)" >> $(AUTOGEN_README_FILE))
 endef
 
 
