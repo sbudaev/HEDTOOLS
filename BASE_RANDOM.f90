@@ -78,6 +78,12 @@ interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
   module procedure RNORM_ARRAY_4_R4
   module procedure RNORM_ARRAY_5_R4
   module procedure RNORM_ARRAY_6_R4
+  module procedure RNORM_RENORM_ARRAY_1_R4
+  module procedure RNORM_RENORM_ARRAY_2_R4
+  module procedure RNORM_RENORM_ARRAY_3_R4
+  module procedure RNORM_RENORM_ARRAY_4_R4
+  module procedure RNORM_RENORM_ARRAY_5_R4
+  module procedure RNORM_RENORM_ARRAY_6_R4
 end interface RNORM_ARRAY
 
 interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
@@ -86,6 +92,11 @@ interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
   module procedure RNORM_ARRAY_4_R4
   module procedure RNORM_ARRAY_5_R4
   module procedure RNORM_ARRAY_6_R4
+  module procedure RNORM_RENORM_ARRAY_2_R4
+  module procedure RNORM_RENORM_ARRAY_3_R4
+  module procedure RNORM_RENORM_ARRAY_4_R4
+  module procedure RNORM_RENORM_ARRAY_5_R4
+  module procedure RNORM_RENORM_ARRAY_6_R4
 end interface RNORM_MATRIX
 
 interface RAND_R4                 ! Uniform random numbers, standard and
@@ -158,7 +169,7 @@ subroutine RANDOM_SEED_INIT(n_here, seed_here)
   !-----------------------------------------------------------------------------
   ! *** NOTE: ***
   ! The above code is auto-generated in the include file by the build system
-  ! Here this include file is referred only:
+  ! Here this include file is referred:
   include "BASE_RANDOM.inc"
   ! *** NON-PORTABLE CODE END ***
   !*****************************************************************************
@@ -167,7 +178,7 @@ subroutine RANDOM_SEED_INIT(n_here, seed_here)
   integer, optional, dimension(:), intent(out) :: seed_here  ! ... and N
 
   ! Subroutine name for DEBUG LOGGER
-  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT_FULL"
+  character (len=*), parameter :: PROCNAME = "RANDOM_SEED_INIT"
 
   !-----------------------------------------------------------------------------
 
@@ -611,6 +622,163 @@ end subroutine RNORM_ARRAY_6_R4
 
 !-------------------------------------------------------------------------------
 
+subroutine RNORM_RENORM_ARRAY_1_R4(random_array, mean, variance)
+!*******************************************************************************
+! RNORM_ARRAY, 1-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real, dimension(:) :: random_array
+real, intent(in) :: mean, variance
+
+! local variables
+integer :: i
+
+
+  do i=1, ubound(random_array,1)
+    random_array(i) = RNORM_RENORMALISED_R4(mean, variance)
+  end do
+
+end subroutine RNORM_RENORM_ARRAY_1_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_RENORM_ARRAY_2_R4(random_array, mean, variance)
+!*******************************************************************************
+! RNORM_ARRAY, 2-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real, dimension(:,:) :: random_array
+real, intent(in) :: mean, variance
+
+! local variables
+integer :: i, j
+
+  do i=1, ubound(random_array,2)
+    do j=1, ubound(random_array,1)
+      random_array(j,i) = RNORM_RENORMALISED_R4(mean, variance)
+    end do
+  end do
+
+end subroutine RNORM_RENORM_ARRAY_2_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_RENORM_ARRAY_3_R4(random_array, mean, variance)
+!*******************************************************************************
+! RNORM_ARRAY, 3-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real, dimension(:,:,:) :: random_array
+real, intent(in) :: mean, variance
+
+! local variables
+integer :: i, j, k
+
+  do i=1, ubound(random_array,3)
+    do j=1, ubound(random_array,2)
+      do k=1, ubound(random_array,1)
+        random_array(k,j,i) = RNORM_RENORMALISED_R4(mean, variance)
+      end do
+    end do
+  end do
+
+end subroutine RNORM_RENORM_ARRAY_3_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_RENORM_ARRAY_4_R4(random_array, mean, variance)
+!*******************************************************************************
+! RNORM_ARRAY, 4-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real, dimension(:,:,:,:) :: random_array
+real, intent(in) :: mean, variance
+
+! local variables
+integer :: i, j, k, l
+
+  do i=1, ubound(random_array,4)
+    do j=1, ubound(random_array,3)
+      do k=1, ubound(random_array,2)
+        do l=1, ubound(random_array,1)
+          random_array(l,k,j,i) = RNORM_RENORMALISED_R4(mean, variance)
+        end do
+      end do
+    end do
+  end do
+
+end subroutine RNORM_RENORM_ARRAY_4_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_RENORM_ARRAY_5_R4(random_array, mean, variance)
+!*******************************************************************************
+! RNORM_ARRAY, 5-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real, dimension(:,:,:,:,:) :: random_array
+real, intent(in) :: mean, variance
+
+! local variables
+integer :: i, j, k, l, m
+
+  do i=1, ubound(random_array,5)
+    do j=1, ubound(random_array,4)
+      do k=1, ubound(random_array,3)
+        do l=1, ubound(random_array,2)
+          do m=1, ubound(random_array,1)
+            random_array(m,l,k,j,i) = RNORM_RENORMALISED_R4(mean, variance)
+          end do
+        end do
+      end do
+    end do
+  end do
+
+end subroutine RNORM_RENORM_ARRAY_5_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_RENORM_ARRAY_6_R4(random_array, mean, variance)
+!*******************************************************************************
+! RNORM_ARRAY, 6-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real, dimension(:,:,:,:,:,:) :: random_array
+real, intent(in) :: mean, variance
+
+! local variables
+integer :: i, j, k, l, m, n
+
+  do i=1, ubound(random_array,6)
+    do j=1, ubound(random_array,5)
+      do k=1, ubound(random_array,4)
+        do l=1, ubound(random_array,3)
+          do m=1, ubound(random_array,2)
+            do n=1, ubound(random_array,1)
+              random_array(n,m,l,k,j,i) = RNORM_RENORMALISED_R4(mean, variance)
+            end do
+          end do
+        end do
+      end do
+    end do
+  end do
+
+end subroutine RNORM_RENORM_ARRAY_6_R4
+
+!-------------------------------------------------------------------------------
+
 subroutine RAND_ARRAY_1_R4(random_array, A, B)
 !*******************************************************************************
 ! RANDOM_ARRAY_1, 1-dimensional
@@ -991,7 +1159,7 @@ function RNORM_RENORMALISED_R4(mean, variance) result (fn_val)
 !          where a and b are constants, has mean μy = a μx + b
 !          and variance σ^2y = a^2 σ^2x.
 !          Solving the system for specific case when μx=0 and σ^2x=1 (standard
-!          Gaussian generator), we get (using wxMaxima)
+!          Gaussian generator), we get (solved using wxMaxima)
 !             solve ([a*0+b=my, a^2*1^2=sy] , [a,b]);
 !             [[a=−sqrt(sy),b=my],[a=sqrt(sy),b=my]]
 !*******************************************************************************
@@ -1000,6 +1168,7 @@ function RNORM_RENORMALISED_R4(mean, variance) result (fn_val)
   real :: fn_val
   real, intent(in) :: mean, variance
 
+  ! local variables
   real :: A, B
 
   A = sqrt(variance)
