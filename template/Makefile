@@ -97,7 +97,9 @@ IF_FFLAGS_WINDOWS = /fast /Qparallel
 SF_STATIC = -Bstatic -dn
 SF_TRAPS = -ftrap=%none
 SF_RCHECKS = -C
-SF_FFLAGS = -fast -autopar -depend=yes
+SF_FFLAGS = -O1 -depend=yes
+# NOTE: optimisations exceeding -O1 might not work with all CSV_IO routines
+# SF_FFLAGS = -fast -autopar -depend=yes
 # -fast = O5
 # -ftrap=common is a macro for -ftrap=invalid,overflow,division.
 # -ftrap=%all, %none, common
