@@ -94,6 +94,12 @@ interface RAND_R4                 ! Uniform random numbers, standard and
   module procedure RAND_RENORMALISED_R4I
 end interface RAND_R4
 
+interface RAND                    ! Alias for RAND_R4
+  module procedure RAND_VAL_R4    ! uniform distribution
+  module procedure RAND_RENORMALISED_R4
+  module procedure RAND_RENORMALISED_R4I
+end interface RAND
+
 interface RAND_R8                 ! Uniform random numbers, standard and
   module procedure RAND_VAL_R8    ! renormalised to arbitrary range
   module procedure RAND_RENORMALISED_R8
