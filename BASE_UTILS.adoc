@@ -645,7 +645,8 @@ This is rendered as follows:
 image:doc/img/img_doc_doxygen_formula.png[width=490,align="left"]
 
 IMPORTANT: +LaTeX+, +dvips+ and +Ghostscript+ should be installed for the
-formula rendering to work correctly.
+           formula rendering to work correctly. There are web-based LaTeX
+           equation editors, e.g. https://www.codecogs.com/latex/eqneditor.php
 indexterm:[LaTeX]
 indexterm:[Ghostscript]
 
@@ -2708,13 +2709,14 @@ ipos = RAND_I(1, len(ga_target))
 indexterm:[RAND_I]
 
 
-Functions: RAND_R4 and RAND_R8
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Functions: RAND_R4 (RAND) and RAND_R8
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Generates a random real (kind 4 or 8) number with the _uniform_
 distribution. If the function has no parameters, it calculates a uniform
 random number ranging from *0* to *1*. May have two real or integer parameters
-defining the desired range (*minimum*, *maximum*) of the random numbers.
+defining the desired range (_minimum_, _maximum_) of the random numbers. +RAND+
+is an alias for +RAND_R4+.
 
 [source]
 --------------------------------------------------------------------------------
@@ -2728,8 +2730,8 @@ indexterm:[RAND_R4]
 indexterm:[RAND_R8]
 
 IMPORTANT: These functions are just wrappers to the standard Fortran subroutine
-           +random_number+. Note that such intrinsic functions as +RAN+ are
-           provided for backwards compatibility with the old _Fortran 77_
+           +random_number+. Note that such intrinsic Fortran functions as +RAN+
+           are provided for backwards compatibility with the old _Fortran 77_
            standard. They are usually implemented as a simple modulo generator
            (as in +f77+). The new standard +random_number+ implements a
            superior algorithm and should be used for all new codes.
@@ -2738,16 +2740,16 @@ Function: RNORM
 ~~~~~~~~~~~~~~~
 
 In absence of any parameters, generates a normally distributed +real+
-(kind 4) random number with *zero mean* and *standard deviation = 1.0.*
-May also have two real parameters defining the desired *mean* and *variance*.
+(kind 4) random number with _zero mean_ and _standard deviation = 1.0._
+May also have two real parameters defining the desired _mean_ and _variance_.
 
 Based on algorithm 712, _Transactions on Mathematical Software,_ 18, 4, 434-435
 (1992); (Kinderman & Monahan, augmented with quadratic bounding curves).
 
 [source]
 --------------------------------------------------------------------------------
-ga_mutation = RNORM()
-ga_i_length = RNORM(100., 10.)
+ga_mutation = RNORM()         ! generate Gaussian variate with mean 0 and variance 1
+ga_i_length = RNORM(100.,10.) ! generate Gaussian variate with mean 100 and variance 10
 --------------------------------------------------------------------------------
 indexterm:[RNORM]
 
@@ -2768,36 +2770,49 @@ uppercase Latin letters 65:90, lowercase Latin letters: 97:122.
 LABEL = RAND_STRING(24,97,122) ! Set a random label of 24 lowercase letters
 --------------------------------------------------------------------------------
 
-
-Generating arrays of random numbers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Arrays of random numbers: RAND_ARRAY and RNORM_ARRAY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The subroutines +RAND_ARRAY+ and +RNORM_ARRAY+ generate arrays
-(up to 6-dimensions) of _uniform_ and _normal (gaussian)_ random numbers,
+(up to 6-dimensions) of _uniform_ and _normal (Gaussian)_ random numbers,
 respectively. +RAND_ARRAY+ can generate real (kind=4) and integer
-arrays. +RAND_ARRAY+ produces values ranging within 0.0 and 1.0, +RNORM_ARRAY+,
-normal values with zero mean and unity standard deviation.
+arrays. In absence of additional parameters, +RAND_ARRAY+ produces values
+ranging within 0.0 and 1.0, +RNORM_ARRAY+, normal (Gaussian) values with
+zero mean and unity standard deviation.
 
-Note that +RAND_ARRAY+ is just a trivial wrapper to the standard intrinsic
-+random_number+ subroutine and runs equally fast, it is here for compatibility
-only.
+*Additional parameters for arbitrary random numbers.* As with the above
+single-value functions, additional parameters enable the generation of random
+numbers with arbitrary parameters. For example, two additional parameters of
++RAND_ARRAY+ define the range (_minimum_, _maximum_) of uniformly distributed
+numbers whereas two additional parameters of +RNORM_ARRAY+ determines the
+_mean_ and _variance_ of the Gaussian random numbers generated.
 
-In case of _integer arrays_, the subroutine also requires two additional
-integers that set the range of the integers generated. There are aliases
-+RAND_MATRIX+ and +RNORM_MATRIX+ for two- to six-dimensional matrices.
+The subroutine +RAND_ARRAY+ can be also used with an integer array as a
+parameter. In this case, the subroutine requires two additional
+integers that set the range of the integers generated.
+
+There are aliases +RAND_MATRIX+ and +RNORM_MATRIX+ for two- to six-dimensional
+matrices.
+
+Here are a few examples:
 
 [source]
 --------------------------------------------------------------------------------
-real, dimension(200,500)  :: ARRAY_X, ARRAY_Y
+real, dimension(200,500)  :: ARRAY_X, ARRAY_Y, ARRAY_Z
 integer, dimension(20,20) :: ARRAY_I
 ....
-call RAND_ARRAY(ARRAY_X)        ! produce 2D array of uniform random numbers
+call RAND_ARRAY(ARRAY_X)         ! produce 2D array of uniform random numbers
 ...
-call RAND_ARRAY(ARRAY_I,1,10)   ! produce 2D array of integers ranging 1 to 10
+call RAND_ARRAY(ARRAY_X,10.,20.) ! produce 2D array of uniform random numbers
+                                 !   ranging from 10.0 to 20.0
 ...
-call RNORM_ARRAY(ARRAY_Y)       ! produce 2D array of gaussian numbers
+call RNORM_ARRAY(ARRAY_Y)        ! produce 2D array of random normal variates
+                                 !   (mean=0, std.dev.=1)
 ...
-call RNORM_MATRIX(ARRAY_Y)      ! produce 2D matrix of gaussian numbers (as above)
+call RNORM_MATRIX(ARRAY_Z,1.,.2) ! produce 2D array of Gaussian numbers with
+                                 !   mean=1.0 and variance=0.2
+...
+call RAND_ARRAY(ARRAY_I,1,10)    ! produce 2D array of integers ranging 1 to 10
 --------------------------------------------------------------------------------
 
 Build details
