@@ -4151,9 +4151,8 @@ This command compiles and links the code in +file.f90+ with the library.
 The static library can be built on any of the supported platforms (Windows,
 Linux, Mac) and compilers (e.g. GNU gfortra and Intel Fortran). But note
 that on Unix systems and GNU gfortran on Windows the library has an +.a+
-rather than +.lib+ file extension and +-c+ is used as the compile flag
-(not +/c+). The redistributable *zip* file that is produced when building
-the library contains a small +Readme.txt+ file.
+rather than +.lib+ file extension. The redistributable *zip* file that is
+produced when building the library contains a small +Readme.txt+ file.
 
 Using Code::Blocks IDE
 ----------------------
