@@ -227,9 +227,23 @@ General principles
 ////////////////////////////////////////////////////////////////////////////////
 
 IMPORTANT: A very helpful collection of advises and tips for efficient
-programming in Fortran can be found here:
-http://www.fortran90.org/src/best-practices.html[Fortran Best Practices]
+           programming in Fortran can be found here:
+           http://www.fortran90.org/src/best-practices.html[Fortran Best
+           Practices]
 indexterm:[Fortran Best Practices]
+
+*Avoid using very long lines of code.* They are difficult to read, especially
+if you (or your collaborator) use terminal editor limited by a 80 columns
+terminal. Working on the HPC cluster is always via the terminal. Also,
+compilers often do not like very long lines and may *drop extra characters*
+(resulting in compile errors). For example 132 characters is a standard
+limitation. But the default rules may be different on different compilers
+and platforms. Best try to use code lines limited by *80 characters* --
+many editors have options to show a 80-characters limit line at the right.
+indexterm:[line length]
+
+*Use the +&+ line continuation symbol and indents* to format code showing
+its structure for easy reading.
 
 *Work at high level, use these tools, use objects, isolate as much as possible
 into subroutines* In this way of coding, it becomes more clear what each part
