@@ -242,6 +242,11 @@ and platforms. Best try to use code lines limited by *80 characters* --
 many editors have options to show a 80-characters limit line at the right.
 indexterm:[line length]
 
+IMPORTANT: In GNU gfortran compiler, +-ffree-line-length-N+ flag controls how
+           many characters (+N+) are allowed in a single line of code. The
+           default valus is *132*. *+none+* removes any limnt, so the whole
+           line is used: +gfortran -ffree-line-length-none code.f90+.
+
 *Use the +&+ line continuation symbol and indents* to format code showing
 its structure for easy reading.
 
