@@ -232,14 +232,15 @@ IMPORTANT: A very helpful collection of advises and tips for efficient
            Practices]
 indexterm:[Fortran Best Practices]
 
-*Avoid using very long lines of code.* They are difficult to read, especially
-if you (or your collaborator) use terminal editor limited by a 80 columns
-terminal. Working on the HPC cluster is always via the terminal. Also,
-compilers often do not like very long lines and may *drop extra characters*
-(resulting in compile errors). For example 132 characters is a standard
-limitation. But the default rules may be different on different compilers
-and platforms. Best try to use code lines limited by *80 characters* --
-many editors have options to show a 80-characters limit line at the right.
+image:doc/img/ok.svg[width=16] *Avoid using very long lines of code.* They are
+difficult to read, especially if you (or your collaborator) use terminal editor
+limited by a 80 columns terminal. Working on the HPC cluster is always via
+the terminal. Also, compilers often do not like very long lines and may *drop
+extra characters* (resulting in compile errors). For example 132 characters
+is a standard limitation. But the default rules may be different on different
+compilers and platforms. Best try to use code lines limited by *80 characters*
+-- many editors have options to show a 80-characters limit line at the right.
+
 indexterm:[line length]
 
 IMPORTANT: In GNU gfortran compiler, +-ffree-line-length-N+ flag controls how
@@ -247,19 +248,21 @@ IMPORTANT: In GNU gfortran compiler, +-ffree-line-length-N+ flag controls how
            default valus is *132*. *+none+* removes any limnt, so the whole
            line is used: +gfortran -ffree-line-length-none code.f90+.
 
-*Use the +&+ line continuation symbol and indents* to format code showing
-its structure for easy reading.
+image:doc/img/ok.svg[width=16] *Use the ampersand +&+ line continuation symbol
+and indents* to format code showing its structure for easy reading.
 
-*Avoid non-standard and non-portable Fortran constructions* that work on
-some compilers but not in others. Intel Fortran compiler can be especially
-notorious in implementing such constructs. Refer the Fortran standard:
-Adams, J.C _et al.,_ 2009. _The Fortran 2003 Handbook._ Springer, DOI:
-10.1007/978-1-84628-746-6.  indexterm:[portability,compiler limitation]
+image:doc/img/ok.svg[width=16] *Avoid non-standard and non-portable Fortran
+constructions* that work on some compilers but not in others. Intel Fortran
+compiler can be especially notorious in implementing such constructs. Refer to
+the Fortran standard: Adams, J.C _et al.,_ 2009. _The Fortran 2003 Handbook._
+Springer, DOI: 10.1007/978-1-84628-746-6.
+indexterm:[portability,compiler limitation]
 
-*Work at high level, use these tools, use objects, isolate as much as possible
-into subroutines* In this way of coding, it becomes more clear what each part
-of the program is really doing and it is also easier to modify components
-of the program so that they don't affect other irrelevant components.
+image:doc/img/ok.svg[width=16] *Work at high level, use these tools, use
+objects, isolate as much as possible into subroutines* In this way of coding,
+it becomes more clear what each part of the program is really doing and it
+is also easier to modify components of the program so that they don't affect
+other irrelevant components.
 
 [source]
 --------------------------------------------------------------------------------
@@ -282,12 +285,12 @@ GENERATIONS_LOOP: do while &
 end do GENERATIONS_LOOP
 --------------------------------------------------------------------------------
 
-*Modularise* everything: many small subroutines are easier to code, test,
-understand, reuse, and maintain that a single monolithic piece or very few
-general subroutines. Modularity can also involve hierarchical organisation, it
-is sometimes quite useful, when a limited scope is required, to define
-subroutines within subroutines (the keyword +contains+ can be used within
-other subroutines and functions!):
+image:doc/img/ok.svg[width=16] *Modularise*: many small subroutines are easier
+to code, test, understand, reuse, and maintain that a single monolithic piece
+or very few general subroutines. Modularity can also involve hierarchical
+organisation, it is sometimes quite useful, when a limited scope is required,
+to define subroutines within subroutines (the keyword +contains+ can be used
+within other subroutines and functions!):
 
 [source]
 --------------------------------------------------------------------------------
@@ -328,12 +331,13 @@ module THE_GENOME
 end module THE_GENOME
 --------------------------------------------------------------------------------
 
-*Use meaningful labels* Using labels to mark +do.. end do+, +if .. end if+,
-+forall+ and other similar constructs may greatly improve the readability of
-the code and make it more easy to understand, especially if there are many
-nested loops +if..then.. end if+ constructs. No need to label all such things
-(this will just increase clutter), but those that are really important or
-very big must be. A couple of examples are below:
+image:doc/img/ok.svg[width=16] *Use meaningful labels* For example, using
+labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
+constructs may greatly improve the readability of the code and make it more
+easy to understand, especially if there are many nested loops +if..then.. end
+if+ constructs. No need to label all such things (this will just increase
+clutter), but those that are really important or very big must be. A couple
+of examples are below:
 
 [source]
 --------------------------------------------------------------------------------
@@ -357,17 +361,18 @@ else if (dev == 4) then SELECT_DEVIANT_CLASS
 end if SELECT_DEVIANT_CLASS
 --------------------------------------------------------------------------------
 
-*Use whole-array operations* and array slices instead of loops, *prefer
-built-in loop-free and parallel instructions* (+where+, +forall+ etc.):
-it is faster. Fortran 95, 2003 and 2008 has several looping/array assignment
-constructions that have been optimised for speed in multi-processor parallel
-environments.  Never use loops to initialise arrays, and avoid using them to
-calculate array components. Whenever possible, _reverse the order of indices_
-in nested loops, e.g. first looping should be over the columns, and then
-over the rows.  Nested loops  may have huge speed overhead! Use +FORALL+,
-+WHERE+ and similar new "parallelized" Fortran constructions. Below is a
-little test conducted on an average amd64 system using GNU Fortran (+-O3
--funroll-loops -fforce-addr,+ timing is by Linux +time+).
+image:doc/img/ok.svg[width=16] *Use whole-array operations* and array slices
+instead of loops, *prefer built-in loop-free and parallel instructions*
+(+where+, +forall+ etc.): it is faster. Fortran 95, 2003 and 2008 has several
+looping/array assignment constructions that have been optimised for speed in
+multi-processor parallel environments.  Never use loops to initialise arrays,
+and avoid using them to calculate array components. Whenever possible,
+_reverse the order of indices_ in nested loops, e.g. first looping should
+be over the columns, and then over the rows.  Nested loops  may have
+huge speed overhead! Use +FORALL+, +WHERE+ and similar new "parallelized"
+Fortran constructions. Below is a little test conducted on an average amd64
+system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+ timing is by
+Linux +time+).
 indexterm:[speed, execution speed]
 indexterm:[nested loops]
 indexterm:[array, nested loops,indices order]
@@ -537,7 +542,6 @@ Document code as you write it with Doxygen
 Local documentation for Doxygen on Linux should be here:
 file:///usr/share/doc/doxygen/html/index.html
 ////////////////////////////////////////////////////////////////////////////////
-
 
 <<DOXY_GET, Doxygen>> is a very useful tool which allows to extract and produce
 documentation from the source code in a highly structured manner. Prior to
