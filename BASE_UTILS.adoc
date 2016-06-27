@@ -250,6 +250,12 @@ IMPORTANT: In GNU gfortran compiler, +-ffree-line-length-N+ flag controls how
 *Use the +&+ line continuation symbol and indents* to format code showing
 its structure for easy reading.
 
+*Avoid non-standard and non-portable Fortran constructions* that work on
+some compilers but not in others. Intel Fortran compiler can be especially
+notorious in implementing such constructs. Refer the Fortran standard:
+Adams, J.C _et al.,_ 2009. _The Fortran 2003 Handbook._ Springer, DOI:
+10.1007/978-1-84628-746-6.  indexterm:[portability,compiler limitation]
+
 *Work at high level, use these tools, use objects, isolate as much as possible
 into subroutines* In this way of coding, it becomes more clear what each part
 of the program is really doing and it is also easier to modify components
