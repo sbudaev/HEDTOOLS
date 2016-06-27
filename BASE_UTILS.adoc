@@ -4182,8 +4182,11 @@ LIBPATH). Not keeping relative path to the library will solve the problem.
 
 image:doc/img/img_doc_cb_relative.png[width=400,align="left"]
 
-Manual builds
--------------
+Manual builds of HEDTOOLS
+-------------------------
+
+Editing source codes
+~~~~~~~~~~~~~~~~~~~~
 
 If the model is built _without_ using the automatic <<MAKE_OVERVIEW, GNU
 make>> utility and the supplied +Makefile+, you should take care about the
@@ -4208,11 +4211,16 @@ code files for the model as well as for the HEDTOOLS are included in the
 project. Many IDEs allow generating (importing) project from a supplied
 +Makefile+ and recognize GNU make format. This could make work a little easier.
 
+Using static library
+~~~~~~~~~~~~~~~~~~~~
+
 Another option is (1) to build the *modelling tools* as a static
 <<BUILD_HEDTOOLS_STATLIB, library>> using the +make+ system. (2) Compile
 the model and link the tools in from the library. Then, no manual edits may
 be required. Refer to the +Readme.txt+ file that is produced with the static
-library.
+library. When using the Intel Fortran compiler on Windows, make sure the command
+prompt environment is <<VISUAL_STUDIO_CMDBLD, correstly set up>>.
+indexterm:[static library]
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -4220,13 +4228,12 @@ library.
 HEDTOOLS]$ make             # make the static library of the Modelling Tools
 ...
 # (2) in the model code directory (make sure .mod and library files are placed there)
-test_library]$ gfortran -c test_lib.f90           # compile model code
-test_library]$ gfortran test_lib.o lib_hedutils.a # link with the library
-                                                  # producing the executable
+#     compile model code link with the library producing the executable
+test_library]$ gfortran test_lib.f90 lib_hedutils.a
 --------------------------------------------------------------------------------
 
-This is a small test program code producing two random matrices and saving them
-to CSV:
+*This is a small test program code* producing two random matrices and saving
+them to CSV:
 
 indexterm:[column names]
 
