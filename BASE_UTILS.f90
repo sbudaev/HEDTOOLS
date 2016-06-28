@@ -5,13 +5,6 @@ module BASE_UTILS
 ! BASE_UTILS:
 ! PURPOSE: This module provides basic high level utilities that are used in
 !   Different models (and should be of general applicability).
-! VERSION AND DATE: 0.3, 2015/11/30
-! CONTENTS:
-!
-! EXAMPLE:
-!
-! NOTES:
-!
 !*******************************************************************************
 
 implicit none

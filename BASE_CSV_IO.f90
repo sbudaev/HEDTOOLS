@@ -6,9 +6,6 @@ module CSV_IO
 ! PURPOSE: This module provides high level functions for input and output in
 !          CSV (Comma Seperated Values) file format along with a few other
 !          basic utilities. CSV is accessible by LibreOffice and MS Excel.
-! VERSION AND DATE: 0.3, 2015/11/30
-! CONTENTS:
-!    TODO: **** bla bla bla
 ! NOTES:
 !    (1) The typical workflow for output in CSV file format is like this:
 !        * CSV_FILE_OPEN_WRITE - physically open CSV file for writing;

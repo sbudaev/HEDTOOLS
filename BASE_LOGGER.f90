@@ -52,13 +52,11 @@
 !      call log_msg( 'This message is written both on screen and on file' )
 !      call log_shutdown ()
 !
-! TODO
-!
 ! Author: Michael Baudin, 2008, michael.baudin@gmail.com
 ! Changes: Arjen Markus, 2008, arjenmarkus@sourceforge.net
+! Changes: Sergey Budaev, sergey.budaev@uib.no
 !
-!     $Id$
-!
+!*******************************************************************************
 module LOGGER
 
   use, intrinsic :: ISO_FORTRAN_ENV   ! Portability, default units
