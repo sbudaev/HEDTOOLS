@@ -2731,6 +2731,9 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, colnames, csv_file_status
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
     call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
                                csv_file_status_here)
+    deallocate(colnames_here)
+    deallocate(colnames_output)
+    deallocate(len_col)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
       return
@@ -2838,6 +2841,9 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, colnames, csv_file_status
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
     call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
                                csv_file_status_here)
+    deallocate(colnames_here)
+    deallocate(colnames_output)
+    deallocate(len_col)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
       return
@@ -2946,6 +2952,9 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, colnames, csv_file_status
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
     call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
                                csv_file_status_here)
+    deallocate(colnames_here)
+    deallocate(colnames_output)
+    deallocate(len_col)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
       return
@@ -3060,6 +3069,9 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, colnames, csv_file_status)
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
     call CSV_FILE_RECORD_WRITE(csv_file_name, funit, csv_record, &
                                csv_file_status_here)
+    deallocate(colnames_here)
+    deallocate(colnames_output)
+    deallocate(len_col)
     if (.not. csv_file_status_here) then
       if (present(csv_file_status)) csv_file_status=csv_file_status_here
       return
