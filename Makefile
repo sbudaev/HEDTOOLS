@@ -292,16 +292,23 @@ all: static
 
 lib: $(LIB)
 
-# Static linking doesn't work well with gnu fortran
+# Make static library
 static: $(LIB)
 
-# Dynamic linking, this might also not work well on all platforms / compilers
+# Dynamic linking, this might not work well on all platforms / compilers
 shared: $(DIB)
 
+# Build shared library for calling from R dyn.load(), doesn't work on Windows
+libr:  $(OBJ)
+	R CMD SHLIB -o Rlib_hedutils.so $(OBJ)
+
+# Prepare include files
 inc: $(AUTOGEN_HEADER_RAND)
 
+# Make PDF (or other::  DOCFMT=xxx) using asciidoc
 doc: $(DOCFIL).$(DOCFMT)
 
+# Clean workspace completely - distribution state
 distclean: neat
 	-rm -f *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/BASE_UTILS.$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
