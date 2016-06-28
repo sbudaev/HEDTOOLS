@@ -888,7 +888,8 @@ Now you can work within this directory. This is the standard workflow.
 * *update* code from the server: +svn up+
 * edit the code using any favoured tools, build, run model etc...
 * *diff* (+svn diff+) to check what are the differences between the local
-  file(s) or directory and those in the repository
+  file(s) or directory and those in the repository, to use specific visual diff
+  tool  use +--diff-cmd diff_tool+.
 * *commit* when ready (e.g. when a new piece of code has been implememnted):
   +svn commit+
 indexterm:[Subversion,update]
@@ -935,15 +936,20 @@ It is also easy to move or copy parts of the repository across the repository:
 
 [source,bash]
 --------------------------------------------------------------------------------
-# Move a model branch to the archive folder -- use mv command
+# Move a model branch to the archive folder -- use mv (move) command
 svn mv https://svn.uib.no/aha-fortran/trunk/model_20151013 \
       https://svn.uib.no/aha-fortran/old_archived/model_20151013
+....
+# Copy a file to another branch -- use cp (copy) command
+svn cp https://svn.uib.no/aha-fortran/trunk/hormones/Hormones.f90 \
+      https://svn.uib.no/aha-fortran/branches/camilla/hormones/Hormones.f90
 --------------------------------------------------------------------------------
 
 Do not forget to update the local working copy after deleting/moving/copying
 directories on the SVN server, then local copy will be in sync with the server.
 
-indexterm:[Subversion,mv]
+indexterm:[Subversion,mv,move]
+indexterm:[Subversion,cp,copy]
 
 Make a branch copying old code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
