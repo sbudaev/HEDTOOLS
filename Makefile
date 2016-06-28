@@ -63,7 +63,7 @@ endif
 REQUIRED_EXECS = uname zip
 K := $(foreach exec,$(REQUIRED_EXECS),\
 	$(if $(shell which $(exec)),check executables,\
-	$(warning "************ No $(exec) available in PATH ************)))
+	$(warning ************ No $(exec) available in PATH ************)))
 
 #*******************************************************************************
 # Main building blocks, define
