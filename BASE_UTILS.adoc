@@ -761,9 +761,30 @@ tree --prune --charset ascii -dxL 2
 indexterm:[Subversion,trunk]
 indexterm:[Subversion,branch]
 
+The +HEDTOOLS+ folder itself has the following structure
+
+[source,bash]
+--------------------------------------------------------------------------------
+`-- HEDTOOLS          # Main place for the source files
+    |-- doc           # Documentation for HEDTOOLS
+    |-- IEEE          # Non-intrinsic IEEE math modules
+    `-- template      # Templates for user Makefile's and
+                      #   HPC cluster batch scripts
+--------------------------------------------------------------------------------
 
 First time setup of the working copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+IMPORTANT: AHA Tools in _trunk_ (stable version) can be found here:
+           +https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/+;
+           Development versions are here:
+           +https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS/+.
+           So standard checkout (the _stable_ version) is like this: +
+           +svn checkout https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/+
+indexterm:[AHA repository]
+
+Command line tool
+^^^^^^^^^^^^^^^^^
 
 First time setup of the working copy of the model (working directory):
 
@@ -807,13 +828,56 @@ indexterm:[Subversion,checkout]
 
 image:doc/img/img_doc_fimm_svn.png[height=280,align="left"]
 
-IMPORTANT: AHA Tools in _trunk_ (stable version) can be found here:
-+https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/+;
-Development versions are here:
-+https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS/+.
-So standard checkout (the _stable_ version) is like this: +
-+svn checkout https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/+
-indexterm:[AHA repository]
+TortoiseSVN on Windows
+^^^^^^^^^^^^^^^^^^^^^^
+* Using the <<SVN_GET, TortoiseSVN>> on *Windows*, initial setup is also simple.
+
+[[TORT_INIT]]
+
+First, choose some folder for keeping the working copies of the development
+files, open it in the Windows Explorer.
+
+indexterm:[Subversion,GUI tools, TortoiseSVN]
+indexterm:[Subversion,TortoiseSVN]
+indexterm:[TortoiseSVN]
+
+Then right-click somewhere within this folder, then choose *TortoiseSVN* and click
+*Checkout*. This will bring a window to enter the Subversion repository address.
+Now paste the address of the folder you are going to clone on the local machine.
+It is perhaps good to get the HEDTOOLS modelling tools initially as they
+are used anyway.
+
+image:doc/img/img_doc_tortoise_init1.png[width=160,align="left"]
+
+IMPORTANT: Unlike the command line client, TortoiseSVN by default clones to the
+           repository directory into the current folder and *does not* create
+           local folder with the same name as the remote one.
+
+It may therefore be necessary to retype the _local directory name_ the same
+as the remote one:
+
+image:doc/img/img_doc_tortoise_init2.png[width=280,align="left"]
+
+Initially the system will also ask for the username and password.
+
+*Repository browser* that is called in the *Checkout* menu *...* button
+is a tool to explore the contents of the repository *on the server*. In
+*Checkout* menu it can be used to select the folder project to be cloned to
+the local machine. Also, using Repository browser you can make a private
+project directory on the server under +/branches/your_name+ and then clone
+it to the local system using the *Checkout* menu.
+
+image:doc/img/img_doc_tortoise_init3.png[width=420,align="left"]
+
+Alternatively, you can create project on the local machine first and use the
+menu item *Import* to import it to the repository. However, in the later
+case make sure you include only the Fortran (Matlab etc) *program code*
+into the Subversion and do not include the many accessory files created by
+the Microsoft Studio. They make clutter and are not needed in the versioning
+sytem. Use the *TortoiseSVN -> Settings -> Ignore* manu item for setting up
+ignore file patterns.
+
+image:doc/img/img_doc_tortoise_init4.png[width=510,align="left"]
 
 
 Standard workflow
@@ -1056,6 +1120,8 @@ terminal commands. With GUI you should just select the appropriate item from
 the menu list.
 
 image:doc/img/img_doc_tortoise.png[height=200,align="left"]
+
+Initial setup for the repository in TortoiseSVN is <<TORT_INIT,simple>>.
 
 Checking changes, diff-ing, setting properties and keywords etc. is also very
 easy and visual with the built-in tool. Another useful feature is the revision
