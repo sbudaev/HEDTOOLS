@@ -423,7 +423,14 @@ endif
 
 # Note -- this is local start/run on all supported systems
 run_local: $(OUT) $(SRC)
+	$(info ********************************************************************)
+	$(info *** Executing model $(OUT) now)
+	$(info ********************************************************************)
+ifeq ($(IS_WINDOWS),1)
+	$(OUT)
+else
 	./$(OUT)
+endif
 
 # Main build the executable
 exec: $(OUT)
