@@ -125,6 +125,8 @@ work without it, but in such a case everything should be tweaked manually. GNU
 make is trivial to install on Linux. For Windows, it goes bundled with the
 Equation solution
 http://www.equation.com/servlet/equation.cmd?fa=fortran[GNU Fortran].
+If GNU Fortran is not needed, *make* can be downloaded *separately* from their
+http://www.equation.com/servlet/equation.cmd?fa=make[web site].
 The official site with the code, manuals aec is here:
 https://www.gnu.org/software/make/
 
