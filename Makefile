@@ -299,8 +299,9 @@ static: $(LIB)
 shared: $(DIB)
 
 # Build shared library for calling from R dyn.load(), doesn't work on Windows
+#  R CMD SHLIB -o Rlib_hedutils.so $(OBJ)
 libr:  $(OBJ)
-	R CMD SHLIB -o Rlib_hedutils.so $(OBJ)
+	gfortran -shared -o Rlib_hedutils.so $(OBJ) -L/usr/lib/R/lib -lR
 
 # Prepare include files
 inc: $(AUTOGEN_HEADER_RAND)
