@@ -16,6 +16,8 @@ Notes: (within the comment block ///// , so won't render in the final document)
 Revisions:
 18.06.2016 11:52:10 r858 - moved all images to from HEDTOOLS root to doc/img
 
+IMAGES:: set maximum width for images (whole page width) 510
+
 ---
 
 We need a name for the toolbox of the modules, does the
@@ -1363,6 +1365,56 @@ BELOW START ACTUAL DESCRIPTION OF THE AHA PROGRAMMING FRAMEWORK
 Introduction to the AHA Fortran modules
 ---------------------------------------
 
+Overview of AHA modules
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The modelling framework is build on these principles: (1) modularity,
+(2) extensibility, (3) portability.
+
+The Modelling framework is composed of two components: (1) *HEDTOOLS,*
+modelling tools (implemented as portable Fortran modules, not object-oriented)
+that have general applicability and are used for data conversion, output,
+random number generation and logging. (2) *The AHA model,* an object oriented
+evolutionary agents model implementing standard reusable module components.
+
+image:doc/img/aha_modules.svg[width=480,align="left"]
+
+*HEDTOOLS:*
+
+Module <<TO_BASE_UTILS, BASE_UTILS>> -- utility functions.
+
+Module <<TO_CSV_IO, CSV_IO>> -- Data output in CSV (comma separated values)
+       format.
+
+Module <<TO_RANDOM, BASE_RANDOM>> -- Utilities for random number generation.
+
+Module <<TO_LOGGER, LOGGER>> -- Logging facility.
+
+Module <<TO_STRINGS, BASE_STRINGS>> -- String manipulation utilities.
+
+*The AHA Model*
+
+Module COMMONDATA -- Setting common parameters for the model.
+
+Module THE_GENOME -- Implementation of the genome objects, gene, alleles,
+        chromosomes.
+
+Module THE_HORMONES -- Architecture of the hormones and their functions.
+
+Module THE_NEUROBIO -- Implements neurobiological architectures based on
+        sigmoid function.
+
+Module THE_INDIVIDUAL -- Implements the individual agent in the final form.
+
+Module THE_POPULATION -- Implements the populations of agents.
+
+Module THE_ENVIRONMENT -- Implements the environment and its variation.
+
+Module THE_EVOLUTION -- Implements the genetic algorithm.
+
+Modules in Fortran
+~~~~~~~~~~~~~~~~~~
+
 Module is just a piece of <<FORTRAN_GET, Fortran>> program that contains
 variable or constant declarations and functions and subroutines. Modules
 are defined in such a simple way:
@@ -1478,6 +1530,8 @@ normally care about all this automatically.
 
 Module: BASE_UTILS
 ------------------
+
+[[TO_BASE_UTILS]]
 
 indexterm:[BASE_UTILS]
 
@@ -1763,6 +1817,9 @@ Module: CSV_IO
 
 Overview
 ~~~~~~~~
+
+[[TO_CSV_IO]]
+
 indexterm:[CSV_IO]
 
 This module contains subroutines and functions for outputting numerical
@@ -2763,6 +2820,8 @@ indexterm:[compiler,limitation]
 Module: BASE_RANDOM
 ------------------
 
+[[TO_RANDOM]]
+
 This module contains subroutines for generating random numbers (pseudo-random
 number generator, PRNG). However, the code of this module depends on the
 platform and compiler used. The build system (make) generates the appropriate
@@ -3008,6 +3067,8 @@ Module: LOGGER
 Overview
 ~~~~~~~~
 
+[[TO_LOGGER]]
+
 This module controls logging arbitrary messages during the execution of the
 program. The format and destination of the messages is configurable during
 the run time. Thus, a trace of the execution can be read by the user during
@@ -3185,6 +3246,8 @@ Module: BASE_STRINGS
 ////////////////////////////////////////////////////////////////////////////////
 Repeat the doc file included with the module
 ////////////////////////////////////////////////////////////////////////////////
+
+[[TO_STRINGS]]
 
 _This module containing some useful string manipulation functions is borrowed
 from http://www.gbenthien.net/strings/index.html. The description below is
