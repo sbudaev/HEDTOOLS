@@ -1371,11 +1371,14 @@ Overview of AHA modules
 The modelling framework is build on these principles: (1) modularity,
 (2) extensibility, (3) portability.
 
-The Modelling framework is composed of two components: (1) *HEDTOOLS,*
-modelling tools (implemented as portable Fortran modules, not object-oriented)
-that have general applicability and are used for data conversion, output,
-random number generation and logging. (2) *The AHA model,* an object oriented
-evolutionary agents model implementing standard reusable module components.
+The Modelling framework is composed of two separate components: (1) *HEDTOOLS,*
+modelling utilities and tools (implemented as portable Fortran modules,
+not object-oriented) that have general applicability and are used for data
+conversion, output, random number generation and execution logging. HEDTOOLS
+modules are designed such that they can be used in many different simulation
+projects, not only the AHA model; (2) *The AHA model,* an object oriented
+evolutionary agents modelling framework implementing standard reusable
+module components.
 
 image:doc/img/aha_modules.svg[width=480,align="left"]
 
@@ -1392,6 +1395,9 @@ Module <<TO_LOGGER, LOGGER>> -- Logging facility.
 
 Module <<TO_STRINGS, BASE_STRINGS>> -- String manipulation utilities.
 
+Non-intrinsic <<IEEE_NONINTR, modules>> -- implement IEEE arithmetic checks
+        and exceptions tracking.
+
 *The AHA Model*
 
 Module COMMONDATA -- Setting common parameters for the model.
@@ -1402,11 +1408,12 @@ Module THE_GENOME -- Implementation of the genome objects, gene, alleles,
 Module THE_HORMONES -- Architecture of the hormones and their functions.
 
 Module THE_NEUROBIO -- Implements neurobiological architectures based on
-        sigmoid function.
+        sigmoid function, decision making and GOS.
 
-Module THE_INDIVIDUAL -- Implements the individual agent in the final form.
+Module THE_INDIVIDUAL -- Implements the individual agent in the final form and
+        the individual-based model functions.
 
-Module THE_POPULATION -- Implements the populations of agents.
+Module THE_POPULATION -- Implements the population(s) of agents.
 
 Module THE_ENVIRONMENT -- Implements the environment and its variation.
 
@@ -3512,6 +3519,9 @@ implementation of IEEE modules is highly dependent on the CPU type and
 features.] However, there are external (non-intrinsic) IEEE modules for gfortran
 on the x86 (support both 32 and 64 bit) that are included into the *HEDTOOLS*
 bundle.
+
+[[IEEE_NONINTR]]
+
 indexterm:[compiler,limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Intel Fortran]
@@ -3745,6 +3755,14 @@ Using make
 
 Most basic things with the standard +Makefile+ are simple. The commands are
 issued on the terminal <<CONSOLE_GET, console>>.
+
+IMPORTANT: There is a separate +Makefile+ in the HEDTOOLS bundle. It is used
+           for building the modelling tools as a <<BUILD_HEDTOOLS_STATLIB,
+           static library>>.  Separate building of HEDTOOLS is normally not
+           necessary. Just tweak and run the +Makefile+ that is supplied
+           in the current model directory. It will build HEDTOOLS and,
+           if necessary, IEEE modules automatically.
+
 indexterm:[GNU make, make, gmake]
 indexterm:[Makefile, make]
 indexterm:[make]
