@@ -3767,6 +3767,44 @@ indexterm:[GNU make, make, gmake]
 indexterm:[Makefile, make]
 indexterm:[make]
 
+The make system keeps track of all the code components. For example, if only
+one has been changed, it will recompile only this. It also keeps track of whether
+IEEE math modules are really necessary and if the intrinsic or non-intrinsic
+modules are used.
+
+For example, you may have built the model executable (make) and then edited
+the code of a module a little. Then just issue command to run batch (make run)
+on fimm. The make system will then automatically determine that the model
+executable is now out of date and recompile the changed module and build an
+updated executable, and only after this will start the batch job.
+
+Another example: you just checked-out or updated (e.g. +svn up+) the model
+source that is tested and known to be bug-free on the fimm cluster. Now you
+should compile components of the program, (e.g. tweak IEEE math modules),
+build the executable, and finally start the executable in the cluster's batch
+job system. All this is done using a single command: +make run+.
+
+[source,bash]
+--------------------------------------------------------------------------------
+$ svn update
+$ ... some output...
+$ make run
+--------------------------------------------------------------------------------
+
+The system should work the same way on Windows and Linux, including the fimm HPC
+cluster. By editing the +Makefile+ provided, one can easily tweak the behaviour
+of the build process, e.g. add other modules, change names, compilation options
+and details etc.
+
+Microsoft Studio, Oracle Solaris Studio and other similar IDEs actually
+provide their own make systems (e.g. +nmake+, +make+ or +dmake+) that work
+behind the scenes even if the IDE GUI is used.
+
+IMPORTANT: The HEDTOOLS bundle has a subdirectory called +template+ that
+           contains a template Makefile for new modelling projects. In many
+           cases only the source code file name(s) have to be
+           <<MAKEFILE_TWEAK, tweaked>> there.
+
 Building and running the model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -3825,39 +3863,6 @@ or use +DEBUG+ as a parameter to make, this works on all platforms:
 $ make intel DEBUG=1
 --------------------------------------------------------------------------------
 
-The make system keeps track of all the code components. For example, if only
-one has been changed, it will recompile only this. It also keeps track of whether
-IEEE math modules are really necessary and if the intrinsic or non-intrinsic
-modules are used.
-
-For example, you may have built the model executable (make) and then edited
-the code of a module a little. Then just issue command to run batch (make run)
-on fimm. The make system will then automatically determine that the model
-executable is now out of date and recompile the changed module and build an
-updated executable, and only after this will start the batch job.
-
-Another example: you just checked-out or updated (e.g. +svn up+) the model
-source that is tested and known to be bug-free on the fimm cluster. Now you
-should compile components of the program, (e.g. tweak IEEE math modules),
-build the executable, and finally start the executable in the cluster's batch
-job system. All this is done using a single command: +make run+.
-
-[source,bash]
---------------------------------------------------------------------------------
-$ svn update
-$ ... some output...
-$ make run
---------------------------------------------------------------------------------
-
-The system should work the same way on Windows and Linux, including the fimm HPC
-cluster. By editing the +Makefile+ provided, one can easily tweak the behaviour
-of the build process, e.g. add other modules, change names, compilation options
-and details etc.
-
-Microsoft Studio, Oracle Solaris Studio and other similar IDEs actually
-provide their own make systems (e.g. +nmake+, +make+ or +dmake+) that work
-behind the scenes even if the IDE GUI is used.
-
 Using Intel Parallel Studio on Windows (command line)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -3876,6 +3881,10 @@ image:doc/img/img_doc_intel_win_menu.png[height=280,align="left"]
 
 Or if you right click on the shortcut, copy the commend line set in the menu
 and run it in the terminal. Such a command may look like this:
+
+////////////////////////////////////////////////////////////////////////////////
+CAUTION: very long line below, and one more further down:
+////////////////////////////////////////////////////////////////////////////////
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -3942,6 +3951,8 @@ IMPORTANT: In most cases only the model source code file(s) may need tweaking.
            This is <<DEF_SRC_MAKE, defined>> in the variable +SRC+ of the
            +Makefile+. Also, path to the Modelling tools, +HEDTOOLSDIR+, may
            need an update. Everything else should work out of the box.
+
+[[MAKEFILE_TWEAK]]
 
 Concepts
 ^^^^^^^^
