@@ -1395,7 +1395,7 @@ Module <<TO_LOGGER, LOGGER>> -- Logging facility.
 
 Module <<TO_STRINGS, BASE_STRINGS>> -- String manipulation utilities.
 
-Non-intrinsic <<IEEE_NONINTR, modules>> -- implement IEEE arithmetic checks
+Non-intrinsic <<IEEE_NONINTR, IEEE modules>> -- implement IEEE arithmetic checks
         and exceptions tracking.
 
 *The AHA Model*

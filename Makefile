@@ -60,7 +60,7 @@ endif
 # Check if certain required executables exist and are callable in path. This is
 # important on the Windows platform because such GNU command line utilities as
 # uname and zip are not installed by default.
-REQUIRED_EXECS = uname zip
+REQUIRED_EXECS = uname zip a2x
 K := $(foreach exec,$(REQUIRED_EXECS),\
 	$(if $(shell which $(exec)),check executables,\
 	$(warning ************ No $(exec) available in PATH ************)))
