@@ -1214,17 +1214,17 @@ Implementation of objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is the most convenient and natural to define a single object or closely
-related objects within the same Fortran module. Note also that components
-of an object or derived type are referred using the percent symbol +%+,
-e.g. +fish%sex+ refers to a component +sex+ of the object +fish+. Both derived
-type data components and functions are referred in this way. Derived type
-data objects can be combined into arrays as "normal" data. For example, the
-+sex+ component of the _i_-th element of the array of derived type +fish+
-is referred as +fish(i)%sex+. Note that derived types can also include arrays,
-so +predator%prey(j)+ can be _j_-th element of the +prey+ array component of
-the object +predator+. If we use an array of derived type that includes
-a three-dimensional array component, it could be something like
-+fish(i)%position(x,y,z)+.
+related objects within the same <<MODULES_INTRO, Fortran module>>. Note also
+that components of an object or derived type are referred using the percent
+symbol +%+, e.g. +fish%sex+ refers to a component +sex+ of the object
++fish+. Both derived type data components and functions are referred in
+this way. Derived type data objects can be combined into arrays as "normal"
+data. For example, the +sex+ component of the _i_-th element of the array of
+derived type +fish+ is referred as +fish(i)%sex+. Note that derived types
+can also include arrays, so +predator%prey(j)+ can be _j_-th element of
+the +prey+ array component of the object +predator+. If we use an array of
+derived type that includes a three-dimensional array component, it could be
+something like +fish(i)%position(x,y,z)+.
 indexterm:[module]
 indexterm:[derived type, object]
 indexterm:[derived type,array of derived type]
@@ -1424,6 +1424,8 @@ Module THE_EVOLUTION -- Implements the genetic algorithm.
 Modules in Fortran
 ~~~~~~~~~~~~~~~~~~
 
+[[MODULES_INTRO]]
+
 Module is just a piece of <<FORTRAN_GET, Fortran>> program that contains
 variable or constant declarations and functions and subroutines. Modules
 are defined in such a simple way:
@@ -1539,8 +1541,8 @@ changeable code can be just linked with the library.
 .Note
 ================================================================================
 The examples above assume that the module code is located in the
-upper-level directory, so ../ , also the build script or Makefile should
-normally care about all this automatically.
+upper-level directory, so ../. The <<MAKE_OVERVIEW, make system>> used to
+build the model cares about the HEDTOOLS modules automatically.
 ================================================================================
 
 Module: BASE_UTILS
