@@ -101,7 +101,7 @@ On Windows they can be installed manually from their official web sites. On
 Mac use http://brew.sh[homebrew] to install many of the utils. Below are
 some details on the Windows software.
 
-*Fortran Compiler* (Mandatory)
+image:doc/img/ok.svg[width=16] *Fortran Compiler* (Mandatory)
 [[FORTRAN_GET]]
 
 *Intel Fortran* compiler, a commercial software available
@@ -117,7 +117,7 @@ indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Intel Fortran]
 indexterm:[compiler,Oracle Fortran]
 
-*GNU Make* (Mandatory)
+image:doc/img/ok.svg[width=16] *GNU Make* (Mandatory)
 [[MAKE_GET]]
 
 This is an automated program build system that keeps track of changes
@@ -137,19 +137,26 @@ http://sourceforge.net/projects/ezwinports/[ezwinports bundle].
 The official site of GNU make with the code, manuals etc. is here:
 https://www.gnu.org/software/make/
 
-*Subversion* (Mandatory)
+image:doc/img/ok.svg[width=16] *Subversion* (Mandatory)
 [[SVN_GET]]
 
-Windows GUI for Subversion is *TortoiseSVN* (supported by UiB IT):
-https://tortoisesvn.net/. It is very helpful to have also console Subversion
-client software: TortoiseSVN includes console tools but they are not
-installed by default. A good command-line-only Windows tool is SilkSVN
-https://sliksvn.com/download/. There are many other GUI tools, e.g.
-http://pysvn.tigris.org/project_downloads.html[PySVN-Workbench] and
+<<SVN_INTRO, Subversion>> is a version control system. Windows GUI
+(graphical user interface) for Subversion is *TortoiseSVN* (supported by
+UiB IT): https://tortoisesvn.net/. It is very helpful to have also console
+Subversion client software: TortoiseSVN includes console tools but they
+are not installed by default. A good command-line-only Windows tool is
+*SilkSVN* https://sliksvn.com/download/. There are many other GUI tools,
+e.g.  http://pysvn.tigris.org/project_downloads.html[PySVN-Workbench] and
 http://www.twobarleycorns.net/tkcvs.html[TkCVS] that are open source tools
-available for Windows, Linux and Mac.
+available for Windows, Linux and Mac. *SmartSVN* is a commercial (with free
+edition) Java-based multi-platform GUI client (http://www.smartsvn.com). There
+is also *SmartGit* multiplatform Java-based GUI client that integrates
+Subversion with Git and Mercurial (other types of version control software),
+see here: https://www.syntevo.com/smartgit/. Subversion can be integrated with
+text editors, IDEs and other tools using various third party
+<<SVN_INTEGR, plugins>>.
 
-*Console terminal* (Highly recommended)
+image:doc/img/ok.svg[width=16] *Console terminal* (Highly recommended)
 [[CONSOLE_GET]]
 
 indexterm:[ConEmu terminal]
@@ -160,7 +167,7 @@ with the *Far manager*, a two-panel console file manager similar to
 the ancient Norton commander for DOS (or Midnight commander on Linux):
 http://www.farmanager.com/download.php?l=en.
 
-image:doc/img/img_doc_far.png[height=280,align="left"]
+image:doc/img/img_doc_far.png[height=200,align="left"]
 
 It is also very helpful to have (on the Microsoft Windows) the
 https://en.wikipedia.org/wiki/GNU_Core_Utilities[GNU core utilities]
@@ -175,7 +182,8 @@ http://unxutils.sourceforge.net/[UnxUtils],
 http://github.com/bmatzelle/gow/wiki[Gow],
 http://win-bash.sourceforge.net/[winbash].
 
-*Doxygen: Automatically generate program documentation* (Highly Recommended)
+image:doc/img/ok.svg[width=16] *Doxygen: Automatically generate program
+documentation* (Highly Recommended)
 [[DOXY_GET]]
 
 This is a tool for writing software reference documentation. The documentation
@@ -191,7 +199,7 @@ are required to generate PDF.
 indexterm:[LaTeX]
 indexterm:[Ghostscript]
 
-*Geany* (Recommended)
+image:doc/img/ok.svg[width=16] *Geany* (Recommended)
 [[GEANY_GET]]
 
 Lightweight IDE, Editor for code and any text files (including
@@ -200,12 +208,13 @@ and Mac. http://www.geany.org/ Also need plugins: http://plugins.geany.org/
 (The Geany SVN plugin for Windows _requires_ command line tools like
 https://sliksvn.com/download/[SilkSvn] to work.)
 
-*Code::Blocks for Fortran* (Recommended)
+image:doc/img/ok.svg[width=16] *Code::Blocks for Fortran* (Recommended)
 [[CODEBLOCKS_GET]]
 
 IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
 http://cbfortran.sourceforge.net/. Installation by unpacking into some
-directory (i.e. does not require administrative rights).
+directory (i.e. does not require administrative rights). How to use this program
+for building for the AHA model is <<CODEBLOCKS_USE, described below>>.
 indexterm:[Code::Blocks]
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -214,7 +223,7 @@ http://recsveditor.sourceforge.net/
 https://sourceforge.net/projects/javacsveditor/
 ////////////////////////////////////////////////////////////////////////////////
 
-*Follow: A logfile reading program* (Recommended)
+image:doc/img/ok.svg[width=16] *Follow: A logfile reading program* (Recommended)
 [[FOLLOW_GET]]
 
 Following a logfile while executing a program is done trivially on Linux:
@@ -716,6 +725,7 @@ AHA Tools stable version (trunk): https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/
 
 Overview
 ~~~~~~~~
+[[SVN_INTRO]]
 
 <<SVN_GET, Subversion>> (SVN) is a version control system used in the AHA
 project. Use version control not only for just managing versions, but also
@@ -1154,6 +1164,8 @@ indexterm:[Subversion,GUI tools, TortoiseSVN]
 indexterm:[Subversion,TortoiseSVN]
 indexterm:[TortoiseSVN]
 
+[[SVN_INTEGR]]
+
 Subversion also integrates with numerous other tools, e.g. there is an SVN
 plugin for the <<GEANY_GET, Geany>> editor, plugins for the
 https://tortoisesvn.net/visualstudio.html[Microsoft Visual Studio IDE] etc.
@@ -1379,7 +1391,7 @@ not object-oriented) that have general applicability and are used for data
 conversion, output, random number generation and execution logging. HEDTOOLS
 modules are designed such that they can be used in many different simulation
 projects, not only the AHA model; (2) *The AHA model,* an object oriented
-evolutionary agents modelling framework implementing standard reusable
+evolutionary agents simulation framework implementing standard reusable
 module components.
 
 image:doc/img/aha_modules.svg[width=480,align="left"]
@@ -3846,6 +3858,8 @@ build process.
 Debugging
 ^^^^^^^^^
 
+[[DEBUG_OPS]]
+
 The environment variable +DEBUG+ controls whether the build system produces the
 debug symbols (-g) or, if NOT defined, speed-optimised machine code (-O3,
 automatic loop parallelization etc.). To build with debug support just define
@@ -4396,6 +4410,9 @@ produced when building the library contains a small +Readme.txt+ file.
 Using Code::Blocks IDE
 ----------------------
 
+Building the Modelling Tools as a static library
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Working with the <<CODEBLOCKS_GET, Code::Blocks IDE>> is similar to
 that with Microsoft Studio. The simplest way to get it running is to (1)
 build HEDTOOLS as a static library using the make system, (2) copy the
@@ -4403,6 +4420,7 @@ library file +lib_hedutils.a+ (or +lib_hedutils.lib+) and all the +.mod+
 files produced by the make build system into the working project directory,
 add the library file to the project file using the *Project -> Add Files*
 menu. After this it should build within the IDE.
+[[CODEBLOCKS_USE]]
 
 indexterm:[Code::Blocks]
 indexterm:[static library]
@@ -4420,6 +4438,25 @@ with the compiler not being able to find the library (as it is not in the
 LIBPATH). Not keeping relative path to the library will solve the problem.
 
 image:doc/img/img_doc_cb_relative.png[width=400,align="left"]
+
+Using the custom Makefile
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another method to use the HEDTOOLS bundle in Code::Blocks IDE is to set
+up the program build directly from the custom +Makefile+:
+*Project -> Properties*
+
+image:doc/img/img_doc_cb_makefile.png[width=460,align="left"]
+
+and setting target paths as in the +Makefile+, i.e. in the *+"."+* directory
+(rather than the default +\bin+). Also, the +Makefile+ commands for *Debug*
+(*Project -> Build options*) should include the +DEBUG=1+ flag (see the GNU
+Makefile <<DEBUG_OPS, command line options>> for debugging).
+
+image:doc/img/img_doc_cb_makefile_bld.png[width=400,align="left"]
+
+This is the most universal and flexible method that uses the same +Makefile+
+for building both on the command line and from the IDE.
 
 Manual builds of HEDTOOLS
 -------------------------
