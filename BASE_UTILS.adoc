@@ -132,7 +132,8 @@ If GNU Fortran is not needed, executable *make* can be downloaded *separately*
 from the
 http://www.equation.com/servlet/equation.cmd?fa=make[Equation solution web site].
 It is also available from the
-http://sourceforge.net/projects/ezwinports/[ezwinports bundle].
+http://sourceforge.net/projects/ezwinports/[ezwinports bundle] and other GNU
+core utils <<GNUCORE_GET, distros for Windows>>.
 
 The official site of GNU make with the code, manuals etc. is here:
 https://www.gnu.org/software/make/
@@ -178,9 +179,12 @@ e.g.
 http://gnuwin32.sourceforge.net/[GnuWin32],
 http://www.cygwin.com/[Cygwin],
 http://www.mingw.org/[MinGW],
+http://sourceforge.net/projects/ezwinports/[ezwinports],
 http://unxutils.sourceforge.net/[UnxUtils],
 http://github.com/bmatzelle/gow/wiki[Gow],
 http://win-bash.sourceforge.net/[winbash].
+[[GNUCORE_GET]]
+
 
 image:doc/img/ok.svg[width=16] *Doxygen: Automatically generate program
 documentation* (Highly Recommended)
@@ -380,24 +384,24 @@ end if SELECT_DEVIANT_CLASS
 --------------------------------------------------------------------------------
 
 image:doc/img/ok.svg[width=16] *Use whole-array operations* and array slices
-instead of loops, *prefer built-in loop-free and parallel instructions*
-(+where+, +forall+ etc.): it is faster. Fortran 95, 2003 and 2008 has several
-looping/array assignment constructions that have been optimised for speed in
-multi-processor parallel environments.  Never use loops to initialise arrays,
-and avoid using them to calculate array components. Whenever possible,
-_reverse the order of indices_ in nested loops, e.g. first looping should
-be over the columns, and then over the rows.  Nested loops  may have
-huge speed overhead! Use +FORALL+, +WHERE+ and similar new "parallelized"
-Fortran constructions. Below is a little test conducted on an average amd64
-system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+ timing is by
-Linux +time+).
+instead of loops, prefer built-in loop-free and parallel instructions and
+array assignments (+where+, +forall+ etc.): it is faster. Fortran 95,
+2003 and 2008 has several looping/array assignment constructions that
+have been optimised for speed in multi-processor parallel environments.
+Never use loops to initialise arrays, and avoid using them to calculate
+array components. Whenever possible, _reverse the order of indices_ in nested
+loops, e.g. first looping should be over the columns, and then over the rows.
+Nested loops  may have huge speed overhead! Use +FORALL+ and +WHERE+ for
+"parallelized" array assignments. Below is a little test conducted on an
+average amd64 system using GNU Fortran (+-O3 -funroll-loops -fforce-addr,+
+timing is by Linux +time+).
 indexterm:[speed, execution speed]
 indexterm:[nested loops]
 indexterm:[array, nested loops,indices order]
 
-.Test 1: Multiple nested loops, execution time = 0m12.488s
 [source]
 --------------------------------------------------------------------------------
+! *** Test 1: Multiple nested loops, execution time = 0m12.488s
 use BASE_UTILS
 use BASE_RANDOM
 implicit none
@@ -420,9 +424,9 @@ MATRLOOP: do nn=1,n
 end do MATRLOOP
 --------------------------------------------------------------------------------
 
-.Test 2: Direct array assignment, execution time = 0m1.046s
 [source]
 --------------------------------------------------------------------------------
+! *** Test 2: Direct array assignment, execution time = 0m1.046s
 ! header the same as above...
 call random_seed_init
 
@@ -433,22 +437,22 @@ end do MATRLOOP
 --------------------------------------------------------------------------------
 indexterm:[array, direct assignment]
 
-.Test 3: +forall+ instruction, execution time = 0m1.042s
 [source]
 --------------------------------------------------------------------------------
+! *** Test 3: +forall+ instruction, execution time = 0m1.042s
 ! header the same as above...
 call random_seed_init
 
 MATRLOOP: do nn=1,n
   random_r = rand_r4()
-  forall (i=1:a, j=1:b, k=1:c) M(i,j,k) = random_r  ! Parallel instruction
+  forall (i=1:a, j=1:b, k=1:c) M(i,j,k) = random_r  ! Parallelised assignment
 end do MATRLOOP
 --------------------------------------------------------------------------------
 indexterm:[FORALL]
 
-.Test 4: Reverse order of nested loops (cols then rows), execution time = 0m1.046s
 [source]
 --------------------------------------------------------------------------------
+! *** Test 4: Reverse order of nested loops (cols then rows), execution time = 0m1.046s
 ! header the same as above...
 call random_seed_init
 
