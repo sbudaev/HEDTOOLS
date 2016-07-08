@@ -1,6 +1,7 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
 # $Id$
+# $HeadURL$
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>
