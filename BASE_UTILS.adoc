@@ -1561,6 +1561,34 @@ upper-level directory, so ../. The <<MAKE_OVERVIEW, make system>> used to
 build the model cares about the HEDTOOLS modules automatically.
 ================================================================================
 
+Building blocks of the AHA Model
+--------------------------------
+
+The genome structure
+~~~~~~~~~~~~~~~~~~~~
+
+Outline of the AHA Model code. So far very little.
+
+Implementation of the genome.
+
+.Genome object types
+image:doc/img/aha_genome_01.svg[width=380,align="left"]
+
+Implementation of the chromosome structure. Arbitrary number of chromosomes,
+arbitrary size (alleles), arbitrary number of additive components. Arbitrary
+ploidity (diploid, polyploid).
+
+.Genetic trait architecture
+image:doc/img/aha_genome_02.svg[width=380,align="left"]
+
+////////////////////////////////////////////////////////////////////////////////
+Note -- shading in svg files produced by LO lead to massive memory leak in
+        asciidos, use colour.
+////////////////////////////////////////////////////////////////////////////////
+
+Mostly to be done yet.
+
+
 Module: BASE_UTILS
 ------------------
 
