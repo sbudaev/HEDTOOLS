@@ -1,5 +1,8 @@
 # Doxyfile 1.8.6
 
+# Revision info:
+# $Id$
+
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project.
 #
@@ -414,7 +417,7 @@ EXTRACT_ALL            = YES
 # be included in the documentation.
 # The default value is: NO.
 
-EXTRACT_PRIVATE        = YES
+EXTRACT_PRIVATE        = NO
 
 # If the EXTRACT_PACKAGE tag is set to YES all members with package or internal
 # scope will be included in the documentation.
