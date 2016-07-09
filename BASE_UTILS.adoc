@@ -243,10 +243,52 @@ GENERAL INTRO ON PROGRAMMING STYLE, INCLUDING OBJECT-ORIENTED FORTRAN FEATURES.
 Coding style: General guidelines and tips
 -----------------------------------------
 
-////////////////////////////////////////////////////////////////////////////////
-General principles
-~~~~~~~~~~~~~~~~~~
-////////////////////////////////////////////////////////////////////////////////
+Code formatting rules
+~~~~~~~~~~~~~~~~~~~~~
+
+To get an easier and more efficient work with the code, it is good to follow
+universal rules in code formatting _consistently_.
+
+image:doc/img/ok.svg[width=16] *Line length* should be short, *not exceeding
+80 characters*. Use the ampersand symbol +&+ to wrap lines. Too long lines may
+not work on some compilers by default and do a lot of mess when you code on
+the terminal or have to check +diff+.
+
+image:doc/img/ok.svg[width=16] Normal *variables* should be in +lowercase+,
+global and local *parameters* that are not allowed to change, in
++UPPERCASE+. For example:
+
+[source]
+--------------------------------------------------------------------------------
+!> Genotype to phenotype gamma2gene initialisation value for **thyroid**
+real, parameter, public :: THYROID_INIT = 0.5
+....
+call this%hormone_init(this%thyroid_level, THYROID_GENOTYPE_PHENOTYPE, THYROID_INIT)
+--------------------------------------------------------------------------------
+
+image:doc/img/ok.svg[width=16] *External and library procedures* that are not
+part of the Fortran intrinsic set and not part of the current model code
+should be in +UPPERCASE+. So they are easy to identify. Spherically, modelling
+tools functions and subroutines from the <<HEDTOOLS_REF, HEDTOOLS>> bundle
+should be in +UPPERCASE+, e.g.
+
+[source]
+--------------------------------------------------------------------------------
+! LOG_MSG and TOSTR are external procedures
+call LOG_MSG ("Generation :" // TOSTR(realgen))
+--------------------------------------------------------------------------------
+
+image:doc/img/ok.svg[width=16] Global *class names* and all the derived
+classes are in +UPPERCASE+, so they are easy to identify within the code, e.g.
+
+[source]
+--------------------------------------------------------------------------------
+!> This type adds hormonal architecture  extending the genome object
+type, public, extends(INDIVIDUAL_GENOME) :: HORMONES
+--------------------------------------------------------------------------------
+
+Efficient Fortran programming
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 IMPORTANT: A very helpful collection of advises and tips for efficient
            programming in Fortran can be found here:
@@ -352,6 +394,12 @@ module THE_GENOME
 
 end module THE_GENOME
 --------------------------------------------------------------------------------
+
+image:doc/img/ok.svg[width=16] *Use short "atomic" procedures* rather than
+long ones. A single subroutine/function should _ideally_ occupy not more
+than a single screen page (with vertical orientation). So the whole bunch of
+code is easy to overview and work with. "Atomic" operations are particularly
+helpful in the object oriented code.
 
 image:doc/img/ok.svg[width=16] *Use meaningful labels* For example, using
 labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
@@ -1402,6 +1450,8 @@ image:doc/img/aha_modules.svg[width=480,align="left"]
 
 *HEDTOOLS:*
 
+[[HEDTOOLS_REF]]
+
 Module <<TO_BASE_UTILS, BASE_UTILS>> -- utility functions.
 
 Module <<TO_CSV_IO, CSV_IO>> -- Data output in CSV (comma separated values)
@@ -1417,6 +1467,8 @@ Non-intrinsic <<IEEE_NONINTR, IEEE modules>> -- implement IEEE arithmetic checks
         and exceptions tracking.
 
 *The AHA Model*
+
+[[AHA_MOD_REF]]
 
 Module COMMONDATA -- Setting common parameters for the model.
 
