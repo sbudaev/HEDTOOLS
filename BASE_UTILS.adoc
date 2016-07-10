@@ -401,13 +401,21 @@ than a single screen page (with vertical orientation). So the whole bunch of
 code is easy to overview and work with. "Atomic" operations are particularly
 helpful in the object oriented code.
 
-image:doc/img/ok.svg[width=16] *Use meaningful labels* For example, using
-labels to mark +do.. end do+, +if .. end if+, +forall+ and other similar
-constructs may greatly improve the readability of the code and make it more
-easy to understand, especially if there are many nested loops +if..then.. end
-if+ constructs. No need to label all such things (this will just increase
-clutter), but those that are really important or very big must be. A couple
-of examples are below:
+image:doc/img/ok.svg[width=16] *Use meaningful labels*. *Global variable
+names* should have longer names, sometimes even written in full, separate
+words with underscore +_+, e.g. +some_global_variable+ so that +Emacs+,
++Vim+ and other advanced programming editors could make use of the words
+(i.e. +SomeGlobalVariable+ is much less useful). Global names must therefore
+comment themselves, abbreviations should be very limited to the most obvious
+cases (e.g. +fry_length+ is much better than +FLEN+). *Local variables* can
+have shorter names though, because they are used in limited contexts.
+
+Also, using labels to mark +do.. end do+, +if .. end if+, +forall+ and
+other similar constructs may greatly improve the readability of the code and
+make it more easy to understand, especially if there are many nested loops
++if..then.. end if+ constructs. No need to label all such things (this will
+just increase clutter), but those that are really important or very big must
+be. A couple of examples are below:
 
 [source]
 --------------------------------------------------------------------------------
@@ -1218,8 +1226,9 @@ indexterm:[TortoiseSVN]
 
 [[SVN_INTEGR]]
 
-Subversion also integrates with numerous other tools, e.g. there is an SVN
-plugin for the <<GEANY_GET, Geany>> editor, plugins for the
+Subversion also integrates with numerous other tools,
+e.g. there is an SVN plugin for the <<GEANY_GET, Geany>> editor
+(http://plugins.geany.org/geanyvc.html[GeanyVC]), plugins for the
 https://tortoisesvn.net/visualstudio.html[Microsoft Visual Studio IDE] etc.
 Do not forget that version control systems are not only for just program code
 but any text-based files. So writing papers in LaTeX benefits from a built-in
