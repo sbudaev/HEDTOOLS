@@ -397,9 +397,9 @@ end module THE_GENOME
 
 image:doc/img/ok.svg[width=16] *Use short "atomic" procedures* rather than
 long ones. A single subroutine/function should _ideally_ occupy not more
-than a single screen page (with vertical orientation). So the whole bunch of
-code is easy to overview and work with. "Atomic" operations are particularly
-helpful in the object oriented code.
+than a single screen page (with vertical screen orientation). So the whole
+bunch of code is easy to overview and work with. "Atomic" operations are
+particularly helpful in the object oriented code.
 
 image:doc/img/ok.svg[width=16] *Use meaningful labels*. *Global variable
 names* should have longer names, sometimes even written in full, separate
@@ -787,13 +787,33 @@ Overview
 ~~~~~~~~
 [[SVN_INTRO]]
 
-<<SVN_GET, Subversion>> (SVN) is a version control system used in the AHA
-project. Use version control not only for just managing versions, but also
-for organising your coding. For example, it would be good to commit changes
-to the server in pieces involving specific functions or parts of the model
-that are ready. Use the log messages to describe briefly what has been done.
-The examples below assume you use a terminal <<CONSOLE_GET, console>>, but
-most SVN commands can also be easily performed from a GUI tool.
+<<SVN_GET, Subversion>> (SVN) is a version control system used in the
+AHA project. Use version control not only for just managing versions, but
+also for organising your coding. Every new code commit should ideally be
+a specific task, function or logical workflow unit. And the commit message
+should reflect this task.
+
+For example, it would be perfect to commit changes in pieces involving
+implementation of a specific function in the model or to correct a specific
+bug. Use the log messages to describe briefly what has been done.
+
+The usefulness of the whole version control workflow is limited if the commit
+pattern is haphazard and any single commit involves different kinds of code
+changes in many different places. It will be, for example, very difficult
+to revert from a single change that have previously introduced a bug. Revision
+history is a very valuable component of the development process!
+
+If several people are working on the same piece of code, it is important to
+make commits frequently. Also frequently integrate others' changes. Otherwise,
+there is an increasing change to get version conflicts that have to be solved
+manually.
+
+IMPORTANT: Always try to commit some logically integrated piece of code rather
+           than do it haphazardly. Write informative commit messages.
+           Commit changes frequently.
+
+The examples below assume you use a terminal <<CONSOLE_GET, console>>,
+but most SVN commands can also be easily performed from various GUI tools.
 indexterm:[Subversion]
 indexterm:[svn]
 indexterm:[Subversion, log message]
@@ -807,9 +827,9 @@ Hed18.f90 and a new Makefile  for building the code, do two commits:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn commit Hed18.f90 -m "New sigmoid function"
-...
-svn commit Makefile -m "Tweaked makefile, added PGI compiler build"
+svn commit model1.f90 -m "Added general neural response function for neural bundles"
+.....
+svn commit model1.f90 -m "Fixed gamma2gene function, Gaussian perception error"
 --------------------------------------------------------------------------------
 
 A typical SVN repository organisation usually includes a *trunk* directory for
