@@ -818,12 +818,13 @@ indexterm:[Subversion]
 indexterm:[svn]
 indexterm:[Subversion, log message]
 
-For example, imagine you have implemented a new sigmoid function. Then, when
-it is ready, commit your change to the server with a log message like
-"New sigmoid function". And only after this go to the next piece of code. Then
-the versions you have will not be haphazard but organised into meaningful
-pieces. If you did several pieces in different files, e.g. sigmoid function in
-Hed18.f90 and a new Makefile  for building the code, do two commits:
+For example, imagine you add a neural response function. Commit the change,
+as soon as it is ready then (with log message like _"Added general neural
+response function for neural bundles"_). Go to the next logical piece of
+the work (e.g. fixing +gamma2gene+) afteer this commit and again commit this
+change when more or less ready (i.e. go to the next step only after you have
+commited the current changes). Then the versions you have will be organised
+into meaningful pieces:
 
 [source,bash]
 --------------------------------------------------------------------------------
