@@ -1090,8 +1090,11 @@ svn merge ^/trunk/HEDTOOLS/
 --------------------------------------------------------------------------------
 indexterm:[Subversion,merge]
 
-Reintegrate your branch back to the trunk
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Merge can be conducted in both ways (to and from different branches to keep
+them in sync).
+
+Reintegrate final revision your branch back to the trunk
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Suppose you have a private branch/branches +.../branches/budaev/HEDTOOLS+ where
 you work on the code. Now you are going to reintegrate your branch back to the
@@ -1158,6 +1161,21 @@ svn merge --reintegrate ^/branches/budaev/HEDTOOLS
 
 # Finally, commit these changes back to the SVN repository
 svn commit -m "Merged my changes to trunk"
+--------------------------------------------------------------------------------
+
+*Step 3.* Now, the user's branch can be removed - everything is saved and
+the trunk is the latest version.
+
+If the user's branch should be *left alive*, we need to do a further command
+in the branch (not in trunk):
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn update                    # cd to the branch for the final update
+Updating '.':                 #   keeping branch alive
+Updated to revision 993.
+# 991 is the latest revision where we reintegrated to the trunk
+$ svn merge --record-only -c 991 ^/trunk/HEDTOOLS/
 --------------------------------------------------------------------------------
 
 Other features
