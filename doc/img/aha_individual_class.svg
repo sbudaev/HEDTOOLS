@@ -164,7 +164,7 @@
       <g id="id4">
        <rect class="BoundingBox" stroke="none" fill="none" x="1350" y="10450" width="7101" height="2101"/>
        <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 4900,12500 L 1400,12500 1400,10500 8400,10500 8400,12500 4900,12500 Z"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="3546" y="11651"/><tspan class="TextPosition" x="3546" y="11651"><tspan fill="rgb(0,0,0)" stroke="none">HORMONES</tspan></tspan></tspan></text>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="3376" y="11651"/><tspan class="TextPosition" x="3376" y="11651"><tspan fill="rgb(0,0,0)" stroke="none">CONDITION</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.CustomShape">
@@ -515,8 +515,8 @@
      </g>
      <g class="com.sun.star.drawing.TextShape">
       <g id="id6">
-       <rect class="BoundingBox" stroke="none" fill="none" x="11834" y="10100" width="4567" height="891"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="400"><tspan class="TextPosition" x="12084" y="10695"/><tspan class="TextPosition" x="12084" y="10695"><tspan fill="rgb(0,0,0)" stroke="none">THE_HORMONES</tspan></tspan></tspan></text>
+       <rect class="BoundingBox" stroke="none" fill="none" x="13200" y="10100" width="3212" height="891"/>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="400"><tspan class="TextPosition" x="13450" y="10695"/><tspan class="TextPosition" x="13450" y="10695"><tspan fill="rgb(0,0,0)" stroke="none">THE_BODY</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.CustomShape">
@@ -2179,7 +2179,7 @@
       <g id="id30">
        <rect class="BoundingBox" stroke="none" fill="none" x="1350" y="7350" width="7101" height="2101"/>
        <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 4900,9400 L 1400,9400 1400,7400 8400,7400 8400,9400 4900,9400 Z"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="3376" y="8551"/><tspan class="TextPosition" x="3376" y="8551"><tspan fill="rgb(0,0,0)" stroke="none">CONDITION</tspan></tspan></tspan></text>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="3546" y="8551"/><tspan class="TextPosition" x="3546" y="8551"><tspan fill="rgb(0,0,0)" stroke="none">HORMONES</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.CustomShape">
@@ -2530,8 +2530,8 @@
      </g>
      <g class="com.sun.star.drawing.TextShape">
       <g id="id32">
-       <rect class="BoundingBox" stroke="none" fill="none" x="13200" y="7000" width="3212" height="891"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="400"><tspan class="TextPosition" x="13450" y="7595"/><tspan class="TextPosition" x="13450" y="7595"><tspan fill="rgb(0,0,0)" stroke="none">THE_BODY</tspan></tspan></tspan></text>
+       <rect class="BoundingBox" stroke="none" fill="none" x="11800" y="7000" width="4567" height="891"/>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="400"><tspan class="TextPosition" x="12050" y="7595"/><tspan class="TextPosition" x="12050" y="7595"><tspan fill="rgb(0,0,0)" stroke="none">THE_HORMONES</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.ConnectorShape">
