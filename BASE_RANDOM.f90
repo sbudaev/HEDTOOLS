@@ -92,12 +92,18 @@ interface RAND_MATRIX                 ! Matrices of uniform random numbers,
 end interface RAND_MATRIX
 
 interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
-  module procedure RNORM_ARRAY_1_R4
+  module procedure RNORM_ARRAY_1_R4    ! 32 bit
   module procedure RNORM_ARRAY_2_R4
   module procedure RNORM_ARRAY_3_R4
   module procedure RNORM_ARRAY_4_R4
   module procedure RNORM_ARRAY_5_R4
   module procedure RNORM_ARRAY_6_R4
+  module procedure RNORM_ARRAY_1_R8    ! 64 bit
+  module procedure RNORM_ARRAY_2_R8
+  module procedure RNORM_ARRAY_3_R8
+  module procedure RNORM_ARRAY_4_R8
+  module procedure RNORM_ARRAY_5_R8
+  module procedure RNORM_ARRAY_6_R8
   module procedure RNORM_RENORM_ARRAY_1_R4
   module procedure RNORM_RENORM_ARRAY_2_R4
   module procedure RNORM_RENORM_ARRAY_3_R4
@@ -107,11 +113,16 @@ interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
 end interface RNORM_ARRAY
 
 interface RNORM_MATRIX   ! Matrices of normally distributed random numbers
-  module procedure RNORM_ARRAY_2_R4
+  module procedure RNORM_ARRAY_2_R4    ! 32 bit
   module procedure RNORM_ARRAY_3_R4
   module procedure RNORM_ARRAY_4_R4
   module procedure RNORM_ARRAY_5_R4
   module procedure RNORM_ARRAY_6_R4
+  module procedure RNORM_ARRAY_2_R8    ! 64 bit
+  module procedure RNORM_ARRAY_3_R8
+  module procedure RNORM_ARRAY_4_R8
+  module procedure RNORM_ARRAY_5_R8
+  module procedure RNORM_ARRAY_6_R8
   module procedure RNORM_RENORM_ARRAY_2_R4
   module procedure RNORM_RENORM_ARRAY_3_R4
   module procedure RNORM_RENORM_ARRAY_4_R4
@@ -695,6 +706,191 @@ do i=1, ubound(random_array,6)
 end do
 
 end subroutine RNORM_ARRAY_6_R4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_ARRAY_1_R8(random_array)
+!*******************************************************************************
+! RNORM_ARRAY, 1-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:) :: random_array
+
+! local variables
+integer :: i
+
+do i=1, ubound(random_array,1)
+  random_array(i) = RNORM_VAL_R8()
+end do
+
+end subroutine RNORM_ARRAY_1_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_ARRAY_2_R8(random_array)
+!*******************************************************************************
+! RNORM_ARRAY, 2-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:) :: random_array
+
+! local variables
+integer :: i, j
+
+do i=1, ubound(random_array,2)
+  do j=1, ubound(random_array,1)
+    random_array(j,i) = RNORM_VAL_R8()
+  end do
+end do
+
+end subroutine RNORM_ARRAY_2_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_ARRAY_3_R8(random_array)
+!*******************************************************************************
+! RNORM_ARRAY, 3-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:) :: random_array
+
+! local variables
+integer :: i, j, k
+
+do i=1, ubound(random_array,3)
+  do j=1, ubound(random_array,2)
+    do k=1, ubound(random_array,1)
+      random_array(k,j,i) = RNORM_VAL_R8()
+    end do
+  end do
+end do
+
+end subroutine RNORM_ARRAY_3_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_ARRAY_4_R8(random_array)
+!*******************************************************************************
+! RNORM_ARRAY, 4-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:,:) :: random_array
+
+! local variables
+integer :: i, j, k, l
+
+do i=1, ubound(random_array,4)
+  do j=1, ubound(random_array,3)
+    do k=1, ubound(random_array,2)
+      do l=1, ubound(random_array,1)
+        random_array(l,k,j,i) = RNORM_VAL_R8()
+      end do
+    end do
+  end do
+end do
+
+end subroutine RNORM_ARRAY_4_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_ARRAY_5_R8(random_array)
+!*******************************************************************************
+! RNORM_ARRAY, 5-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:,:,:) :: random_array
+
+! local variables
+integer :: i, j, k, l, m
+
+do i=1, ubound(random_array,5)
+  do j=1, ubound(random_array,4)
+    do k=1, ubound(random_array,3)
+      do l=1, ubound(random_array,2)
+        do m=1, ubound(random_array,1)
+          random_array(m,l,k,j,i) = RNORM_VAL_R8()
+        end do
+      end do
+    end do
+  end do
+end do
+
+end subroutine RNORM_ARRAY_5_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RNORM_ARRAY_6_R8(random_array)
+!*******************************************************************************
+! RNORM_ARRAY, 6-dimensional
+! PURPOSE: Wrapper to RNORM_VAL_R4 to produce array of normally distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:,:,:,:) :: random_array
+
+! local variables
+integer :: i, j, k, l, m, n
+
+do i=1, ubound(random_array,6)
+  do j=1, ubound(random_array,5)
+    do k=1, ubound(random_array,4)
+      do l=1, ubound(random_array,3)
+        do m=1, ubound(random_array,2)
+          do n=1, ubound(random_array,1)
+            random_array(n,m,l,k,j,i) = RNORM_VAL_R8()
+          end do
+        end do
+      end do
+    end do
+  end do
+end do
+
+end subroutine RNORM_ARRAY_6_R8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 !-------------------------------------------------------------------------------
 
