@@ -18,6 +18,9 @@ module BASE_RANDOM
 
 implicit none
 
+! Double precision kind def.
+integer, parameter :: dp=8
+
 ! Module name for the DEBUG LOGGER: every function/sub must also have
 ! the PROCNAME parameter referring to its name. This is done for the Debug
 ! Logger module. Each module must also have a DEBUG Logger subroutine, that
@@ -38,9 +41,15 @@ interface RNORM_R4      ! Gaussian normals
   module procedure RNORM_RENORMALISED_R4
 end interface RNORM_R4
 
-interface RNORM         ! We can use RNORM as an alias to RNORM_R4
-  module procedure RNORM_VAL_R4
-  module procedure RNORM_RENORMALISED_R4
+interface RNORM_R8      ! Gaussian normals, dbl prec.
+  module procedure RNORM_VAL_R8
+  module procedure RNORM_RENORMALISED_R8
+end interface RNORM_R8
+
+interface RNORM         ! We can use RNORM as an alias to RNORM_R4 (R8 not
+  module procedure RNORM_VAL_R4           ! thoroughly tested)
+  module procedure RNORM_RENORMALISED_R4  ! but renormalised versions can be
+  module procedure RNORM_RENORMALISED_R8  ! any supported precision.
 end interface RNORM
 
 interface RAND_ARRAY                  ! Arrays of uniform random numbers,
@@ -105,17 +114,18 @@ interface RAND_R4                 ! Uniform random numbers, standard and
   module procedure RAND_RENORMALISED_R4I
 end interface RAND_R4
 
-interface RAND                    ! Alias for RAND_R4
-  module procedure RAND_VAL_R4    ! uniform distribution
-  module procedure RAND_RENORMALISED_R4
-  module procedure RAND_RENORMALISED_R4I
-end interface RAND
-
 interface RAND_R8                 ! Uniform random numbers, standard and
   module procedure RAND_VAL_R8    ! renormalised to arbitrary range
   module procedure RAND_RENORMALISED_R8
   module procedure RAND_RENORMALISED_R8I
 end interface RAND_R8
+
+interface RAND                    ! Alias for RAND_R4
+  module procedure RAND_VAL_R4    ! uniform distribution
+  module procedure RAND_RENORMALISED_R4
+  module procedure RAND_RENORMALISED_R4I
+  module procedure RAND_RENORMALISED_R8 ! RAND_RENORMALISED_R8I is ambiguous
+end interface RAND
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
@@ -340,7 +350,7 @@ function RAND_VAL_R8() result (randreal)
 ! Standard (trivial) wrapper for random real (0.0 <= r < 1.0)
 
   implicit none
-  real (kind=8) :: randreal
+  real (kind=dp) :: randreal
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RAND_R8"
@@ -469,6 +479,61 @@ fn_val = v/u
 RETURN
 
 end function RNORM_VAL_R4
+
+!-------------------------------------------------------------------------------
+
+function RNORM_VAL_R8() result(fn_val)
+!*******************************************************************************
+! RNORM
+! PURPOSE: Returns a normally distributed pseudo-random number with zero mean
+!          and unit variance. This is the double precision (kind=dp) version.
+! NOTES:   Adapted from the following Fortran 77 code
+!          ALGORITHM 712, COLLECTED ALGORITHMS FROM ACM.
+!          THIS WORK PUBLISHED IN TRANSACTIONS ON MATHEMATICAL SOFTWARE,
+!          VOL. 18, NO. 4, DECEMBER, 1992, PP. 434-435.
+! WARNING: This is a simple conversion of single precision 32 bit function
+!          statistical properties of the generated distribution are to be
+!          checked yet.
+! The function RNORM() returns a normally distributed pseudo-random
+! number with zero mean and unit variance.
+! The algorithm uses the ratio of uniforms method of A.J. Kinderman
+! and J.F. Monahan augmented with quadratic bounding curves.
+! CODE SOURCE: http://www.netlib.org/ (random.f90)
+!*******************************************************************************
+
+REAL(kind=dp) :: fn_val
+
+!     Local variables
+REAL(kind=dp) :: s=0.449871_dp, t=-0.386595_dp, a=0.19600_dp, b=0.25472_dp,    &
+                 r1=0.27597_dp, r2=0.27846_dp, u, v, x, y, q
+
+REAL(kind=dp) :: half = 0.5 ! moved here from header of the original module
+
+!     Generate P = (u,v) uniform in rectangle enclosing acceptance region
+
+DO
+  CALL random_number(u)
+  CALL random_number(v)
+  v = 1.7156_dp * (v - half)
+
+!     Evaluate the quadratic form
+  x = u - s
+  y = ABS(v) - t
+  q = x**2 + y*(a*y - b*x)
+
+!     Accept P if inside inner ellipse
+  IF (q < r1) EXIT
+!     Reject P if outside outer ellipse
+  IF (q > r2) CYCLE
+!     Reject P if outside acceptance region
+  IF (v**2 < -4.0_dp*LOG(u)*u**2) EXIT
+END DO
+
+!     Return ratio of P's coordinates as the normal deviate
+fn_val = v/u
+RETURN
+
+end function RNORM_VAL_R8
 
 !-------------------------------------------------------------------------------
 
@@ -1125,8 +1190,8 @@ function RAND_RENORMALISED_R8(A, B) result(s_val)
 !*******************************************************************************
 
   implicit none
-  real(kind=8):: s_val
-  real(kind=8):: A, B
+  real(kind=dp):: s_val
+  real(kind=dp):: A, B
 
   s_val = A+RAND_VAL_R8()*(B-A)
 
@@ -1140,7 +1205,7 @@ function RAND_RENORMALISED_R8I(A, B) result(s_val)
 !*******************************************************************************
 
   implicit none
-  real(kind=8):: s_val
+  real(kind=dp):: s_val
   integer :: A, B
 
   s_val = real(A,8)+RAND_VAL_R8()*(real(B,8)-real(A,8))
@@ -1178,5 +1243,35 @@ function RNORM_RENORMALISED_R4(mean, variance) result (fn_val)
 
 end function RNORM_RENORMALISED_R4
 
+!-------------------------------------------------------------------------------
+
+function RNORM_RENORMALISED_R8(mean, variance) result (fn_val)
+!*******************************************************************************
+! RNORM_RENORMALISED_R4
+! PURPOSE: Produce Gaussian random number renormalised from X=0 s=1 to any
+!          arbitrary mean and variance
+! THEORY and DETAILS: if x is a random variable whose mean is μx and variance
+!          is σ^2x, then the random variable, y, defined by y = ax + b,
+!          where a and b are constants, has mean μy = a μx + b
+!          and variance σ^2y = a^2 σ^2x.
+!          Solving the system for specific case when μx=0 and σ^2x=1 (standard
+!          Gaussian generator), we get (solved using wxMaxima)
+!             solve ([a*0+b=my, a^2*1^2=sy] , [a,b]);
+!             [[a=−sqrt(sy),b=my],[a=sqrt(sy),b=my]]
+!*******************************************************************************
+
+  implicit none
+  real(kind=dp) :: fn_val
+  real(kind=dp), intent(in) :: mean, variance
+
+  ! local variables
+  real :: A, B
+
+  A = sqrt(variance)
+  B = mean
+
+  fn_val = A * RNORM_VAL_R8() + B
+
+end function RNORM_RENORMALISED_R8
 
 end module BASE_RANDOM ! <EOF>
