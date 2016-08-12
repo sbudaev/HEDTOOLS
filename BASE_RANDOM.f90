@@ -723,20 +723,6 @@ end do
 
 end subroutine RNORM_ARRAY_6_R4
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !-------------------------------------------------------------------------------
 
 subroutine RNORM_ARRAY_1_R8(random_array)
@@ -886,27 +872,6 @@ do i=1, ubound(random_array,6)
 end do
 
 end subroutine RNORM_ARRAY_6_R8
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 !-------------------------------------------------------------------------------
 
@@ -1065,21 +1030,6 @@ integer :: i, j, k, l, m, n
 
 end subroutine RNORM_RENORM_ARRAY_6_R4
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !-------------------------------------------------------------------------------
 
 subroutine RNORM_RENORM_ARRAY_1_R8(random_array, mean, variance)
@@ -1236,33 +1186,6 @@ integer :: i, j, k, l, m, n
 
 end subroutine RNORM_RENORM_ARRAY_6_R8
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !-------------------------------------------------------------------------------
 
 subroutine RAND_ARRAY_1_R4(random_array, A, B)
@@ -1407,20 +1330,6 @@ end if
 
 end subroutine RAND_ARRAY_6_R4
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !-------------------------------------------------------------------------------
 
 subroutine RAND_ARRAY_1_R8(random_array, A, B)
@@ -1564,25 +1473,6 @@ else
 end if
 
 end subroutine RAND_ARRAY_6_R8
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 !-------------------------------------------------------------------------------
 
