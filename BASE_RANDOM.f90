@@ -59,12 +59,18 @@ interface RAND_ARRAY                  ! Arrays of uniform random numbers,
   module procedure RAND_ARRAY_4_I
   module procedure RAND_ARRAY_5_I
   module procedure RAND_ARRAY_6_I
-  module procedure RAND_ARRAY_1_R4
+  module procedure RAND_ARRAY_1_R4    ! 32 bit
   module procedure RAND_ARRAY_2_R4
   module procedure RAND_ARRAY_3_R4
   module procedure RAND_ARRAY_4_R4
   module procedure RAND_ARRAY_5_R4
   module procedure RAND_ARRAY_6_R4
+  module procedure RAND_ARRAY_1_R8    ! 64 bit
+  module procedure RAND_ARRAY_2_R8
+  module procedure RAND_ARRAY_3_R8
+  module procedure RAND_ARRAY_4_R8
+  module procedure RAND_ARRAY_5_R8
+  module procedure RAND_ARRAY_6_R8
 end interface RAND_ARRAY
 
 interface RAND_MATRIX                 ! Matrices of uniform random numbers,
@@ -73,11 +79,16 @@ interface RAND_MATRIX                 ! Matrices of uniform random numbers,
   module procedure RAND_ARRAY_4_I
   module procedure RAND_ARRAY_5_I
   module procedure RAND_ARRAY_6_I
-  module procedure RAND_ARRAY_2_R4
+  module procedure RAND_ARRAY_2_R4    ! 32 bit
   module procedure RAND_ARRAY_3_R4
   module procedure RAND_ARRAY_4_R4
   module procedure RAND_ARRAY_5_R4
   module procedure RAND_ARRAY_6_R4
+  module procedure RAND_ARRAY_2_R8    ! 64 bit
+  module procedure RAND_ARRAY_3_R8
+  module procedure RAND_ARRAY_4_R8
+  module procedure RAND_ARRAY_5_R8
+  module procedure RAND_ARRAY_6_R8
 end interface RAND_MATRIX
 
 interface RNORM_ARRAY   ! Arrays of normally distributed random numbers
@@ -985,6 +996,183 @@ else
 end if
 
 end subroutine RAND_ARRAY_6_R4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_1_R8(random_array, A, B)
+!*******************************************************************************
+! RANDOM_ARRAY_1, 1-dimensional
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:) :: random_array
+real(kind=dp), optional, intent(in) :: A, B
+
+! local variables
+integer :: i
+
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
+
+end subroutine RAND_ARRAY_1_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_2_R8(random_array, A, B)
+!*******************************************************************************
+! RAND_ARRAY, 2-dimensional
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:) :: random_array
+real(kind=dp), optional, intent(in) :: A, B
+
+! local variables
+integer :: i, j
+
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
+
+end subroutine RAND_ARRAY_2_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_3_R8(random_array, A, B)
+!*******************************************************************************
+! RNORM_ARRAY, 3-dimensional
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:) :: random_array
+real(kind=dp), optional, intent(in) :: A, B
+
+! local variables
+integer :: i, j, k
+
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
+
+end subroutine RAND_ARRAY_3_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_4_R8(random_array, A, B)
+!*******************************************************************************
+! RNORM_ARRAY, 4-dimensional
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:,:) :: random_array
+real(kind=dp), optional, intent(in) :: A, B
+
+! local variables
+integer :: i, j, k, l
+
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
+
+end subroutine RAND_ARRAY_4_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_5_R8(random_array, A, B)
+!*******************************************************************************
+! RNORM_ARRAY, 5-dimensional
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:,:,:) :: random_array
+real(kind=dp), optional, intent(in) :: A, B
+
+! local variables
+integer :: i, j, k, l, m
+
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
+
+end subroutine RAND_ARRAY_5_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RAND_ARRAY_6_R8(random_array, A, B)
+!*******************************************************************************
+! RNORM_ARRAY, 6-dimensional
+! PURPOSE: Wrapper to RAND_R4 to produce array of uniformly distributed values
+!*******************************************************************************
+
+! parameters
+real(kind=dp), dimension(:,:,:,:,:,:) :: random_array
+real(kind=dp), optional, intent(in) :: A, B
+
+! local variables
+integer :: i, j, k, l, m, n
+
+if (present(A) .and. present(B)) then
+  call random_number(random_array)
+  random_array = A + random_array * (B - A)
+else
+  call random_number(random_array)
+end if
+
+end subroutine RAND_ARRAY_6_R8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 !-------------------------------------------------------------------------------
 
