@@ -3172,13 +3172,13 @@ Usage Notes
 
 If the parameter type is ambiguous while calling the PRNG function, "single
 precision" (kind 4) is used by default. For example, the following involves
-type conversion from kind 8 to kind 4:
+type conversion from kind 4 to kind 8:
 
 [source]
 --------------------------------------------------------------------------------
-real(8) :: ga_mut   ! kind 8
+real(8) :: ga_mut   ! kind 8 type real
 ...
-ga_mut  = RNORM()   ! RNORM returns a kind 4 value by default
+ga_mut  = RNORM()   ! RNORM returns a kind 4 value, assigned to kind 8 variable
 --------------------------------------------------------------------------------
 
 Be careful when using literal constants as parameters. They should normally
