@@ -3167,6 +3167,40 @@ call RNORM_MATRIX(ARRAY_Z,1.,.2) ! produce 2D array of Gaussian numbers with
 call RAND_ARRAY(ARRAY_I,1,10)    ! produce 2D array of integers ranging 1 to 10
 --------------------------------------------------------------------------------
 
+Usage Notes
+~~~~~~~~~~~
+
+If the parameter type is ambiguous while calling the PRNG function, "single
+precision" (kind 4) is used by default. For example, the following involves
+type conversion from kind 8 to kind 4:
+
+[source]
+--------------------------------------------------------------------------------
+real(8) :: ga_mut   ! kind 8
+...
+ga_mut  = RNORM()   ! RNORM returns a kind 4 value by default
+--------------------------------------------------------------------------------
+
+Be careful when using literal constants as parameters. They should normally
+have the same type as the main argument. For example, numerical parameters
+in the example below should be explicitly kind 8, otherwise this error will
+be issued: "There is no specific subroutine for the generic rnorm_array."
+
+[source]
+--------------------------------------------------------------------------------
+real(8), dimension(ROWS)      :: C  ! declarations use kid 8
+real(8), dimension(ROWS,COLS) :: D
+....
+call RAND_ARRAY(C, 10._8,25._8)     ! correct call as all arguments are kind 8
+call RNORM_ARRAY(D, 10._8, 25._8)
+....
+call RAND_ARRAY(C, 10, 25)          ! compiler error, type mismatch, not kind 8
+call RNORM_ARRAY(D, 10., 25.)
+--------------------------------------------------------------------------------
+
+(This limitation might change in future if mixed type functions are
+implemented.)
+
 Build details
 ~~~~~~~~~~~~~
 
