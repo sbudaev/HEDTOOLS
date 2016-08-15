@@ -1076,6 +1076,9 @@ svn copy https://svn.uib.no/aha-fortran/branches/budaev/HED18 \
 indexterm:[Subversion,branch]
 indexterm:[Subversion,copy]
 
+Merge changes between branches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 If several people are simultaneously working on the project, it make sense to
 merge changes from the parent branch back to the current branch (e.g. from
 trunk to +budaev+ and +natasha+). Thus does not allow the code to diverge
@@ -1091,15 +1094,27 @@ svn merge ^/trunk/HEDTOOLS/
 indexterm:[Subversion,merge]
 
 Merge can be conducted in both ways (to and from different branches to keep
-them in sync).
+them in sync). This is the main component in branch maintenance. And it is quite
+trivial. Make a branch -- merge changes from trunk or another branch.
 
-Reintegrate final revision your branch back to the trunk
+indexterm:[Subversion,merge]
+
+IMPORTANT: Only the simple *merge* is enough in most cases, e.g. merge from
+           trunk to branch and back from branch to the trunk.
+
+If you made the final changes in the subproject branch and like to do a final
+and ultimate merge, *reintegrate* should work.
+
+Reintegrate final revision from branch back to the trunk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Suppose you have a private branch/branches +.../branches/budaev/HEDTOOLS+ where
 you work on the code. Now you are going to reintegrate your branch back to the
 trunk (the main development line: +.../trunk/HEDTOOLS+).
 indexterm:[Subversion,branch,reintegrate branch]
+
+IMPORTANT: Reintegrate is used only for the *ultimate* merge effectively
+           "closing" the sub-project, not for routine maintenance.
 
 For this you need several simple steps:
 
