@@ -1487,6 +1487,98 @@ subroutine population_init()
 end subroutine population_init
 --------------------------------------------------------------------------------
 
+A trivial example: Stopwatch object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is a trivial example implementing a stopwatch object -- +TIMER_CPU+. The
+comments in the code are self-explanatory.
+
+[source]
+--------------------------------------------------------------------------------
+!> Here we define CPU timer container object for debugging and
+!! speed/performance control. Therefore we can instantiate arbitrary timers
+!! for different parts of the code (and also global). "Class," so can extend.
+!! Using a specific timer (`timer_general`)
+!! is like this: `call stopwatch%start()` to start the stopwatch, then the
+!! function `stopwatch%elapsed()` returns the elapsed time.
+!! @note The near-trivial nature of this object makes it ideal for learning
+!!       how to implement objects. TODO: add to doc full implementation.
+type, public :: TIMER_CPU
+  !> Define start time for the stopwatch.
+  !! @note We need to keep only the start time as raw values coming out
+  !!       of `cpu_time` are machine-dependent
+  !! @note It does not seem good to move `TIMER_CPU` to *HEDTOOLS* as they
+  !!       are for portability (require only F90) and do not use OO.
+  !!       `TIMER_CPU`  uses full OO extensible class implementation so
+  !!       requires *F2003* minimum.
+  real(SRP) :: cpu_time_start
+
+  contains
+    procedure, public :: start => timer_cpu_start       ! subroutine
+    procedure, public :: elapsed => timer_cpu_elapsed   ! function
+
+end type TIMER_CPU
+....
+....
+  !=============================================================================
+  ! The two procedures below are for the CPU timer / stopwatch object
+
+  !-----------------------------------------------------------------------------
+  !> Start the timer object, stopwatch is now ON.
+  !! @note We do not need exact low-level time as it is machine-specific.
+  subroutine timer_cpu_start(this)
+    class(TIMER_CPU) :: this
+
+    !> this turns on the CPU stopwatch
+    call cpu_time(this%cpu_time_start)
+
+  end subroutine timer_cpu_start
+
+  !-----------------------------------------------------------------------------
+  !> Calculate the time elapsed since the stopwatch subroutine was called
+  !! for this instance of the timer container object. Can be called several
+  !! times showing elapsed time since the grand start.
+  function timer_cpu_elapsed (this) result (cpu_time_elapsed)
+    class(TIMER_CPU) :: this
+    !> @returns the time elapsed since `timer_cpu_start` call (object-bound).
+    real(SRP) :: cpu_time_elapsed
+
+    ! Local var
+    real(SRP) :: cpu_time_finish
+
+    !> We use the intrinsic `cpu_time` to get the finish time point.
+    call cpu_time(cpu_time_finish)
+
+    !> Elapsed time is then trivial to get.
+    cpu_time_elapsed = cpu_time_finish - this%cpu_time_start
+
+  end function timer_cpu_elapsed
+--------------------------------------------------------------------------------
+
+Declarations for the *instantiation* of such an object look like this:
+
+[source]
+--------------------------------------------------------------------------------
+!> This is the stopwatch objects for global and for timing each generation
+type(TIMER_CPU) :: stopwatch_global, stopwatch_generation
+--------------------------------------------------------------------------------
+
+The *use* of the stopwatch objects is now rather simple:
+
+[source]
+--------------------------------------------------------------------------------
+! Start global stopwatch
+call stopwatch_global%start()
+....
+....
+! Print elapsed time in the log message;
+!    check out the function stopwatch_global%elapsed() that actually gets
+!    the elapsed time:
+call LOG_DBG("Initialisation of generation one completed, took " //           &
+                TOSTR(stopwatch_global%elapsed(), "(f8.4)") //                &
+                "s since global procedure start.")
+--------------------------------------------------------------------------------
+
 TODO -- more text later
 
 ////////////////////////////////////////////////////////////////////////////////
