@@ -319,7 +319,7 @@ clean: neat
 	-rm -f *.o *.obj
 
 neat:
-	-rm -f $(TMPFILES) *conflict*
+	-rm -f $(TMPFILES) *conflict*  .syncthing*
 
 #-------------------------------------------------------------------------------
 

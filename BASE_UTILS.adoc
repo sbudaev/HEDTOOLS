@@ -254,9 +254,11 @@ image:doc/img/ok.svg[width=16] *Line length* should be short, *not exceeding
 not work on some compilers by default and do a lot of mess when you code on
 the terminal or have to check +diff+.
 
-image:doc/img/ok.svg[width=16] Normal *variables* should be in +lowercase+,
-global and local *parameters* that are not allowed to change, in
-+UPPERCASE+. For example:
+image:doc/img/ok.svg[width=16] Use +lowercase+ for most of the
+coding. Specifically, fortran keywords, intrinsic functions etc. as well as
+normal *variables* should be in +lowercase+. Global and local *parameters*
+that are not allowed to change, in +UPPERCASE+ (so they become easily
+identifiable). For example:
 
 [source]
 --------------------------------------------------------------------------------
