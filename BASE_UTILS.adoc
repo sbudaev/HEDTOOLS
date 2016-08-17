@@ -425,8 +425,12 @@ GENERATIONS_LOOP: do while &
                   (realgen <= GENERATIONS .and. &
                    parents(1)%fitness > 0)
 .....
-  realgen = realgen +1
+  realgen = realgen + 1
 
+  ... exit GENERATIONS_LOOP     ! it is now clear which loop to "exit"
+  ...
+  ... cycle GENERATIONS_LOOP    ! and clear which loop to "cycle"
+                                !    if there are several nested loops...
 end do GENERATIONS_LOOP
 --------------------------------------------------------------------------------
 
