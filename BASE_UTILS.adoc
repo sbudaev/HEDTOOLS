@@ -254,6 +254,27 @@ image:doc/img/ok.svg[width=16] *Line length* should be short, *not exceeding
 not work on some compilers by default and do a lot of mess when you code on
 the terminal or have to check +diff+.
 
+[source]
+--------------------------------------------------------------------------------
+call CSV_MATRIX_WRITE ( reshape(                                        &
+                       [proto_parents%individual%body_length,           &
+                        proto_parents%individual%body_mass,             &
+                        proto_parents%individual%stomach_content_mass,  &
+                        proto_parents%individual%thyroid_level,         &
+                        proto_parents%individual%smr,                   &
+                        proto_parents%individual%energy_current],       &
+                       [POPSIZE, 6]),                                   &
+                       "out_" // MODEL_NAME // "_" // TAG_MMDD() //     &
+                       "_gen_" // TOSTR(realgen, GENERATIONS) // csv,   &
+                       ["LEN ","MASS", "STOM", "THYR","SMR ","ENRG"]    &
+                      )
+........
+!> Log generation timing
+call LOG_MSG ("Generation " // TOSTR(realgen) // ", took "     //       &
+               TOSTR(stopwatch_generation%elapsed(),"(f8.4)")  //       &
+               " s since generation start")
+--------------------------------------------------------------------------------
+
 image:doc/img/ok.svg[width=16] Use +lowercase+ for most of the
 coding. Specifically, fortran keywords, intrinsic functions etc. as well as
 normal *variables* should be in +lowercase+. Global and local *parameters*
@@ -288,6 +309,32 @@ classes are in +UPPERCASE+, so they are easy to identify within the code, e.g.
 !> This type adds hormonal architecture  extending the genome object
 type, public, extends(INDIVIDUAL_GENOME) :: HORMONES
 --------------------------------------------------------------------------------
+
+image:doc/img/ok.svg[width=16] Always explicitly use the *intrinsic type
+conversion functions*, whenever conversion between types is necessary -- even
+if automatic implicit conversion works correctly. This will avoid many bugs.
+
+[source]
+--------------------------------------------------------------------------------
+if ( ((real(sex_locus_sum,SRP)/real(sex_locus_num,SRP)) /                 &
+           (ALLELERANGE_MAX - ALLELERANGE_MIN)) <= SEX_RATIO ) then
+--------------------------------------------------------------------------------
+
+image:doc/img/ok.svg[width=16] Always use the *result-style functions* (i.e,
+with a result variable). This makes it easier to control the function type
+and avoid bugs.
+
+[source]
+--------------------------------------------------------------------------------
+elemental function alleleconv(raw_value) result (converted)
+......
+  !> Type 1: no conversion from 0:1 to output allele value
+  !! @note   identical to old alleleconv 1
+  !!         `converted = raw_value`
+  converted = raw_value
+end function alleleconv
+--------------------------------------------------------------------------------
+
 
 Efficient Fortran programming
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
