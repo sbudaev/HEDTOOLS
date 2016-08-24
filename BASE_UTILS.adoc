@@ -696,13 +696,16 @@ in a "Character length argument mismatch" compiler error (or warning) if
 the function is, for example, called with literal string that does not have
 exactly the same length as in the definition.
 
+indexterm:[strings, assumed length]
+indexterm:[strings, dummy parameters]
+
 That is, use such definition of the +label+ parameter (assumed length):
 
 [source]
 --------------------------------------------------------------------------------
 subroutine allele_label_set(this, label)
   class(GENE) :: this
-  character(len=*)  :: label
+  character(len=*)  :: label                ! assumed length string, use this!
 
   this%allele_label = label
 
@@ -720,6 +723,14 @@ subroutine allele_label_set(this, label)
   this%allele_label = label
 
 end subroutine allele_label_set
+--------------------------------------------------------------------------------
+
+In the former case, such code is safe even when +"SEX_DETERMINATION"+ length
+(17) is unequal to +LABEL_LENGTH+:
+
+[source]
+--------------------------------------------------------------------------------
+some_allele%allele_label_set("SEX_DETERMINATION")
 --------------------------------------------------------------------------------
 
 
