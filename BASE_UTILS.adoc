@@ -686,8 +686,8 @@ order, such as *loop-free array constructions,* that works fast just
 everywhere. Many of the Fortran loop-free constructions actually resemble
 similar Matlab functions.
 
-Using string parameters
-~~~~~~~~~~~~~~~~~~~~~~~
+Using strings
+~~~~~~~~~~~~~
 
 image:doc/img/ok.svg[width=16] Always use *assumed length strings* defined
 as an asterisk length in subroutine and function dummy input parameters
