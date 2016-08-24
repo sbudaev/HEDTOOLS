@@ -686,6 +686,43 @@ order, such as *loop-free array constructions,* that works fast just
 everywhere. Many of the Fortran loop-free constructions actually resemble
 similar Matlab functions.
 
+Using string parameters
+~~~~~~~~~~~~~~~~~~~~~~~
+
+image:doc/img/ok.svg[width=16] Always use *assumed length strings* defined
+as an asterisk length in subroutine and function dummy input parameters
+(+intent(in)+) rather than fixed length parameters.  The latter may result
+in a "Character length argument mismatch" compiler error (or warning) if
+the function is, for example, called with literal string that does not have
+exactly the same length as in the definition.
+
+That is, use such definition of the +label+ parameter (assumed length):
+
+[source]
+--------------------------------------------------------------------------------
+subroutine allele_label_set(this, label)
+  class(GENE) :: this
+  character(len=*)  :: label
+
+  this%allele_label = label
+
+end subroutine allele_label_set
+--------------------------------------------------------------------------------
+
+Rather than this one (length fixed to +LABEL_LENGTH+ characters):
+
+[source]
+--------------------------------------------------------------------------------
+subroutine allele_label_set(this, label)
+  class(GENE) :: this
+  character(len=LABEL_LENGTH)  :: label
+
+  this%allele_label = label
+
+end subroutine allele_label_set
+--------------------------------------------------------------------------------
+
+
 Document code as you write it with Doxygen
 ------------------------------------------
 
