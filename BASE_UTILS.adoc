@@ -464,7 +464,7 @@ elemental function surface_light(tstep) result (surlig)
   !> @param tstep time step of the model, limited by maximum LIFESPAN
   integer, intent(in) :: tstep
 
-  surlig = DAYLIGHT*0.5_SRP*(1.01_SRP+sin(3.1415926_SRP*2._SRP*             &
+  surlig = DAYLIGHT*0.5_SRP*(1.01_SRP+sin(PI*2._SRP*                          &
               DIELCYCLES*real(tstep,SRP)/(1._SRP*LIFESPAN)))
 
 end function surface_light
