@@ -450,6 +450,26 @@ than a single screen page (with vertical screen orientation). So the whole
 bunch of code is easy to overview and work with. "Atomic" operations are
 particularly helpful in the object oriented code.
 
+[source]
+--------------------------------------------------------------------------------
+!> Calculate surface light at specific time step of the model.
+!! Light (surlig) is calculated from a sine function. Light intensity
+!! just beneath the surface is modeled by assuming a 50 % loss by scattering
+!! at the surface: @f$ L_{t} = L_{max} 0.5 sin(\pi dt / \Omega ) @f$.
+elemental function surface_light(tstep) result (surlig)
+
+  !> @returns surface light intensity
+  real(SRP) :: surlig
+
+  !> @param tstep time step of the model, limited by maximum LIFESPAN
+  integer, intent(in) :: tstep
+
+  surlig = DAYLIGHT*0.5_SRP*(1.01_SRP+sin(3.1415926_SRP*2._SRP*             &
+              DIELCYCLES*real(tstep,SRP)/(1._SRP*LIFESPAN)))
+
+end function surface_light
+--------------------------------------------------------------------------------
+
 image:doc/img/ok.svg[width=16] *Use meaningful labels*. *Global variable
 names* should have longer names, sometimes even written in full, separate
 words with underscore +_+, e.g. +some_global_variable+ so that +Emacs+,
