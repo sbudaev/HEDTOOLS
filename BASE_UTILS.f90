@@ -1737,4 +1737,23 @@ subroutine MRGRNK_I (xdont, irngt)
 !
 end subroutine MRGRNK_I
 
+!-------------------------------------------------------------------------------
+
+subroutine ARRAY_RANK(Indx, Ranks)
+!*******************************************************************************
+! ARRAY_RANK
+! PURPOSE: Calculate the rank order of an array elements from the rank indices
+!          computed by ARRAY_IDRANK.
+! CALL PARAMETERS: integer input index vector and an output vector of ranks.
+!*******************************************************************************
+integer, dimension(:), intent(in)  :: Indx
+integer, dimension(:), intent(out) :: Ranks
+integer :: i
+
+  do i=1, min(size(Indx), size(Ranks))
+      Ranks(indx(i)) = i
+  end do
+
+end subroutine ARRAY_RANK
+
 end module BASE_UTILS
