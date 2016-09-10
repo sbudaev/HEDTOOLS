@@ -2214,6 +2214,20 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
+Subroutine: ARRAY_RANK
+~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[ARRAY_RANK]
+
+*ARRAY_RANK* Ranks an array (real kind 4 or 8 or integer, the first parameter)
+into an index array, using merge-sort.
+
+Example:
+
+[source]
+--------------------------------------------------------------------------------
+call ARRAY_RANK(array_to_rank, index_array)
+--------------------------------------------------------------------------------
+
 Subroutine: RANDOM_SEED_INIT_SIMPLE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[RANDOM_SEED_INIT_SIMPLE]

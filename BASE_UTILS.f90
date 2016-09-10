@@ -85,6 +85,15 @@ interface STDERR              ! Short name for stderr-output routine
 
 end interface STDERR
 
+interface ARRAY_RANK          ! Generic interface for calculating an
+                              ! unconstrained  integer vector of ranks
+  module procedure MRGRNK_R4  ! for an input vector.
+  module procedure MRGRNK_R8
+  module procedure MRGRNK_I
+
+end interface ARRAY_RANK
+
+
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
                                 ! Private here to avoid possible name conflicts,
                                 ! do we need them outside?
@@ -1087,5 +1096,645 @@ function I4_LOG_10 (i) result(i4log10)
 end function I4_LOG_10
 
 !-------------------------------------------------------------------------------
+
+subroutine MRGRNK_R4 (xdont, irngt)
+!*******************************************************************************
+! MRGRNK_R
+! PURPOSE: Unconditionally rank real vector placing ranks into an integer
+!          vector. This is a real kind 4 version.
+! CALL PARAMETERS: Real vector for ranking and integer vector containing
+!          the ranks obtained.
+! NOTES: From public domain code http://www.fortran-2000.com/rank/
+!        Author: Michel Olagnon <Michel.Olagnon@ifremer.fr>.
+!        IMPORTANT: This is a performance-optimised code. For performance
+!        reasons, the first 2 passes are taken out of the standard loop, and
+!        use dedicated coding.
+!*******************************************************************************
+! __________________________________________________________
+!   mrgrnk = merge-sort ranking of an array
+!   for performance reasons, the first 2 passes are taken
+!   out of the standard loop, and use dedicated coding.
+! __________________________________________________________
+! _________________________________________________________
+      real, dimension (:), intent (in) :: xdont
+      integer, dimension (:), intent (out) :: irngt
+! __________________________________________________________
+      real :: xvala, xvalb
+!
+      integer, dimension (size(irngt)) :: jwrkt
+      integer :: lmtna, lmtnc, irng1, irng2
+      integer :: nval, iind, iwrkd, iwrk, iwrkf, jinda, iinda, iindb
+!
+      nval = min (size(xdont), size(irngt))
+      select case (nval)
+      case (:0)
+        return
+      case (1)
+        irngt (1) = 1
+        return
+      case default
+        continue
+      end select
+!
+!  fill-in the index array, creating ordered couples
+!
+      do iind = 2, nval, 2
+        if (xdont(iind-1) <= xdont(iind)) then
+            irngt (iind-1) = iind - 1
+            irngt (iind) = iind
+        else
+            irngt (iind-1) = iind
+            irngt (iind) = iind - 1
+        end if
+      end do
+      if (modulo(nval, 2) /= 0) then
+        irngt (nval) = nval
+      end if
+!
+!  we will now have ordered subsets a - b - a - b - ...
+!  and merge a and b couples into     c   -   c   - ...
+!
+      lmtna = 2
+      lmtnc = 4
+!
+!  first iteration. the length of the ordered subsets goes from 2 to 4
+!
+      do
+        if (nval <= 2) exit
+!
+!   loop on merges of a and b into c
+!
+        do iwrkd = 0, nval - 1, 4
+            if ((iwrkd+4) > nval) then
+              if ((iwrkd+2) >= nval) exit
+!
+!   1 2 3
+!
+              if (xdont(irngt(iwrkd+2)) <= xdont(irngt(iwrkd+3))) exit
+!
+!   1 3 2
+!
+              if (xdont(irngt(iwrkd+1)) <= xdont(irngt(iwrkd+3))) then
+                  irng2 = irngt (iwrkd+2)
+                  irngt (iwrkd+2) = irngt (iwrkd+3)
+                  irngt (iwrkd+3) = irng2
+!
+!   3 1 2
+!
+              else
+                  irng1 = irngt (iwrkd+1)
+                  irngt (iwrkd+1) = irngt (iwrkd+3)
+                  irngt (iwrkd+3) = irngt (iwrkd+2)
+                  irngt (iwrkd+2) = irng1
+              end if
+              exit
+            end if
+!
+!   1 2 3 4
+!
+            if (xdont(irngt(iwrkd+2)) <= xdont(irngt(iwrkd+3))) cycle
+!
+!   1 3 x x
+!
+            if (xdont(irngt(iwrkd+1)) <= xdont(irngt(iwrkd+3))) then
+              irng2 = irngt (iwrkd+2)
+              irngt (iwrkd+2) = irngt (iwrkd+3)
+              if (xdont(irng2) <= xdont(irngt(iwrkd+4))) then
+!   1 3 2 4
+                  irngt (iwrkd+3) = irng2
+              else
+!   1 3 4 2
+                  irngt (iwrkd+3) = irngt (iwrkd+4)
+                  irngt (iwrkd+4) = irng2
+              end if
+!
+!   3 x x x
+!
+            else
+              irng1 = irngt (iwrkd+1)
+              irng2 = irngt (iwrkd+2)
+              irngt (iwrkd+1) = irngt (iwrkd+3)
+              if (xdont(irng1) <= xdont(irngt(iwrkd+4))) then
+                  irngt (iwrkd+2) = irng1
+                  if (xdont(irng2) <= xdont(irngt(iwrkd+4))) then
+!   3 1 2 4
+                    irngt (iwrkd+3) = irng2
+                  else
+!   3 1 4 2
+                    irngt (iwrkd+3) = irngt (iwrkd+4)
+                    irngt (iwrkd+4) = irng2
+                  end if
+              else
+!   3 4 1 2
+                  irngt (iwrkd+2) = irngt (iwrkd+4)
+                  irngt (iwrkd+3) = irng1
+                  irngt (iwrkd+4) = irng2
+              end if
+            end if
+        end do
+!
+!  the cs become as and bs
+!
+        lmtna = 4
+        exit
+      end do
+!
+!  iteration loop. each time, the length of the ordered subsets
+!  is doubled.
+!
+      do
+        if (lmtna >= nval) exit
+        iwrkf = 0
+        lmtnc = 2 * lmtnc
+!
+!   loop on merges of a and b into c
+!
+        do
+            iwrk = iwrkf
+            iwrkd = iwrkf + 1
+            jinda = iwrkf + lmtna
+            iwrkf = iwrkf + lmtnc
+            if (iwrkf >= nval) then
+              if (jinda >= nval) exit
+              iwrkf = nval
+            end if
+            iinda = 1
+            iindb = jinda + 1
+!
+!   shortcut for the case when the max of a is smaller
+!   than the min of b. this line may be activated when the
+!   initial set is already close to sorted.
+!
+!          if (xdont(irngt(jinda)) <= xdont(irngt(iindb))) cycle
+!
+!  one steps in the c subset, that we build in the final rank array
+!
+!  make a copy of the rank array for the merge iteration
+!
+            jwrkt (1:lmtna) = irngt (iwrkd:jinda)
+!
+            xvala = xdont (jwrkt(iinda))
+            xvalb = xdont (irngt(iindb))
+!
+            do
+              iwrk = iwrk + 1
+!
+!  we still have unprocessed values in both a and b
+!
+              if (xvala > xvalb) then
+                  irngt (iwrk) = irngt (iindb)
+                  iindb = iindb + 1
+                  if (iindb > iwrkf) then
+!  only a still with unprocessed values
+                    irngt (iwrk+1:iwrkf) = jwrkt (iinda:lmtna)
+                    exit
+                  end if
+                  xvalb = xdont (irngt(iindb))
+              else
+                  irngt (iwrk) = jwrkt (iinda)
+                  iinda = iinda + 1
+                  if (iinda > lmtna) exit! only b still with unprocessed values
+                  xvala = xdont (jwrkt(iinda))
+              end if
+!
+            end do
+        end do
+!
+!  the cs become as and bs
+!
+        lmtna = 2 * lmtna
+      end do
+!
+      return
+!
+end subroutine MRGRNK_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine MRGRNK_R8 (xdont, irngt)
+!*******************************************************************************
+! MRGRNK_R8
+! PURPOSE: Unconditionally rank real vector placing ranks into an integer
+!          vector. This is a real kind 8 (double precision) version.
+! CALL PARAMETERS: Real vector for ranking and integer vector containing
+!          the ranks obtained.
+! NOTES: From public domain code http://www.fortran-2000.com/rank/
+!        Author: Michel Olagnon <Michel.Olagnon@ifremer.fr>.
+!        IMPORTANT: This is a performance-optimised code. For performance
+!        reasons, the first 2 passes are taken out of the standard loop, and
+!        use dedicated coding.
+!*******************************************************************************
+! __________________________________________________________
+!   mrgrnk = merge-sort ranking of an array
+!   for performance reasons, the first 2 passes are taken
+!   out of the standard loop, and use dedicated coding.
+! __________________________________________________________
+! __________________________________________________________
+      real (kind=8), dimension (:), intent (in) :: xdont
+      integer, dimension (:), intent (out) :: irngt
+! __________________________________________________________
+      real (kind=8) :: xvala, xvalb
+!
+      integer, dimension (size(irngt)) :: jwrkt
+      integer :: lmtna, lmtnc, irng1, irng2
+      integer :: nval, iind, iwrkd, iwrk, iwrkf, jinda, iinda, iindb
+!
+      nval = min (size(xdont), size(irngt))
+      select case (nval)
+      case (:0)
+         return
+      case (1)
+         irngt (1) = 1
+         return
+      case default
+         continue
+      end select
+!
+!  fill-in the index array, creating ordered couples
+!
+      do iind = 2, nval, 2
+         if (xdont(iind-1) <= xdont(iind)) then
+            irngt (iind-1) = iind - 1
+            irngt (iind) = iind
+         else
+            irngt (iind-1) = iind
+            irngt (iind) = iind - 1
+         end if
+      end do
+      if (modulo(nval, 2) /= 0) then
+         irngt (nval) = nval
+      end if
+!
+!  we will now have ordered subsets a - b - a - b - ...
+!  and merge a and b couples into     c   -   c   - ...
+!
+      lmtna = 2
+      lmtnc = 4
+!
+!  first iteration. the length of the ordered subsets goes from 2 to 4
+!
+      do
+         if (nval <= 2) exit
+!
+!   loop on merges of a and b into c
+!
+         do iwrkd = 0, nval - 1, 4
+            if ((iwrkd+4) > nval) then
+               if ((iwrkd+2) >= nval) exit
+!
+!   1 2 3
+!
+               if (xdont(irngt(iwrkd+2)) <= xdont(irngt(iwrkd+3))) exit
+!
+!   1 3 2
+!
+               if (xdont(irngt(iwrkd+1)) <= xdont(irngt(iwrkd+3))) then
+                  irng2 = irngt (iwrkd+2)
+                  irngt (iwrkd+2) = irngt (iwrkd+3)
+                  irngt (iwrkd+3) = irng2
+!
+!   3 1 2
+!
+               else
+                  irng1 = irngt (iwrkd+1)
+                  irngt (iwrkd+1) = irngt (iwrkd+3)
+                  irngt (iwrkd+3) = irngt (iwrkd+2)
+                  irngt (iwrkd+2) = irng1
+               end if
+               exit
+            end if
+!
+!   1 2 3 4
+!
+            if (xdont(irngt(iwrkd+2)) <= xdont(irngt(iwrkd+3))) cycle
+!
+!   1 3 x x
+!
+            if (xdont(irngt(iwrkd+1)) <= xdont(irngt(iwrkd+3))) then
+               irng2 = irngt (iwrkd+2)
+               irngt (iwrkd+2) = irngt (iwrkd+3)
+               if (xdont(irng2) <= xdont(irngt(iwrkd+4))) then
+!   1 3 2 4
+                  irngt (iwrkd+3) = irng2
+               else
+!   1 3 4 2
+                  irngt (iwrkd+3) = irngt (iwrkd+4)
+                  irngt (iwrkd+4) = irng2
+               end if
+!
+!   3 x x x
+!
+            else
+               irng1 = irngt (iwrkd+1)
+               irng2 = irngt (iwrkd+2)
+               irngt (iwrkd+1) = irngt (iwrkd+3)
+               if (xdont(irng1) <= xdont(irngt(iwrkd+4))) then
+                  irngt (iwrkd+2) = irng1
+                  if (xdont(irng2) <= xdont(irngt(iwrkd+4))) then
+!   3 1 2 4
+                     irngt (iwrkd+3) = irng2
+                  else
+!   3 1 4 2
+                     irngt (iwrkd+3) = irngt (iwrkd+4)
+                     irngt (iwrkd+4) = irng2
+                  end if
+               else
+!   3 4 1 2
+                  irngt (iwrkd+2) = irngt (iwrkd+4)
+                  irngt (iwrkd+3) = irng1
+                  irngt (iwrkd+4) = irng2
+               end if
+            end if
+         end do
+!
+!  the cs become as and bs
+!
+         lmtna = 4
+         exit
+      end do
+!
+!  iteration loop. each time, the length of the ordered subsets
+!  is doubled.
+!
+      do
+         if (lmtna >= nval) exit
+         iwrkf = 0
+         lmtnc = 2 * lmtnc
+!
+!   loop on merges of a and b into c
+!
+         do
+            iwrk = iwrkf
+            iwrkd = iwrkf + 1
+            jinda = iwrkf + lmtna
+            iwrkf = iwrkf + lmtnc
+            if (iwrkf >= nval) then
+               if (jinda >= nval) exit
+               iwrkf = nval
+            end if
+            iinda = 1
+            iindb = jinda + 1
+!
+!   shortcut for the case when the max of a is smaller
+!   than the min of b. this line may be activated when the
+!   initial set is already close to sorted.
+!
+!          if (xdont(irngt(jinda)) <= xdont(irngt(iindb))) cycle
+!
+!  one steps in the c subset, that we build in the final rank array
+!
+!  make a copy of the rank array for the merge iteration
+!
+            jwrkt (1:lmtna) = irngt (iwrkd:jinda)
+!
+            xvala = xdont (jwrkt(iinda))
+            xvalb = xdont (irngt(iindb))
+!
+            do
+               iwrk = iwrk + 1
+!
+!  we still have unprocessed values in both a and b
+!
+               if (xvala > xvalb) then
+                  irngt (iwrk) = irngt (iindb)
+                  iindb = iindb + 1
+                  if (iindb > iwrkf) then
+!  only a still with unprocessed values
+                     irngt (iwrk+1:iwrkf) = jwrkt (iinda:lmtna)
+                     exit
+                  end if
+                  xvalb = xdont (irngt(iindb))
+               else
+                  irngt (iwrk) = jwrkt (iinda)
+                  iinda = iinda + 1
+                  if (iinda > lmtna) exit! only b still with unprocessed values
+                  xvala = xdont (jwrkt(iinda))
+               end if
+!
+            end do
+         end do
+!
+!  the cs become as and bs
+!
+         lmtna = 2 * lmtna
+      end do
+!
+      return
+!
+end subroutine MRGRNK_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine MRGRNK_I (xdont, irngt)
+!*******************************************************************************
+! MRGRNK_I
+! PURPOSE: Unconditionally rank real vector placing ranks into an integer
+!          vector. This is an integer version.
+! CALL PARAMETERS: Real vector for ranking and integer vector containing
+!          the ranks obtained.
+! NOTES: From public domain code http://www.fortran-2000.com/rank/
+!        Author: Michel Olagnon <Michel.Olagnon@ifremer.fr>.
+!        IMPORTANT: This is a performance-optimised code. For performance
+!        reasons, the first 2 passes are taken out of the standard loop, and
+!        use dedicated coding.
+!*******************************************************************************
+! __________________________________________________________
+!   mrgrnk = merge-sort ranking of an array
+!   for performance reasons, the first 2 passes are taken
+!   out of the standard loop, and use dedicated coding.
+! __________________________________________________________
+! __________________________________________________________
+      integer, dimension (:), intent (in)  :: xdont
+      integer, dimension (:), intent (out) :: irngt
+! __________________________________________________________
+      integer :: xvala, xvalb
+!
+      integer, dimension (size(irngt)) :: jwrkt
+      integer :: lmtna, lmtnc, irng1, irng2
+      integer :: nval, iind, iwrkd, iwrk, iwrkf, jinda, iinda, iindb
+!
+      nval = min (size(xdont), size(irngt))
+      select case (nval)
+      case (:0)
+         return
+      case (1)
+         irngt (1) = 1
+         return
+      case default
+         continue
+      end select
+!
+!  fill-in the index array, creating ordered couples
+!
+      do iind = 2, nval, 2
+         if (xdont(iind-1) <= xdont(iind)) then
+            irngt (iind-1) = iind - 1
+            irngt (iind) = iind
+         else
+            irngt (iind-1) = iind
+            irngt (iind) = iind - 1
+         end if
+      end do
+      if (modulo(nval, 2) /= 0) then
+         irngt (nval) = nval
+      end if
+!
+!  we will now have ordered subsets a - b - a - b - ...
+!  and merge a and b couples into     c   -   c   - ...
+!
+      lmtna = 2
+      lmtnc = 4
+!
+!  first iteration. the length of the ordered subsets goes from 2 to 4
+!
+      do
+         if (nval <= 2) exit
+!
+!   loop on merges of a and b into c
+!
+         do iwrkd = 0, nval - 1, 4
+            if ((iwrkd+4) > nval) then
+               if ((iwrkd+2) >= nval) exit
+!
+!   1 2 3
+!
+               if (xdont(irngt(iwrkd+2)) <= xdont(irngt(iwrkd+3))) exit
+!
+!   1 3 2
+!
+               if (xdont(irngt(iwrkd+1)) <= xdont(irngt(iwrkd+3))) then
+                  irng2 = irngt (iwrkd+2)
+                  irngt (iwrkd+2) = irngt (iwrkd+3)
+                  irngt (iwrkd+3) = irng2
+!
+!   3 1 2
+!
+               else
+                  irng1 = irngt (iwrkd+1)
+                  irngt (iwrkd+1) = irngt (iwrkd+3)
+                  irngt (iwrkd+3) = irngt (iwrkd+2)
+                  irngt (iwrkd+2) = irng1
+               end if
+               exit
+            end if
+!
+!   1 2 3 4
+!
+            if (xdont(irngt(iwrkd+2)) <= xdont(irngt(iwrkd+3))) cycle
+!
+!   1 3 x x
+!
+            if (xdont(irngt(iwrkd+1)) <= xdont(irngt(iwrkd+3))) then
+               irng2 = irngt (iwrkd+2)
+               irngt (iwrkd+2) = irngt (iwrkd+3)
+               if (xdont(irng2) <= xdont(irngt(iwrkd+4))) then
+!   1 3 2 4
+                  irngt (iwrkd+3) = irng2
+               else
+!   1 3 4 2
+                  irngt (iwrkd+3) = irngt (iwrkd+4)
+                  irngt (iwrkd+4) = irng2
+               end if
+!
+!   3 x x x
+!
+            else
+               irng1 = irngt (iwrkd+1)
+               irng2 = irngt (iwrkd+2)
+               irngt (iwrkd+1) = irngt (iwrkd+3)
+               if (xdont(irng1) <= xdont(irngt(iwrkd+4))) then
+                  irngt (iwrkd+2) = irng1
+                  if (xdont(irng2) <= xdont(irngt(iwrkd+4))) then
+!   3 1 2 4
+                     irngt (iwrkd+3) = irng2
+                  else
+!   3 1 4 2
+                     irngt (iwrkd+3) = irngt (iwrkd+4)
+                     irngt (iwrkd+4) = irng2
+                  end if
+               else
+!   3 4 1 2
+                  irngt (iwrkd+2) = irngt (iwrkd+4)
+                  irngt (iwrkd+3) = irng1
+                  irngt (iwrkd+4) = irng2
+               end if
+            end if
+         end do
+!
+!  the cs become as and bs
+!
+         lmtna = 4
+         exit
+      end do
+!
+!  iteration loop. each time, the length of the ordered subsets
+!  is doubled.
+!
+      do
+         if (lmtna >= nval) exit
+         iwrkf = 0
+         lmtnc = 2 * lmtnc
+!
+!   loop on merges of a and b into c
+!
+         do
+            iwrk = iwrkf
+            iwrkd = iwrkf + 1
+            jinda = iwrkf + lmtna
+            iwrkf = iwrkf + lmtnc
+            if (iwrkf >= nval) then
+               if (jinda >= nval) exit
+               iwrkf = nval
+            end if
+            iinda = 1
+            iindb = jinda + 1
+!
+!   shortcut for the case when the max of a is smaller
+!   than the min of b. this line may be activated when the
+!   initial set is already close to sorted.
+!
+!          if (xdont(irngt(jinda)) <= xdont(irngt(iindb))) cycle
+!
+!  one steps in the c subset, that we build in the final rank array
+!
+!  make a copy of the rank array for the merge iteration
+!
+            jwrkt (1:lmtna) = irngt (iwrkd:jinda)
+!
+            xvala = xdont (jwrkt(iinda))
+            xvalb = xdont (irngt(iindb))
+!
+            do
+               iwrk = iwrk + 1
+!
+!  we still have unprocessed values in both a and b
+!
+               if (xvala > xvalb) then
+                  irngt (iwrk) = irngt (iindb)
+                  iindb = iindb + 1
+                  if (iindb > iwrkf) then
+!  only a still with unprocessed values
+                     irngt (iwrk+1:iwrkf) = jwrkt (iinda:lmtna)
+                     exit
+                  end if
+                  xvalb = xdont (irngt(iindb))
+               else
+                  irngt (iwrk) = jwrkt (iinda)
+                  iinda = iinda + 1
+                  if (iinda > lmtna) exit! only b still with unprocessed values
+                  xvala = xdont (jwrkt(iinda))
+               end if
+!
+            end do
+         end do
+!
+!  the cs become as and bs
+!
+         lmtna = 2 * lmtna
+      end do
+!
+      return
+!
+end subroutine MRGRNK_I
 
 end module BASE_UTILS
