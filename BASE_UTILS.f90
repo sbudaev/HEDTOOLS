@@ -85,13 +85,13 @@ interface STDERR              ! Short name for stderr-output routine
 
 end interface STDERR
 
-interface ARRAY_RANK          ! Generic interface for calculating an
+interface ARRAY_IDRANK        ! Generic interface for calculating an
                               ! unconstrained  integer vector of ranks
   module procedure MRGRNK_R4  ! for an input vector.
   module procedure MRGRNK_R8
   module procedure MRGRNK_I
 
-end interface ARRAY_RANK
+end interface ARRAY_IDRANK
 
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.

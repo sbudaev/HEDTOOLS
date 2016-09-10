@@ -2214,18 +2214,21 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
-Subroutine: ARRAY_RANK
+Subroutine: ARRAY_IDRANK
 ~~~~~~~~~~~~~~~~~~~~~~
-indexterm:[ARRAY_RANK]
+indexterm:[ARRAY_IDRANK]
 
-*ARRAY_RANK* Ranks an array (real kind 4 or 8 or integer, the first parameter)
-into an index array, using merge-sort.
+*ARRAY_IDRANK* calculates an integer index array for sorting a real (kind 4 or
+8) or integer array. The first parameter defines the array to be sorted, the
+second is the integer indexing array  into an index array, using merge-sort.
 
 Example:
 
 [source]
 --------------------------------------------------------------------------------
-call ARRAY_RANK(array_to_rank, index_array)
+call ARRAY_IDRANK(array_to_rank, index_array)
+! To get a sorted array, just use this index array: index_array
+array_sorted = array_to_rank(index_array)
 --------------------------------------------------------------------------------
 
 Subroutine: RANDOM_SEED_INIT_SIMPLE
