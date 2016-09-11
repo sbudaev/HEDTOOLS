@@ -2214,13 +2214,13 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
-Subroutines: ARRAY_IDRANK and ARRAY_RANK
+Subroutines: ARRAY_INDEX and ARRAY_RANK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-indexterm:[ARRAY_IDRANK]
+indexterm:[ARRAY_INDEX]
 indexterm:[ARRAY_RANK]
 indexterm:[sorting index]
 
-*ARRAY_IDRANK* calculates an integer sorting index vector for sorting a
+*ARRAY_INDEX* calculates an integer sorting index vector for sorting a
 real (kind 4 or 8) or an integer input vector footnote:[This routine
 is based on the high performance algorithm from Michel Olagnon's
 http://www.fortran-2000.com/rank/[ORDERPACK]. It is also analogous to
@@ -2235,14 +2235,14 @@ Example:
 [source]
 --------------------------------------------------------------------------------
 ! Calculate index array for vector X
-call ARRAY_IDRANK(X, index_array)
+call ARRAY_INDEX(X, index_array)
 
 ! To get the vector X sorted, just use this index array by vector indexing:
 print *, X(index_array)
 --------------------------------------------------------------------------------
 
 *ARRAY_RANK* calculates the ranking order scores for the original vector
-using the integer sorting index vector that is calculated by +ARRAY_IDRANK+.
+using the integer sorting index vector that is calculated by +ARRAY_INDEX+.
 indexterm:[ARRAY_RANK]
 
 Example:
@@ -2253,7 +2253,7 @@ Example:
 call ARRAY_RANK(index_array, ranks_for_X)
 --------------------------------------------------------------------------------
 
-This shows how to use +ARRAY_IDRANK+ and +ARRAY_RANK+ together.
+This shows how to use +ARRAY_INDEX+ and +ARRAY_RANK+ together.
 
 [source]
 --------------------------------------------------------------------------------
@@ -2263,7 +2263,7 @@ program TESTRANKS
   real(4), dimension(10) :: X=[ 13.,12.,14.,11.,15.,99.,16.,18.,17.,19.]
   integer, dimension(10) :: Id = 0, Ranks
 
-  call ARRAY_IDRANK(X, Id)   ! Calculate index vector for X:
+  call ARRAY_INDEX(X, Id)    ! Calculate index vector for X:
                              !   4   2   1   3   5   7   9   8  10   6
   call ARRAY_RANK(Id, Ranks) ! Calculate rank scores for the original vector X:
                              !   3   2   4   1   5  10   6   8   7   9

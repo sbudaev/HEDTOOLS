@@ -85,13 +85,13 @@ interface STDERR              ! Short name for stderr-output routine
 
 end interface STDERR
 
-interface ARRAY_IDRANK        ! Generic interface for calculating an
+interface ARRAY_INDEX         ! Generic interface for calculating an
                               ! unconstrained  integer vector of ranks
   module procedure MRGRNK_R4  ! for an input vector.
   module procedure MRGRNK_R8
   module procedure MRGRNK_I
 
-end interface ARRAY_IDRANK
+end interface ARRAY_INDEX
 
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
@@ -1743,7 +1743,7 @@ subroutine ARRAY_RANK(Indx, Ranks)
 !*******************************************************************************
 ! ARRAY_RANK
 ! PURPOSE: Calculate the rank order of an array elements from the rank indices
-!          computed by ARRAY_IDRANK.
+!          computed by ARRAY_INDEX.
 ! CALL PARAMETERS: integer input index vector and an output vector of ranks.
 !*******************************************************************************
 integer, dimension(:), intent(in)  :: Indx
