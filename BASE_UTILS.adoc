@@ -2221,7 +2221,11 @@ indexterm:[ARRAY_RANK]
 indexterm:[sorting index]
 
 *ARRAY_IDRANK* calculates an integer sorting index vector for sorting a
-real (kind 4 or 8) or an integer input vector. The first parameter of the
+real (kind 4 or 8) or an integer input vector footnote:[This routine
+is based on the high performance algorithm from Michel Olagnon's
+http://www.fortran-2000.com/rank/[ORDERPACK]. It is also analogous to
+the +indexx+ subroutine from the _Numerical recipes_ (very restrictive
+license disallowing source code distribution).]. The first parameter of the
 subroutine defines the vector to be sorted, the second is the calculated
 integer indexing vector. The input vector can then be easily sorted by the
 integer sorting indices.
