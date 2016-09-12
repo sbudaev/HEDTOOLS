@@ -1915,8 +1915,9 @@ Outline of the AHA Model code. So far very little.
 
 Implementation of the genome.
 
-.Genome object types
-image:doc/img/aha_genome_01.svg[width=380,align="left"]
+Genome object types
+
+image:doc/img/aha_genome_01.svg[width=400,align="left"]
 
 Implementation of the chromosome structure. Arbitrary number of chromosomes,
 arbitrary size (alleles), arbitrary number of additive components. Arbitrary
@@ -1927,8 +1928,9 @@ neurobiological modules etc.) are represented by the boolean Gene x Phenotype
 matrices. Any arbitrary structure can be implemented, many traits controlled
 by a single gene, many genes controlling a specific single trait.
 
-.Genetic trait architecture
-image:doc/img/aha_genome_02.svg[width=380,align="left"]
+Genetic trait architecture
+
+image:doc/img/aha_genome_02.svg[width=400,align="left"]
 
 ////////////////////////////////////////////////////////////////////////////////
 Note -- shading in svg files produced by LO lead to massive memory leak in
@@ -1941,8 +1943,9 @@ The individual agent
 UML (loose) class diagram for the structure of the individual agents, from
 individual person to the population membership (incomplete yet):
 
-.Individual, class hierarchy
-image:doc/img/aha_individual_class.svg[width=380,align="left"]
+Individual, class hierarchy
+
+image:doc/img/aha_individual_class.svg[width=510,align="left"]
 
 Mostly to be written yet.
 
