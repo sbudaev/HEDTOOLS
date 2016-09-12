@@ -1221,13 +1221,17 @@ merge changes from the parent branch back to the current branch (e.g. from
 trunk to +budaev+ and +natasha+). Thus does not allow the code to diverge
 too far and reduces the chances to get version conflicts. Merging ongoing
 changes from the parent project is easy. For example, the following will merge
-changes from trunk back to the current branch (note that ^ substitutes the
+changes *from trunk back to the current branch* (note that +^+ substitutes the
 SVN repository web address):
 
 [source,bash]
 --------------------------------------------------------------------------------
 svn merge ^/trunk/HEDTOOLS/
 --------------------------------------------------------------------------------
+
+That is, with this syntax we have provided the *source* for merging
+(+^/trunk/HEDTOOLS/+) *into the current directory*.
+
 indexterm:[Subversion,merge]
 
 Merge can be conducted in both ways (to and from different branches to keep
