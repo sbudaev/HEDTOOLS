@@ -1909,8 +1909,44 @@ upper-level directory, so ../. The <<MAKE_OVERVIEW, make system>> used to
 build the model cares about the HEDTOOLS modules automatically.
 ================================================================================
 
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+*** CLASS DIAGRAMS AND THE BEAST FRAMEWORK TOOLS FOLLOW BELOW
+////////////////////////////////////////////////////////////////////////////////
+
 Building blocks of the AHA Model
 --------------------------------
+
+////////////////////////////////////////////////////////////////////////////////
+Note -- shading in svg files produced by LO lead to massive memory leak in
+        asciidos, use colour.
+////////////////////////////////////////////////////////////////////////////////
+
+The environment
+~~~~~~~~~~~~~~~
+
+Outline of THE_ENVIRONMENT module.
+
+image:doc/img/aha_environment_diagr.svg[width=510,align="left"]
+
+
+The individual agent
+~~~~~~~~~~~~~~~~~~~~
+
+UML (loose) class diagram for the structure of the individual agents, from
+individual person to the population membership (incomplete yet):
+
+Individual, class hierarchy
+
+image:doc/img/aha_individual_class.svg[width=510,align="left"]
+
 
 The genome structure
 ~~~~~~~~~~~~~~~~~~~~
@@ -1936,23 +1972,16 @@ Genetic trait architecture
 
 image:doc/img/aha_genome_02.svg[width=400,align="left"]
 
-////////////////////////////////////////////////////////////////////////////////
-Note -- shading in svg files produced by LO lead to massive memory leak in
-        asciidos, use colour.
-////////////////////////////////////////////////////////////////////////////////
-
-The individual agent
-~~~~~~~~~~~~~~~~~~~~
-
-UML (loose) class diagram for the structure of the individual agents, from
-individual person to the population membership (incomplete yet):
-
-Individual, class hierarchy
-
-image:doc/img/aha_individual_class.svg[width=510,align="left"]
-
 Mostly to be written yet.
 
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+*** HEDTOOLS DOCUMENTATION FOLLOWS BELOW
+////////////////////////////////////////////////////////////////////////////////
 
 Module: BASE_UTILS
 ------------------
