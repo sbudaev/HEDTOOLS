@@ -95,7 +95,7 @@
   </font>
  </defs>
  <defs class="TextShapeIndex">
-  <g ooo:slide="id1" ooo:id-list="id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20 id21 id22 id23 id24 id25 id26 id27 id28 id29 id30 id31 id32 id33 id34 id35"/>
+  <g ooo:slide="id1" ooo:id-list="id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20 id21 id22 id23 id24 id25 id26 id27 id28 id29 id30 id31 id32 id33 id34 id35 id36"/>
  </defs>
  <defs class="EmbeddedBulletChars">
   <g id="bullet-char-template(57356)" transform="scale(0.00048828125,-0.00048828125)">
@@ -168,6 +168,7 @@
      </g>
      <g class="com.sun.star.drawing.CustomShape">
       <g id="id8">
+       <path fill="rgb(230,230,230)" stroke="none" d="M 17100,10000 L 13600,10000 13600,8000 20600,8000 20600,10000 17100,10000 Z"/>
        <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 17100,10000 L 13600,10000 13600,8000 20600,8000 20600,10000 17100,10000 Z"/>
        <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="15915" y="9151"/><tspan class="TextPosition" x="15915" y="9151"><tspan fill="rgb(0,0,0)" stroke="none">HABITAT</tspan></tspan></tspan></text>
       </g>
@@ -1383,6 +1384,12 @@
       <g id="id35">
        <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 9400,9000 L 13020,9000"/>
        <path fill="rgb(0,0,0)" stroke="none" d="M 13600,9000 L 13300,9150 13000,9000 13300,8850 13600,9000 Z"/>
+      </g>
+     </g>
+     <g class="com.sun.star.drawing.ConnectorShape">
+      <g id="id36">
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 17100,11200 L 17100,10580"/>
+       <path fill="rgb(0,0,0)" stroke="none" d="M 17100,10000 L 17250,10300 17100,10600 16950,10300 17100,10000 Z"/>
       </g>
      </g>
     </g>
