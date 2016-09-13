@@ -95,7 +95,7 @@
   </font>
  </defs>
  <defs class="TextShapeIndex">
-  <g ooo:slide="id1" ooo:id-list="id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20 id21 id22 id23 id24 id25 id26 id27 id28 id29 id30 id31 id32 id33 id34"/>
+  <g ooo:slide="id1" ooo:id-list="id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20 id21 id22 id23 id24 id25 id26 id27 id28 id29 id30 id31 id32 id33 id34 id35"/>
  </defs>
  <defs class="EmbeddedBulletChars">
   <g id="bullet-char-template(57356)" transform="scale(0.00048828125,-0.00048828125)">
@@ -168,25 +168,25 @@
      </g>
      <g class="com.sun.star.drawing.CustomShape">
       <g id="id8">
-       <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 17100,9700 L 13600,9700 13600,7700 20600,7700 20600,9700 17100,9700 Z"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="15915" y="8851"/><tspan class="TextPosition" x="15915" y="8851"><tspan fill="rgb(0,0,0)" stroke="none">HABITAT</tspan></tspan></tspan></text>
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 17100,10000 L 13600,10000 13600,8000 20600,8000 20600,10000 17100,10000 Z"/>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="15915" y="9151"/><tspan class="TextPosition" x="15915" y="9151"><tspan fill="rgb(0,0,0)" stroke="none">HABITAT</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.CustomShape">
       <g id="id9">
-       <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 9600,13100 L 7100,13100 7100,11100 12100,11100 12100,13100 9600,13100 Z"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="8076" y="12251"/><tspan class="TextPosition" x="8076" y="12251"><tspan fill="rgb(0,0,0)" stroke="none">FOOD_ITEM</tspan></tspan></tspan></text>
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 8800,13200 L 6300,13200 6300,11200 11300,11200 11300,13200 8800,13200 Z"/>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="7276" y="12351"/><tspan class="TextPosition" x="7276" y="12351"><tspan fill="rgb(0,0,0)" stroke="none">FOOD_ITEM</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.ConnectorShape">
       <g id="id10">
-       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 17100,7700 L 17100,7331"/>
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 17100,8000 L 17100,7331"/>
        <path fill="rgb(0,0,0)" stroke="none" d="M 17100,7000 L 17278,7355 16923,7355 17100,7000 Z M 17100,7053 L 16961,7331 17239,7331 17100,7053 Z"/>
       </g>
      </g>
      <g class="com.sun.star.drawing.ConnectorShape">
       <g id="id11">
-       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 9600,11100 L 9600,10500 11100,10500 11100,4531"/>
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 8800,11200 L 8800,10550 11100,10550 11100,4531"/>
        <path fill="rgb(0,0,0)" stroke="none" d="M 11100,4200 L 11278,4555 10923,4555 11100,4200 Z M 11100,4253 L 10961,4531 11239,4531 11100,4253 Z"/>
       </g>
      </g>
@@ -198,14 +198,14 @@
      </g>
      <g class="com.sun.star.drawing.CustomShape">
       <g id="id13">
-       <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 16700,13100 L 13200,13100 13200,11100 20200,11100 20200,13100 16700,13100 Z"/>
-       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="14499" y="12251"/><tspan class="TextPosition" x="14499" y="12251"><tspan fill="rgb(0,0,0)" stroke="none">FOOD_RESOURCE</tspan></tspan></tspan></text>
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="100" stroke-linejoin="round" d="M 17100,13200 L 13600,13200 13600,11200 20600,11200 20600,13200 17100,13200 Z"/>
+       <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Mono, monospace" font-size="564px" font-weight="700"><tspan class="TextPosition" x="14899" y="12351"/><tspan class="TextPosition" x="14899" y="12351"><tspan fill="rgb(0,0,0)" stroke="none">FOOD_RESOURCE</tspan></tspan></tspan></text>
       </g>
      </g>
      <g class="com.sun.star.drawing.ConnectorShape">
       <g id="id14">
-       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 12100,12100 L 12620,12100"/>
-       <path fill="rgb(0,0,0)" stroke="none" d="M 13200,12100 L 12900,12250 12600,12100 12900,11950 13200,12100 Z"/>
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 11300,12200 L 13020,12200"/>
+       <path fill="rgb(0,0,0)" stroke="none" d="M 13600,12200 L 13300,12350 13000,12200 13300,12050 13600,12200 Z"/>
       </g>
      </g>
      <g class="com.sun.star.drawing.ConnectorShape">
@@ -1377,6 +1377,12 @@
       <g id="id34">
        <path fill="rgb(255,255,255)" stroke="none" d="M 13450,17200 L 12900,17200 12900,16000 14000,16000 14000,17200 13450,17200 Z"/>
        <path fill="none" stroke="rgb(192,192,192)" stroke-width="100" stroke-linejoin="round" d="M 13450,17200 L 12900,17200 12900,16000 14000,16000 14000,17200 13450,17200 Z"/>
+      </g>
+     </g>
+     <g class="com.sun.star.drawing.ConnectorShape">
+      <g id="id35">
+       <path fill="none" stroke="rgb(0,0,0)" stroke-width="50" stroke-linejoin="round" d="M 9400,9000 L 13020,9000"/>
+       <path fill="rgb(0,0,0)" stroke="none" d="M 13600,9000 L 13300,9150 13000,9000 13300,8850 13600,9000 Z"/>
       </g>
      </g>
     </g>
