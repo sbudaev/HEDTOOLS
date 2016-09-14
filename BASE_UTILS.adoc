@@ -1785,6 +1785,22 @@ Module THE_ENVIRONMENT -- Implements the environment and its variation.
 
 Module THE_EVOLUTION -- Implements the genetic algorithm.
 
+IMPORTANT: Solaris Studio Fortran compiler f95 v. 12.4 does not support all
+           object-oriented features (most probably the type-bound functions
+           and polymorphic classes) of the Fortran 2003 standard and
+           does not compile the AHA model code issuing this error: +f90:
+           Internal Error, code=fw-interface-ctyp1-796+. Though, it does
+           compile the more portable non-object-oriented +HEDTOOLS+ modules
+           without issues. It is believed that the next major release of Oracle
+           Studio will include full support of these Fortran features. Recent
+           Intel and GNU compilers work as expected with all object-oriented
+           code.
+indexterm:[compiler,GNU,gfortran]
+indexterm:[compiler,Intel Fortran]
+indexterm:[compiler,Oracle Fortran]
+indexterm:[compiler limitation]
+indexterm:[object-oriented programming]
+
 Modules in Fortran
 ~~~~~~~~~~~~~~~~~~
 
