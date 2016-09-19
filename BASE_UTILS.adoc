@@ -2270,7 +2270,7 @@ Subroutines: ARRAY_INDEX and ARRAY_RANK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[ARRAY_INDEX]
 indexterm:[ARRAY_RANK]
-indexterm:[sorting index]
+indexterm:[vector, sorting index]
 
 *ARRAY_INDEX* calculates an integer sorting index vector for sorting a
 real (kind 4 or 8) or an integer input vector footnote:[This routine
@@ -2330,7 +2330,7 @@ end program TESTRANKS
 
 The code below shows partial indexing:
 
-indexterm:[sorting index, partial]
+indexterm:[vector, sorting index, partial]
 
 [source]
 --------------------------------------------------------------------------------
