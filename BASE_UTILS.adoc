@@ -2282,6 +2282,12 @@ subroutine defines the vector to be sorted, the second is the calculated
 integer indexing vector. The input vector can then be easily sorted by the
 integer sorting indices.
 
+The routines can add the *third* scalar integer parameter, the maximum order to
+index the array. In such cases, this will result in partial indexing ordering,
+which is much faster if we are not interested in the whole array (e.g.
+intetested in finding, indexing and ranking the smallest +N+ elements). See
+the code example below.
+
 Example:
 
 [source]
@@ -2322,6 +2328,36 @@ program TESTRANKS
 end program TESTRANKS
 --------------------------------------------------------------------------------
 
+The code below shows partial indexing:
+
+indexterm:[sorting index, partial]
+
+[source]
+--------------------------------------------------------------------------------
+program TESTRANKS
+  use BASE_UTILS
+  integer :: i
+  real(4), dimension(10) :: X=[ 13.,12.,14.,11.,15.,99.,16.,18.,17.,19.]
+
+  integer, dimension(10) :: Id = 0, Ranks
+
+  integer :: order
+
+  order=7                        ! Set the order, indexing is done up to this.
+
+  Id=-9999; Ranks=-9999          ! Note that we need to initialise the index
+                                 ! vector before use to avoid errors (depends
+                                 ! on how compiler treats uninitialised arrays).
+
+  call ARRAY_INDEX(X, Id, order) ! Calculate index vector for X:
+                                 !  4  2  1  3  5  7  9  -9999 -9999 -9999
+  call ARRAY_RANK(Id, Ranks)     ! Calculate rank scores for the original X:
+                                 !  3  2  4  1  5  -9999  6  -9999 7  -9999
+  print *, Id
+  print *, Ranks
+
+end program TESTRANKS
+--------------------------------------------------------------------------------
 
 Subroutine: RANDOM_SEED_INIT_SIMPLE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

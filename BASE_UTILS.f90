@@ -91,6 +91,10 @@ interface ARRAY_INDEX         ! Generic interface for calculating an
   module procedure MRGRNK_R8
   module procedure MRGRNK_I
 
+  module procedure RNKPAR_R4  ! Generic interfaces for partial ranking
+  module procedure RNKPAR_R8  ! obtained by adding an additional integer
+  module procedure RNKPAR_I
+
 end interface ARRAY_INDEX
 
 
@@ -1755,5 +1759,1607 @@ integer :: i
   end do
 
 end subroutine ARRAY_RANK
+
+!-------------------------------------------------------------------------------
+
+subroutine RNKPAR_R4 (xdont, irngt, nord)
+!*******************************************************************************
+! RNKPAR_R4
+! PURPOSE: Partial ranking of a vector up to a specific order.
+!
+! CALL PARAMETERS: Real vector for ranking, integer vector containing
+!          the ranks obtained, and an integer scalar value setting the
+!          ranking limit.
+! NOTES: From public domain code http://www.fortran-2000.com/rank/
+!        Author: Michel Olagnon <Michel.Olagnon@ifremer.fr>.
+!        IMPORTANT: This is a performance-optimised code.
+!*******************************************************************************
+!
+!  Ranks partially XDONT by IRNGT, up to order NORD
+! __________________________________________________________
+!  This routine uses a pivoting strategy such as the one of
+!  finding the median based on the quicksort algorithm, but
+!  we skew the pivot choice to try to bring it to NORD as
+!  fast as possible. It uses 2 temporary arrays, where it
+!  stores the indices of the values smaller than the pivot
+!  (ILOWT), and the indices of values larger than the pivot
+!  that we might still need later on (IHIGT). It iterates
+!  until it can bring the number of values in ILOWT to
+!  exactly NORD, and then uses an insertion sort to rank
+!  this set, since it is supposedly small.
+!  Michel Olagnon - Feb. 2000
+! __________________________________________________________
+! _________________________________________________________
+      real, dimension (:), intent (in) :: xdont
+      integer, dimension (:), intent (out) :: irngt
+      integer, intent (in) :: nord
+! __________________________________________________________
+      real    :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
+!
+      integer, dimension (size(xdont)) :: ilowt, ihigt
+      integer :: ndon, jhig, jlow, ihig, iwrk, iwrk1, iwrk2, iwrk3
+      integer :: ideb, jdeb, imil, ifin, nwrk, icrs, idcr, ilow
+      integer :: jlm2, jlm1, jhm2, jhm1
+!
+      ndon = size (xdont)
+!
+!    first loop is used to fill-in ilowt, ihigt at the same time
+!
+      if (ndon < 2) then
+         if (nord >= 1) irngt (1) = 1
+         return
+      end if
+!
+!  one chooses a pivot, best estimate possible to put fractile near
+!  mid-point of the set of low values.
+!
+      if (xdont(2) < xdont(1)) then
+         ilowt (1) = 2
+         ihigt (1) = 1
+      else
+         ilowt (1) = 1
+         ihigt (1) = 2
+      end if
+!
+      if (ndon < 3) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         return
+      end if
+!
+      if (xdont(3) <= xdont(ihigt(1))) then
+         ihigt (2) = ihigt (1)
+         if (xdont(3) < xdont(ilowt(1))) then
+            ihigt (1) = ilowt (1)
+            ilowt (1) = 3
+         else
+            ihigt (1) = 3
+         end if
+      else
+         ihigt (2) = 3
+      end if
+!
+      if (ndon < 4) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         if (nord >= 3) irngt (3) = ihigt (2)
+         return
+      end if
+!
+      if (xdont(ndon) <= xdont(ihigt(1))) then
+         ihigt (3) = ihigt (2)
+         ihigt (2) = ihigt (1)
+         if (xdont(ndon) < xdont(ilowt(1))) then
+            ihigt (1) = ilowt (1)
+            ilowt (1) = ndon
+         else
+            ihigt (1) = ndon
+         end if
+      else
+         if (xdont (ndon) < xdont (ihigt(2))) then
+            ihigt (3) = ihigt (2)
+            ihigt (2) = ndon
+         else
+            ihigt (3) = ndon
+         endif
+      end if
+!
+      if (ndon < 5) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         if (nord >= 3) irngt (3) = ihigt (2)
+         if (nord >= 4) irngt (4) = ihigt (3)
+         return
+      end if
+!
+      jdeb = 0
+      ideb = jdeb + 1
+      jlow = ideb
+      jhig = 3
+      xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+                                   (xdont(ihigt(3))-xdont(ilowt(ideb)))
+      if (xpiv >= xdont(ihigt(1))) then
+         xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+                                      (xdont(ihigt(2))-xdont(ilowt(ideb)))
+         if (xpiv >= xdont(ihigt(1))) &
+             xpiv = xdont (ilowt(ideb)) + real (2*nord) / real (ndon+nord) * &
+                                          (xdont(ihigt(1))-xdont(ilowt(ideb)))
+      end if
+      xpiv0 = xpiv
+!
+!  one puts values > pivot in the end and those <= pivot
+!  at the beginning. this is split in 2 cases, so that
+!  we can skip the loop test a number of times.
+!  as we are also filling in the work arrays at the same time
+!  we stop filling in the ihigt array as soon as we have more
+!  than enough values in ilowt.
+!
+!
+      if (xdont(ndon) > xpiv) then
+         icrs = 3
+         do
+            icrs = icrs + 1
+            if (xdont(icrs) > xpiv) then
+               if (icrs >= ndon) exit
+               jhig = jhig + 1
+               ihigt (jhig) = icrs
+            else
+               jlow = jlow + 1
+               ilowt (jlow) = icrs
+               if (jlow >= nord) exit
+            end if
+         end do
+!
+!  one restricts further processing because it is no use
+!  to store more high values
+!
+         if (icrs < ndon-1) then
+            do
+               icrs = icrs + 1
+               if (xdont(icrs) <= xpiv) then
+                  jlow = jlow + 1
+                  ilowt (jlow) = icrs
+               else if (icrs >= ndon) then
+                  exit
+               end if
+            end do
+         end if
+!
+!
+      else
+!
+!  same as above, but this is not as easy to optimize, so the
+!  do-loop is kept
+!
+         do icrs = 4, ndon - 1
+            if (xdont(icrs) > xpiv) then
+               jhig = jhig + 1
+               ihigt (jhig) = icrs
+            else
+               jlow = jlow + 1
+               ilowt (jlow) = icrs
+               if (jlow >= nord) exit
+            end if
+         end do
+!
+         if (icrs < ndon-1) then
+            do
+               icrs = icrs + 1
+               if (xdont(icrs) <= xpiv) then
+                  if (icrs >= ndon) exit
+                  jlow = jlow + 1
+                  ilowt (jlow) = icrs
+               end if
+            end do
+         end if
+      end if
+!
+      jlm2 = 0
+      jlm1 = 0
+      jhm2 = 0
+      jhm1 = 0
+      do
+         if (jlow == nord) exit
+         if (jlm2 == jlow .and. jhm2 == jhig) then
+!
+!   we are oscillating. perturbate by bringing jlow closer by one
+!   to nord
+!
+           if (nord > jlow) then
+                xmin = xdont (ihigt(1))
+                ihig = 1
+                do icrs = 2, jhig
+                   if (xdont(ihigt(icrs)) < xmin) then
+                      xmin = xdont (ihigt(icrs))
+                      ihig = icrs
+                   end if
+                end do
+!
+                jlow = jlow + 1
+                ilowt (jlow) = ihigt (ihig)
+                ihigt (ihig) = ihigt (jhig)
+                jhig = jhig - 1
+             else
+                ilow = ilowt (jlow)
+                xmax = xdont (ilow)
+                do icrs = 1, jlow
+                   if (xdont(ilowt(icrs)) > xmax) then
+                      iwrk = ilowt (icrs)
+                      xmax = xdont (iwrk)
+                      ilowt (icrs) = ilow
+                      ilow = iwrk
+                   end if
+                end do
+                jlow = jlow - 1
+             end if
+         end if
+         jlm2 = jlm1
+         jlm1 = jlow
+         jhm2 = jhm1
+         jhm1 = jhig
+!
+!   we try to bring the number of values in the low values set
+!   closer to nord.
+!
+        select case (nord-jlow)
+         case (2:)
+!
+!   not enough values in low part, at least 2 are missing
+!
+            select case (jhig)
+!!!!!           case default
+!!!!!              write (*,*) "assertion failed"
+!!!!!              stop
+!
+!   we make a special case when we have so few values in
+!   the high values set that it is bad performance to choose a pivot
+!   and apply the general algorithm.
+!
+            case (2)
+               if (xdont(ihigt(1)) <= xdont(ihigt(2))) then
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (1)
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (2)
+               else
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (2)
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (1)
+               end if
+               exit
+!
+            case (3)
+!
+!
+               iwrk1 = ihigt (1)
+               iwrk2 = ihigt (2)
+               iwrk3 = ihigt (3)
+               if (xdont(iwrk2) < xdont(iwrk1)) then
+                  ihigt (1) = iwrk2
+                  ihigt (2) = iwrk1
+                  iwrk2 = iwrk1
+               end if
+               if (xdont(iwrk2) > xdont(iwrk3)) then
+                  ihigt (3) = iwrk2
+                  ihigt (2) = iwrk3
+                  iwrk2 = iwrk3
+                  if (xdont(iwrk2) < xdont(ihigt(1))) then
+                     ihigt (2) = ihigt (1)
+                     ihigt (1) = iwrk2
+                  end if
+               end if
+               jhig = 0
+               do icrs = jlow + 1, nord
+                  jhig = jhig + 1
+                  ilowt (icrs) = ihigt (jhig)
+               end do
+               jlow = nord
+               exit
+!
+            case (4:)
+!
+!
+               xpiv0 = xpiv
+               ifin = jhig
+!
+!  one chooses a pivot from the 2 first values and the last one.
+!  this should ensure sufficient renewal between iterations to
+!  avoid worst case behavior effects.
+!
+               iwrk1 = ihigt (1)
+               iwrk2 = ihigt (2)
+               iwrk3 = ihigt (ifin)
+               if (xdont(iwrk2) < xdont(iwrk1)) then
+                  ihigt (1) = iwrk2
+                  ihigt (2) = iwrk1
+                  iwrk2 = iwrk1
+               end if
+               if (xdont(iwrk2) > xdont(iwrk3)) then
+                  ihigt (ifin) = iwrk2
+                  ihigt (2) = iwrk3
+                  iwrk2 = iwrk3
+                  if (xdont(iwrk2) < xdont(ihigt(1))) then
+                     ihigt (2) = ihigt (1)
+                     ihigt (1) = iwrk2
+                  end if
+               end if
+!
+               jdeb = jlow
+               nwrk = nord - jlow
+               iwrk1 = ihigt (1)
+               jlow = jlow + 1
+               ilowt (jlow) = iwrk1
+               xpiv = xdont (iwrk1) + real (nwrk) / real (nord+nwrk) * &
+                                      (xdont(ihigt(ifin))-xdont(iwrk1))
+!
+!  one takes values <= pivot to ilowt
+!  again, 2 parts, one where we take care of the remaining
+!  high values because we might still need them, and the
+!  other when we know that we will have more than enough
+!  low values in the end.
+!
+               jhig = 0
+               do icrs = 2, ifin
+                  if (xdont(ihigt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ihigt (icrs)
+                     if (jlow >= nord) exit
+                  else
+                     jhig = jhig + 1
+                     ihigt (jhig) = ihigt (icrs)
+                  end if
+               end do
+!
+               do icrs = icrs + 1, ifin
+                  if (xdont(ihigt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ihigt (icrs)
+                  end if
+               end do
+           end select
+!
+!
+         case (1)
+!
+!  only 1 value is missing in low part
+!
+            xmin = xdont (ihigt(1))
+            ihig = 1
+            do icrs = 2, jhig
+               if (xdont(ihigt(icrs)) < xmin) then
+                  xmin = xdont (ihigt(icrs))
+                  ihig = icrs
+               end if
+            end do
+!
+            jlow = jlow + 1
+            ilowt (jlow) = ihigt (ihig)
+            exit
+!
+!
+         case (0)
+!
+!  low part is exactly what we want
+!
+            exit
+!
+!
+         case (-5:-1)
+!
+!  only few values too many in low part
+!
+            irngt (1) = ilowt (1)
+            do icrs = 2, nord
+               iwrk = ilowt (icrs)
+               xwrk = xdont (iwrk)
+               do idcr = icrs - 1, 1, - 1
+                  if (xwrk < xdont(irngt(idcr))) then
+                     irngt (idcr+1) = irngt (idcr)
+                  else
+                     exit
+                  end if
+               end do
+               irngt (idcr+1) = iwrk
+            end do
+!
+            xwrk1 = xdont (irngt(nord))
+            do icrs = nord + 1, jlow
+               if (xdont(ilowt (icrs)) < xwrk1) then
+                  xwrk = xdont (ilowt (icrs))
+                  do idcr = nord - 1, 1, - 1
+                     if (xwrk >= xdont(irngt(idcr))) exit
+                     irngt (idcr+1) = irngt (idcr)
+                  end do
+                  irngt (idcr+1) = ilowt (icrs)
+                  xwrk1 = xdont (irngt(nord))
+               end if
+            end do
+!
+            return
+!
+!
+         case (:-6)
+!
+! last case: too many values in low part
+!
+            ideb = jdeb + 1
+            imil = (jlow+ideb) / 2
+            ifin = jlow
+!
+!  one chooses a pivot from 1st, last, and middle values
+!
+            if (xdont(ilowt(imil)) < xdont(ilowt(ideb))) then
+               iwrk = ilowt (ideb)
+               ilowt (ideb) = ilowt (imil)
+               ilowt (imil) = iwrk
+            end if
+            if (xdont(ilowt(imil)) > xdont(ilowt(ifin))) then
+               iwrk = ilowt (ifin)
+               ilowt (ifin) = ilowt (imil)
+               ilowt (imil) = iwrk
+               if (xdont(ilowt(imil)) < xdont(ilowt(ideb))) then
+                  iwrk = ilowt (ideb)
+                  ilowt (ideb) = ilowt (imil)
+                  ilowt (imil) = iwrk
+               end if
+            end if
+            if (ifin <= 3) exit
+!
+            xpiv = xdont (ilowt(1)) + real(nord)/real(jlow+nord) * &
+                                      (xdont(ilowt(ifin))-xdont(ilowt(1)))
+            if (jdeb > 0) then
+               if (xpiv <= xpiv0) &
+                   xpiv = xpiv0 + real(2*nord-jdeb)/real (jlow+nord) * &
+                                  (xdont(ilowt(ifin))-xpiv0)
+            else
+               ideb = 1
+            end if
+!
+!  one takes values > xpiv to ihigt
+!  however, we do not process the first values if we have been
+!  through the case when we did not have enough low values
+!
+            jhig = 0
+            jlow = jdeb
+!
+            if (xdont(ilowt(ifin)) > xpiv) then
+               icrs = jdeb
+               do
+                 icrs = icrs + 1
+                  if (xdont(ilowt(icrs)) > xpiv) then
+                     jhig = jhig + 1
+                     ihigt (jhig) = ilowt (icrs)
+                     if (icrs >= ifin) exit
+                  else
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                     if (jlow >= nord) exit
+                  end if
+               end do
+!
+               if (icrs < ifin) then
+                  do
+                     icrs = icrs + 1
+                     if (xdont(ilowt(icrs)) <= xpiv) then
+                        jlow = jlow + 1
+                        ilowt (jlow) = ilowt (icrs)
+                     else
+                        if (icrs >= ifin) exit
+                     end if
+                  end do
+               end if
+           else
+               do icrs = ideb, ifin
+                  if (xdont(ilowt(icrs)) > xpiv) then
+                     jhig = jhig + 1
+                     ihigt (jhig) = ilowt (icrs)
+                  else
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                     if (jlow >= nord) exit
+                  end if
+               end do
+!
+               do icrs = icrs + 1, ifin
+                  if (xdont(ilowt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                  end if
+               end do
+            end if
+!
+         end select
+!
+      end do
+!
+!  now, we only need to complete ranking of the 1:nord set
+!  assuming nord is small, we use a simple insertion sort
+!
+      irngt (1) = ilowt (1)
+      do icrs = 2, nord
+         iwrk = ilowt (icrs)
+         xwrk = xdont (iwrk)
+         do idcr = icrs - 1, 1, - 1
+            if (xwrk < xdont(irngt(idcr))) then
+               irngt (idcr+1) = irngt (idcr)
+            else
+               exit
+            end if
+         end do
+         irngt (idcr+1) = iwrk
+      end do
+     return
+!
+!
+end subroutine RNKPAR_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine RNKPAR_R8 (xdont, irngt, nord)
+!*******************************************************************************
+! RNKPAR_R8
+! PURPOSE: Partial ranking of a vector up to a specific order.
+!
+! CALL PARAMETERS: Real (kind 8) vector for ranking, integer vector containing
+!          the ranks obtained, and an integer scalar value setting the
+!          ranking limit.
+! NOTES: From public domain code http://www.fortran-2000.com/rank/
+!        Author: Michel Olagnon <Michel.Olagnon@ifremer.fr>.
+!        IMPORTANT: This is a performance-optimised code.
+!*******************************************************************************
+!  ranks partially xdont by irngt, up to order nord
+! __________________________________________________________
+!  this routine uses a pivoting strategy such as the one of
+!  finding the median based on the quicksort algorithm, but
+!  we skew the pivot choice to try to bring it to nord as
+!  fast as possible. it uses 2 temporary arrays, where it
+!  stores the indices of the values smaller than the pivot
+!  (ilowt), and the indices of values larger than the pivot
+!  that we might still need later on (ihigt). it iterates
+!  until it can bring the number of values in ilowt to
+!  exactly nord, and then uses an insertion sort to rank
+!  this set, since it is supposedly small.
+!  michel olagnon - feb. 2000
+! __________________________________________________________
+! __________________________________________________________
+      real (kind=8), dimension (:), intent (in) :: xdont
+      integer, dimension (:), intent (out) :: irngt
+      integer, intent (in) :: nord
+! __________________________________________________________
+      real (kind=8) :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
+!
+      integer, dimension (size(xdont)) :: ilowt, ihigt
+      integer :: ndon, jhig, jlow, ihig, iwrk, iwrk1, iwrk2, iwrk3
+      integer :: ideb, jdeb, imil, ifin, nwrk, icrs, idcr, ilow
+      integer :: jlm2, jlm1, jhm2, jhm1
+!
+      ndon = size (xdont)
+!
+!    first loop is used to fill-in ilowt, ihigt at the same time
+!
+      if (ndon < 2) then
+         if (nord >= 1) irngt (1) = 1
+         return
+      end if
+!
+!  one chooses a pivot, best estimate possible to put fractile near
+!  mid-point of the set of low values.
+!
+      if (xdont(2) < xdont(1)) then
+         ilowt (1) = 2
+         ihigt (1) = 1
+      else
+         ilowt (1) = 1
+         ihigt (1) = 2
+      end if
+!
+      if (ndon < 3) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         return
+      end if
+!
+      if (xdont(3) <= xdont(ihigt(1))) then
+         ihigt (2) = ihigt (1)
+         if (xdont(3) < xdont(ilowt(1))) then
+            ihigt (1) = ilowt (1)
+            ilowt (1) = 3
+         else
+            ihigt (1) = 3
+         end if
+      else
+         ihigt (2) = 3
+      end if
+!
+      if (ndon < 4) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         if (nord >= 3) irngt (3) = ihigt (2)
+         return
+      end if
+!
+      if (xdont(ndon) <= xdont(ihigt(1))) then
+         ihigt (3) = ihigt (2)
+         ihigt (2) = ihigt (1)
+         if (xdont(ndon) < xdont(ilowt(1))) then
+            ihigt (1) = ilowt (1)
+            ilowt (1) = ndon
+         else
+            ihigt (1) = ndon
+         end if
+      else
+         if (xdont (ndon) < xdont (ihigt(2))) then
+            ihigt (3) = ihigt (2)
+            ihigt (2) = ndon
+         else
+            ihigt (3) = ndon
+         endif
+      end if
+!
+      if (ndon < 5) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         if (nord >= 3) irngt (3) = ihigt (2)
+         if (nord >= 4) irngt (4) = ihigt (3)
+         return
+      end if
+!
+      jdeb = 0
+      ideb = jdeb + 1
+      jlow = ideb
+      jhig = 3
+      xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+                                   (xdont(ihigt(3))-xdont(ilowt(ideb)))
+      if (xpiv >= xdont(ihigt(1))) then
+         xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+                                      (xdont(ihigt(2))-xdont(ilowt(ideb)))
+         if (xpiv >= xdont(ihigt(1))) &
+             xpiv = xdont (ilowt(ideb)) + real (2*nord) / real (ndon+nord) * &
+                                          (xdont(ihigt(1))-xdont(ilowt(ideb)))
+      end if
+      xpiv0 = xpiv
+!
+!  one puts values > pivot in the end and those <= pivot
+!  at the beginning. this is split in 2 cases, so that
+!  we can skip the loop test a number of times.
+!  as we are also filling in the work arrays at the same time
+!  we stop filling in the ihigt array as soon as we have more
+!  than enough values in ilowt.
+!
+!
+      if (xdont(ndon) > xpiv) then
+         icrs = 3
+         do
+            icrs = icrs + 1
+            if (xdont(icrs) > xpiv) then
+               if (icrs >= ndon) exit
+               jhig = jhig + 1
+               ihigt (jhig) = icrs
+            else
+               jlow = jlow + 1
+               ilowt (jlow) = icrs
+               if (jlow >= nord) exit
+            end if
+         end do
+!
+!  one restricts further processing because it is no use
+!  to store more high values
+!
+         if (icrs < ndon-1) then
+            do
+               icrs = icrs + 1
+               if (xdont(icrs) <= xpiv) then
+                  jlow = jlow + 1
+                  ilowt (jlow) = icrs
+               else if (icrs >= ndon) then
+                  exit
+               end if
+            end do
+         end if
+!
+!
+      else
+!
+!  same as above, but this is not as easy to optimize, so the
+!  do-loop is kept
+!
+         do icrs = 4, ndon - 1
+            if (xdont(icrs) > xpiv) then
+               jhig = jhig + 1
+               ihigt (jhig) = icrs
+            else
+               jlow = jlow + 1
+               ilowt (jlow) = icrs
+               if (jlow >= nord) exit
+            end if
+         end do
+!
+         if (icrs < ndon-1) then
+            do
+               icrs = icrs + 1
+               if (xdont(icrs) <= xpiv) then
+                  if (icrs >= ndon) exit
+                  jlow = jlow + 1
+                  ilowt (jlow) = icrs
+               end if
+            end do
+         end if
+      end if
+!
+      jlm2 = 0
+      jlm1 = 0
+      jhm2 = 0
+      jhm1 = 0
+      do
+         if (jlow == nord) exit
+         if (jlm2 == jlow .and. jhm2 == jhig) then
+!
+!   we are oscillating. perturbate by bringing jlow closer by one
+!   to nord
+!
+           if (nord > jlow) then
+                xmin = xdont (ihigt(1))
+                ihig = 1
+                do icrs = 2, jhig
+                   if (xdont(ihigt(icrs)) < xmin) then
+                      xmin = xdont (ihigt(icrs))
+                      ihig = icrs
+                   end if
+                end do
+!
+                jlow = jlow + 1
+                ilowt (jlow) = ihigt (ihig)
+                ihigt (ihig) = ihigt (jhig)
+                jhig = jhig - 1
+             else
+                ilow = ilowt (jlow)
+                xmax = xdont (ilow)
+                do icrs = 1, jlow
+                   if (xdont(ilowt(icrs)) > xmax) then
+                      iwrk = ilowt (icrs)
+                      xmax = xdont (iwrk)
+                      ilowt (icrs) = ilow
+                      ilow = iwrk
+                   end if
+                end do
+                jlow = jlow - 1
+             end if
+         end if
+         jlm2 = jlm1
+         jlm1 = jlow
+         jhm2 = jhm1
+         jhm1 = jhig
+!
+!   we try to bring the number of values in the low values set
+!   closer to nord.
+!
+        select case (nord-jlow)
+         case (2:)
+!
+!   not enough values in low part, at least 2 are missing
+!
+            select case (jhig)
+!!!!!           case default
+!!!!!              write (*,*) "assertion failed"
+!!!!!              stop
+!
+!   we make a special case when we have so few values in
+!   the high values set that it is bad performance to choose a pivot
+!   and apply the general algorithm.
+!
+            case (2)
+               if (xdont(ihigt(1)) <= xdont(ihigt(2))) then
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (1)
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (2)
+               else
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (2)
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (1)
+               end if
+               exit
+!
+            case (3)
+!
+!
+               iwrk1 = ihigt (1)
+               iwrk2 = ihigt (2)
+               iwrk3 = ihigt (3)
+               if (xdont(iwrk2) < xdont(iwrk1)) then
+                  ihigt (1) = iwrk2
+                  ihigt (2) = iwrk1
+                  iwrk2 = iwrk1
+               end if
+               if (xdont(iwrk2) > xdont(iwrk3)) then
+                  ihigt (3) = iwrk2
+                  ihigt (2) = iwrk3
+                  iwrk2 = iwrk3
+                  if (xdont(iwrk2) < xdont(ihigt(1))) then
+                     ihigt (2) = ihigt (1)
+                     ihigt (1) = iwrk2
+                  end if
+               end if
+               jhig = 0
+               do icrs = jlow + 1, nord
+                  jhig = jhig + 1
+                  ilowt (icrs) = ihigt (jhig)
+               end do
+               jlow = nord
+               exit
+!
+            case (4:)
+!
+!
+               xpiv0 = xpiv
+               ifin = jhig
+!
+!  one chooses a pivot from the 2 first values and the last one.
+!  this should ensure sufficient renewal between iterations to
+!  avoid worst case behavior effects.
+!
+               iwrk1 = ihigt (1)
+               iwrk2 = ihigt (2)
+               iwrk3 = ihigt (ifin)
+               if (xdont(iwrk2) < xdont(iwrk1)) then
+                  ihigt (1) = iwrk2
+                  ihigt (2) = iwrk1
+                  iwrk2 = iwrk1
+               end if
+               if (xdont(iwrk2) > xdont(iwrk3)) then
+                  ihigt (ifin) = iwrk2
+                  ihigt (2) = iwrk3
+                  iwrk2 = iwrk3
+                  if (xdont(iwrk2) < xdont(ihigt(1))) then
+                     ihigt (2) = ihigt (1)
+                     ihigt (1) = iwrk2
+                  end if
+               end if
+!
+               jdeb = jlow
+               nwrk = nord - jlow
+               iwrk1 = ihigt (1)
+               jlow = jlow + 1
+               ilowt (jlow) = iwrk1
+               xpiv = xdont (iwrk1) + real (nwrk) / real (nord+nwrk) * &
+                                      (xdont(ihigt(ifin))-xdont(iwrk1))
+!
+!  one takes values <= pivot to ilowt
+!  again, 2 parts, one where we take care of the remaining
+!  high values because we might still need them, and the
+!  other when we know that we will have more than enough
+!  low values in the end.
+!
+               jhig = 0
+               do icrs = 2, ifin
+                  if (xdont(ihigt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ihigt (icrs)
+                     if (jlow >= nord) exit
+                  else
+                     jhig = jhig + 1
+                     ihigt (jhig) = ihigt (icrs)
+                  end if
+               end do
+!
+               do icrs = icrs + 1, ifin
+                  if (xdont(ihigt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ihigt (icrs)
+                  end if
+               end do
+           end select
+!
+!
+         case (1)
+!
+!  only 1 value is missing in low part
+!
+            xmin = xdont (ihigt(1))
+            ihig = 1
+            do icrs = 2, jhig
+               if (xdont(ihigt(icrs)) < xmin) then
+                  xmin = xdont (ihigt(icrs))
+                  ihig = icrs
+               end if
+            end do
+!
+            jlow = jlow + 1
+            ilowt (jlow) = ihigt (ihig)
+            exit
+!
+!
+         case (0)
+!
+!  low part is exactly what we want
+!
+            exit
+!
+!
+         case (-5:-1)
+!
+!  only few values too many in low part
+!
+            irngt (1) = ilowt (1)
+            do icrs = 2, nord
+               iwrk = ilowt (icrs)
+               xwrk = xdont (iwrk)
+               do idcr = icrs - 1, 1, - 1
+                  if (xwrk < xdont(irngt(idcr))) then
+                     irngt (idcr+1) = irngt (idcr)
+                  else
+                     exit
+                  end if
+               end do
+               irngt (idcr+1) = iwrk
+            end do
+!
+            xwrk1 = xdont (irngt(nord))
+            do icrs = nord + 1, jlow
+               if (xdont(ilowt (icrs)) < xwrk1) then
+                  xwrk = xdont (ilowt (icrs))
+                  do idcr = nord - 1, 1, - 1
+                     if (xwrk >= xdont(irngt(idcr))) exit
+                     irngt (idcr+1) = irngt (idcr)
+                  end do
+                  irngt (idcr+1) = ilowt (icrs)
+                  xwrk1 = xdont (irngt(nord))
+               end if
+            end do
+!
+            return
+!
+!
+         case (:-6)
+!
+! last case: too many values in low part
+!
+            ideb = jdeb + 1
+            imil = (jlow+ideb) / 2
+            ifin = jlow
+!
+!  one chooses a pivot from 1st, last, and middle values
+!
+            if (xdont(ilowt(imil)) < xdont(ilowt(ideb))) then
+               iwrk = ilowt (ideb)
+               ilowt (ideb) = ilowt (imil)
+               ilowt (imil) = iwrk
+            end if
+            if (xdont(ilowt(imil)) > xdont(ilowt(ifin))) then
+               iwrk = ilowt (ifin)
+               ilowt (ifin) = ilowt (imil)
+               ilowt (imil) = iwrk
+               if (xdont(ilowt(imil)) < xdont(ilowt(ideb))) then
+                  iwrk = ilowt (ideb)
+                  ilowt (ideb) = ilowt (imil)
+                  ilowt (imil) = iwrk
+               end if
+            end if
+            if (ifin <= 3) exit
+!
+            xpiv = xdont (ilowt(1)) + real(nord)/real(jlow+nord) * &
+                                      (xdont(ilowt(ifin))-xdont(ilowt(1)))
+            if (jdeb > 0) then
+               if (xpiv <= xpiv0) &
+                   xpiv = xpiv0 + real(2*nord-jdeb)/real (jlow+nord) * &
+                                  (xdont(ilowt(ifin))-xpiv0)
+            else
+               ideb = 1
+            end if
+!
+!  one takes values > xpiv to ihigt
+!  however, we do not process the first values if we have been
+!  through the case when we did not have enough low values
+!
+            jhig = 0
+            jlow = jdeb
+!
+            if (xdont(ilowt(ifin)) > xpiv) then
+               icrs = jdeb
+               do
+                 icrs = icrs + 1
+                  if (xdont(ilowt(icrs)) > xpiv) then
+                     jhig = jhig + 1
+                     ihigt (jhig) = ilowt (icrs)
+                     if (icrs >= ifin) exit
+                  else
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                     if (jlow >= nord) exit
+                  end if
+               end do
+!
+               if (icrs < ifin) then
+                  do
+                     icrs = icrs + 1
+                     if (xdont(ilowt(icrs)) <= xpiv) then
+                        jlow = jlow + 1
+                        ilowt (jlow) = ilowt (icrs)
+                     else
+                        if (icrs >= ifin) exit
+                     end if
+                  end do
+               end if
+           else
+               do icrs = ideb, ifin
+                  if (xdont(ilowt(icrs)) > xpiv) then
+                     jhig = jhig + 1
+                     ihigt (jhig) = ilowt (icrs)
+                  else
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                     if (jlow >= nord) exit
+                  end if
+               end do
+!
+               do icrs = icrs + 1, ifin
+                  if (xdont(ilowt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                  end if
+               end do
+            end if
+!
+         end select
+!
+      end do
+!
+!  now, we only need to complete ranking of the 1:nord set
+!  assuming nord is small, we use a simple insertion sort
+!
+      irngt (1) = ilowt (1)
+      do icrs = 2, nord
+         iwrk = ilowt (icrs)
+         xwrk = xdont (iwrk)
+         do idcr = icrs - 1, 1, - 1
+            if (xwrk < xdont(irngt(idcr))) then
+               irngt (idcr+1) = irngt (idcr)
+            else
+               exit
+            end if
+         end do
+         irngt (idcr+1) = iwrk
+      end do
+     return
+!
+!
+end subroutine RNKPAR_R8
+
+!-------------------------------------------------------------------------------
+
+subroutine RNKPAR_I (xdont, irngt, nord)
+!*******************************************************************************
+! RNKPAR_I
+! PURPOSE: Partial ranking of a vector up to a specific order.
+!
+! CALL PARAMETERS: Integer vector for ranking, integer vector containing
+!          the ranks obtained, and an integer scalar value setting the
+!          ranking limit.
+! NOTES: From public domain code http://www.fortran-2000.com/rank/
+!        Author: Michel Olagnon <Michel.Olagnon@ifremer.fr>.
+!        IMPORTANT: This is a performance-optimised code.
+!*******************************************************************************
+!  ranks partially xdont by irngt, up to order nord
+! __________________________________________________________
+!  this routine uses a pivoting strategy such as the one of
+!  finding the median based on the quicksort algorithm, but
+!  we skew the pivot choice to try to bring it to nord as
+!  fast as possible. it uses 2 temporary arrays, where it
+!  stores the indices of the values smaller than the pivot
+!  (ilowt), and the indices of values larger than the pivot
+!  that we might still need later on (ihigt). it iterates
+!  until it can bring the number of values in ilowt to
+!  exactly nord, and then uses an insertion sort to rank
+!  this set, since it is supposedly small.
+!  michel olagnon - feb. 2000
+! __________________________________________________________
+! __________________________________________________________
+      integer, dimension (:), intent (in)  :: xdont
+      integer, dimension (:), intent (out) :: irngt
+      integer, intent (in) :: nord
+! __________________________________________________________
+      integer :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
+!
+      integer, dimension (size(xdont)) :: ilowt, ihigt
+      integer :: ndon, jhig, jlow, ihig, iwrk, iwrk1, iwrk2, iwrk3
+      integer :: ideb, jdeb, imil, ifin, nwrk, icrs, idcr, ilow
+      integer :: jlm2, jlm1, jhm2, jhm1
+!
+      ndon = size (xdont)
+!
+!    first loop is used to fill-in ilowt, ihigt at the same time
+!
+      if (ndon < 2) then
+         if (nord >= 1) irngt (1) = 1
+         return
+      end if
+!
+!  one chooses a pivot, best estimate possible to put fractile near
+!  mid-point of the set of low values.
+!
+      if (xdont(2) < xdont(1)) then
+         ilowt (1) = 2
+         ihigt (1) = 1
+      else
+         ilowt (1) = 1
+         ihigt (1) = 2
+      end if
+!
+      if (ndon < 3) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         return
+      end if
+!
+      if (xdont(3) <= xdont(ihigt(1))) then
+         ihigt (2) = ihigt (1)
+         if (xdont(3) < xdont(ilowt(1))) then
+            ihigt (1) = ilowt (1)
+            ilowt (1) = 3
+         else
+            ihigt (1) = 3
+         end if
+      else
+         ihigt (2) = 3
+      end if
+!
+      if (ndon < 4) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         if (nord >= 3) irngt (3) = ihigt (2)
+         return
+      end if
+!
+      if (xdont(ndon) <= xdont(ihigt(1))) then
+         ihigt (3) = ihigt (2)
+         ihigt (2) = ihigt (1)
+         if (xdont(ndon) < xdont(ilowt(1))) then
+            ihigt (1) = ilowt (1)
+            ilowt (1) = ndon
+         else
+            ihigt (1) = ndon
+         end if
+      else
+         if (xdont (ndon) < xdont (ihigt(2))) then
+            ihigt (3) = ihigt (2)
+            ihigt (2) = ndon
+         else
+            ihigt (3) = ndon
+         endif
+      end if
+!
+      if (ndon < 5) then
+         if (nord >= 1) irngt (1) = ilowt (1)
+         if (nord >= 2) irngt (2) = ihigt (1)
+         if (nord >= 3) irngt (3) = ihigt (2)
+         if (nord >= 4) irngt (4) = ihigt (3)
+         return
+      end if
+!
+      jdeb = 0
+      ideb = jdeb + 1
+      jlow = ideb
+      jhig = 3
+      xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+                                   (xdont(ihigt(3))-xdont(ilowt(ideb)))
+      if (xpiv >= xdont(ihigt(1))) then
+         xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+                                      (xdont(ihigt(2))-xdont(ilowt(ideb)))
+         if (xpiv >= xdont(ihigt(1))) &
+             xpiv = xdont (ilowt(ideb)) + real (2*nord) / real (ndon+nord) * &
+                                          (xdont(ihigt(1))-xdont(ilowt(ideb)))
+      end if
+      xpiv0 = xpiv
+!
+!  one puts values > pivot in the end and those <= pivot
+!  at the beginning. this is split in 2 cases, so that
+!  we can skip the loop test a number of times.
+!  as we are also filling in the work arrays at the same time
+!  we stop filling in the ihigt array as soon as we have more
+!  than enough values in ilowt.
+!
+!
+      if (xdont(ndon) > xpiv) then
+         icrs = 3
+         do
+            icrs = icrs + 1
+            if (xdont(icrs) > xpiv) then
+               if (icrs >= ndon) exit
+               jhig = jhig + 1
+               ihigt (jhig) = icrs
+            else
+               jlow = jlow + 1
+               ilowt (jlow) = icrs
+               if (jlow >= nord) exit
+            end if
+         end do
+!
+!  one restricts further processing because it is no use
+!  to store more high values
+!
+         if (icrs < ndon-1) then
+            do
+               icrs = icrs + 1
+               if (xdont(icrs) <= xpiv) then
+                  jlow = jlow + 1
+                  ilowt (jlow) = icrs
+               else if (icrs >= ndon) then
+                  exit
+               end if
+            end do
+         end if
+!
+!
+      else
+!
+!  same as above, but this is not as easy to optimize, so the
+!  do-loop is kept
+!
+         do icrs = 4, ndon - 1
+            if (xdont(icrs) > xpiv) then
+               jhig = jhig + 1
+               ihigt (jhig) = icrs
+            else
+               jlow = jlow + 1
+               ilowt (jlow) = icrs
+               if (jlow >= nord) exit
+            end if
+         end do
+!
+         if (icrs < ndon-1) then
+            do
+               icrs = icrs + 1
+               if (xdont(icrs) <= xpiv) then
+                  if (icrs >= ndon) exit
+                  jlow = jlow + 1
+                  ilowt (jlow) = icrs
+               end if
+            end do
+         end if
+      end if
+!
+      jlm2 = 0
+      jlm1 = 0
+      jhm2 = 0
+      jhm1 = 0
+      do
+         if (jlow == nord) exit
+         if (jlm2 == jlow .and. jhm2 == jhig) then
+!
+!   we are oscillating. perturbate by bringing jlow closer by one
+!   to nord
+!
+           if (nord > jlow) then
+                xmin = xdont (ihigt(1))
+                ihig = 1
+                do icrs = 2, jhig
+                   if (xdont(ihigt(icrs)) < xmin) then
+                      xmin = xdont (ihigt(icrs))
+                      ihig = icrs
+                   end if
+                end do
+!
+                jlow = jlow + 1
+                ilowt (jlow) = ihigt (ihig)
+                ihigt (ihig) = ihigt (jhig)
+                jhig = jhig - 1
+             else
+                ilow = ilowt (jlow)
+                xmax = xdont (ilow)
+                do icrs = 1, jlow
+                   if (xdont(ilowt(icrs)) > xmax) then
+                      iwrk = ilowt (icrs)
+                      xmax = xdont (iwrk)
+                      ilowt (icrs) = ilow
+                      ilow = iwrk
+                   end if
+                end do
+                jlow = jlow - 1
+             end if
+         end if
+         jlm2 = jlm1
+         jlm1 = jlow
+         jhm2 = jhm1
+         jhm1 = jhig
+!
+!   we try to bring the number of values in the low values set
+!   closer to nord.
+!
+        select case (nord-jlow)
+         case (2:)
+!
+!   not enough values in low part, at least 2 are missing
+!
+            select case (jhig)
+!!!!!           case default
+!!!!!              write (*,*) "assertion failed"
+!!!!!              stop
+!
+!   we make a special case when we have so few values in
+!   the high values set that it is bad performance to choose a pivot
+!   and apply the general algorithm.
+!
+            case (2)
+               if (xdont(ihigt(1)) <= xdont(ihigt(2))) then
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (1)
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (2)
+               else
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (2)
+                  jlow = jlow + 1
+                  ilowt (jlow) = ihigt (1)
+               end if
+               exit
+!
+            case (3)
+!
+!
+               iwrk1 = ihigt (1)
+               iwrk2 = ihigt (2)
+               iwrk3 = ihigt (3)
+               if (xdont(iwrk2) < xdont(iwrk1)) then
+                  ihigt (1) = iwrk2
+                  ihigt (2) = iwrk1
+                  iwrk2 = iwrk1
+               end if
+               if (xdont(iwrk2) > xdont(iwrk3)) then
+                  ihigt (3) = iwrk2
+                  ihigt (2) = iwrk3
+                  iwrk2 = iwrk3
+                  if (xdont(iwrk2) < xdont(ihigt(1))) then
+                     ihigt (2) = ihigt (1)
+                     ihigt (1) = iwrk2
+                  end if
+               end if
+               jhig = 0
+               do icrs = jlow + 1, nord
+                  jhig = jhig + 1
+                  ilowt (icrs) = ihigt (jhig)
+               end do
+               jlow = nord
+               exit
+!
+            case (4:)
+!
+!
+               xpiv0 = xpiv
+               ifin = jhig
+!
+!  one chooses a pivot from the 2 first values and the last one.
+!  this should ensure sufficient renewal between iterations to
+!  avoid worst case behavior effects.
+!
+               iwrk1 = ihigt (1)
+               iwrk2 = ihigt (2)
+               iwrk3 = ihigt (ifin)
+               if (xdont(iwrk2) < xdont(iwrk1)) then
+                  ihigt (1) = iwrk2
+                  ihigt (2) = iwrk1
+                  iwrk2 = iwrk1
+               end if
+               if (xdont(iwrk2) > xdont(iwrk3)) then
+                  ihigt (ifin) = iwrk2
+                  ihigt (2) = iwrk3
+                  iwrk2 = iwrk3
+                  if (xdont(iwrk2) < xdont(ihigt(1))) then
+                     ihigt (2) = ihigt (1)
+                     ihigt (1) = iwrk2
+                  end if
+               end if
+!
+               jdeb = jlow
+               nwrk = nord - jlow
+               iwrk1 = ihigt (1)
+               jlow = jlow + 1
+               ilowt (jlow) = iwrk1
+               xpiv = xdont (iwrk1) + real (nwrk) / real (nord+nwrk) * &
+                                      (xdont(ihigt(ifin))-xdont(iwrk1))
+!
+!  one takes values <= pivot to ilowt
+!  again, 2 parts, one where we take care of the remaining
+!  high values because we might still need them, and the
+!  other when we know that we will have more than enough
+!  low values in the end.
+!
+               jhig = 0
+               do icrs = 2, ifin
+                  if (xdont(ihigt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ihigt (icrs)
+                     if (jlow >= nord) exit
+                  else
+                     jhig = jhig + 1
+                     ihigt (jhig) = ihigt (icrs)
+                  end if
+               end do
+!
+               do icrs = icrs + 1, ifin
+                  if (xdont(ihigt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ihigt (icrs)
+                  end if
+               end do
+           end select
+!
+!
+         case (1)
+!
+!  only 1 value is missing in low part
+!
+            xmin = xdont (ihigt(1))
+            ihig = 1
+            do icrs = 2, jhig
+               if (xdont(ihigt(icrs)) < xmin) then
+                  xmin = xdont (ihigt(icrs))
+                  ihig = icrs
+               end if
+            end do
+!
+            jlow = jlow + 1
+            ilowt (jlow) = ihigt (ihig)
+            exit
+!
+!
+         case (0)
+!
+!  low part is exactly what we want
+!
+            exit
+!
+!
+         case (-5:-1)
+!
+!  only few values too many in low part
+!
+            irngt (1) = ilowt (1)
+            do icrs = 2, nord
+               iwrk = ilowt (icrs)
+               xwrk = xdont (iwrk)
+               do idcr = icrs - 1, 1, - 1
+                  if (xwrk < xdont(irngt(idcr))) then
+                     irngt (idcr+1) = irngt (idcr)
+                  else
+                     exit
+                  end if
+               end do
+               irngt (idcr+1) = iwrk
+            end do
+!
+            xwrk1 = xdont (irngt(nord))
+            do icrs = nord + 1, jlow
+               if (xdont(ilowt (icrs)) < xwrk1) then
+                  xwrk = xdont (ilowt (icrs))
+                  do idcr = nord - 1, 1, - 1
+                     if (xwrk >= xdont(irngt(idcr))) exit
+                     irngt (idcr+1) = irngt (idcr)
+                  end do
+                  irngt (idcr+1) = ilowt (icrs)
+                  xwrk1 = xdont (irngt(nord))
+               end if
+            end do
+!
+            return
+!
+!
+         case (:-6)
+!
+! last case: too many values in low part
+!
+            ideb = jdeb + 1
+            imil = (jlow+ideb) / 2
+            ifin = jlow
+!
+!  one chooses a pivot from 1st, last, and middle values
+!
+            if (xdont(ilowt(imil)) < xdont(ilowt(ideb))) then
+               iwrk = ilowt (ideb)
+               ilowt (ideb) = ilowt (imil)
+               ilowt (imil) = iwrk
+            end if
+            if (xdont(ilowt(imil)) > xdont(ilowt(ifin))) then
+               iwrk = ilowt (ifin)
+               ilowt (ifin) = ilowt (imil)
+               ilowt (imil) = iwrk
+               if (xdont(ilowt(imil)) < xdont(ilowt(ideb))) then
+                  iwrk = ilowt (ideb)
+                  ilowt (ideb) = ilowt (imil)
+                  ilowt (imil) = iwrk
+               end if
+            end if
+            if (ifin <= 3) exit
+!
+            xpiv = xdont (ilowt(1)) + real(nord)/real(jlow+nord) * &
+                                      (xdont(ilowt(ifin))-xdont(ilowt(1)))
+            if (jdeb > 0) then
+               if (xpiv <= xpiv0) &
+                   xpiv = xpiv0 + real(2*nord-jdeb)/real (jlow+nord) * &
+                                  (xdont(ilowt(ifin))-xpiv0)
+            else
+               ideb = 1
+            end if
+!
+!  one takes values > xpiv to ihigt
+!  however, we do not process the first values if we have been
+!  through the case when we did not have enough low values
+!
+            jhig = 0
+            jlow = jdeb
+!
+            if (xdont(ilowt(ifin)) > xpiv) then
+               icrs = jdeb
+               do
+                 icrs = icrs + 1
+                  if (xdont(ilowt(icrs)) > xpiv) then
+                     jhig = jhig + 1
+                     ihigt (jhig) = ilowt (icrs)
+                     if (icrs >= ifin) exit
+                  else
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                     if (jlow >= nord) exit
+                  end if
+               end do
+!
+               if (icrs < ifin) then
+                  do
+                     icrs = icrs + 1
+                     if (xdont(ilowt(icrs)) <= xpiv) then
+                        jlow = jlow + 1
+                        ilowt (jlow) = ilowt (icrs)
+                     else
+                        if (icrs >= ifin) exit
+                     end if
+                  end do
+               end if
+           else
+               do icrs = ideb, ifin
+                  if (xdont(ilowt(icrs)) > xpiv) then
+                     jhig = jhig + 1
+                     ihigt (jhig) = ilowt (icrs)
+                  else
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                     if (jlow >= nord) exit
+                  end if
+               end do
+!
+               do icrs = icrs + 1, ifin
+                  if (xdont(ilowt(icrs)) <= xpiv) then
+                     jlow = jlow + 1
+                     ilowt (jlow) = ilowt (icrs)
+                  end if
+               end do
+            end if
+!
+         end select
+!
+      end do
+!
+!  now, we only need to complete ranking of the 1:nord set
+!  assuming nord is small, we use a simple insertion sort
+!
+      irngt (1) = ilowt (1)
+      do icrs = 2, nord
+         iwrk = ilowt (icrs)
+         xwrk = xdont (iwrk)
+         do idcr = icrs - 1, 1, - 1
+            if (xwrk < xdont(irngt(idcr))) then
+               irngt (idcr+1) = irngt (idcr)
+            else
+               exit
+            end if
+         end do
+         irngt (idcr+1) = iwrk
+      end do
+     return
+!
+!
+end subroutine RNKPAR_I
+
+
 
 end module BASE_UTILS
