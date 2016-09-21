@@ -4532,17 +4532,17 @@ make doc
 
 IMPORTANT: Note *doc* not docs as in the model Doxygen documentation.
 
-The default output format for this manual is PDF. Any other format supported
+The default output format for this manual is _PDF_. Any other format supported
 by asciidoc can be produced by setting the +DOCFMT+ variable. For example,
-Epub is compiled using:
+_Epub_ is compiled using:
 
 [source,bash]
 --------------------------------------------------------------------------------
 make doc DOCFMT=epub
 --------------------------------------------------------------------------------
 
-Compiling this document in PDF and other supported output formats requires
-<<ASCIIDOC_GET, asciidoc>> is markup processor.
+Compiling this document in PDF and other supported output formats requires the
+<<ASCIIDOC_GET, asciidoc>> markup processor.
 indexterm:[asciidoc]
 
 
