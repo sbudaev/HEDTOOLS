@@ -4535,15 +4535,17 @@ IMPORTANT: Note *doc* not docs as in the model Doxygen documentation.
 The default output format for this manual is _PDF_. Any other format supported
 by asciidoc can be produced by setting the +DOCFMT+ variable. For example,
 _Epub_ is compiled using:
+indexterm:[asciidoc]
 
 [source,bash]
 --------------------------------------------------------------------------------
 make doc DOCFMT=epub
 --------------------------------------------------------------------------------
 
-Compiling this document in PDF and other supported output formats requires the
-<<ASCIIDOC_GET, asciidoc>> markup processor.
-indexterm:[asciidoc]
+IMPORTANT: Compiling *this* document in PDF and other supported output formats
+           requires the <<ASCIIDOC_GET, asciidoc>> markup processor.
+           Asciidoc is not required for anything else.
+
 
 
 Using Intel Parallel Studio on Windows (command line)
