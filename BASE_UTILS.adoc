@@ -2347,14 +2347,14 @@ program TESTRANKS
   if (order>size(X)) order=size(X) ! Order must be smaller than the vector, the
                                    ! indexing procedure does NOT auto-check it.
 
-  Id=-9999; Ranks=-9999          ! Note that we need to initialise the index
-                                 ! vector before use to avoid errors (depends
-                                 ! on how compiler treats uninitialised arrays).
+  Id=-9999; Ranks=-9999            ! Note that we need to initialise the index
+                                   ! vector before use to avoid errors, depends
+                                   ! on how compiler treats uninitialised arrays.
 
-  call ARRAY_INDEX(X, Id, order) ! Calculate index vector for X:
-                                 !  4  2  1  3  5  7  9  -9999 -9999 -9999
-  call ARRAY_RANK(Id, Ranks)     ! Calculate rank scores for the original X:
-                                 !  3  2  4  1  5  -9999  6  -9999 7  -9999
+  call ARRAY_INDEX(X, Id, order)   ! Calculate index vector for X:
+                                   !  4  2  1  3  5  7  9  -9999 -9999 -9999
+  call ARRAY_RANK(Id, Ranks)       ! Calculate rank scores for the original X:
+                                   !  3  2  4  1  5  -9999  6  -9999 7  -9999
   print *, Id
   print *, Ranks
 
