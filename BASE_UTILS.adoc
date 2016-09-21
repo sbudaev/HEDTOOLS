@@ -204,6 +204,18 @@ are required to generate PDF.
 indexterm:[LaTeX]
 indexterm:[Ghostscript]
 
+
+image:doc/img/ok.svg[width=16] *Asciidoc: Markup text processor* (Recommended)
+[[ASCIIDOC_GET]]
+
+Asciidoc is a markup text processor. This manual is written in asciidoc,
+but it is not used for anything except compiling a PDF version of this
+document. Asciidoc is trivial to install on Linux, but requires more efforts
+(due to many dependencies e.g. python, LaTeX etc.) on Windows. Check out
+asciidoc web site: http://www.methods.co.nz/asciidoc/.
+indexterm:[asciidoc]
+
+
 image:doc/img/ok.svg[width=16] *Geany* (Recommended)
 [[GEANY_GET]]
 
