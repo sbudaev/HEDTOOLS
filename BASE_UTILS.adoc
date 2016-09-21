@@ -210,9 +210,10 @@ image:doc/img/ok.svg[width=16] *Asciidoc: Markup text processor* (Recommended)
 
 Asciidoc is a markup text processor. This manual is written in asciidoc,
 but it is not used for anything except compiling a PDF version of this
-document. Asciidoc is trivial to install on Linux, but requires more efforts
-(due to many dependencies e.g. python, LaTeX etc.) on Windows. Check out
-asciidoc web site: http://www.methods.co.nz/asciidoc/.
+document. Asciidoc is trivial to install on Linux (check your package
+manager), but requires more efforts (due to many dependencies e.g. python,
+LaTeX etc.) on Windows. Check out asciidoc web site: http://asciidoc.org/
+(or http://www.methods.co.nz/asciidoc/).
 indexterm:[asciidoc]
 
 
@@ -4509,6 +4510,41 @@ $ gprof MODEL.exe
 
 IMPORTANT: Profiling currently works only with the GNU toolset (GNU gfortran
            and GNU profiler).
+
+
+Compiling documentation
+^^^^^^^^^^^^^^^^^^^^^^^
+
+<<DOXY_GET, Doxygen>> documentation for the model (extracted from the source
+code comments) is produced using this command:
+
+[source,bash]
+--------------------------------------------------------------------------------
+make docs
+--------------------------------------------------------------------------------
+
+Additionally, *this document* can be compiled in the +HEDTOOLS+ directory with:
+
+[source,bash]
+--------------------------------------------------------------------------------
+make doc
+--------------------------------------------------------------------------------
+
+IMPORTANT: Note *doc* not docs as in the model Doxygen documentation.
+
+The default output format for this manual is PDF. Any other format supported
+by asciidoc can be produced by setting the +DOCFMT+ variable. For example,
+Epub is compiled using:
+
+[source,bash]
+--------------------------------------------------------------------------------
+make doc DOCFMT=epub
+--------------------------------------------------------------------------------
+
+Compiling this document in PDF and other supported output formats requires
+<<ASCIIDOC_GET, asciidoc>> is markup processor.
+indexterm:[asciidoc]
+
 
 Using Intel Parallel Studio on Windows (command line)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
