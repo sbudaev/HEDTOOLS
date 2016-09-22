@@ -1174,6 +1174,8 @@ A *branch* in Subversion is just a directory on the SVN server. It can be
 thought of in the same way as common file system directory/folder. Creating
 a new folder is easy:
 indexterm:[Subversion,branch]
+indexterm:[Subversion,branch,copy branch]
+indexterm:[Subversion,branch,move branch]
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -1200,6 +1202,8 @@ directories on the SVN server, then local copy will be in sync with the server.
 
 indexterm:[Subversion,mv,move]
 indexterm:[Subversion,cp,copy]
+indexterm:[Subversion,branch,copy branch]
+indexterm:[Subversion,branch,move branch]
 
 Make a branch copying old code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1228,6 +1232,9 @@ indexterm:[Subversion,copy]
 
 Merge changes between branches
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+indexterm:[Subversion,merge]
+indexterm:[Subversion,branch,merge branch]
 
 If several people are simultaneously working on the project, it make sense to
 merge changes from the parent branch back to the current branch (e.g. from
