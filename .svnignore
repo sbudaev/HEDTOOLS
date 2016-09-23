@@ -2,6 +2,9 @@
 #  svn propset svn:ignore -F .svnignore .
 #---------------------------------------------------------
 
+# Hidden files on Linux
+.hidden
+
 # Git files
 .git
 .gitignore
