@@ -241,12 +241,12 @@ http://recsveditor.sourceforge.net/
 https://sourceforge.net/projects/javacsveditor/
 ////////////////////////////////////////////////////////////////////////////////
 
-image:doc/img/ok.svg[width=16] *Follow: A logfile reading program* (Recommended)
+image:doc/img/ok.svg[width=16] *Follow: A logfile reading program* (Optional)
 [[FOLLOW_GET]]
 
-Following a logfile while executing a program is done trivially on Linux:
-+tail -f some_log_file.txt+. There is a Java GUI program for reading log
-files that works on all major platforms installs by just placing in some
+Following a <<TO_LOGGER, logfile>> while executing a program is done trivially
+on Linux: +tail -f some_log_file.txt+. There is a Java GUI program for reading
+log files that works on all major platforms installs by just placing in some
 directory: Follow. Available from http://sourceforge.net/projects/follow/.
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,6 +262,11 @@ Code formatting rules
 
 To get an easier and more efficient work with the code, it is good to follow
 universal rules in code formatting _consistently_.
+
+IMPORTANT: Here are some links to Fortran programming style:
+http://stellar.cleanscape.net/products/fortranlint/fortran-programming_tips.html[Coding tips]
+and http://www.fortran.com/Fortran_Style.pdf[Fortran style].
+indexterm:[Fortran Best Practices]
 
 image:doc/img/ok.svg[width=16] *Line length* should be short, *not exceeding
 80 characters*. Use the ampersand symbol +&+ to wrap lines. Too long lines may
