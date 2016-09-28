@@ -101,7 +101,7 @@ On Windows they can be installed manually from their official web sites. On
 Mac use http://brew.sh[homebrew] to install many of the utils. Below are
 some details on the Windows software.
 
-image:doc/img/ok.svg[width=16] *Fortran Compiler* (Mandatory)
+** *Fortran Compiler* (Mandatory)
 [[FORTRAN_GET]]
 
 *Intel Fortran* compiler, a commercial software available
@@ -117,7 +117,7 @@ indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Intel Fortran]
 indexterm:[compiler,Oracle Fortran]
 
-image:doc/img/ok.svg[width=16] *GNU Make* (Mandatory)
+** *GNU Make* (Mandatory)
 [[MAKE_GET]]
 
 This is an automated program build system that keeps track of changes
@@ -138,7 +138,7 @@ core utils <<GNUCORE_GET, distros for Windows>>.
 The official site of GNU make with the code, manuals etc. is here:
 https://www.gnu.org/software/make/
 
-image:doc/img/ok.svg[width=16] *Subversion* (Mandatory)
+** *Subversion* (Mandatory)
 [[SVN_GET]]
 
 <<SVN_INTRO, Subversion>> is a version control system. Windows GUI
@@ -157,7 +157,7 @@ see here: https://www.syntevo.com/smartgit/. Subversion can be integrated with
 text editors, IDEs and other tools using various third party
 <<SVN_INTEGR, plugins>>.
 
-image:doc/img/ok.svg[width=16] *Console terminal* (Highly recommended)
+** *Console terminal* (Highly recommended)
 [[CONSOLE_GET]]
 
 indexterm:[ConEmu terminal]
@@ -187,7 +187,7 @@ http://win-bash.sourceforge.net/[winbash].
 [[GNUCORE_GET]]
 
 
-image:doc/img/ok.svg[width=16] *Doxygen: Automatically generate program
+** *Doxygen: Automatically generate program
 documentation* (Highly Recommended)
 [[DOXY_GET]]
 
@@ -205,7 +205,7 @@ indexterm:[LaTeX]
 indexterm:[Ghostscript]
 
 
-image:doc/img/ok.svg[width=16] *Asciidoc: Markup text processor* (Recommended)
+** *Asciidoc: Markup text processor* (Recommended)
 [[ASCIIDOC_GET]]
 
 Asciidoc is a markup text processor. This manual is written in asciidoc,
@@ -217,7 +217,7 @@ LaTeX etc.) on Windows. Check out asciidoc web site: http://asciidoc.org/
 indexterm:[asciidoc]
 
 
-image:doc/img/ok.svg[width=16] *Geany* (Recommended)
+** *Geany* (Recommended)
 [[GEANY_GET]]
 
 Lightweight IDE, Editor for code and any text files (including
@@ -226,7 +226,7 @@ and Mac. http://www.geany.org/ Also need plugins: http://plugins.geany.org/
 (The Geany SVN plugin for Windows _requires_ command line tools like
 https://sliksvn.com/download/[SilkSvn] to work.)
 
-image:doc/img/ok.svg[width=16] *Code::Blocks for Fortran* (Recommended)
+** *Code::Blocks for Fortran* (Recommended)
 [[CODEBLOCKS_GET]]
 
 IDE for Fortran. Works with many compilers, including Intel and GNU gfortran.
@@ -241,7 +241,7 @@ http://recsveditor.sourceforge.net/
 https://sourceforge.net/projects/javacsveditor/
 ////////////////////////////////////////////////////////////////////////////////
 
-image:doc/img/ok.svg[width=16] *Follow: A logfile reading program* (Optional)
+** *Follow: A logfile reading program* (Optional)
 [[FOLLOW_GET]]
 
 Following a <<TO_LOGGER, logfile>> while executing a program is done trivially
@@ -268,7 +268,7 @@ http://stellar.cleanscape.net/products/fortranlint/fortran-programming_tips.html
 and http://www.fortran.com/Fortran_Style.pdf[Fortran style].
 indexterm:[Fortran Best Practices]
 
-image:doc/img/ok.svg[width=16] *Line length* should be short, *not exceeding
+** *Line length* should be short, *not exceeding
 80 characters*. Use the ampersand symbol +&+ to wrap lines. Too long lines may
 not work on some compilers by default and do a lot of mess when you code on
 the terminal or have to check +diff+.
@@ -294,7 +294,7 @@ call LOG_MSG ("Generation " // TOSTR(realgen) // ", took "     //       &
                " s since generation start")
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] Use +lowercase+ for most of the
+** Use +lowercase+ for most of the
 coding. Specifically, fortran keywords, intrinsic functions etc. as well as
 normal *variables* should be in +lowercase+. Global and local *parameters*
 that are not allowed to change, in +UPPERCASE+ (so they become easily
@@ -308,7 +308,7 @@ real, parameter, public :: THYROID_INIT = 0.5
 call this%hormone_init(this%thyroid_level, THYROID_GENOTYPE_PHENOTYPE, THYROID_INIT)
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] *External and library procedures* that are not
+** *External and library procedures* that are not
 part of the Fortran intrinsic set and not part of the current model code
 should be in +UPPERCASE+. So they are easy to identify. Spherically, modelling
 tools functions and subroutines from the <<HEDTOOLS_REF, HEDTOOLS>> bundle
@@ -320,7 +320,7 @@ should be in +UPPERCASE+, e.g.
 call LOG_MSG ("Generation :" // TOSTR(realgen))
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] Global *class names* and all the derived
+** Global *class names* and all the derived
 classes are in +UPPERCASE+, so they are easy to identify within the code, e.g.
 
 [source]
@@ -329,7 +329,7 @@ classes are in +UPPERCASE+, so they are easy to identify within the code, e.g.
 type, public, extends(INDIVIDUAL_GENOME) :: HORMONES
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] *Block labels* for particularly long or
+** *Block labels* for particularly long or
 important pieces of the code are in +UPPERCASE+, so they are easy to
 identify, e.g.
 
@@ -344,7 +344,7 @@ ENVIRON_RESTRICT: if (present(environment_limits)) then ! Block label UPPERCASE
 ....
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] Always explicitly use the *intrinsic type
+** Always explicitly use the *intrinsic type
 conversion functions*, whenever conversion between types is necessary -- even
 if automatic implicit conversion works correctly. This will avoid many bugs.
 
@@ -354,7 +354,7 @@ if ( ((real(sex_locus_sum,SRP)/real(sex_locus_num,SRP)) /                 &
            (ALLELERANGE_MAX - ALLELERANGE_MIN)) <= SEX_RATIO ) then
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] Always use the *result-style functions* (i.e,
+** Always use the *result-style functions* (i.e,
 with a result variable). This makes it easier to control the function type
 and avoid bugs.
 
@@ -379,7 +379,7 @@ IMPORTANT: A very helpful collection of advises and tips for efficient
            Practices]
 indexterm:[Fortran Best Practices]
 
-image:doc/img/ok.svg[width=16] *Avoid using very long lines of code.* They are
+** *Avoid using very long lines of code.* They are
 difficult to read, especially if you (or your collaborator) use terminal editor
 limited by a 80 columns terminal. Working on the HPC cluster is always via
 the terminal. Also, compilers often do not like very long lines and may *drop
@@ -395,17 +395,17 @@ IMPORTANT: In GNU gfortran compiler, +-ffree-line-length-N+ flag controls how
            default valus is *132*. *+none+* removes any limnt, so the whole
            line is used: +gfortran -ffree-line-length-none code.f90+.
 
-image:doc/img/ok.svg[width=16] *Use the ampersand +&+ line continuation symbol
+** *Use the ampersand +&+ line continuation symbol
 and indents* to format code showing its structure for easy reading.
 
-image:doc/img/ok.svg[width=16] *Avoid non-standard and non-portable Fortran
+** *Avoid non-standard and non-portable Fortran
 constructions* that work on some compilers but not in others. Intel Fortran
 compiler can be especially notorious in implementing such constructs. Refer to
 the Fortran standard: Adams, J.C _et al.,_ 2009. _The Fortran 2003 Handbook._
 Springer, DOI: 10.1007/978-1-84628-746-6.
 indexterm:[portability,compiler limitation]
 
-image:doc/img/ok.svg[width=16] *Work at high level, use these tools, use
+** *Work at high level, use these tools, use
 objects, isolate as much as possible into subroutines* In this way of coding,
 it becomes more clear what each part of the program is really doing and it
 is also easier to modify components of the program so that they don't affect
@@ -432,7 +432,7 @@ GENERATIONS_LOOP: do while &
 end do GENERATIONS_LOOP
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] *Modularise*: many small subroutines are easier
+** *Modularise*: many small subroutines are easier
 to code, test, understand, reuse, and maintain that a single monolithic piece
 or very few general subroutines. Modularity can also involve hierarchical
 organisation, it is sometimes quite useful, when a limited scope is required,
@@ -478,7 +478,7 @@ module THE_GENOME
 end module THE_GENOME
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] *Use short "atomic" procedures* rather than
+** *Use short "atomic" procedures* rather than
 long ones. A single subroutine/function should _ideally_ occupy not more
 than a single screen page (with vertical screen orientation). So the whole
 bunch of code is easy to overview and work with. "Atomic" operations are
@@ -504,7 +504,7 @@ elemental function surface_light(tstep) result (surlig)
 end function surface_light
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] *Use meaningful labels*. *Global variable
+** *Use meaningful labels*. *Global variable
 names* should have longer names, sometimes even written in full, separate
 words with underscore +_+, e.g. +some_global_variable+ so that +Emacs+,
 +Vim+ and other advanced programming editors could make use of the words
@@ -546,7 +546,7 @@ else if (dev == 4) then SELECT_DEVIANT_CLASS
 end if SELECT_DEVIANT_CLASS
 --------------------------------------------------------------------------------
 
-image:doc/img/ok.svg[width=16] *Use whole-array operations* and array slices
+** *Use whole-array operations* and array slices
 instead of loops, prefer built-in loop-free and parallel instructions and
 array assignments (+where+, +forall+ etc.): it is faster. Fortran 95,
 2003 and 2008 has several looping/array assignment constructions that
@@ -723,7 +723,7 @@ similar Matlab functions.
 Using strings
 ~~~~~~~~~~~~~
 
-image:doc/img/ok.svg[width=16] Always use *assumed length strings* defined
+** Always use *assumed length strings* defined
 as an asterisk length in subroutine and function dummy input parameters
 (+intent(in)+) rather than fixed length parameters.  The latter may result
 in a "Character length argument mismatch" compiler error (or warning) if
@@ -1470,21 +1470,21 @@ indexterm:[object-oriented programming]
 
 Object oriented programming is based on the following principles:
 
-*Abstraction:* defining and abstracting common features of objects and
+** *Abstraction:* defining and abstracting common features of objects and
 functions.
 
-*Modularity and hiding irrelevant information:* An object is written and
+** *Modularity and hiding irrelevant information:* An object is written and
 treated separately from other objects. Details about internal functioning of
 the object are effectively hidden, what is important is the _interface_ of the
 object, i.e. how it interacts with the external world. This reduces complexity.
 
-*Encapsulation:* combining components of the object to create a new object.
+** *Encapsulation:* combining components of the object to create a new object.
 
-*Inheritance:* components of objects (both data and functions) can be
+** *Inheritance:* components of objects (both data and functions) can be
 inherited across objects, e.g. properties the "genome" object inherited by
 a more general object "the individual."
 
-*Polymorphism:* the provision of a single interface to objects of different
+** *Polymorphism:* the provision of a single interface to objects of different
 types.
 
 At the most basic level the programmer defines both the *data structure*
@@ -1773,42 +1773,42 @@ image:doc/img/aha_modules.svg[width=480,align="left"]
 
 [[HEDTOOLS_REF]]
 
-Module <<TO_BASE_UTILS, BASE_UTILS>> -- utility functions.
+** Module <<TO_BASE_UTILS, BASE_UTILS>> -- utility functions.
 
-Module <<TO_CSV_IO, CSV_IO>> -- Data output in CSV (comma separated values)
+** Module <<TO_CSV_IO, CSV_IO>> -- Data output in CSV (comma separated values)
        format.
 
-Module <<TO_RANDOM, BASE_RANDOM>> -- Utilities for random number generation.
+** Module <<TO_RANDOM, BASE_RANDOM>> -- Utilities for random number generation.
 
-Module <<TO_LOGGER, LOGGER>> -- Logging facility.
+** Module <<TO_LOGGER, LOGGER>> -- Logging facility.
 
-Module <<TO_STRINGS, BASE_STRINGS>> -- String manipulation utilities.
+** Module <<TO_STRINGS, BASE_STRINGS>> -- String manipulation utilities.
 
-Non-intrinsic <<IEEE_NONINTR, IEEE modules>> -- implement IEEE arithmetic checks
-        and exceptions tracking.
+** Non-intrinsic <<IEEE_NONINTR, IEEE modules>> -- implement IEEE arithmetic
+        checks and exceptions tracking.
 
 *The AHA Model*
 
 [[AHA_MOD_REF]]
 
-Module COMMONDATA -- Setting common parameters for the model.
+** Module COMMONDATA -- Setting common parameters for the model.
 
-Module THE_GENOME -- Implementation of the genome objects, gene, alleles,
+** Module THE_GENOME -- Implementation of the genome objects, gene, alleles,
         chromosomes.
 
-Module THE_HORMONES -- Architecture of the hormones and their functions.
+** Module THE_HORMONES -- Architecture of the hormones and their functions.
 
-Module THE_NEUROBIO -- Implements neurobiological architectures based on
+** Module THE_NEUROBIO -- Implements neurobiological architectures based on
         sigmoid function, decision making and GOS.
 
-Module THE_INDIVIDUAL -- Implements the individual agent in the final form and
-        the individual-based model functions.
+** Module THE_INDIVIDUAL -- Implements the individual agent in the final form
+        and the individual-based model functions.
 
-Module THE_POPULATION -- Implements the population(s) of agents.
+** Module THE_POPULATION -- Implements the population(s) of agents.
 
-Module THE_ENVIRONMENT -- Implements the environment and its variation.
+** Module THE_ENVIRONMENT -- Implements the environment and its variation.
 
-Module THE_EVOLUTION -- Implements the genetic algorithm.
+** Module THE_EVOLUTION -- Implements the genetic algorithm.
 
 IMPORTANT: Solaris Studio Fortran compiler f95 v. 12.4 does not support all
            object-oriented features (most probably the type-bound functions
