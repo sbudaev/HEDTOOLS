@@ -2020,9 +2020,10 @@ Mostly to be written yet.
 The perception mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Class diagram of the perception structure. Perception objects of two types,
+Class diagram of the perception structure. Perception objects of three types,
 (1) external spatial perception objects (perception depends on visual range),
-(2) internal perception objects, depend on the body
+(2) internal perception objects, depend on the body. (3) Light perception is
+separate in that it gets this environmental factor directly.
 
 image:doc/img/aha_neurobio_percept.svg[width=510,align="left"]
 
