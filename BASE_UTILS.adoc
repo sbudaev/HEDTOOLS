@@ -3607,6 +3607,23 @@ call RNORM_MATRIX(ARRAY_Z,1.,.2) ! produce 2D array of Gaussian numbers with
 call RAND_ARRAY(ARRAY_I,1,10)    ! produce 2D array of integers ranging 1 to 10
 --------------------------------------------------------------------------------
 
+Random permutation: PERMUTE_RANDOM function
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+indexterm:[PERMUTE_RANDOM]
+indexterm:[random permutation]
+indexterm:[permutation]
+
++PERMUTE_RANDOM+ produces a random permutation index array, i.e. an array of
+integers from 1 to N in a randomised order. It takes a single integer argument,
+the size of the random permutation index array (N).
+
+[source]
+--------------------------------------------------------------------------------
+print *, PERMUTE_RANDOM(10)         ! Produces:  7, 4, 5, 10, 3, 9, 2, 1, 8, 6
+print *, X(PERMUTE_RANDOM(size(X))) ! Elements of the array X in random order
+--------------------------------------------------------------------------------
+
 Usage Notes
 ~~~~~~~~~~~
 

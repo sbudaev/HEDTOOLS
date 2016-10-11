@@ -1762,4 +1762,35 @@ function RNORM_RENORMALISED_R8(mean, variance) result (fn_val)
 
 end function RNORM_RENORMALISED_R8
 
-end module BASE_RANDOM ! <EOF>
+end module BASE_RANDOM
+
+!-------------------------------------------------------------------------------
+
+function PERMUTE_RANDOM(N) result (p)
+!*******************************************************************************
+! RPERMUTE
+! PURPOSE: Produce a random integer permutation array, i.e. an array from 1 to N
+!          in a random order.
+! Author: Bart Vandewoestyne; Based on http://coding.derkeiler.com/Archive/
+!          Fortran/comp.lang.fortran/2006-03/msg00743.html
+!*******************************************************************************
+
+  integer, intent(in) :: N
+  integer, dimension(N) :: p
+
+  integer :: j, k
+  real :: u
+
+  p = 0
+
+  do j=1,N
+
+    call random_number(u)
+    k = floor(j*u) + 1
+
+    p(j) = p(k)
+    p(k) = j
+
+  end do
+
+end function PERMUTE_RANDOM ! <EOF>
