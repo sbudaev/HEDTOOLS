@@ -419,7 +419,7 @@ function RAND_I(a, b) result (randint)
     b_here = tmp
   end if
 
-  randint = a + int(RAND_R4() * (b - a + 1))
+  randint = a + int(RAND_R4() * (b - a + 1))  ! or use floor?
 
 end function RAND_I
 
