@@ -1762,8 +1762,6 @@ function RNORM_RENORMALISED_R8(mean, variance) result (fn_val)
 
 end function RNORM_RENORMALISED_R8
 
-end module BASE_RANDOM
-
 !-------------------------------------------------------------------------------
 
 function PERMUTE_RANDOM(N) result (p)
@@ -1793,4 +1791,6 @@ function PERMUTE_RANDOM(N) result (p)
 
   end do
 
-end function PERMUTE_RANDOM ! <EOF>
+end function PERMUTE_RANDOM
+
+end module BASE_RANDOM  ! <EOF>
