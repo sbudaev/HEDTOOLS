@@ -419,7 +419,12 @@ function RAND_I(a, b) result (randint)
     b_here = tmp
   end if
 
-  randint = a + int(RAND_R4() * (b - a + 1))  ! or use floor?
+  ! Use int or floor? floor returns more homogeneous numbers if negative
+  ! integers are in the range. With positive arguments int and floor eqivalent.
+  ! Note: int(-0.2)= 0, floor(-0.2)=-1
+  !       int(+0.2)= 0, floor(+0.2)= 0 , so with int there is a small local
+  !       raise in the density function, not good.
+  randint = a + floor(RAND_R4() * (b - a + 1))
 
 end function RAND_I
 
