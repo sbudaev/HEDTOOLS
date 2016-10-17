@@ -2042,6 +2042,7 @@ arrays of different objects (e.g. thousands of individual stochastic food
 items, each with specific visual range). This allows very fast processing of
 only the objects that are in proximity of the agent.
 
+image:doc/img/aha_neurobio_appraisal.svg[width=510,align="left"]
 
 
 ////////////////////////////////////////////////////////////////////////////////
