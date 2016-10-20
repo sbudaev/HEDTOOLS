@@ -3362,52 +3362,75 @@ end subroutine RNKPAR_I
 
 !-------------------------------------------------------------------------------
 
-function LINTERPOL (nn, xx, yy, x, ierr) result (y)
+function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 !*******************************************************************************
 ! LINTERPOL
-! PURPOSE: Piecewise liner interpolation.
-! CALL PARAMETERS:
+! PURPOSE: Simple piecewise liner interpolation.
+! CALL PARAMETERS: Ordered array for independent variable, array for the
+!          dependent variable, independent variable X value  to interpolate,
+!          optional integer error code.
 !
-! RETURNS:
+! RETURNS: Interpolated value Y(X)
 !
-! NOTES: Piecewise linear interpolation.  Given input arrays XX (independent
-!        variable) and YY (dependent variable), both of dimension NN,
-!        this routine finds, by linear interpolation, the value of Y(X).
-!        Array XX must be in ascending order.
-!        The flag IERR is returned as -1 if X is below the low end of XX
-!        (an error), +1 if X is above the high end of XX (also an error),
-!        or 0 if there was no error.
+! NOTES:   Piecewise linear interpolation.  Given input arrays XX (independent
+!          variable) and YY (dependent variable), both of dimension NN,
+!          this routine finds, by linear interpolation, the value of Y(X).
+!          Array XX must be in ascending order.
+!          The flag IERR is returned as -1 if X is below the low end of XX
+!          (an error), +1 if X is above the high end of XX (also an error),
+!          or 0 if there was no error.
+!          If the xx and yy input arrays are not conforming, the ier error is
+!          multiplied by 100.
+!
+!          Error codes ierr:
+!                         0 = no error;
+!                       100 = input arrays not conforming;
+!                        -1 = X below the low limit;
+!                         1 = X above the upper limit;
+!                      -101 = input arrays not conforming, X below low limit;
+!                       101 = input arrays not conforming, X above upper limit.
 !
 ! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
-!         Maryland  20771, Version 1.00a, October 29, 2013
+!         Maryland  20771; Version 1.00a, October 29, 2013
 ! From:   http://www.davidgsimpson.com/software/linterpol_f90.txt
 ! Modified by Sergey Budaev
 !*******************************************************************************
    implicit none
 
-   integer, intent(in) :: nn                  ! dimension of xx and yy arrays
-   real, dimension(nn), intent(in) :: xx, yy  ! indep and dep variable arrays
-   real, intent(in) :: x                      ! interpolate at x
-   integer, intent(out) :: ierr               ! returned error code
-   real :: y                                  ! interpolated value y(x)
-   integer :: i                               ! loop counter
+   real, dimension(:), intent(in) :: xx, yy  ! Indep. and dep. variable arrays.
+   real, intent(in) :: x                     ! Interpolate at x
+   integer, optional, intent(out) :: ierr    ! Returned error code.
+   real :: y                                 ! Interpolated value y(x).
 
-   if (x .lt. xx(1)) then                     ! if below low end of xx (error)..
-      y = yy(1)                               !  set y = first yy value
-      ierr = -1                               !  return error code -1
-   else if (x .gt. xx(nn)) then               ! if above high end of xx (error)..
-      y = yy(nn)                              !  set y = last yy value
-      ierr = +1                               !  return error code +1
-   else                                       ! if ok
-      do i = 2, nn                            ! loop to find first xx > x
+   integer :: nn                             ! dimension of xx and yy arrays
+
+   integer :: i                              ! Local counter.
+   integer :: ierr_here                      ! Local copy of ierr.
+
+   if (size(xx) == size(yy)) then            ! Check the sizes of the arrays
+      nn = size(xx)                          ! set as normal if equal...
+      ierr_here = 0
+   else
+      nn = min(size(xx),size(yy))            ! .. or to minimum size otherwise
+      ierr_here = 100                        ! (error factor updated by 100),
+   end if                                    ! extra values are ignored.
+
+   if (x .lt. xx(1)) then                    ! If below low end of xx (error)..
+      y = yy(1)                              !  set y = first yy value,
+      ierr_here = (ierr_here + 1) * (-1)     !  return error code -1 (or -101);
+   else if (x .gt. xx(nn)) then              ! if above high end of xx (error)..
+      y = yy(nn)                             !  set y = last yy value,
+      ierr_here = ierr_here + 1              !  return error code +1 (or 101),
+   else                                      ! if ok
+      do i = 2, nn                           ! loop to find first xx > x .
          if (xx(i) .gt. x) exit
       end do
-      y = (yy(i)-yy(i-1))/(xx(i)-xx(i-1))*(x-xx(i-1))+yy(i-1)  ! interpolate
-      ierr = 0                                 ! set error code to 0 (no error)
+      y = (yy(i)-yy(i-1))/(xx(i)-xx(i-1))*(x-xx(i-1))+yy(i-1) ! Do interpolate.
+      ierr_here = ierr_here                  ! set no error code to 0 (or 100).
    end if
 
-   return
+   if (present(ierr)) ierr = ierr_here
 
-end function LINTERPOL
+end function LINTERPOL_R4
 
 end module BASE_UTILS
