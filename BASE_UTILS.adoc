@@ -2316,6 +2316,34 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
+Function: LINTERPOL
+~~~~~~~~~~~~~~~~~~~
+
+indexterm:[LINTERPOL]
+indexterm:[linear interpolation]
+indexterm:[interpolation]
+
+
+*LINTERPOL* is a simple linear interpolation function. It takes a *sorted*
+independent variable (+X+) vector, a conforming (same dimensionality) dependent
+variable (+Y+) vector that set the grid data as well as a single +X+ argument
+to get the dependent variable +Y+ result of the function. An optional integer
+error error code (with the intent out) can be provided to check error code.
+
+Possible *error code values*: 0 : no error; 100 : input arrays not conforming;
+-1 : the X argument is below the low limit of the grid array; 1 : the X
+argument is above the upper grid limit; -101 : input arrays not conforming and
+X is below low limit; 101 = input arrays are not conforming and X argument is
+above the upper grid limit.
+
+The vectors and X argument
+
+[source]
+--------------------------------------------------------------------------------
+print *, LINTERPOL( [1.,2.,3.,4.,5.], [0.1, 0.5, 0.9, 0.95, 0.99], 0.2, IERR )
+--------------------------------------------------------------------------------
+
+
 Subroutines: ARRAY_INDEX and ARRAY_RANK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[ARRAY_INDEX]
