@@ -2336,7 +2336,8 @@ argument is above the upper grid limit; -101 : input arrays not conforming and
 X is below low limit; 101 = input arrays are not conforming and X argument is
 above the upper grid limit.
 
-The vectors and X argument
+The grid vectors and the +X+ argument can be real kind 4 or kind 8 values, all
+with same type (i.e. no mixing within a single call).
 
 [source]
 --------------------------------------------------------------------------------
