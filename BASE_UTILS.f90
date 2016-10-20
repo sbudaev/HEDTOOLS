@@ -3360,6 +3360,54 @@ subroutine RNKPAR_I (xdont, irngt, nord)
 !
 end subroutine RNKPAR_I
 
+!-------------------------------------------------------------------------------
 
+function LINTERPOL (nn, xx, yy, x, ierr) result (y)
+!*******************************************************************************
+! LINTERPOL
+! PURPOSE: Piecewise liner interpolation.
+! CALL PARAMETERS:
+!
+! RETURNS:
+!
+! NOTES: Piecewise linear interpolation.  Given input arrays XX (independent
+!        variable) and YY (dependent variable), both of dimension NN,
+!        this routine finds, by linear interpolation, the value of Y(X).
+!        Array XX must be in ascending order.
+!        The flag IERR is returned as -1 if X is below the low end of XX
+!        (an error), +1 if X is above the high end of XX (also an error),
+!        or 0 if there was no error.
+!
+! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
+!         Maryland  20771, Version 1.00a, October 29, 2013
+! From:   http://www.davidgsimpson.com/software/linterpol_f90.txt
+! Modified by Sergey Budaev
+!*******************************************************************************
+   implicit none
+
+   integer, intent(in) :: nn                  ! dimension of xx and yy arrays
+   real, dimension(nn), intent(in) :: xx, yy  ! indep and dep variable arrays
+   real, intent(in) :: x                      ! interpolate at x
+   integer, intent(out) :: ierr               ! returned error code
+   real :: y                                  ! interpolated value y(x)
+   integer :: i                               ! loop counter
+
+   if (x .lt. xx(1)) then                     ! if below low end of xx (error)..
+      y = yy(1)                               !  set y = first yy value
+      ierr = -1                               !  return error code -1
+   else if (x .gt. xx(nn)) then               ! if above high end of xx (error)..
+      y = yy(nn)                              !  set y = last yy value
+      ierr = +1                               !  return error code +1
+   else                                       ! if ok
+      do i = 2, nn                            ! loop to find first xx > x
+         if (xx(i) .gt. x) exit
+      end do
+      y = (yy(i)-yy(i-1))/(xx(i)-xx(i-1))*(x-xx(i-1))+yy(i-1)  ! interpolate
+      ierr = 0                                 ! set error code to 0 (no error)
+   end if
+
+   return
+
+end function LINTERPOL
 
 end module BASE_UTILS
