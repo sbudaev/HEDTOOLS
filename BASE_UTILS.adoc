@@ -2329,11 +2329,11 @@ variable (+Y+) vector that set the grid data as well as a single +X+ argument
 to get the dependent variable +Y+ result of the function. An optional integer
 error error code (with the intent out) can be provided to check error code.
 
-Possible *error code values* are 0 : no error; 100 :: input arrays not
-conforming; -1 :: the X argument is below the low limit of the grid array;
-1 :: the X argument is above the upper grid limit; -101 :: input arrays not
-conforming and X is below low limit; 101 :: input arrays are not conforming
-and X argument is above the upper grid limit.
+Possible *error code values* are 0 no error; 100 input arrays not conforming;
+-1 the X argument is below the low limit of the grid array; 1 the X argument
+is above the upper grid limit; -101 input arrays not conforming and X is
+below low limit; 101 input arrays are not conforming and X argument is above
+the upper grid limit.
 
 The grid vectors and the +X+ argument can be real kind 4 or kind 8 values, all
 with same type (i.e. no mixing within a single call).
