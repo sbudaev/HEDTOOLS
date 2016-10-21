@@ -268,6 +268,11 @@ http://stellar.cleanscape.net/products/fortranlint/fortran-programming_tips.html
 and http://www.fortran.com/Fortran_Style.pdf[Fortran style].
 indexterm:[Fortran Best Practices]
 
+////////////////////////////////////////////////////////////////////////////////
+Other useful coding rules: do we need to include them?
+http://bigdft.org/Wiki/index.php?title=Coding_Rules
+////////////////////////////////////////////////////////////////////////////////
+
 ** *Line length* should be short, *not exceeding
 80 characters*. Use the ampersand symbol +&+ to wrap lines. Too long lines may
 not work on some compilers by default and do a lot of mess when you code on
