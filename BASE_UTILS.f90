@@ -118,10 +118,7 @@ module procedure INTERP_LAGRANGE_R8
 
 end interface INTERP_LAGRANGE
 
-
-
-
-
+!-------------------------------------------------------------------------------
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
                                 ! Private here to avoid possible name conflicts,
