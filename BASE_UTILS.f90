@@ -4501,5 +4501,78 @@ subroutine R4VEC_BRACKET ( n, x, xval, left, right )
 
 end subroutine R4VEC_BRACKET
 
+!-------------------------------------------------------------------------------
+
+function LAGR_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+!*******************************************************************************
+! LAGR_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (default
+!      real type version).
+!
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate  to interpolate.
+!
+! NOTE: Unlike LINTERPOL this function results in extrapolation if the
+!         independent variable X values are beyond the XX range.
+!
+!*******************************************************************************
+
+real, dimension(:), intent(in) :: xx
+real, dimension(:), intent(in) :: yy            ! (1,:)
+real, dimension(:), intent(in) :: xi
+
+real, dimension(size(xi)) :: vector_output      ! (1,:)
+
+real, dimension(1,size(yy)) :: yy_here
+real, dimension(1,size(xi)) :: vector_output_here
+
+yy_here(1,:) = yy(:)
+
+call INTERP_LAGRANGE ( xx, yy_here, xi, vector_output_here )
+
+vector_output(:) = vector_output_here(1,:)
+
+end function LAGR_INTERPOL_VECTOR_R4
+
+!-------------------------------------------------------------------------------
+
+function LIN_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+!*******************************************************************************
+! LIN_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      INTERP_LINEAR, linear interpolation subroutine (default
+!      real type version).
+!
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate  to interpolate.
+!
+! NOTE: Unlike LINTERPOL this function results in extrapolation if the
+!         independent variable X values are beyond the XX range.
+!
+!*******************************************************************************
+
+real, dimension(:), intent(in) :: xx
+real, dimension(:), intent(in) :: yy            ! (1,:)
+real, dimension(:), intent(in) :: xi
+
+real, dimension(size(xi)) :: vector_output      ! (1,:)
+
+real, dimension(1,size(yy)) :: yy_here
+real, dimension(1,size(xi)) :: vector_output_here
+
+yy_here(1,:) = yy(:)
+
+
+call INTERP_LINEAR ( xx, yy_here, xi, vector_output_here )
+
+vector_output(:) = vector_output_here(1,:)
+
+end function LIN_INTERPOL_VECTOR_R4
+
+
+
+
+
 
 end module BASE_UTILS
