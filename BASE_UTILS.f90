@@ -3401,6 +3401,7 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 ! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
 !         Maryland  20771; Version 1.00a, October 29, 2013
 ! From:   http://www.davidgsimpson.com/software/linterpol_f90.txt
+!
 ! Modified by Sergey Budaev
 !*******************************************************************************
    implicit none
@@ -3611,6 +3612,7 @@ subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 !    Output, real ( kind = 8 ) P_INTERP(M,DATA_NUM), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
+! Modiuied by Sergey Budaev
 !*******************************************************************************
 
   implicit none
@@ -3706,6 +3708,7 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 !    Output, real ( kind = 8 ) p_interp(M,data_num), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
+! Modiuied by Sergey Budaev
 !*******************************************************************************
 
   implicit none
@@ -3762,7 +3765,7 @@ end subroutine INTERP_LINEAR_R8
 !-------------------------------------------------------------------------------
 
 subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp )
-!*****************************************************************************80
+!*******************************************************************************
 !
 ! LAGRANGE_VALUE_R8 evaluates the Lagrange polynomials.
 !
@@ -3821,6 +3824,8 @@ subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp 
 !    Output, real ( kind = 8 ) L_INTERP(DATA_NUM,INTERP_NUM), the values
 !    of the Lagrange polynomials at the interpolation points.
 !
+!*******************************************************************************
+
   implicit none
 
   integer data_num
@@ -3858,10 +3863,9 @@ end subroutine LAGRANGE_VALUE_R8
 !-------------------------------------------------------------------------------
 
 function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
-
-!*****************************************************************************80
+!*******************************************************************************
 !
-!! R8VEC_ASCENDS_STRICTLY determines if an R8VEC is strictly ascending.
+! R8VEC_ASCENDS_STRICTLY determines if an R8VEC is strictly ascending.
 !
 !  Discussion:
 !
@@ -3896,8 +3900,11 @@ function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 !    Input, real ( kind = 8 ) X(N), the array to be examined.
 !
 !    Output, logical R8VEC_ASCENDS_STRICTLY, is TRUE if the
-!    entries of X strictly ascend.                                               r8vec_ascends_strictly
+!    entries of X strictly ascend.
 !
+! Modiuied by Sergey Budaev
+!*******************************************************************************
+
   implicit none
 
   integer n
@@ -3961,6 +3968,8 @@ subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 !    or
 !      X(LEFT) <= XVAL <= X(RIGHT).
 !
+!*******************************************************************************
+
   implicit none
 
   integer n
