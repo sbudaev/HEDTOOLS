@@ -3548,8 +3548,7 @@ end function LINTERPOL_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, &
-  t_interp, p_interp )
+subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 !*******************************************************************************
 !
 ! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
@@ -3631,15 +3630,14 @@ subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, &
   data_num = size(p_data, 2)
   m = size(p_data, 1)
 
-!
 !  Evaluate the DATA_NUM Lagrange polynomials associated with T_DATA(1:DATA_NUM)
 !  for the interpolation points T_INTERP(1:INTERP_NUM).
-!
+
   call LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp )
-!
+
 !  Multiply P_DATA(1:M,1:DATA_NUM) * L_INTERP(1:DATA_NUM,1:INTERP_NUM)
 !  to get P_INTERP(1:M,1:INTERP_NUM).
-!
+
   p_interp(1:m,1:interp_num) = &
     matmul ( p_data(1:m,1:data_num), l_interp(1:data_num,1:interp_num) )
 
@@ -3649,9 +3647,8 @@ end subroutine INTERP_LAGRANGE_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LINEAR_R8 ( t_data, p_data,  &
-  t_interp, p_interp, error_code )
-!*****************************************************************************80
+subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
+!*******************************************************************************
 !
 !! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
 !
@@ -3709,9 +3706,9 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data,  &
 !    Output, real ( kind = 8 ) p_interp(M,data_num), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
+!*******************************************************************************
 
   implicit none
-
 
   integer interp
   integer left
@@ -3719,12 +3716,9 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data,  &
   real ( kind = 8 ), intent(out) ::  p_interp(:,:)
   logical, optional :: error_code      !> Error code if not strictly increasing.
 
-
   integer :: interp_num
   integer :: data_num
   integer :: m
-
-
 
   logical R8VEC_ASCENDS_STRICTLY
   integer right
@@ -3736,10 +3730,6 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data,  &
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
   data_num = size(p_data, 2)
-
-
-
-
 
   if ( .not. R8VEC_ASCENDS_STRICTLY ( data_num, t_data ) ) then
    if (present(error_code)) error_code = .TRUE.
@@ -3867,7 +3857,7 @@ end subroutine LAGRANGE_VALUE_R8
 
 !-------------------------------------------------------------------------------
 
-function R8VEC_ASCENDS_STRICTLY ( n, x )
+function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 
 !*****************************************************************************80
 !
@@ -3906,24 +3896,24 @@ function R8VEC_ASCENDS_STRICTLY ( n, x )
 !    Input, real ( kind = 8 ) X(N), the array to be examined.
 !
 !    Output, logical R8VEC_ASCENDS_STRICTLY, is TRUE if the
-!    entries of X strictly ascend.
+!    entries of X strictly ascend.                                               r8vec_ascends_strictly
 !
   implicit none
 
   integer n
 
   integer i
-  logical r8vec_ascends_strictly
+  logical is_increasing
   real ( kind = 8 ) x(n)
 
   do i = 1, n - 1
     if ( x(i+1) <= x(i) ) then
-      r8vec_ascends_strictly = .false.
+      is_increasing = .false.
       return
     end if
   end do
 
-  r8vec_ascends_strictly = .true.
+  is_increasing = .true.
 
   return
 
