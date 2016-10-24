@@ -3564,32 +3564,6 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
 
 end function LINTERPOL_R8
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ! The procedures below are taken from the INTERP library by John Burkardt
 ! http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
@@ -4059,37 +4033,6 @@ subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 
 end subroutine R8VEC_BRACKET
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
 !*******************************************************************************
 !
@@ -4554,40 +4497,6 @@ subroutine R4VEC_BRACKET ( n, x, xval, left, right )
   return
 
 end subroutine R4VEC_BRACKET
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 end module BASE_UTILS
