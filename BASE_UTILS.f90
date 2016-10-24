@@ -3614,15 +3614,19 @@ subroutine INTERP_LAGRANGE_R8 ( m, data_num, t_data, p_data, interp_num, &
 !
   implicit none
 
-  integer data_num
-  integer m
-  integer interp_num
+  integer, intent(in) :: data_num
+  integer, intent(in) :: m
+  integer, intent(in) :: interp_num
 
   real ( kind = 8 ) l_interp(data_num,interp_num)
-  real ( kind = 8 ) p_data(m,data_num)
-  real ( kind = 8 ) p_interp(m,interp_num)
-  real ( kind = 8 ) t_data(data_num)
-  real ( kind = 8 ) t_interp(interp_num)
+  real ( kind = 8 ), intent(in) :: p_data(m,data_num)
+  real ( kind = 8 ), intent(out) :: p_interp(m,interp_num)
+  real ( kind = 8 ), intent(in) :: t_data(data_num)
+  real ( kind = 8 ), intent(in) :: t_interp(interp_num)
+
+
+
+
 !
 !  Evaluate the DATA_NUM Lagrange polynomials associated with T_DATA(1:DATA_NUM)
 !  for the interpolation points T_INTERP(1:INTERP_NUM).
@@ -3642,7 +3646,7 @@ end subroutine INTERP_LAGRANGE_R8
 !-------------------------------------------------------------------------------
 
 subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
-  t_interp, p_interp )
+  t_interp, p_interp, error_code )
 !*****************************************************************************80
 !
 !! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
@@ -3650,22 +3654,22 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
 !  Discussion:
 !
 !    From a space of M dimensions, we are given a sequence of
-!    DATA_NUM points, which are presumed to be successive samples
+!    data_num points, which are presumed to be successive samples
 !    from a curve of points P.
 !
 !    We are also given a parameterization of this data, that is,
-!    an associated sequence of DATA_NUM values of a variable T.
+!    an associated sequence of data_num values of a variable T.
 !    The values of T are assumed to be strictly increasing.
 !
 !    Thus, we have a sequence of values P(T), where T is a scalar,
 !    and each value of P is of dimension M.
 !
-!    We are then given INTERP_NUM values of T, for which values P
+!    We are then given interp_num values of T, for which values P
 !    are to be produced, by linear interpolation of the data we are given.
 !
 !    Note that the user may request extrapolation.  This occurs whenever
-!    a T_INTERP value is less than the minimum T_DATA or greater than the
-!    maximum T_DATA.  In that case, linear extrapolation is used.
+!    a t_interp value is less than the minimum t_data or greater than the
+!    maximum t_data.  In that case, linear extrapolation is used.
 !
 !  Licensing:
 !
@@ -3683,22 +3687,22 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
 !
 !    Input, integer ( kind = 4 ) M, the spatial dimension.
 !
-!    Input, integer ( kind = 4 ) DATA_NUM, the number of data points.
+!    Input, integer ( kind = 4 ) data_num, the number of data points.
 !
-!    Input, real ( kind = 8 ) T_DATA(DATA_NUM), the value of the
-!    independent variable at the sample points.  The values of T_DATA
+!    Input, real ( kind = 8 ) t_data(data_num), the value of the
+!    independent variable at the sample points.  The values of t_data
 !    must be strictly increasing.
 !
-!    Input, real ( kind = 8 ) P_DATA(M,DATA_NUM), the value of the
+!    Input, real ( kind = 8 ) P_DATA(M,data_num), the value of the
 !    dependent variables at the sample points.
 !
-!    Input, integer ( kind = 4 ) INTERP_NUM, the number of points
+!    Input, integer ( kind = 4 ) interp_num, the number of points
 !    at which interpolation is to be done.
 !
-!    Input, real ( kind = 8 ) T_INTERP(INTERP_NUM), the value of the
+!    Input, real ( kind = 8 ) t_interp(interp_num), the value of the
 !    independent variable at the interpolation points.
 !
-!    Output, real ( kind = 8 ) P_INTERP(M,DATA_NUM), the interpolated
+!    Output, real ( kind = 8 ) p_interp(M,data_num), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
   implicit none
@@ -3711,6 +3715,8 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
   integer left
   real ( kind = 8 ) p_data(m,data_num)
   real ( kind = 8 ) p_interp(m,interp_num)
+  logical, optional :: error_code      !> Error code if not strictly increasing.
+
   logical R8VEC_ASCENDS_STRICTLY
   integer right
   real ( kind = 8 ) t
@@ -3718,11 +3724,9 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
   real ( kind = 8 ) t_interp(interp_num)
 
   if ( .not. R8VEC_ASCENDS_STRICTLY ( data_num, t_data ) ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'INTERP_LINEAR - Fatal error!'
-    write ( *, '(a)' ) &
-      '  Independent variable array T_DATA is not strictly increasing.'
-    stop 1
+   if (present(error_code)) error_code = .TRUE.
+   !> TODO make output vars zero.
+   return
   end if
 
   do interp = 1, interp_num
@@ -3740,6 +3744,8 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
       / ( t_data(right)     - t_data(left) )
 
   end do
+
+  if (present(error_code)) error_code = .FALSE. ! No error, flag FALSE.
 
   return
 
