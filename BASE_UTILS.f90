@@ -3368,6 +3368,11 @@ end subroutine RNKPAR_I
 
 !-------------------------------------------------------------------------------
 
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+! The procedures below is LINTERPOL subroutine by David G. Simpson
+! http://www.davidgsimpson.com/software/linterpol_f90.txt
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 !*******************************************************************************
 ! LINTERPOL
@@ -3546,8 +3551,10 @@ end function LINTERPOL_R8
 
 
 
-
-!-------------------------------------------------------------------------------
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+! The procedures below are taken from the INTERP library by John Burkardt
+! http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 !*******************************************************************************
@@ -3612,7 +3619,8 @@ subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 !    Output, real ( kind = 8 ) P_INTERP(M,DATA_NUM), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
-! Modiuied by Sergey Budaev
+! Modified by Sergey Budaev
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
 !*******************************************************************************
 
   implicit none
@@ -3708,7 +3716,8 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 !    Output, real ( kind = 8 ) p_interp(M,data_num), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
-! Modiuied by Sergey Budaev
+! Modified by Sergey Budaev
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
 !*******************************************************************************
 
   implicit none
@@ -3824,6 +3833,7 @@ subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp 
 !    Output, real ( kind = 8 ) L_INTERP(DATA_NUM,INTERP_NUM), the values
 !    of the Lagrange polynomials at the interpolation points.
 !
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
 !*******************************************************************************
 
   implicit none
@@ -3902,7 +3912,8 @@ function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 !    Output, logical R8VEC_ASCENDS_STRICTLY, is TRUE if the
 !    entries of X strictly ascend.
 !
-! Modiuied by Sergey Budaev
+! Modified by Sergey Budaev
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
 !*******************************************************************************
 
   implicit none
@@ -3968,6 +3979,7 @@ subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 !    or
 !      X(LEFT) <= XVAL <= X(RIGHT).
 !
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
 !*******************************************************************************
 
   implicit none
