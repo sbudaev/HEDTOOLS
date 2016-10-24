@@ -3614,9 +3614,9 @@ subroutine INTERP_LAGRANGE_R8 ( m, data_num, t_data, p_data, interp_num, &
 !
   implicit none
 
-  integer ( kind = 4 ) data_num
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) interp_num
+  integer data_num
+  integer m
+  integer interp_num
 
   real ( kind = 8 ) l_interp(data_num,interp_num)
   real ( kind = 8 ) p_data(m,data_num)
@@ -3703,16 +3703,16 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
 !
   implicit none
 
-  integer ( kind = 4 ) data_num
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) interp_num
+  integer data_num
+  integer m
+  integer interp_num
 
-  integer ( kind = 4 ) interp
-  integer ( kind = 4 ) left
+  integer interp
+  integer left
   real ( kind = 8 ) p_data(m,data_num)
   real ( kind = 8 ) p_interp(m,interp_num)
   logical R8VEC_ASCENDS_STRICTLY
-  integer ( kind = 4 ) right
+  integer right
   real ( kind = 8 ) t
   real ( kind = 8 ) t_data(data_num)
   real ( kind = 8 ) t_interp(interp_num)
@@ -3809,11 +3809,11 @@ subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp 
 !
   implicit none
 
-  integer ( kind = 4 ) data_num
-  integer ( kind = 4 ) interp_num
+  integer data_num
+  integer interp_num
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
+  integer i
+  integer j
   real ( kind = 8 ) l_interp(data_num,interp_num)
   real ( kind = 8 ) t_data(data_num)
   real ( kind = 8 ) t_interp(interp_num)
@@ -3886,9 +3886,9 @@ function R8VEC_ASCENDS_STRICTLY ( n, x )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer n
 
-  integer ( kind = 4 ) i
+  integer i
   logical r8vec_ascends_strictly
   real ( kind = 8 ) x(n)
 
@@ -3949,11 +3949,11 @@ subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer n
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) left
-  integer ( kind = 4 ) right
+  integer i
+  integer left
+  integer right
   real ( kind = 8 ) x(n)
   real ( kind = 8 ) xval
 
