@@ -118,13 +118,26 @@ interface INTERP_LAGRANGE        ! Generic interface for polynominal
 
 end interface INTERP_LAGRANGE
 
-
-interface VEC_ASCENDS_STRICTLY
+interface VEC_ASCENDS_STRICTLY   ! Generic interface to ascending vector util.
 
    module procedure R8VEC_ASCENDS_STRICTLY
    module procedure R4VEC_ASCENDS_STRICTLY
 
 end interface VEC_ASCENDS_STRICTLY
+
+interface LIN_INTERPOL_VECTOR    ! Generic interface to linear interpolation
+                                 ! vector-based wrapper.
+   module procedure LIN_INTERPOL_VECTOR_R4
+   module procedure LIN_INTERPOL_VECTOR_R8
+
+end interface LIN_INTERPOL_VECTOR
+
+interface LAGR_INTERPOL_VECTOR   ! Generic interface to Lagrange polynominal
+                                 ! vector-based wrapper.
+   module procedure LAGR_INTERPOL_VECTOR_R4
+   module procedure LAGR_INTERPOL_VECTOR_R8
+
+end interface LAGR_INTERPOL_VECTOR
 
 !-------------------------------------------------------------------------------
 
@@ -4037,6 +4050,8 @@ subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 
 end subroutine R8VEC_BRACKET
 
+!-------------------------------------------------------------------------------
+
 subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
 !*******************************************************************************
 !
@@ -4108,16 +4123,16 @@ subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
 
   implicit none
 
-  real ( kind = 4 ), intent(in) :: p_data(:,:)
-  real ( kind = 4 ), intent(out) :: p_interp(:,:)
-  real ( kind = 4 ), intent(in) :: t_data(:)
-  real ( kind = 4 ), intent(in) :: t_interp(:)
+  real, intent(in) :: p_data(:,:)
+  real, intent(out) :: p_interp(:,:)
+  real, intent(in) :: t_data(:)
+  real, intent(in) :: t_interp(:)
 
   integer :: interp_num
   integer :: data_num
   integer :: m
 
-  real ( kind = 4 ) l_interp( size(p_data, 2),size(p_interp, 2) )
+  real :: l_interp( size(p_data, 2),size(p_interp, 2) )
 
   interp_num = size(p_interp, 2)
   data_num = size(p_data, 2)
@@ -4207,10 +4222,10 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
 
   implicit none
 
-  integer interp
-  integer left
-  real ( kind = 4 ), intent(in) :: p_data(:,:)
-  real ( kind = 4 ), intent(out) ::  p_interp(:,:)
+  integer :: interp
+  integer :: left
+  real, intent(in) :: p_data(:,:)
+  real, intent(out) ::  p_interp(:,:)
   logical, optional :: error_code      !> Error code if not strictly increasing.
 
   integer :: interp_num
@@ -4218,11 +4233,11 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
   integer :: m
 
   integer right
-  real ( kind = 4 ) t
-  real ( kind = 4 ), intent(in) :: t_data(:)
-  real ( kind = 4 ), intent(in) :: t_interp(:)
+  real :: t
+  real, intent(in) :: t_data(:)
+  real, intent(in) :: t_interp(:)
 
-  real ( kind = 4 ), parameter ::  INVALID = -9999.0_4
+  real, parameter ::  INVALID = -9999.0_4
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
@@ -4325,14 +4340,14 @@ subroutine LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_interp 
 
   implicit none
 
-  integer data_num
-  integer interp_num
+  integer :: data_num
+  integer :: interp_num
 
-  integer i
-  integer j
-  real ( kind = 4 ) l_interp(data_num,interp_num)
-  real ( kind = 4 ) t_data(data_num)
-  real ( kind = 4 ) t_interp(interp_num)
+  integer :: i
+  integer :: j
+  real :: l_interp(data_num,interp_num)
+  real :: t_data(data_num)
+  real :: t_interp(interp_num)
 !
 !  Evaluate the polynomial.
 !
@@ -4408,11 +4423,11 @@ function R4VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 
   implicit none
 
-  integer n
+  integer :: n
 
-  integer i
-  logical is_increasing
-  real ( kind = 4 ) x(n)
+  integer :: i
+  logical :: is_increasing
+  real :: x(n)
 
   do i = 1, n - 1
     if ( x(i+1) <= x(i) ) then
@@ -4481,8 +4496,8 @@ subroutine R4VEC_BRACKET ( n, x, xval, left, right )
   integer i
   integer left
   integer right
-  real ( kind = 4 ) x(n)
-  real ( kind = 4 ) xval
+  real :: x(n)
+  real :: xval
 
   do i = 2, n - 1
 
