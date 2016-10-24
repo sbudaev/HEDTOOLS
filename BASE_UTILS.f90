@@ -26,10 +26,10 @@ logical, private, parameter :: IS_DEBUG = .FALSE.
 ! Generic interfaces to the modules....
 !*******************************************************************************
 
-interface NUMTOSTR            ! Generic interface to number-to-string
-                              ! conversion functions. We have two forms:
-  module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
-  module procedure STR_RTOA   ! for convenience, they 're identical
+interface NUMTOSTR               ! Generic interface to number-to-string
+                                 ! conversion functions. We have two forms:
+  module procedure STR_ITOA      ! NUMTOSTR ( number) and TOSTR ( number)
+  module procedure STR_RTOA      ! for convenience, they 're identical
   module procedure STR_R8TOA
 
   module procedure STR_ARRAY_ITOA
@@ -39,10 +39,10 @@ interface NUMTOSTR            ! Generic interface to number-to-string
 
 end interface NUMTOSTR
 
-interface TOSTR               ! Generic interface to number-to-string
-                              ! conversion functions. We have two forms:
-  module procedure STR_ITOA   ! NUMTOSTR ( number) and TOSTR ( number)
-  module procedure STR_RTOA   ! for convenience, they're identical
+interface TOSTR                  ! Generic interface to number-to-string
+                                 ! conversion functions. We have two forms:
+  module procedure STR_ITOA      ! NUMTOSTR ( number) and TOSTR ( number)
+  module procedure STR_RTOA      ! for convenience, they're identical
   module procedure STR_R8TOA
   module procedure STR_LTOA
   module procedure STR_ATOA
@@ -56,7 +56,7 @@ interface TOSTR               ! Generic interface to number-to-string
 
 end interface TOSTR
 
-interface STR                 ! An "alias" to TOSTR
+interface STR                    ! An "alias" to TOSTR
 
   module procedure STR_ITOA
   module procedure STR_RTOA
@@ -73,36 +73,55 @@ interface STR                 ! An "alias" to TOSTR
 
 end interface STR
 
-interface STDOUT              ! Short name for stdout-output routine
+interface STDOUT                 ! Short name for stdout-output routine
 
   module procedure OUT_FREE_STDOUT
 
 end interface STDOUT
 
-interface STDERR              ! Short name for stderr-output routine
+interface STDERR                 ! Short name for stderr-output routine
 
   module procedure OUT_FREE_STDERR
 
 end interface STDERR
 
-interface ARRAY_INDEX         ! Generic interface for calculating an
-                              ! unconstrained  integer vector of ranks
-  module procedure MRGRNK_R4  ! for an input vector.
+interface ARRAY_INDEX            ! Generic interface for calculating an
+                                 ! unconstrained  integer vector of ranks
+  module procedure MRGRNK_R4     ! for an input vector.
   module procedure MRGRNK_R8
   module procedure MRGRNK_I
 
-  module procedure RNKPAR_R4  ! Generic interfaces for partial ranking
-  module procedure RNKPAR_R8  ! obtained by adding an additional integer
+  module procedure RNKPAR_R4     ! Generic interfaces for partial ranking
+  module procedure RNKPAR_R8     ! obtained by adding an additional integer
   module procedure RNKPAR_I
 
 end interface ARRAY_INDEX
 
 interface LINTERPOL
 
-   module procedure LINTERPOL_R4 ! Generic interface for linear interpolation
-   module procedure LINTERPOL_R8 ! functions.
+   module procedure LINTERPOL_R4 ! Generic interface for simple linear
+   module procedure LINTERPOL_R8 ! interpolation functions.
 
 end interface LINTERPOL
+
+interface INTERP_LINEAR          ! Generic interface to linear interpolation
+                                 ! procedure.
+   module procedure INTERP_LINEAR_R4
+   module procedure INTERP_LINEAR_R8
+
+end interface INTERP_LINEAR
+
+interface INTERP_LAGRANGE        ! Generic interface for polynominal
+                                 ! interpolation routines.
+module procedure INTERP_LAGRANGE_R4
+module procedure INTERP_LAGRANGE_R8
+
+end interface INTERP_LAGRANGE
+
+
+
+
+
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
                                 ! Private here to avoid possible name conflicts,
@@ -3392,7 +3411,7 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 !          The flag IERR is returned as -1 if X is below the low end of XX
 !          (an error), +1 if X is above the high end of XX (also an error),
 !          or 0 if there was no error.
-!          If the xx and yy input arrays are not conforming, the ier error is
+!          If the xx and yy input arrays are not conforming, the ierr error is
 !          multiplied by 100.
 !
 !          Error codes ierr:
@@ -3401,7 +3420,8 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 !                        -1 = X below the low limit;
 !                         1 = X above the upper limit;
 !                      -101 = input arrays not conforming, X below low limit;
-!                       101 = input arrays not conforming, X above upper limit.
+!                       101 = input arrays not conforming, X above upper limit,
+!                     -9999 = X array is not strictly increasing ordered.
 !
 ! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
 !         Maryland  20771; Version 1.00a, October 29, 2013
@@ -3421,6 +3441,15 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 
    integer :: i                              ! Local counter.
    integer :: ierr_here                      ! Local copy of ierr.
+
+   real ( kind = 4 ), parameter ::  INVALID = -9999.0_4
+
+   ! Check if the input vector is strictly increasing.
+   if ( .not. R4VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
+      if (present(ierr)) ierr=-9999
+      y = INVALID
+      return
+   end if
 
    if (size(xx) == size(yy)) then            ! Check the sizes of the arrays
       nn = size(xx)                          ! set as normal if equal...
@@ -3478,7 +3507,8 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
 !                        -1 = X below the low limit;
 !                         1 = X above the upper limit;
 !                      -101 = input arrays not conforming, X below low limit;
-!                       101 = input arrays not conforming, X above upper limit.
+!                       101 = input arrays not conforming, X above upper limit,
+!                     -9999 = X array is not strictly increasing ordered.
 !
 ! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
 !         Maryland  20771; Version 1.00a, October 29, 2013
@@ -3498,6 +3528,15 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
 
    integer :: i                              ! Local counter.
    integer :: ierr_here                      ! Local copy of ierr.
+
+   real ( kind = 8 ), parameter ::  INVALID = -9999.0_8
+
+   ! Check if the input vector is strictly increasing.
+   if ( .not. R8VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
+      if (present(ierr)) ierr=-9999
+      y = INVALID
+      return
+   end if
 
    if (size(xx) == size(yy)) then            ! Check the sizes of the arrays
       nn = size(xx)                          ! set as normal if equal...
@@ -3742,6 +3781,7 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
   real ( kind = 8 ), intent(in) :: t_data(:)
   real ( kind = 8 ), intent(in) :: t_interp(:)
 
+  real ( kind = 8 ), parameter ::  INVALID = -9999.0_8
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
@@ -3749,7 +3789,7 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 
   if ( .not. R8VEC_ASCENDS_STRICTLY ( data_num, t_data ) ) then
    if (present(error_code)) error_code = .TRUE.
-   !> TODO make output vars zero.
+   p_interp = INVALID
    return
   end if
 
@@ -4236,6 +4276,7 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
   real ( kind = 4 ), intent(in) :: t_data(:)
   real ( kind = 4 ), intent(in) :: t_interp(:)
 
+  real ( kind = 4 ), parameter ::  INVALID = -9999.0_4
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
@@ -4243,7 +4284,7 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
 
   if ( .not. R4VEC_ASCENDS_STRICTLY ( data_num, t_data ) ) then
    if (present(error_code)) error_code = .TRUE.
-   !> TODO make output vars zero.
+   p_interp = INVALID
    return
   end if
 
