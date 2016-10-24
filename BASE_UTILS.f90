@@ -3710,11 +3710,11 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) M, the spatial dimension.
+!    -- Input, integer ( kind = 4 ) M, the spatial dimension.
 !
 !    Input, integer ( kind = 4 ) data_num, the number of data points.
 !
-!    Input, real ( kind = 8 ) t_data(data_num), the value of the
+!    -- Input, real ( kind = 8 ) t_data(data_num), the value of the
 !    independent variable at the sample points.  The values of t_data
 !    must be strictly increasing.
 !
@@ -3724,7 +3724,7 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 !    Input, integer ( kind = 4 ) interp_num, the number of points
 !    at which interpolation is to be done.
 !
-!    Input, real ( kind = 8 ) t_interp(interp_num), the value of the
+!    -- Input, real ( kind = 8 ) t_interp(interp_num), the value of the
 !    independent variable at the interpolation points.
 !
 !    Output, real ( kind = 8 ) p_interp(M,data_num), the interpolated
@@ -4174,18 +4174,18 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) M, the spatial dimension.
+!    -- Input, integer ( kind = 4 ) M, the spatial dimension.
 !
-!    Input, integer ( kind = 4 ) data_num, the number of data points.
+!    -- Input, integer ( kind = 4 ) data_num, the number of data points.
 !
 !    Input, real ( kind = 4 ) t_data(data_num), the value of the
 !    independent variable at the sample points.  The values of t_data
 !    must be strictly increasing.
 !
-!    Input, real ( kind = 4 ) P_DATA(M,data_num), the value of the
+!    Input, real ( kind = 4 ) p_data(M,data_num), the value of the
 !    dependent variables at the sample points.
 !
-!    Input, integer ( kind = 4 ) interp_num, the number of points
+!    -- Input, integer ( kind = 4 ) interp_num, the number of points
 !    at which interpolation is to be done.
 !
 !    Input, real ( kind = 4 ) t_interp(interp_num), the value of the
