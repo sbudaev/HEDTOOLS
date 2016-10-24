@@ -113,10 +113,18 @@ end interface INTERP_LINEAR
 
 interface INTERP_LAGRANGE        ! Generic interface for polynominal
                                  ! interpolation routines.
-module procedure INTERP_LAGRANGE_R4
-module procedure INTERP_LAGRANGE_R8
+   module procedure INTERP_LAGRANGE_R4
+   module procedure INTERP_LAGRANGE_R8
 
 end interface INTERP_LAGRANGE
+
+
+interface VEC_ASCENDS_STRICTLY
+
+   module procedure R8VEC_ASCENDS_STRICTLY
+   module procedure R4VEC_ASCENDS_STRICTLY
+
+end interface VEC_ASCENDS_STRICTLY
 
 !-------------------------------------------------------------------------------
 
@@ -3746,7 +3754,6 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
   integer :: data_num
   integer :: m
 
-  logical R8VEC_ASCENDS_STRICTLY
   integer right
   real ( kind = 8 ) t
   real ( kind = 8 ), intent(in) :: t_data(:)
@@ -4210,7 +4217,6 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
   integer :: data_num
   integer :: m
 
-  logical R4VEC_ASCENDS_STRICTLY
   integer right
   real ( kind = 4 ) t
   real ( kind = 4 ), intent(in) :: t_data(:)
