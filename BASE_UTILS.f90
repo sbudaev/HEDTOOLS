@@ -3548,11 +3548,11 @@ end function LINTERPOL_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LAGRANGE_R8 ( m, data_num, t_data, p_data, interp_num, &
+subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, &
   t_interp, p_interp )
-!*****************************************************************************80
+!*******************************************************************************
 !
-!! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
+! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
 !
 !  Discussion:
 !
@@ -3612,20 +3612,24 @@ subroutine INTERP_LAGRANGE_R8 ( m, data_num, t_data, p_data, interp_num, &
 !    Output, real ( kind = 8 ) P_INTERP(M,DATA_NUM), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
+!*******************************************************************************
+
   implicit none
 
-  integer, intent(in) :: data_num
-  integer, intent(in) :: m
-  integer, intent(in) :: interp_num
+  real ( kind = 8 ), intent(in) :: p_data(:,:)
+  real ( kind = 8 ), intent(out) :: p_interp(:,:)
+  real ( kind = 8 ), intent(in) :: t_data(:)
+  real ( kind = 8 ), intent(in) :: t_interp(:)
 
-  real ( kind = 8 ) l_interp(data_num,interp_num)
-  real ( kind = 8 ), intent(in) :: p_data(m,data_num)
-  real ( kind = 8 ), intent(out) :: p_interp(m,interp_num)
-  real ( kind = 8 ), intent(in) :: t_data(data_num)
-  real ( kind = 8 ), intent(in) :: t_interp(interp_num)
+  integer :: interp_num
+  integer :: data_num
+  integer :: m
 
+  real ( kind = 8 ) l_interp( size(p_data, 2),size(p_interp, 2) )
 
-
+  interp_num = size(p_interp, 2)
+  data_num = size(p_data, 2)
+  m = size(p_data, 1)
 
 !
 !  Evaluate the DATA_NUM Lagrange polynomials associated with T_DATA(1:DATA_NUM)
@@ -3645,7 +3649,7 @@ end subroutine INTERP_LAGRANGE_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
+subroutine INTERP_LINEAR_R8 ( t_data, p_data,  &
   t_interp, p_interp, error_code )
 !*****************************************************************************80
 !
@@ -3705,23 +3709,37 @@ subroutine INTERP_LINEAR_R8 ( m, data_num, t_data, p_data, interp_num, &
 !    Output, real ( kind = 8 ) p_interp(M,data_num), the interpolated
 !    values of the dependent variables at the interpolation points.
 !
+
   implicit none
 
-  integer data_num
-  integer m
-  integer interp_num
 
   integer interp
   integer left
-  real ( kind = 8 ) p_data(m,data_num)
-  real ( kind = 8 ) p_interp(m,interp_num)
+  real ( kind = 8 ), intent(in) :: p_data(:,:)
+  real ( kind = 8 ), intent(out) ::  p_interp(:,:)
   logical, optional :: error_code      !> Error code if not strictly increasing.
+
+
+  integer :: interp_num
+  integer :: data_num
+  integer :: m
+
+
 
   logical R8VEC_ASCENDS_STRICTLY
   integer right
   real ( kind = 8 ) t
-  real ( kind = 8 ) t_data(data_num)
-  real ( kind = 8 ) t_interp(interp_num)
+  real ( kind = 8 ), intent(in) :: t_data(:)
+  real ( kind = 8 ), intent(in) :: t_interp(:)
+
+
+  m = size(p_data, 1)
+  interp_num = size(p_interp, 2)
+  data_num = size(p_data, 2)
+
+
+
+
 
   if ( .not. R8VEC_ASCENDS_STRICTLY ( data_num, t_data ) ) then
    if (present(error_code)) error_code = .TRUE.
