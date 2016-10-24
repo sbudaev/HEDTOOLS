@@ -3561,6 +3561,8 @@ subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 !
 ! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
 !
+! NOTE: This is the real kind 8 procedure. See R4.. for default kind 4 procs.
+!
 !  Discussion:
 !
 !    From a space of M dimensions, we are given a sequence of
@@ -3660,7 +3662,9 @@ end subroutine INTERP_LAGRANGE_R8
 subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 !*******************************************************************************
 !
-!! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
+! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
+!
+! NOTE: This is the real kind 8 procedure. See R4.. for default kind 4 procs.
 !
 !  Discussion:
 !
@@ -3778,6 +3782,8 @@ subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp 
 !
 ! LAGRANGE_VALUE_R8 evaluates the Lagrange polynomials.
 !
+! NOTE: This is the real kind 8 procedure. See R4.. for default kind 4 procs.
+!
 !  Discussion:
 !
 !    Given DATA_NUM distinct abscissas, T_DATA(1:DATA_NUM),
@@ -3877,6 +3883,8 @@ function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 !
 ! R8VEC_ASCENDS_STRICTLY determines if an R8VEC is strictly ascending.
 !
+! NOTE: This is the real kind 8 procedure. See R4.. for default kind 4 procs.
+!
 !  Discussion:
 !
 !    An R8VEC is a vector of R8 values.
@@ -3940,9 +3948,11 @@ end function R8VEC_ASCENDS_STRICTLY
 !-------------------------------------------------------------------------------
 
 subroutine R8VEC_BRACKET ( n, x, xval, left, right )
-!*****************************************************************************80
+!*******************************************************************************
 !
 ! R8VEC_BRACKET searches a sorted R8VEC for successive brackets of a value.
+!
+! NOTE: This is the real kind 8 procedure. See R4.. for default kind 4 procs.
 !
 !  Discussion:
 !
@@ -4040,6 +4050,469 @@ end subroutine R8VEC_BRACKET
 
 
 
+subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
+!*******************************************************************************
+!
+! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
+!
+! NOTE: This is the real kind 4 procedure. See R8.. for kind 8 procs.
+!
+!  Discussion:
+!
+!    From a space of M dimensions, we are given a sequence of
+!    DATA_NUM points, which are presumed to be successive samples
+!    from a curve of points P.
+!
+!    We are also given a parameterization of this data, that is,
+!    an associated sequence of DATA_NUM values of a variable T.
+!
+!    Thus, we have a sequence of values P(T), where T is a scalar,
+!    and each value of P is of dimension M.
+!
+!    We are then given INTERP_NUM values of T, for which values P
+!    are to be produced, by linear interpolation of the data we are given.
+!
+!    The user may request extrapolation.  This occurs whenever
+!    a T_INTERP value is less than the minimum T_DATA or greater than the
+!    maximum T_DATA.  In that case, extrapolation is used.
+!
+!    For each spatial component, a polynomial of degree
+!    ( DATA_NUM - 1 ) is generated for the interpolation.  In most cases,
+!    such a polynomial interpolant begins to oscillate as DATA_NUM
+!    increases, even if the original data seems well behaved.  Typically,
+!    values of DATA_NUM should be no greater than 10!
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    03 December 2007
+!
+!  Author:
+!
+!    John Burkardt
+!
+!  Parameters:
+!
+!    Input, integer ( kind = 4 ) M, the spatial dimension.
+!
+!    Input, integer ( kind = 4 ) data_num, the number of data points.
+!
+!    Input, real ( kind = 4 ) t_data(data_num), the value of the
+!    independent variable at the sample points.
+!
+!    Input, real ( kind = 4 ) p_data(m,data_num), the value of the
+!    dependent variables at the sample points.
+!
+!    Input, integer ( kind = 4 ) interp_num, the number of points
+!    at which interpolation is to be done.
+!
+!    Input, real ( kind = 4 ) t_interp(interp_num), the value of the
+!    independent variable at the interpolation points.
+!
+!    Output, real ( kind = 4 ) p_interp(m,data_num), the interpolated
+!    values of the dependent variables at the interpolation points.
+!
+! Modified by Sergey Budaev
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
+!*******************************************************************************
+
+  implicit none
+
+  real ( kind = 4 ), intent(in) :: p_data(:,:)
+  real ( kind = 4 ), intent(out) :: p_interp(:,:)
+  real ( kind = 4 ), intent(in) :: t_data(:)
+  real ( kind = 4 ), intent(in) :: t_interp(:)
+
+  integer :: interp_num
+  integer :: data_num
+  integer :: m
+
+  real ( kind = 4 ) l_interp( size(p_data, 2),size(p_interp, 2) )
+
+  interp_num = size(p_interp, 2)
+  data_num = size(p_data, 2)
+  m = size(p_data, 1)
+
+!  Evaluate the DATA_NUM Lagrange polynomials associated with T_DATA(1:DATA_NUM)
+!  for the interpolation points T_INTERP(1:INTERP_NUM).
+
+  call LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_interp )
+
+!  Multiply P_DATA(1:M,1:DATA_NUM) * L_INTERP(1:DATA_NUM,1:INTERP_NUM)
+!  to get P_INTERP(1:M,1:INTERP_NUM).
+
+  p_interp(1:m,1:interp_num) = &
+    matmul ( p_data(1:m,1:data_num), l_interp(1:data_num,1:interp_num) )
+
+  return
+
+end subroutine INTERP_LAGRANGE_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
+!*******************************************************************************
+!
+! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
+!
+! NOTE: This is the real kind 4 procedure. See R8.. for kind 8 procs.
+!
+!  Discussion:
+!
+!    From a space of M dimensions, we are given a sequence of
+!    data_num points, which are presumed to be successive samples
+!    from a curve of points P.
+!
+!    We are also given a parameterization of this data, that is,
+!    an associated sequence of data_num values of a variable T.
+!    The values of T are assumed to be strictly increasing.
+!
+!    Thus, we have a sequence of values P(T), where T is a scalar,
+!    and each value of P is of dimension M.
+!
+!    We are then given interp_num values of T, for which values P
+!    are to be produced, by linear interpolation of the data we are given.
+!
+!    Note that the user may request extrapolation.  This occurs whenever
+!    a t_interp value is less than the minimum t_data or greater than the
+!    maximum t_data.  In that case, linear extrapolation is used.
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    03 December 2007
+!
+!  Author:
+!
+!    John Burkardt
+!
+!  Parameters:
+!
+!    Input, integer ( kind = 4 ) M, the spatial dimension.
+!
+!    Input, integer ( kind = 4 ) data_num, the number of data points.
+!
+!    Input, real ( kind = 4 ) t_data(data_num), the value of the
+!    independent variable at the sample points.  The values of t_data
+!    must be strictly increasing.
+!
+!    Input, real ( kind = 4 ) P_DATA(M,data_num), the value of the
+!    dependent variables at the sample points.
+!
+!    Input, integer ( kind = 4 ) interp_num, the number of points
+!    at which interpolation is to be done.
+!
+!    Input, real ( kind = 4 ) t_interp(interp_num), the value of the
+!    independent variable at the interpolation points.
+!
+!    Output, real ( kind = 4 ) p_interp(M,data_num), the interpolated
+!    values of the dependent variables at the interpolation points.
+!
+! Modified by Sergey Budaev
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
+!*******************************************************************************
+
+  implicit none
+
+  integer interp
+  integer left
+  real ( kind = 4 ), intent(in) :: p_data(:,:)
+  real ( kind = 4 ), intent(out) ::  p_interp(:,:)
+  logical, optional :: error_code      !> Error code if not strictly increasing.
+
+  integer :: interp_num
+  integer :: data_num
+  integer :: m
+
+  logical R4VEC_ASCENDS_STRICTLY
+  integer right
+  real ( kind = 4 ) t
+  real ( kind = 4 ), intent(in) :: t_data(:)
+  real ( kind = 4 ), intent(in) :: t_interp(:)
+
+
+  m = size(p_data, 1)
+  interp_num = size(p_interp, 2)
+  data_num = size(p_data, 2)
+
+  if ( .not. R4VEC_ASCENDS_STRICTLY ( data_num, t_data ) ) then
+   if (present(error_code)) error_code = .TRUE.
+   !> TODO make output vars zero.
+   return
+  end if
+
+  do interp = 1, interp_num
+
+    t = t_interp(interp)
+!
+!  Find the interval [ TDATA(LEFT), TDATA(RIGHT) ] that contains, or is
+!  nearest to, TVAL.
+!
+    call R4VEC_BRACKET ( data_num, t_data, t, left, right )
+
+    p_interp(1:m,interp) = &
+      ( ( t_data(right) - t                ) * p_data(1:m,left)   &
+      + (                 t - t_data(left) ) * p_data(1:m,right) ) &
+      / ( t_data(right)     - t_data(left) )
+
+  end do
+
+  if (present(error_code)) error_code = .FALSE. ! No error, flag FALSE.
+
+  return
+
+end subroutine INTERP_LINEAR_R4
+
+!-------------------------------------------------------------------------------
+
+subroutine LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_interp )
+!*******************************************************************************
+!
+! LAGRANGE_VALUE_R8 evaluates the Lagrange polynomials.
+!
+! NOTE: This is the real kind 4 procedure. See R8.. for kind 8 procs.
+!
+!  Discussion:
+!
+!    Given DATA_NUM distinct abscissas, T_DATA(1:DATA_NUM),
+!    the I-th Lagrange polynomial L(I)(T) is defined as the polynomial of
+!    degree DATA_NUM - 1 which is 1 at T_DATA(I) and 0 at the DATA_NUM - 1
+!    other abscissas.
+!
+!    A formal representation is:
+!
+!      L(I)(T) = Product ( 1 <= J <= DATA_NUM, I /= J )
+!       ( T - T(J) ) / ( T(I) - T(J) )
+!
+!    This routine accepts a set of INTERP_NUM values at which all the Lagrange
+!    polynomials should be evaluated.
+!
+!    Given data values P_DATA at each of the abscissas, the value of the
+!    Lagrange interpolating polynomial at each of the interpolation points
+!    is then simple to compute by matrix multiplication:
+!
+!      P_INTERP(1:INTERP_NUM) =
+!        P_DATA(1:DATA_NUM) * L_INTERP(1:DATA_NUM,1:INTERP_NUM)
+!
+!    or, in the case where P is multidimensional:
+!
+!      P_INTERP(1:M,1:INTERP_NUM) =
+!        P_DATA(1:M,1:DATA_NUM) * L_INTERP(1:DATA_NUM,1:INTERP_NUM)
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    03 December 2007
+!
+!  Author:
+!
+!    John Burkardt
+!
+!  Parameters:
+!
+!    Input, integer ( kind = 4 ) DATA_NUM, the number of data points.
+!    DATA_NUM must be at least 1.
+!
+!    Input, real ( kind = 4 ) T_DATA(DATA_NUM), the data points.
+!
+!    Input, integer ( kind = 4 ) INTERP_NUM, the number of
+!    interpolation points.
+!
+!    Input, real ( kind = 4 ) T_INTERP(INTERP_NUM), the
+!    interpolation points.
+!
+!    Output, real ( kind = 4 ) L_INTERP(DATA_NUM,INTERP_NUM), the values
+!    of the Lagrange polynomials at the interpolation points.
+!
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
+!*******************************************************************************
+
+  implicit none
+
+  integer data_num
+  integer interp_num
+
+  integer i
+  integer j
+  real ( kind = 4 ) l_interp(data_num,interp_num)
+  real ( kind = 4 ) t_data(data_num)
+  real ( kind = 4 ) t_interp(interp_num)
+!
+!  Evaluate the polynomial.
+!
+  l_interp(1:data_num,1:interp_num) = 1.0D+00
+
+  do i = 1, data_num
+
+    do j = 1, data_num
+
+      if ( j /= i ) then
+
+        l_interp(i,1:interp_num) = l_interp(i,1:interp_num) &
+          * ( t_interp(1:interp_num) - t_data(j) ) / ( t_data(i) - t_data(j) )
+
+      end if
+
+    end do
+
+  end do
+
+  return
+
+end subroutine LAGRANGE_VALUE_R4
+
+!-------------------------------------------------------------------------------
+
+function R4VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
+!*******************************************************************************
+!
+! R4VEC_ASCENDS_STRICTLY determines if an R8VEC is strictly ascending.
+!
+!
+! NOTE: This is the real kind 4 procedure. See R8.. for kind 8 procs.
+
+!  Discussion:
+!
+!    An R8VEC is a vector of R4 values.
+!
+!    Notice the effect of entry number 6 in the following results:
+!
+!      X = ( -8.1, 1.3, 2.2, 3.4, 7.5, 7.4, 9.8 )
+!      Y = ( -8.1, 1.3, 2.2, 3.4, 7.5, 7.5, 9.8 )
+!      Z = ( -8.1, 1.3, 2.2, 3.4, 7.5, 7.6, 9.8 )
+!
+!      R8VEC_ASCENDS_STRICTLY ( X ) = FALSE
+!      R8VEC_ASCENDS_STRICTLY ( Y ) = FALSE
+!      R8VEC_ASCENDS_STRICTLY ( Z ) = TRUE
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    03 December 2007
+!
+!  Author:
+!
+!    John Burkardt
+!
+!  Parameters:
+!
+!    Input, integer ( kind = 4 ) N, the size of the array.
+!
+!    Input, real ( kind = 4 ) X(N), the array to be examined.
+!
+!    Output, logical R8VEC_ASCENDS_STRICTLY, is TRUE if the
+!    entries of X strictly ascend.
+!
+! Modified by Sergey Budaev
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
+!*******************************************************************************
+
+  implicit none
+
+  integer n
+
+  integer i
+  logical is_increasing
+  real ( kind = 4 ) x(n)
+
+  do i = 1, n - 1
+    if ( x(i+1) <= x(i) ) then
+      is_increasing = .false.
+      return
+    end if
+  end do
+
+  is_increasing = .true.
+
+  return
+
+end function R4VEC_ASCENDS_STRICTLY
+
+!-------------------------------------------------------------------------------
+
+subroutine R4VEC_BRACKET ( n, x, xval, left, right )
+!*******************************************************************************
+!
+! R4VEC_BRACKET searches a sorted R8VEC for successive brackets of a value.
+!
+! NOTE: This is the real kind 4 procedure. See R8.. for kind 8 procs.
+!
+!  Discussion:
+!
+!    An R4VEC is an array of double precision real values.
+!
+!    If the values in the vector are thought of as defining intervals
+!    on the real line, then this routine searches for the interval
+!    nearest to or containing the given value.
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    06 April 1999
+!
+!  Author:
+!
+!    John Burkardt
+!
+!  Parameters:
+!
+!    Input, integer ( kind = 4 ) N, length of input array.
+!
+!    Input, real ( kind = 4 ) X(N), an array sorted into ascending order.
+!
+!    Input, real ( kind = 4 ) XVAL, a value to be bracketed.
+!
+!    Output, integer ( kind = 4 ) LEFT, RIGHT, the results of the search.
+!    Either:
+!      XVAL < X(1), when LEFT = 1, RIGHT = 2;
+!      X(N) < XVAL, when LEFT = N-1, RIGHT = N;
+!    or
+!      X(LEFT) <= XVAL <= X(RIGHT).
+!
+! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
+!*******************************************************************************
+
+  implicit none
+
+  integer n
+
+  integer i
+  integer left
+  integer right
+  real ( kind = 4 ) x(n)
+  real ( kind = 4 ) xval
+
+  do i = 2, n - 1
+
+    if ( xval < x(i) ) then
+      left = i - 1
+      right = i
+      return
+    end if
+
+   end do
+
+  left = n - 1
+  right = n
+
+  return
+
+end subroutine R4VEC_BRACKET
 
 
 
