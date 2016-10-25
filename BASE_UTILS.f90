@@ -108,6 +108,13 @@ interface LINTERPOL              ! Generic interface for simple linear
 
 end interface LINTERPOL
 
+interface DDPINTERPOL            ! Generic interface to the Divided Difference
+                                 ! Polynomials (DDP) interpolation functions.
+   module procedure DDINT_R4
+   module procedure DDINT_R8
+
+end interface DDPINTERPOL
+
 interface INTERP_LINEAR          ! Generic interface to linear interpolation
                                  ! and extrapolation procedure.
    module procedure INTERP_LINEAR_R4
@@ -4665,7 +4672,7 @@ end function LIN_INTERPOL_VECTOR_R8
 
 !-------------------------------------------------------------------------------
 
-function DDINT_R4(xi, yi, xx, n_points) result (ddint_out)
+function DDINT_R4 (xi, yi, xx, n_points) result (ddint_out)
 !*******************************************************************************
 ! Interpolation based on Divided Difference Polynomials:
 ! Alex G: January 2010
@@ -4790,6 +4797,134 @@ function DDINT_R4(xi, yi, xx, n_points) result (ddint_out)
   ddint_out = Pn
 
 end function DDINT_R4
+
+!-------------------------------------------------------------------------------
+
+function DDINT_R8 (xi, yi, xx, n_points) result (ddint_out)
+!*******************************************************************************
+! Interpolation based on Divided Difference Polynomials:
+! Alex G: January 2010
+!-------------------------------------------------------------------------------
+! input ...
+! xx    - the abscissa at which the interpolation is to be evaluated
+! xi()  - the arrays of data abscissas
+! yi()  - the arrays of data ordinates
+! ni    - size of the arrays xi() and yi()
+! n     - number of points for interpolation (order of interp. = n-1)
+! output ...
+! ddint   - interpolated value
+! comments ...
+! if (n > ni) n = ni
+! program works for both equally and unequally spaced xi()
+!
+! Modified by Sergey Budaev
+! Source : http://ww2.odu.edu/~agodunov/computing/programs/book2/Ch01/ddint.f90
+!
+!*******************************************************************************
+
+  implicit none
+
+  real (kind=8) :: ddint_out
+  real (kind=8), intent(in) :: xx
+
+  integer, intent(in), optional :: n_points
+  real (kind=8), intent(in) :: xi(:), yi(:)
+
+  integer :: ni, n
+  real (kind=8), allocatable, dimension(:,:) :: d
+  real (kind=8), allocatable, dimension(:)   :: x
+  integer :: i, j, k, ix
+  real (kind=8) :: c, pn
+
+  ni = min(size(xi),size(yi)) ! Check conformant xi and yi.
+
+  ! default interpolation order is the input array size.
+  if (present(n_points)) then
+     ! check order of interpolation
+     if (n_points > ni) then
+        n = ni
+     else
+        n = n_points
+     end if
+  else
+     n = ni
+  end if
+
+  allocate (d(n,n))
+  allocate (x(n))
+
+  ! if x is ouside the xi(1)-xi(ni) interval take a boundary value
+  if (xx <= xi(1)) then
+    ddint_out = yi(1)
+    return
+  end if
+  if (xx >= xi(ni)) then
+    ddint_out = yi(ni)
+    return
+  end if
+
+  ! a binary (bisectional) search to find i so that xi(i) < x < xi(i+1)
+  i = 1
+  j = ni
+  do while (j > i+1)
+    k = (i+j)/2
+    if (xx < xi(k)) then
+       j = k
+    else
+       i = k
+    end if
+  end do
+
+  ! shift i that will correspond to n-th order of interpolation
+  ! the search point will be in the middle in x_i, x_i+1, x_i+2 ...
+  i = i + 1 - n/2
+
+  ! check boundaries: if i is ouside of the range [1, ... n] -> shift i
+  if (i < 1) i=1
+  if (i + n > ni) i=ni-n+1
+
+  !  old output to test i
+  !  write(*,100) xx, i
+  !  100 format (f10.5, I5)
+
+  ! just wanted to use index i later for d coefficients
+  ix = i
+
+  ! initialization of d(n,1) and x(n)
+  do i=1,n
+    d(i,1) = yi(ix+i-1)
+    x(i)   = xi(ix+i-1)
+  end do
+
+  ! calculations for the divided difference coefficients
+  do j=2,n
+    do i=1,n-j+1
+      d(i,j)=(d(i+1,j-1)-d(i,j-1))/(x(i+1+j-2)-x(i))
+    end do
+  end do
+
+  ! print results for the d coeff.
+  !  do i=1,n
+  !    write(*,200) (d(i,j),j=1,n-i+1)
+  !  end do
+  !200 format (4f10.6)
+
+  ! divided difference interpolation
+  Pn = d(1,1)
+  do i=1,n-1
+    c = 1.0
+    do j=1,i
+      c = c*(xx - x(j))
+    end do
+    Pn = Pn + c*d(1,i+1);
+  end do
+
+  deallocate (d)
+  deallocate (x)
+
+  ddint_out = Pn
+
+end function DDINT_R8
 
 
 
