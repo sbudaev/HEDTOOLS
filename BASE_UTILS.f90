@@ -4540,20 +4540,20 @@ function LAGR_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-real, dimension(:), intent(in) :: xx
-real, dimension(:), intent(in) :: yy            ! (1,:)
-real, dimension(:), intent(in) :: xi
+   real, dimension(:), intent(in) :: xx
+   real, dimension(:), intent(in) :: yy            ! (1,:)
+   real, dimension(:), intent(in) :: xi
 
-real, dimension(size(xi)) :: vector_output      ! (1,:)
+   real, dimension(size(xi)) :: vector_output      ! (1,:)
 
-real, dimension(1,size(yy)) :: yy_here
-real, dimension(1,size(xi)) :: vector_output_here
+   real, dimension(1,size(yy)) :: yy_here
+   real, dimension(1,size(xi)) :: vector_output_here
 
-yy_here(1,:) = yy(:)
+   yy_here(1,:) = yy(:)
 
-call INTERP_LAGRANGE ( xx, yy_here, xi, vector_output_here )
+   call INTERP_LAGRANGE ( xx, yy_here, xi, vector_output_here )
 
-vector_output(:) = vector_output_here(1,:)
+   vector_output(:) = vector_output_here(1,:)
 
 end function LAGR_INTERPOL_VECTOR_R4
 
@@ -4574,20 +4574,20 @@ function LIN_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-real, dimension(:), intent(in) :: xx
-real, dimension(:), intent(in) :: yy            ! (1,:)
-real, dimension(:), intent(in) :: xi
+   real, dimension(:), intent(in) :: xx
+   real, dimension(:), intent(in) :: yy            ! (1,:)
+   real, dimension(:), intent(in) :: xi
 
-real, dimension(size(xi)) :: vector_output      ! (1,:)
+   real, dimension(size(xi)) :: vector_output      ! (1,:)
 
-real, dimension(1,size(yy)) :: yy_here
-real, dimension(1,size(xi)) :: vector_output_here
+   real, dimension(1,size(yy)) :: yy_here
+   real, dimension(1,size(xi)) :: vector_output_here
 
-yy_here(1,:) = yy(:)
+   yy_here(1,:) = yy(:)
 
-call INTERP_LINEAR ( xx, yy_here, xi, vector_output_here )
+   call INTERP_LINEAR ( xx, yy_here, xi, vector_output_here )
 
-vector_output(:) = vector_output_here(1,:)
+   vector_output(:) = vector_output_here(1,:)
 
 end function LIN_INTERPOL_VECTOR_R4
 
@@ -4612,20 +4612,20 @@ function LAGR_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-real(kind=8), dimension(:), intent(in) :: xx
-real(kind=8), dimension(:), intent(in) :: yy            ! (1,:)
-real(kind=8), dimension(:), intent(in) :: xi
+   real(kind=8), dimension(:), intent(in) :: xx
+   real(kind=8), dimension(:), intent(in) :: yy            ! (1,:)
+   real(kind=8), dimension(:), intent(in) :: xi
 
-real(kind=8), dimension(size(xi)) :: vector_output      ! (1,:)
+   real(kind=8), dimension(size(xi)) :: vector_output      ! (1,:)
 
-real(kind=8), dimension(1,size(yy)) :: yy_here
-real(kind=8), dimension(1,size(xi)) :: vector_output_here
+   real(kind=8), dimension(1,size(yy)) :: yy_here
+   real(kind=8), dimension(1,size(xi)) :: vector_output_here
 
-yy_here(1,:) = yy(:)
+   yy_here(1,:) = yy(:)
 
-call INTERP_LAGRANGE ( xx, yy_here, xi, vector_output_here )
+   call INTERP_LAGRANGE ( xx, yy_here, xi, vector_output_here )
 
-vector_output(:) = vector_output_here(1,:)
+   vector_output(:) = vector_output_here(1,:)
 
 end function LAGR_INTERPOL_VECTOR_R8
 
@@ -4646,57 +4646,30 @@ function LIN_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-real(kind=8), dimension(:), intent(in) :: xx
-real(kind=8), dimension(:), intent(in) :: yy            ! (1,:)
-real(kind=8), dimension(:), intent(in) :: xi
+   real(kind=8), dimension(:), intent(in) :: xx
+   real(kind=8), dimension(:), intent(in) :: yy            ! (1,:)
+   real(kind=8), dimension(:), intent(in) :: xi
 
-real(kind=8), dimension(size(xi)) :: vector_output      ! (1,:)
+   real(kind=8), dimension(size(xi)) :: vector_output      ! (1,:)
 
-real(kind=8), dimension(1,size(yy)) :: yy_here
-real(kind=8), dimension(1,size(xi)) :: vector_output_here
+   real(kind=8), dimension(1,size(yy)) :: yy_here
+   real(kind=8), dimension(1,size(xi)) :: vector_output_here
 
-yy_here(1,:) = yy(:)
+   yy_here(1,:) = yy(:)
 
-call INTERP_LINEAR ( xx, yy_here, xi, vector_output_here )
+   call INTERP_LINEAR ( xx, yy_here, xi, vector_output_here )
 
-vector_output(:) = vector_output_here(1,:)
+   vector_output(:) = vector_output_here(1,:)
 
 end function LIN_INTERPOL_VECTOR_R8
 
+!-------------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function DDINT_R4(xx, xi, yi, n_points) result (ddint_out)
-!====================================================================               ddint
+function DDINT_R4(xi, yi, xx, n_points) result (ddint_out)
+!*******************************************************************************
 ! Interpolation based on Divided Difference Polynomials:
 ! Alex G: January 2010
-!--------------------------------------------------------------------
+!-------------------------------------------------------------------------------
 ! input ...
 ! xx    - the abscissa at which the interpolation is to be evaluated
 ! xi()  - the arrays of data abscissas
@@ -4709,33 +4682,41 @@ function DDINT_R4(xx, xi, yi, n_points) result (ddint_out)
 ! if (n > ni) n = ni
 ! program works for both equally and unequally spaced xi()
 !
-! Source : http://people.sc.fsu.edu/~jburkardt%20/f_src/divdif/divdif.f90
+! Modified by Sergey Budaev
+! Source : http://ww2.odu.edu/~agodunov/computing/programs/book2/Ch01/ddint.f90
 !
-!=====================================================================
+!*******************************************************************************
 
    implicit none
 
    real :: ddint_out
    real, intent(in) :: xx
 
-   integer, intent(in) :: n_points
+   integer, intent(in), optional :: n_points
    real, intent(in) :: xi(:), yi(:)
 
-
    integer :: ni, n
-
-   real :: d(n_points,n_points), x(n_points)
+   real, allocatable, dimension(:,:) :: d
+   real, allocatable, dimension(:)   :: x
    integer :: i, j, k, ix
    real :: c, pn
 
-   ni=size(xi) ! TODO check conformant size yi
+   ni = min(size(xi),size(yi)) ! Check conformant xi and yi.
 
-   ! check order of interpolation
-   if (n_points > ni) then
-      n = ni
+   ! default interpolation order is the input array size.
+   if (present(n_points)) then
+      ! check order of interpolation
+      if (n_points > ni) then
+         n = ni
+      else
+         n = n_points
+      end if
    else
-      n = n_points
+      n = ni
    end if
+
+   allocate (d(n,n))
+   allocate (x(n))
 
    ! if x is ouside the xi(1)-xi(ni) interval take a boundary value
    if (xx <= xi(1)) then
@@ -4802,6 +4783,9 @@ function DDINT_R4(xx, xi, yi, n_points) result (ddint_out)
    end do
    Pn = Pn + c*d(1,i+1);
    end do
+
+   deallocate (d)
+   deallocate (x)
 
    ddint_out = Pn
 
