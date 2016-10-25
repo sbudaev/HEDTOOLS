@@ -150,6 +150,8 @@ private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
                     ! used as a stand-alone module in other projects... But it
                     ! has the same name as in the model proto
 
+private :: R8VEC_ASCENDS_STRICTLY, LIN_INTERPOL_VECTOR_R8
+
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
 
