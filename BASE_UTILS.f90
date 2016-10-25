@@ -97,22 +97,22 @@ interface ARRAY_INDEX            ! Generic interface for calculating an
 
 end interface ARRAY_INDEX
 
-interface LINTERPOL
-
-   module procedure LINTERPOL_R4 ! Generic interface for simple linear
-   module procedure LINTERPOL_R8 ! interpolation functions.
+interface LINTERPOL              ! Generic interface for simple linear
+                                 ! interpolation functions.
+   module procedure LINTERPOL_R4
+   module procedure LINTERPOL_R8
 
 end interface LINTERPOL
 
 interface INTERP_LINEAR          ! Generic interface to linear interpolation
-                                 ! procedure.
+                                 ! and extrapolation procedure.
    module procedure INTERP_LINEAR_R4
    module procedure INTERP_LINEAR_R8
 
 end interface INTERP_LINEAR
 
 interface INTERP_LAGRANGE        ! Generic interface for polynominal
-                                 ! interpolation routines.
+                                 ! interpolation and extrapolation routines.
    module procedure INTERP_LAGRANGE_R4
    module procedure INTERP_LAGRANGE_R8
 
