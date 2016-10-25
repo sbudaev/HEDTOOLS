@@ -22,8 +22,8 @@ character (len=*), private, parameter :: MODNAME = "BASE_UTILS"
 logical, private, parameter :: IS_DEBUG = .FALSE.
 
 ! Set here a flag and output parameter code for invalid calculations.
-!real(kind=8), parameter, private ::  INVALID = -9999.0_8
-integer, parameter, private :: INVALID = -9999
+! real(kind=8), private, parameter ::  INVALID = -9999.0_8
+integer, private, parameter :: INVALID = -9999
 
 !*******************************************************************************
 ! GENERIC INTERFACES
@@ -3466,8 +3466,6 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
    integer :: i                              ! Local counter.
    integer :: ierr_here                      ! Local copy of ierr.
 
-   real ( kind = 4 ), parameter ::  INVALID = -9999.0_4
-
    ! Check if the input vector is strictly increasing.
    if ( .not. R4VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
       if (present(ierr)) ierr=-9999
@@ -3552,8 +3550,6 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
 
    integer :: i                              ! Local counter.
    integer :: ierr_here                      ! Local copy of ierr.
-
-   real ( kind = 8 ), parameter ::  INVALID = -9999.0_8
 
    ! Check if the input vector is strictly increasing.
    if ( .not. R8VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
@@ -3777,8 +3773,6 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
   real ( kind = 8 ) t
   real ( kind = 8 ), intent(in) :: t_data(:)
   real ( kind = 8 ), intent(in) :: t_interp(:)
-
-  real ( kind = 8 ), parameter ::  INVALID = -9999.0_8
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
@@ -4242,8 +4236,6 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
   real :: t
   real, intent(in) :: t_data(:)
   real, intent(in) :: t_interp(:)
-
-  real, parameter ::  INVALID = -9999.0_4
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
