@@ -21,6 +21,10 @@ character (len=*), private, parameter :: MODNAME = "BASE_UTILS"
 ! module LOGGER. May also define integer DEBUG_LEVEL parameter...
 logical, private, parameter :: IS_DEBUG = .FALSE.
 
+! Set here a flag and output parameter code for invalid calculations.
+!real(kind=8), parameter, private ::  INVALID = -9999.0_8
+integer, parameter, private :: INVALID = -9999
+
 !*******************************************************************************
 ! GENERIC INTERFACES
 ! Generic interfaces to the modules....
