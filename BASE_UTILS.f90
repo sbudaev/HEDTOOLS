@@ -4935,6 +4935,56 @@ end function DDINT_R8
 
 
 
+! Function to to compute polynomials using nevilles method:
+double precision function nev( n,x,xNodes,yNodes )
+
+!! https://github.com/calebwherry/F90-Numerical-Lib/
+!
+
+  implicit none
+
+  integer, intent(in) :: n
+  double precision, intent(in) :: x, xNodes(0:n), yNodes(0:n)
+  integer :: i,k
+  double precision :: lnk
+  double precision, allocatable, dimension(:,:) :: a
+
+  allocate( a(0:n,0:n) )
+
+  a = 1.0d0
+
+  a(0:n,0) = yNodes
+
+  do k = 1, n
+    do i = k, n
+      a(i,k) = ( (x-xNodes(i-k))*a(i,k-1) - (x-xNodes(i))*a(i-1,k-1) )/( xNodes(i)-xNodes(i-k) )
+    end do
+  end do
+
+  nev = a(n,n)
+
+  deallocate(a)
+
+  return
+
+end function nev
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
