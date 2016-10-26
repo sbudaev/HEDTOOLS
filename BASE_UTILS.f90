@@ -4933,41 +4933,52 @@ end function DDINT_R8
 
 
 
+!-------------------------------------------------------------------------------
 
-
-! Function to to compute polynomials using nevilles method:
-double precision function nev( n,x,xNodes,yNodes )
-
-!! https://github.com/calebwherry/F90-Numerical-Lib/
+function NEVILLE_R4( xNodes, yNodes, x )  result (nev_out)
+!*******************************************************************************
+! NEVILLE_R4: Neville polynominal interpolant.
 !
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate, optional integer order parameter (data points - 1).
+!
+! Source: https://github.com/calebwherry/F90-Numerical-Lib/!
+!
+!*******************************************************************************
 
   implicit none
 
-  integer, intent(in) :: n
-  double precision, intent(in) :: x, xNodes(0:n), yNodes(0:n)
+  real :: nev_out
+  real, dimension(:) :: xNodes, yNodes ! xNodes(0:n), yNodes(0:n) -> xNodes(1:n+1), yNodes(1:n+1)
+  real, intent(in) :: x
+
+  integer :: n
   integer :: i,k
-  double precision :: lnk
-  double precision, allocatable, dimension(:,:) :: a
+  real :: lnk
+  real, allocatable, dimension(:,:) :: a
+
+  n = size(xNodes) + 1
 
   allocate( a(0:n,0:n) )
 
-  a = 1.0d0
+  a = 1.
 
   a(0:n,0) = yNodes
 
   do k = 1, n
     do i = k, n
-      a(i,k) = ( (x-xNodes(i-k))*a(i,k-1) - (x-xNodes(i))*a(i-1,k-1) )/( xNodes(i)-xNodes(i-k) )
+      a(i,k) = ( (x-xNodes(i-k+1))*a(i,k-1) - (x-xNodes(i+1))*a(i-1,k-1) )/( xNodes(i+1)-xNodes(i-k+1) )
     end do
   end do
 
-  nev = a(n,n)
+  nev_out = a(n,n)
 
   deallocate(a)
 
   return
 
-end function nev
+end function NEVILLE_R4
 
 
 
