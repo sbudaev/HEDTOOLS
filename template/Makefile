@@ -15,6 +15,13 @@ SF_FC = f95
 # Choose the default compiler type
 FC = $(GF_FC)
 
+# Graphics library to use, for example:
+# PGPLOT:
+#   -lpgplot
+# PLPLOT:
+#   -lplplotf95d -lplplotf95cd -lplf95demolibd -I/usr/lib/fortran/modules/plplot
+GRAPHLIB =
+
 # Root of the host name to run in HPC cluster / batch mode, not directly
 HOST_HPC_ROOT=fimm
 
@@ -464,7 +471,7 @@ clean: neat
 
 # Cean temporary files and conflict that remain from syncthing synchronisation.
 neat:
-	-rm -f $(TMPFILES) *conflict*
+	-rm -f $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.*
 
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -473,9 +480,9 @@ neat:
 $(OUT): $(OBJ) $(HTOOLOBJ)
 	@$(MAKE) -f $(THIS_FILE) inc
 ifeq ($(COMPILE_NONINTRINSIC_IEEE),YES)
-	$(FC) $(FFLAGS) -o $(OUT) $^  $(IEEEOBJ)
+	$(FC) $(FFLAGS) -o $(OUT) $^ $(IEEEOBJ) $(GRAPHLIB)
 else
-	$(FC) $(FFLAGS) -o $(OUT) $^
+	$(FC) $(FFLAGS) -o $(OUT) $^ $(GRAPHLIB)
 endif
 
 $(OBJ): $(SRC) $(HTOOLOBJ)
@@ -484,7 +491,7 @@ ifeq ($(COMPILE_NONINTRINSIC_IEEE),YES)
 else
 	@$(MAKE) -f $(THIS_FILE) ieee_not_need
 endif
-	$(FC) $(FFLAGS) -c $^
+	$(FC) $(FFLAGS) -c $^ $(GRAPHLIB)
 
 #-------------------------------------------------------------------------------
 # Build HEDTOOLS
