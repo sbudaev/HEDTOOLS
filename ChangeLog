@@ -1,5 +1,7 @@
 2016-11-18  sbu062
 
+	* BASE_UTILS.adoc: update fix doc, Change Log and svn log
+	* ChangeLog: update changelog
 	* BASE_UTILS.adoc: added some on svn log to manual
 	* ChangeLog: changelog svn2cl --group-by-day
 	* ChangeLog: changelog svn2cl --group-by-day
