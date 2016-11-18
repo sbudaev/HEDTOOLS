@@ -1177,20 +1177,44 @@ svn commit Hed18.f90
 Both +update+ and +commit+ can be performed within any subdirectory of the
 working copy. In such cases they are limited to this subdirectory only.
 
-The +log+ command will issue the list of log messages, by default in reverse
-order (the most recent logs are the first), so the development progress is seen.
-*Example:* To show only +5+ most recent log messages for a specific file use
-such a command:
+Log of changes
+~~~~~~~~~~~~~~
+
+The +svn log+ command will issue the list of log messages, by default in
+the reverse order (the most recent logs go first), so the development
+progress is seen. The log messages can be filtered by date, revision number etc.
+Check out +svn help log+.
+
+*Example:* To show only +5+ most recent log messages for the specific file
++Hed18.f90+ use such a command:
 
 [source,bash]
 --------------------------------------------------------------------------------
 svn log -l 5 Hed18.f90
 --------------------------------------------------------------------------------
 
-There is a small *caveat* with +svn log+: by default it shows log messages from
-the local _working copy_ (not repository). So, if you did many commits lately but
-did not +svn update+, the latest messages will be absent from the log. So,
-*do +svn update+!*
+indexterm:[Subversion, log message]
+
+IMPORTANT: There is a small *caveat* with +svn log+. By default it shows log
+           messages from the local _working copy_ (not repository). So, if you
+           did many commits lately but did not +svn update+, the latest messages
+           will be absent from the log. So, *do +svn update+!*
+
+There is a useful utility *svn2cl* that generates standard
+https://www.gnu.org/prep/standards/html_node/Change-Logs.html[GNU-style ChangeLog]
+file. This utlity can be found in the standard Debian-based Linux repositories
+(subversion-tools). So, installation is trivial on Linux. Download it from the
+official site:
+https://arthurdejong.org/svn2cl/downloads.html[svn2cl].
+
+indexterm:[ChangeLog]
+
+*Example:* The command below produces a slightly more concise daily log.
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn2cl --group-by-day
+--------------------------------------------------------------------------------
 
 Using branches
 ~~~~~~~~~~~~~~
