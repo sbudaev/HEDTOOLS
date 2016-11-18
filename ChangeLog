@@ -1,3 +1,8 @@
+2016-11-18  sbu062
+
+	* ChangeLog: changelog svn2cl --group-by-day
+	* ChangeLog: added changelog produced by svn2cl
+
 2016-10-27  sbu062
 
 	* doc/img/aha_genome_02.svg, doc/img/aha_genome_structure.odg: fix
