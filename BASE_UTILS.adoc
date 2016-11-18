@@ -1177,6 +1177,21 @@ svn commit Hed18.f90
 Both +update+ and +commit+ can be performed within any subdirectory of the
 working copy. In such cases they are limited to this subdirectory only.
 
+The +log+ command will issue the list of log messages, by default in reverse
+order (the most recent logs are the first), so the development progress is seen.
+*Example:* To show only +5+ most recent log messages for a specific file use
+such a command:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn log -l 5 Hed18.f90
+--------------------------------------------------------------------------------
+
+There is a small *caveat* with +svn log+: by default it shows log messages from
+the local _working copy_ (not repository). So, if you did many commits lately but
+did not +svn update+, the latest messages will be absent from the log. So,
+*do +svn update+!*
+
 Using branches
 ~~~~~~~~~~~~~~
 
