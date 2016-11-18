@@ -1,0 +1,2424 @@
+2016-10-27 21:28  sbu062
+
+	* doc/img/aha_genome_02.svg, doc/img/aha_genome_structure.odg: fix
+	  genome chart
+
+2016-10-27 08:57  sbu062
+
+	* template/Makefile: updated makefile
+
+2016-10-27 08:56  sbu062
+
+	* template/run_interpol.f90: added interpolation test/fix/tweak
+	  program
+
+2016-10-26 09:06  sbu062
+
+	* BASE_UTILS.f90: NEVILLE_R4 deleted so far
+
+2016-10-26 08:24  sbu062
+
+	* BASE_UTILS.f90: fix nev. produces nans
+
+2016-10-26 07:52  sbu062
+
+	* BASE_UTILS.f90: added initial Neville polynominal
+
+2016-10-25 15:21  sbu062
+
+	* BASE_UTILS.f90: divided difference polynominals interpolation
+	  routines, r4 r8 plus generic interface, ready
+
+2016-10-25 14:55  sbu062
+
+	* BASE_UTILS.f90: fix indents
+
+2016-10-25 14:47  sbu062
+
+	* BASE_UTILS.f90: fixed ddint, now real kind 4
+
+2016-10-25 13:25  sbu062
+
+	* BASE_UTILS.f90: added ddint (r8)
+
+2016-10-25 12:24  sbu062
+
+	* BASE_UTILS.f90: global private invalid constant
+
+2016-10-25 10:35  sbu062
+
+	* BASE_UTILS.f90: added global parameter code for INVALID
+
+2016-10-25 09:24  sbu062
+
+	* BASE_UTILS.f90: private vector ascends util, pending a vector
+	  wrappers with assumed shape arrays + generic interface
+
+2016-10-25 09:03  sbu062
+
+	* BASE_UTILS.f90: minor change comments
+
+2016-10-24 15:46  sbu062
+
+	* BASE_UTILS.f90: set default real type in r4 interpolation
+	  procedures, added generic interfaces for vector-based wrapper
+	  functions
+
+2016-10-24 14:57  sbu062
+
+	* BASE_UTILS.f90: kind 8 real vector wrappers for lagrange and
+	  linear interpolators
+
+2016-10-24 14:53  sbu062
+
+	* BASE_UTILS.f90: vector based (1-d) wrappers for the linear and
+	  lagrange interpolators
+
+2016-10-24 14:13  sbu062
+
+	* BASE_UTILS.f90: minor fix function ascends strictly
+
+2016-10-24 13:50  sbu062
+
+	* BASE_UTILS.f90: marked disabled scalar parameter values in
+	  comments (by --)
+
+2016-10-24 13:37  sbu062
+
+	* BASE_UTILS.f90: minor
+
+2016-10-24 13:36  sbu062
+
+	* BASE_UTILS.f90: minor comments fixes and formatting, linear and
+	  lagrange interpolation procs ready now
+
+2016-10-24 13:33  sbu062
+
+	* BASE_UTILS.f90: implemented parameter correctness checks and
+	  generic interfaces
+
+2016-10-24 13:11  sbu062
+
+	* BASE_UTILS.f90: added real kind 8 interpolation procs
+
+2016-10-24 12:59  sbu062
+
+	* BASE_UTILS.f90: interpolation procs now ready for kind 8 reals,
+	  minor comments added
+
+2016-10-24 12:40  sbu062
+
+	* BASE_UTILS.f90: minor formats & comments
+
+2016-10-24 12:35  sbu062
+
+	* BASE_UTILS.f90: logical R8VEC_ASCENDS_STRICTLY modernised, uses
+	  result notation
+
+2016-10-24 12:30  sbu062
+
+	* BASE_UTILS.f90: interpolation main drivers now use assumed shape
+	  arrays for input
+
+2016-10-24 11:56  sbu062
+
+	* BASE_UTILS.f90: fix intent Lagrange interpolation
+
+2016-10-24 11:45  sbu062
+
+	* BASE_UTILS.f90: integer default type everywhere
+
+2016-10-24 11:43  sbu062
+
+	* BASE_UTILS.f90: initial implementation of Lagrange polynominal
+	  and linear interpolation in M dimensions, imported, R8 reals
+
+2016-10-22 16:15  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: fix class chart, abstract
+	  type
+
+2016-10-22 16:03  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: updated class chart with the
+	  new base root type for motivation
+
+2016-10-21 10:27  sbu062
+
+	* BASE_UTILS.adoc: coding rules from bigDFT project as a hidden
+	  comment (so far)
+
+2016-10-21 08:45  sbu062
+
+	* BASE_UTILS.adoc: minor fix interpolation doc
+
+2016-10-20 18:20  sbu062
+
+	* BASE_UTILS.adoc: minor fix another
+
+2016-10-20 18:17  sbu062
+
+	* BASE_UTILS.adoc: minor fix
+
+2016-10-20 18:13  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-10-20 18:10  sbu062
+
+	* BASE_UTILS.adoc: update doc, linear interpolation func.
+
+2016-10-20 16:31  sbu062
+
+	* BASE_UTILS.f90: minor fix linear interpolation function , real
+	  kind 8 version plus generic interface
+
+2016-10-20 16:22  sbu062
+
+	* BASE_UTILS.f90: updated linear interpolation function, single
+	  precision real 4
+
+2016-10-20 15:45  sbu062
+
+	* BASE_UTILS.f90: linear interpolation function
+
+2016-10-19 12:39  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: updated class charts
+
+2016-10-18 11:30  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: update scheme, small change
+
+2016-10-18 11:27  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: updated class charts, unitary
+	  motivation objects with both perception components and overall
+	  drive level
+
+2016-10-17 13:48  sbu062
+
+	* BASE_UTILS.adoc: added appraisal and motivation chart
+
+2016-10-17 13:47  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: added appraisal and
+	  motivation class charts
+
+2016-10-17 10:33  sbu062
+
+	* BASE_RANDOM.f90: use floor instead of int for RAND_I, avoids
+	  local elevation of density function in negative arguments.
+
+2016-10-13 14:37  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg: added appraisal class scheme,
+	  now copy of percept
+
+2016-10-11 05:55  sbu062
+
+	* BASE_RANDOM.f90: fix permute_random outside module
+
+2016-10-11 05:42  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: integer random permutation
+	  function
+
+2016-10-11 04:32  sbu062
+
+	* BASE_RANDOM.f90: minor, comment floor versus int
+
+2016-10-10 20:07  sbu062
+
+	* doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: updated class chart, delete age
+	  from memory
+
+2016-10-10 17:32  sbu062
+
+	* doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: updated class chart
+
+2016-10-07 13:09  sbu062
+
+	* doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: modify class chart, perception
+
+2016-10-06 14:21  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: update the individual
+
+2016-10-06 14:16  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: update the individual
+
+2016-10-06 14:05  sbu062
+
+	* doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: update perception object scheme
+
+2016-10-06 10:37  sbu062
+
+	* BASE_UTILS.adoc: added more text on perception
+
+2016-10-06 10:11  sbu062
+
+	* BASE_UTILS.adoc, doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: fixed perception scheme
+
+2016-10-06 10:01  sbu062
+
+	* BASE_UTILS.adoc: added perception diagrams to doc
+
+2016-10-06 09:50  sbu062
+
+	* doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: added perception objects
+	  diagram to img doc
+
+2016-09-28 09:17  sbu062
+
+	* BASE_UTILS.adoc: bullets in doc
+
+2016-09-27 08:53  sbu062
+
+	* BASE_UTILS.adoc: minor addition: some tips and formatting
+
+2016-09-23 04:38  sbu062
+
+	* ., .svnignore: properties update
+
+2016-09-22 03:44  sbu062
+
+	* BASE_UTILS.adoc: updated indices
+
+2016-09-21 15:35  sbu062
+
+	* BASE_UTILS.adoc: another small fix
+
+2016-09-21 15:28  sbu062
+
+	* BASE_UTILS.adoc: small fixes
+
+2016-09-21 13:40  sbu062
+
+	* BASE_UTILS.adoc: added asciidoc details + make doc
+
+2016-09-21 12:14  sbu062
+
+	* BASE_UTILS.adoc: added asciidoc to software requirements
+
+2016-09-21 09:22  sbu062
+
+	* BASE_UTILS.adoc: micro fix blanks only
+
+2016-09-21 08:59  sbu062
+
+	* BASE_UTILS.adoc: fix code example for vector indexing procedure,
+	  check for invalid array memory reference
+
+2016-09-19 14:30  sbu062
+
+	* BASE_UTILS.adoc: minor fix index
+
+2016-09-19 13:13  sbu062
+
+	* BASE_UTILS.adoc, BASE_UTILS.f90: added partial indexing routines
+	  + generic interfaces
+
+2016-09-15 18:14  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated the individual class
+	  diagram - added population
+
+2016-09-14 07:18  sbu062
+
+	* BASE_UTILS.adoc: note added on f95 Oracle non-support of OO code,
+	  f2003 non-compilant
+
+2016-09-13 11:41  sbu062
+
+	* doc/img/aha_environment_diagr.odg,
+	  doc/img/aha_environment_diagr.svg: updated class diagram for
+	  habitat
+
+2016-09-13 11:17  sbu062
+
+	* doc/img/aha_environment_diagr.odg,
+	  doc/img/aha_environment_diagr.svg: added predation
+
+2016-09-13 10:31  sbu062
+
+	* doc/img/aha_environment_diagr.odg,
+	  doc/img/aha_environment_diagr.svg, doc/img/aha_modules.odg,
+	  doc/img/aha_modules.svg: updated class diagramc & schemes
+
+2016-09-13 08:25  sbu062
+
+	* BASE_UTILS.adoc, doc/img/aha_environment_diagr.odg,
+	  doc/img/aha_environment_diagr.svg,
+	  doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated class diagrams, added
+	  the environment module
+
+2016-09-13 01:55  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: update class diagram for
+	  individual
+
+2016-09-12 13:04  sbu062
+
+	* BASE_UTILS.adoc: minor fix for svn merge doc
+
+2016-09-12 12:58  sbu062
+
+	* BASE_UTILS.adoc, doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated class hierarchy scheme,
+	  changed fig sizes a little
+
+2016-09-11 10:15  sbu062
+
+	* BASE_UTILS.adoc, BASE_UTILS.f90: IDRANK renamed to ARRAY_INDEX
+
+2016-09-11 08:59  sbu062
+
+	* BASE_UTILS.adoc: footnote added on indexx
+
+2016-09-10 18:23  sbu062
+
+	* BASE_UTILS.adoc, BASE_UTILS.f90: fixed vector indexing routines
+
+2016-09-10 16:47  sbu062
+
+	* BASE_UTILS.adoc, BASE_UTILS.f90: small fix
+
+2016-09-10 11:24  sbu062
+
+	* BASE_UTILS.adoc, BASE_UTILS.f90: added array ranking subs with
+	  generic interface, performance optimised versions
+
+2016-09-07 12:28  sbu062
+
+	* BASE_UTILS.adoc: block labels code style
+
+2016-09-01 19:53  sbu062
+
+	* BASE_UTILS.adoc: added busybox win32 lins to software
+
+2016-08-24 14:23  sbu062
+
+	* BASE_UTILS.adoc: small fix
+
+2016-08-24 13:29  sbu062
+
+	* BASE_UTILS.adoc: fixed tip on string dummy parameters
+
+2016-08-24 13:18  sbu062
+
+	* BASE_UTILS.adoc: added tip on string dummy parameters, aleways
+	  use assumed length , asterisk
+
+2016-08-24 10:34  sbu062
+
+	* BASE_UTILS.adoc: fix athomic func example code
+
+2016-08-24 10:32  sbu062
+
+	* BASE_UTILS.adoc: added athomic func example code
+
+2016-08-20 08:54  sbu062
+
+	* BASE_UTILS.adoc: added to code formatting rules
+
+2016-08-17 14:08  sbu062
+
+	* BASE_UTILS.adoc: minor updates
+
+2016-08-16 12:39  sbu062
+
+	* BASE_UTILS.adoc: placed timer_cpu from commondata as a good and
+	  trivial example of OO implementation
+
+2016-08-16 10:36  sbu062
+
+	* BASE_UTILS.adoc, Makefile: minor updates
+
+2016-08-15 07:06  sbu062
+
+	* BASE_UTILS.adoc: doc on merge usage
+
+2016-08-13 11:59  sbu062
+
+	* BASE_UTILS.adoc: minor corrected
+
+2016-08-13 11:49  sbu062
+
+	* BASE_UTILS.adoc: updated implementation notes on RANDOM
+
+2016-08-12 16:49  sbu062
+
+	* BASE_RANDOM.f90: formatting holes in code removed
+
+2016-08-12 16:46  sbu062
+
+	* BASE_UTILS.adoc: updated doc - random 64 bit procs
+
+2016-08-12 15:01  sbu062
+
+	* BASE_RANDOM.f90: RNORM - renormalised - 64 bit array funcs ready
+
+2016-08-12 14:50  sbu062
+
+	* BASE_RANDOM.f90: RNORM 64 bit array funcs ready
+
+2016-08-12 14:40  sbu062
+
+	* BASE_RANDOM.f90: RAND 64 bit array funcs ready
+
+2016-08-12 14:32  sbu062
+
+	* BASE_RANDOM.f90: started implementing R8 64 bit random funcs
+
+2016-08-11 14:38  sbu062
+
+	* doc/img/aha_genome_02.svg, doc/img/aha_genome_structure.odg:
+	  updated figs with genome architecture, shadow unised chromosomes
+	  in GxP matrix
+
+2016-08-11 06:31  sbu062
+
+	* doc/img/aha_modules.odg, doc/img/aha_modules.svg: update modules
+	  scheme - swapped modules hormones-body
+
+2016-08-11 06:26  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated individual class
+	  diagram, moved the body behind hormones
+
+2016-08-10 05:14  sbu062
+
+	* BASE_UTILS.adoc: minor change - forgot on keep alive branch after
+	  reintegrate
+
+2016-08-08 11:22  sbu062
+
+	* doc/img/aha_modules.odg, doc/img/aha_modules.svg: updated figure
+	  in doc, overview of modules
+
+2016-07-28 08:31  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated figs
+
+2016-07-15 09:48  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated class hierarchy fig
+
+2016-07-13 08:31  sbu062
+
+	* BASE_UTILS.adoc: changes that did in bus
+
+2016-07-13 06:37  sbu062
+
+	* doc/README_Roadmap.txt: delted roadmap readme, it is no more
+	  actual
+
+2016-07-11 17:41  sbu062
+
+	* BASE_UTILS.adoc: more tips on subversion
+
+2016-07-10 10:28  sbu062
+
+	* ., .svnignore: updated svnignore
+
+2016-07-10 07:54  sbu062
+
+	* ., doc/BASE_UTILS.pdf: maintenance, deleted PDF doc, and updated
+	  svnignore properties
+
+2016-07-10 06:10  sbu062
+
+	* doc/img/aha_genome_01.svg, doc/img/aha_genome_structure.odg: fix
+	  pics
+
+2016-07-10 05:10  sbu062
+
+	* BASE_UTILS.adoc: added on style of labels/var names
+
+2016-07-09 09:53  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: updated figs
+
+2016-07-09 09:04  sbu062
+
+	* BASE_UTILS.adoc: added code style - uppercase and lowercase use
+	  rules
+
+2016-07-08 18:35  sbu062
+
+	* doc/img/aha_genome_02.svg, doc/img/aha_genome_structure.odg:
+	  updated fig.
+
+2016-07-08 14:25  sbu062
+
+	* doc/img/aha_genome_01.svg, doc/img/aha_genome_structure.odg:
+	  updated pics for doc (UML diagrams)
+
+2016-07-08 14:15  sbu062
+
+	* BASE_UTILS.adoc: added UML diagram for the individual
+
+2016-07-08 14:03  sbu062
+
+	* doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: added pics for class hierarchy,
+	  UML diagram
+
+2016-07-08 11:10  sbu062
+
+	* doc/img/aha_genome_02.svg, doc/img/aha_genome_structure.odg: fix
+	  fig 2 gen. structure
+
+2016-07-08 11:03  sbu062
+
+	* doc/img/aha_genome_01.svg, doc/img/aha_genome_02.svg,
+	  doc/img/aha_genome_structure.odg: added genetic structure pics
+
+2016-07-08 10:59  sbu062
+
+	* BASE_UTILS.adoc: added new AHA genetic structure schemes to the
+	  doc
+
+2016-07-08 08:45  sbu062
+
+	* template/Makefile: fix HeadURL
+
+2016-07-08 08:40  sbu062
+
+	* template/Doxyfile: fix HeadURL
+
+2016-07-08 08:40  sbu062
+
+	* template/Doxyfile: added HeadURL
+
+2016-07-08 08:38  sbu062
+
+	* template/Doxyfile: added keywords
+
+2016-07-04 08:56  sbu062
+
+	* BASE_UTILS.adoc: more small changes made in bus
+
+2016-07-04 07:02  sbu062
+
+	* BASE_UTILS.adoc, doc/img/img_doc_cb_makefile.png,
+	  doc/img/img_doc_cb_makefile_bld.png: use custom makefile in c:b
+	  and smart svn tool
+
+2016-07-01 09:13  sbu062
+
+	* BASE_UTILS.adoc: fix outdated info about modules
+
+2016-07-01 09:01  sbu062
+
+	* BASE_UTILS.adoc: added ezwinports to software - for make for
+	  windows
+
+2016-07-01 07:02  sbu062
+
+	* BASE_UTILS.adoc, Makefile: minor fix for ieee modules link
+
+2016-06-30 20:18  sbu062
+
+	* BASE_UTILS.adoc: cleanup doc
+
+2016-06-30 16:56  sbu062
+
+	* Makefile: Fixed targetto build the library callable from R
+
+2016-06-30 16:02  sbu062
+
+	* BASE_UTILS.adoc: more fixed doc
+
+2016-06-30 15:47  sbu062
+
+	* BASE_UTILS.adoc: forgot to mention IEEE modules in scheme outline
+	  + added on Makefiles in HEDTOOLS and model dir
+
+2016-06-30 15:01  sbu062
+
+	* doc/img/aha_modules.odg, doc/img/aha_modules.svg: fixed new fig,
+	  forgot IEEE modules
+
+2016-06-30 10:30  sbu062
+
+	* BASE_UTILS.adoc: added overview of modules to doc
+
+2016-06-30 10:30  sbu062
+
+	* doc/img/aha_modules.odg, doc/img/aha_modules.svg: added more pics
+	  for doc
+
+2016-06-29 14:23  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-29 14:21  sbu062
+
+	* BASE_UTILS.adoc: minor fix
+
+2016-06-29 14:16  sbu062
+
+	* BASE_UTILS.adoc: doc, separate make distro for Windows
+
+2016-06-28 19:44  sbu062
+
+	* BASE_CSV_IO.f90, BASE_LOGGER.f90, BASE_UTILS.f90: cleanup header
+	  comments
+
+2016-06-28 15:29  sbu062
+
+	* BASE_UTILS.adoc: small changes to doc
+
+2016-06-28 12:14  sbu062
+
+	* Makefile: added option to buils shared library callable from R
+	  dyn.load
+
+2016-06-28 09:41  sbu062
+
+	* doc/img/img_doc_tortoise_init1.png,
+	  doc/img/img_doc_tortoise_init2.png,
+	  doc/img/img_doc_tortoise_init3.png,
+	  doc/img/img_doc_tortoise_init4.png: added more images
+
+2016-06-28 09:38  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-28 09:37  sbu062
+
+	* BASE_UTILS.adoc: added tortoisesvn setup on windows to doc
+
+2016-06-28 08:28  sbu062
+
+	* template/Makefile: fixed make_run on Windows
+
+2016-06-28 06:51  sbu062
+
+	* Makefile: fixed extra quote in info
+
+2016-06-28 06:16  sbu062
+
+	* BASE_CSV_IO.f90: deallocate for column headers
+
+2016-06-27 21:02  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-27 21:02  sbu062
+
+	* doc/img/ok.svg: add pic
+
+2016-06-27 21:00  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-06-27 15:58  sbu062
+
+	* BASE_UTILS.adoc: added doc on portability
+
+2016-06-27 15:17  sbu062
+
+	* BASE_CSV_IO.f90: fixed wrong column headers - was checking only
+	  first maximum label length, now overall maximum checks
+
+2016-06-27 11:06  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-06-27 10:59  sbu062
+
+	* BASE_UTILS.adoc: added length of line to doc
+
+2016-06-27 09:25  sbu062
+
+	* BASE_UTILS.adoc: added formatting long lines to doc -- prog style
+
+2016-06-27 08:32  sbu062
+
+	* BASE_UTILS.adoc: small fix doc
+
+2016-06-22 08:16  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-06-22 08:15  sbu062
+
+	* BASE_UTILS.adoc: minor fix
+
+2016-06-22 08:13  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-06-22 08:12  sbu062
+
+	* BASE_UTILS.adoc, Makefile: fixed command line compile with static
+	  lib, it works on all platforms simpler way
+
+2016-06-21 20:31  sbu062
+
+	* Makefile: fixed link instructions in static lib readme
+
+2016-06-21 19:23  sbu062
+
+	* README_Notes.txt: deleted notes
+
+2016-06-21 19:09  sbu062
+
+	* template/RUN.pbs: added keywords
+
+2016-06-21 19:07  sbu062
+
+	* template/Makefile: updated template makefile from MOD2
+
+2016-06-21 18:36  sbu062
+
+	* template/Makefile: changed compiler optimisation to safe O1 for
+	  Solaris Studio, f95 and executables crash on 64 bit systems
+	  magical errors with O3 and autopar
+
+2016-06-21 16:57  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-21 16:56  sbu062
+
+	* BASE_UTILS.adoc: updated doc - added array routines for arbitrary
+	  random numbers
+
+2016-06-21 16:05  sbu062
+
+	* BASE_RANDOM.f90: implemented RNORM array with arbitrary mean and
+	  variance
+
+2016-06-21 08:45  sbu062
+
+	* BASE_RANDOM.f90: implemented RAND alias function
+
+2016-06-20 21:54  sbu062
+
+	* BASE_RANDOM.f90: fix commented out nested loop versions --
+	  deleted
+
+2016-06-20 21:51  sbu062
+
+	* BASE_RANDOM.f90: implemented renormalised functions for uniformly
+	  distributed arrays with arbitrary range
+
+2016-06-20 14:28  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: implemented renormalised normal
+	  random variates, no respective array functions yet.
+
+2016-06-20 12:31  sbu062
+
+	* BASE_RANDOM.f90: implemented renormalised random uniforms with
+	  integer range
+
+2016-06-20 12:10  sbu062
+
+	* BASE_RANDOM.f90: implemented uniform random numbers with
+	  arbitrary range, plus generic integface
+
+2016-06-20 11:46  sbu062
+
+	* BASE_RANDOM.f90: implemented renormalisation functions for
+	  uniform random numbers
+
+2016-06-20 08:28  sbu062
+
+	* README_Roadmap.txt, doc/README_Roadmap.txt: removed/moved to doc
+	  outdated readme files
+
+2016-06-18 10:09  sbu062
+
+	* template/Doxyfile: copied Doxyfile with updated path to img to
+	  templates
+
+2016-06-18 09:57  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-18 09:56  sbu062
+
+	* BASE_UTILS.adoc: updated all pathes to images from root to
+	  doc/img in the text
+
+2016-06-18 09:47  sbu062
+
+	* doc/img/img_doc_records_work.odg, img_doc_records_work.odg:
+	  moving images to img
+
+2016-06-18 09:47  sbu062
+
+	* doc/img/img_doc_record_append.odg, img_doc_record_append.odg:
+	  moving images to img
+
+2016-06-18 09:46  sbu062
+
+	* doc/img/img_doc_records_work.svg, img_doc_records_work.svg:
+	  moving images to img
+
+2016-06-18 09:46  sbu062
+
+	* doc/img/img_doc_record_append.svg, img_doc_record_append.svg:
+	  moving images to img
+
+2016-06-18 09:45  sbu062
+
+	* doc/img/uni-bergen-liten.png, uni-bergen-liten.png: moving images
+	  to img
+
+2016-06-18 09:44  sbu062
+
+	* doc/img/img_doc_tortoise.png, img_doc_tortoise.png: moving images
+	  to img
+
+2016-06-18 09:44  sbu062
+
+	* doc/img/img_doc_svn_first.png, img_doc_svn_first.png: moving
+	  images to img
+
+2016-06-18 09:43  sbu062
+
+	* doc/img/img_doc_reshape2.png, img_doc_reshape2.png: moving images
+	  to img
+
+2016-06-18 09:43  sbu062
+
+	* doc/img/img_doc_reshape1.png, img_doc_reshape1.png: moving images
+	  to img
+
+2016-06-18 09:43  sbu062
+
+	* doc/img/img_doc_ms_studio_solution.png,
+	  img_doc_ms_studio_solution.png: moving images to img
+
+2016-06-18 09:42  sbu062
+
+	* doc/img/img_doc_ms_studio_ignore.png,
+	  img_doc_ms_studio_ignore.png: moving images to img
+
+2016-06-18 09:42  sbu062
+
+	* doc/img/img_doc_ms_studio_fail.png, img_doc_ms_studio_fail.png:
+	  moving images to img
+
+2016-06-18 09:41  sbu062
+
+	* doc/img/img_doc_ms_studio_add_lib.png,
+	  img_doc_ms_studio_add_lib.png: moving images to img
+
+2016-06-18 09:41  sbu062
+
+	* doc/img/img_doc_log.png, img_doc_log.png: moving images to img
+
+2016-06-18 09:40  sbu062
+
+	* doc/img/img_doc_intel_win_term.png, img_doc_intel_win_term.png:
+	  moving images to img
+
+2016-06-18 09:40  sbu062
+
+	* doc/img/img_doc_intel_win_menu.png, img_doc_intel_win_menu.png:
+	  moving images to img
+
+2016-06-18 09:39  sbu062
+
+	* doc/img/img_doc_intel_win_conemu.png,
+	  img_doc_intel_win_conemu.png: moving images to img
+
+2016-06-18 09:39  sbu062
+
+	* doc/img/img_doc_intel_win_conemu2.png,
+	  img_doc_intel_win_conemu2.png: moving images to img
+
+2016-06-18 09:39  sbu062
+
+	* doc/img/img_doc_fxce_svn.png, img_doc_fxce_svn.png: moving images
+	  to img
+
+2016-06-18 09:38  sbu062
+
+	* doc/img/img_doc_fimm_svn.png, img_doc_fimm_svn.png: moving images
+	  to img
+
+2016-06-18 09:38  sbu062
+
+	* doc/img/img_doc_far.png, img_doc_far.png: moving images to img
+
+2016-06-18 09:38  sbu062
+
+	* doc/img/img_doc_doxygen.png, img_doc_doxygen.png: moving images
+	  to img
+
+2016-06-18 09:37  sbu062
+
+	* doc/img/img_doc_doxygen_pdf.png, img_doc_doxygen_pdf.png: moving
+	  images to img
+
+2016-06-18 09:37  sbu062
+
+	* doc/img/img_doc_doxygen_formula.png, img_doc_doxygen_formula.png:
+	  moving images to img
+
+2016-06-18 09:36  sbu062
+
+	* doc/img/img_doc_cb_relative.png, img_doc_cb_relative.png: moving
+	  images to img
+
+2016-06-18 09:35  sbu062
+
+	* doc/img/img_doc_cb_link_order.png, img_doc_cb_link_order.png:
+	  moving images to img
+
+2016-06-18 09:34  sbu062
+
+	* doc/img/img_doc_cb_add_lib.png, img_doc_cb_add_lib.png: moving
+	  images to img
+
+2016-06-18 09:31  sbu062
+
+	* doc/img: making separate directory for images, there are too many
+	  in the root, too much mess
+
+2016-06-18 09:07  sbu062
+
+	* Makefile: minor fix link to win32
+
+2016-06-17 21:42  sbu062
+
+	* BASE_UTILS.adoc: minor fix, doc
+
+2016-06-17 14:38  sbu062
+
+	* img_doc_cb_add_lib.png: fix pic
+
+2016-06-17 14:32  sbu062
+
+	* BASE_UTILS.adoc, img_doc_cb_add_lib.png,
+	  img_doc_cb_link_order.png, img_doc_cb_relative.png: added
+	  code::blocks building to doc
+
+2016-06-17 12:04  sbu062
+
+	* Makefile: added warning if uname and zip unavailable, crucial on
+	  Windows
+
+2016-06-17 11:31  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-06-17 11:29  sbu062
+
+	* BASE_UTILS.adoc, Makefile: added info on utils that may not be
+	  available on Windows platform
+
+2016-06-16 19:57  sbu062
+
+	* tests: "Removed_using_TkSVN"
+
+2016-06-16 17:55  sbu062
+
+	* BASE_UTILS.adoc, Makefile: minor fixes
+
+2016-06-16 12:18  sbu062
+
+	* Makefile: insert revision number from SVN to readme in zip distro
+
+2016-06-16 12:13  sbu062
+
+	* Makefile: zipfile distro file name now includes platform,
+	  compiler and revision for convenience
+
+2016-06-16 11:48  sbu062
+
+	* doc/BASE_UTILS.pdf, img_doc_ms_studio_solution.png: update pdf, +
+	  additional pic for doc
+
+2016-06-16 11:47  sbu062
+
+	* BASE_UTILS.adoc, Makefile: fixed parallel code in intel fortran
+	  for windows, fix doc on Visual Studio - still need to include
+	  .mod files!
+
+2016-06-16 09:49  sbu062
+
+	* BASE_UTILS.adoc: small fix, added footnote to doc
+
+2016-06-16 09:29  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-06-16 09:25  sbu062
+
+	* BASE_UTILS.adoc, Makefile: help in Makefile , added to doc on
+	  builds with static lib
+
+2016-06-15 22:45  sbu062
+
+	* img_doc_ms_studio_add_lib.png, img_doc_ms_studio_fail.png,
+	  img_doc_ms_studio_ignore.png: additional pics on Visual Studio
+
+2016-06-15 22:39  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-15 22:37  sbu062
+
+	* BASE_UTILS.adoc, Makefile: Fixed Makefile to build static library
+	  on Windows, pluggable to Visual Studio, updated doc manual
+
+2016-06-15 12:15  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-06-15 12:12  sbu062
+
+	* BASE_UTILS.adoc, img_doc_intel_win_conemu.png,
+	  img_doc_intel_win_conemu2.png: fix doc on initialising Intel
+	  Fortran environment for command prompt on Windows
+
+2016-06-15 05:51  sbu062
+
+	* template/Makefile: fix comments in Makefile
+
+2016-06-14 19:00  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-06-14 18:57  sbu062
+
+	* img_doc_intel_win_conemu.png, img_doc_intel_win_menu.png,
+	  img_doc_intel_win_term.png: added pics to doc
+
+2016-06-14 18:55  sbu062
+
+	* BASE_UTILS.adoc, template/Makefile: Fixed Makefile to work with
+	  Intel Fortran on Windows, added to doc how to set up build
+	  command prompt environment for Windows
+
+2016-06-09 13:02  sbu062
+
+	* BASE_UTILS.adoc: added new svn dir tree with a few comments +
+	  command to produce tree in hidden comments
+
+2016-06-09 09:43  sbu062
+
+	* BASE_UTILS.adoc: added a comment on older PRNG implementations
+	  like RAN
+
+2016-06-09 06:58  sbu062
+
+	* BASE_RANDOM.f90: more fix prng comments
+
+2016-06-09 06:54  sbu062
+
+	* BASE_RANDOM.f90: fix comment on PRNG, added notes on GNU gfortran
+
+2016-06-09 06:46  sbu062
+
+	* BASE_RANDOM.f90: updated comment for PRNG
+
+2016-06-08 20:17  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: fixed RAND_ARRAY to avoid loops
+	  altogether, it's trivial wrapper to random_number. Do we need
+	  function for that, producing matrix?
+
+2016-06-08 09:44  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf manual
+
+2016-06-08 09:43  sbu062
+
+	* BASE_UTILS.adoc: small fix in doc
+
+2016-06-08 09:30  sbu062
+
+	* BASE_UTILS.adoc: added to doc, a few changes on
+	  coding/optimization style
+
+2016-06-07 19:50  sbu062
+
+	* BASE_UTILS.adoc: added a few loop-free to doc + code
+
+2016-06-06 19:36  sbu062
+
+	* BASE_UTILS.adoc: coding style update in doc
+
+2016-06-04 12:20  sbu062
+
+	* .: ignore files, updated
+
+2016-06-04 12:16  sbu062
+
+	* ., .svnignore: updated svn ignores
+
+2016-06-04 12:13  sbu062
+
+	* ., .svnignore, doc/BASE_UTILS.pdf: updated svn ignores
+
+2016-06-03 09:48  sbu062
+
+	* BASE_UTILS.adoc: small fix, doc
+
+2016-06-02 11:16  sbu062
+
+	* BASE_UTILS.adoc: ... or AHA-BEAST
+
+2016-06-02 11:15  sbu062
+
+	* BASE_UTILS.adoc: name for the toolbox BEAST :)
+
+2016-06-02 10:59  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: Implemented function to
+	  generate random strings
+
+2016-06-01 13:27  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: added subroutines to generate
+	  random integer arrays and matrices, needed for genetic structure
+	  in OO G2 code
+
+2016-05-31 12:37  sbu062
+
+	* BASE_UTILS.adoc: micro-fix
+
+2016-05-31 12:25  sbu062
+
+	* BASE_UTILS.adoc: more tweaks on makefile doc
+
+2016-05-31 12:03  sbu062
+
+	* BASE_UTILS.adoc: more fixes for doc about makefile
+
+2016-05-31 11:54  sbu062
+
+	* BASE_UTILS.adoc: fix doc, on makefile usage/tweaking
+
+2016-05-31 09:33  sbu062
+
+	* BASE_UTILS.adoc: added doc on GNU Make
+
+2016-05-30 12:47  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-30 12:39  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: fix for random arrays, added
+	  alias for matrix
+
+2016-05-30 12:08  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: implemented functions to
+	  generate real (4) arrays of random numbers
+
+2016-05-27 08:52  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: Implemented RNORM function in
+	  mod RANDOM for normal distribution PRNG
+
+2016-05-25 11:58  sbu062
+
+	* BASE_UTILS.adoc: added link to pysvn to doc
+
+2016-05-25 09:48  sbu062
+
+	* BASE_UTILS.adoc: added tkcsv to software in doc
+
+2016-05-24 10:08  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-24 09:04  sbu062
+
+	* BASE_UTILS.adoc: added info on propset tags to doc
+
+2016-05-21 15:51  sbu062
+
+	* BASE_UTILS.adoc: added some more GUI for svn and links
+
+2016-05-19 22:48  sbu062
+
+	* ., BASE_UTILS.adoc, doc/BASE_UTILS.pdf: update doc from trunk:
+	  added repo links
+
+2016-05-19 19:07  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-05-19 12:55  sbu062
+
+	* BASE_UTILS.adoc, img_doc_record_append.odg,
+	  img_doc_record_append.svg, img_doc_records_work.odg,
+	  img_doc_records_work.svg: added / fixed scheme for doc
+
+2016-05-19 11:46  sbu062
+
+	* img_doc_record_append.odg: added ODF source for pic
+
+2016-05-19 08:13  sbu062
+
+	* BASE_UTILS.adoc, img_doc_record_append.svg: added pic and
+	  cross-refs to doc
+
+2016-05-18 14:03  sbu062
+
+	* BASE_CSV_IO.f90: fixed comments after CVS_GUESS_RECORD_LENGTH
+
+2016-05-16 19:52  sbu062
+
+	* BASE_UTILS.adoc: added csv editors, now links to web, commented
+	  out notes
+
+2016-05-16 17:15  sbu062
+
+	* BASE_UTILS.adoc: added cross-refs and final manual build note
+
+2016-05-14 08:48  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-14 08:18  sbu062
+
+	* BASE_UTILS.adoc, doc/BASE_UTILS.pdf: updated doc
+
+2016-05-13 19:23  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-05-13 19:21  sbu062
+
+	* BASE_CSV_IO.f90, BASE_UTILS.adoc: implemented function to guess
+	  maximum record length for string record for APPEND function
+
+2016-05-13 18:21  sbu062
+
+	* BASE_CSV_IO.f90: update comments TODO
+
+2016-05-13 18:13  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-13 18:07  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-05-13 18:06  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-13 18:00  sbu062
+
+	* .: will issue new pdf to trunk
+
+2016-05-13 17:57  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-05-13 17:52  sbu062
+
+	* BASE_UTILS.adoc: added svn branching to doc
+
+2016-05-13 15:17  sbu062
+
+	* .: reintegrating
+
+2016-05-13 15:11  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-13 15:09  sbu062
+
+	* .: maintenance properties
+
+2016-05-13 15:04  sbu062
+
+	* doc/BASE_STRINGS.pdf, doc/README.txt: deleted old files
+
+2016-05-13 14:49  sbu062
+
+	* .: fix
+
+2016-05-13 14:44  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-05-13 14:39  sbu062
+
+	* BASE_STRINGS.f90: properties update
+
+2016-05-13 14:38  sbu062
+
+	* BASE_STRINGS.f90: properties added
+
+2016-05-13 14:29  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-05-13 14:28  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-05-13 14:12  sbu062
+
+	* BASE_UTILS.adoc: added to doc, some tips on branching
+
+2016-05-04 12:45  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-05-04 11:04  sbu062
+
+	* BASE_UTILS.adoc: add to doc, CSV multiple arrays with different
+	  types
+
+2016-05-03 17:54  sbu062
+
+	* BASE_UTILS.adoc: minor fix, doc
+
+2016-05-03 15:54  sbu062
+
+	* img_doc_reshape1.png, img_doc_reshape2.png: added two screenshots
+	  for reshape doc
+
+2016-05-03 15:54  sbu062
+
+	* BASE_UTILS.adoc: added description of reshape for array combining
+	  in CSV
+
+2016-05-02 13:55  sbu062
+
+	* BASE_UTILS.adoc: little fix, doc
+
+2016-04-28 10:39  sbu062
+
+	* doc/BASE_UTILS.pdf: up pdf
+
+2016-04-28 10:39  sbu062
+
+	* BASE_UTILS.adoc, img_doc_svn_first.png: fix doc
+
+2016-04-28 09:48  sbu062
+
+	* BASE_UTILS.adoc: fix doc, svn first time
+
+2016-04-27 12:06  sbu062
+
+	* BASE_UTILS.adoc: minifix
+
+2016-04-27 12:04  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-04-27 11:56  sbu062
+
+	* BASE_LOGGER.f90: fix delimiter configuration in logger
+
+2016-04-26 08:54  sbu062
+
+	* img_doc_doxygen.png: forgot to commit this image for doc
+
+2016-04-26 08:46  sbu062
+
+	* BASE_UTILS.adoc: fix doc, links to latex and GS for Windows
+	  doxygen
+
+2016-04-26 08:38  sbu062
+
+	* uni-bergen-liten.png: addad a small logo for doxygen
+
+2016-04-25 09:40  sbu062
+
+	* BASE_UTILS.adoc: nano-fix
+
+2016-04-25 09:24  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-04-23 18:42  sbu062
+
+	* BASE_UTILS.adoc, img_doc_doxygen_pdf.png: added pdf doxygen image
+	  to doc
+
+2016-04-23 18:13  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-04-23 15:01  sbu062
+
+	* BASE_UTILS.adoc: updated doc
+
+2016-04-23 12:03  sbu062
+
+	* tests/MODEL_PROTO.f90: add to logger test
+
+2016-04-23 11:51  sbu062
+
+	* tests/MODEL_PROTO.f90: fixed random_seed to simple
+
+2016-04-23 11:50  sbu062
+
+	* BASE_UTILS.adoc, img_doc_log.png: described logger in doc
+
+2016-04-23 07:50  sbu062
+
+	* img_doc_doxygen_formula.png: doc part for doxygen, a new img
+
+2016-04-23 07:49  sbu062
+
+	* BASE_UTILS.adoc: completed doc part for doxygen
+
+2016-04-22 17:29  sbu062
+
+	* BASE_UTILS.adoc, img_doc_doxygen.png: reorganised doc and added
+	  doxygen info
+
+2016-04-14 05:56  sbu062
+
+	* BASE_UTILS.adoc: update doc
+
+2016-04-12 19:51  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-04-12 19:23  sbu062
+
+	* BASE_UTILS.adoc: smal fix, doc
+
+2016-04-12 17:11  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-04-12 17:09  sbu062
+
+	* BASE_UTILS.adoc: add more to doc on OOP
+
+2016-04-12 14:36  sbu062
+
+	* BASE_UTILS.adoc: started adding OOP pieces to doc
+
+2016-04-11 22:31  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-04-11 22:21  sbu062
+
+	* BASE_UTILS.adoc: started adding OOP to doc
+
+2016-04-08 14:29  sbu062
+
+	* template/Makefile: updated template Makefile
+
+2016-04-06 10:07  sbu062
+
+	* BASE_UTILS.adoc: litle fix, doc
+
+2016-04-06 09:44  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-04-05 20:35  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: fix random_seed
+
+2016-04-05 18:11  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.adoc: add debug output random seed
+	  (optional)
+
+2016-04-04 10:05  sbu062
+
+	* BASE_UTILS.adoc, img_doc_far.png: doc
+
+2016-04-04 09:55  sbu062
+
+	* BASE_UTILS.adoc, img_doc_fimm_svn.png: doc
+
+2016-04-01 19:26  sbu062
+
+	* template/Makefile: Determine platform with ComSpec
+
+2016-03-31 15:31  sbu062
+
+	* BASE_UTILS.adoc: minor fix
+
+2016-03-31 13:36  sbu062
+
+	* BASE_UTILS.adoc: minor
+
+2016-03-31 12:59  sbu062
+
+	* template/RUN.pbs: add fimm script (rudimentary)
+
+2016-03-30 12:00  sbu062
+
+	* BASE_UTILS.adoc: updated doc
+
+2016-03-30 09:10  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-03-30 07:15  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-03-30 05:32  sbu062
+
+	* doc/BASE_UTILS.pdf: up pdf
+
+2016-03-30 05:28  sbu062
+
+	* BASE_UTILS.adoc: updated doc
+
+2016-03-29 20:33  sbu062
+
+	* template/Makefile: little fix IEEE
+
+2016-03-29 12:25  sbu062
+
+	* doc/BASE_UTILS.pdf: up pdf
+
+2016-03-29 12:24  sbu062
+
+	* BASE_UTILS.adoc: updated doc, base_strings module added
+
+2016-03-29 10:05  sbu062
+
+	* Makefile: add strings mod
+
+2016-03-29 09:46  sbu062
+
+	* template/Makefile: made grep case-insensitive, added strings
+	  module, rudimentary list of modules used
+
+2016-03-29 09:26  sbu062
+
+	* BASE_STRINGS.f90, BASE_STRINGS_MAIN.f90: strings module
+	  maintenance
+
+2016-03-29 09:24  sbu062
+
+	* BASE_RANDOM.f90, BASE_STRINGS_MAIN.f90, BASE_STRINGS_PREC.f90:
+	  placed string's precision module into its main source
+
+2016-03-25 11:38  sbu062
+
+	* template/Makefile: Fix ifort build options on fimm
+
+2016-03-24 13:45  sbu062
+
+	* BASE_UTILS.adoc: little add to doc
+
+2016-03-22 08:34  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-03-22 08:32  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-03-22 08:31  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-03-22 08:30  sbu062
+
+	* BASE_UTILS.adoc: update doc
+
+2016-03-21 22:38  sbu062
+
+	* BASE_UTILS.adoc: updated doc
+
+2016-03-21 19:49  sbu062
+
+	* template/Makefile: tweak makefile
+
+2016-03-21 16:43  sbu062
+
+	* template/Makefile: fix platform determination, Windows
+
+2016-03-21 16:29  sbu062
+
+	* template/Makefile: keywords set
+
+2016-03-21 16:28  sbu062
+
+	* template/Makefile: update template Makefile
+
+2016-03-20 09:27  sbu062
+
+	* template/Makefile: fix template makefile
+
+2016-03-20 01:53  sbu062
+
+	* template, template/Makefile: added template makefile
+
+2016-03-20 01:43  sbu062
+
+	* BASE_RANDOM.f90, Makefile: Fix Makefile
+
+2016-03-19 19:28  sbu062
+
+	* Makefile: minor change, makefile
+
+2016-03-19 17:40  sbu062
+
+	* Makefile: fix makefile
+
+2016-03-19 17:16  sbu062
+
+	* Makefile: fix Makefile for fimm
+
+2016-03-19 16:50  sbu062
+
+	* BASE_RANDOM.f90, Makefile: Updated module RANDOM and Makefile to
+	  build and auto-generate appropriate include compiler/platform
+	  specific code.
+
+2016-03-19 13:34  sbu062
+
+	* BASE_RANDOM.f90: set keywords
+
+2016-03-19 13:32  sbu062
+
+	* BASE_RANDOM.f90, BASE_UTILS.f90: Moved PRNG functions to module
+	  BASE_RANDOM. They are inevitably non-portable
+
+2016-03-19 13:09  sbu062
+
+	* BASE_UTILS.f90: litle fix
+
+2016-03-19 12:53  sbu062
+
+	* BASE_UTILS.f90: RANDOM_SEED; added portability notes for ntel and
+	  Oracle Fortran
+
+2016-03-19 12:12  sbu062
+
+	* BASE_UTILS.f90: more portable random seed init, still has
+	  problems on Oracle Solaris studio
+
+2016-03-18 08:20  sbu062
+
+	* BASE_UTILS.f90: fix ISO_FORTRAN_ENV
+
+2016-03-18 08:15  sbu062
+
+	* BASE_UTILS.f90: get back the old RANDOM_SEED_INIT, new is not
+	  portable, uses getpid, GNU extensions, does not work with Solaris
+	  Fortran
+
+2016-03-18 04:20  sbu062
+
+	* BASE_UTILS.f90: fix random-number functions
+
+2016-03-18 04:18  sbu062
+
+	* BASE_UTILS.f90: Added random-number functions
+
+2016-03-17 19:20  sbu062
+
+	* BASE_UTILS.f90: RANDOM_SEED_INIT updated to better, using
+	  system-wide entropy source (urandom)
+
+2016-03-17 15:57  sbu062
+
+	* doc/BASE_UTILS.pdf: new pdf
+
+2016-03-17 15:52  sbu062
+
+	* BASE_UTILS.adoc, img_doc_fxce_svn.png, img_doc_tortoise.png:
+	  added to doc
+
+2016-03-17 13:45  sbu062
+
+	* tests/Makefile: micro fix
+
+2016-03-17 04:28  sbu062
+
+	* doc/BASE_UTILS.pdf: up pdf
+
+2016-03-17 04:27  sbu062
+
+	* BASE_UTILS.adoc: update doc
+
+2016-03-17 04:00  sbu062
+
+	* BASE_CSV_IO.f90: implemented file opened check functions
+
+2016-03-16 10:01  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-03-16 09:59  sbu062
+
+	* BASE_UTILS.adoc: updated doc
+
+2016-03-15 16:28  sbu062
+
+	* BASE_UTILS.adoc: add to doc
+
+2016-03-15 16:08  sbu062
+
+	* BASE_UTILS.adoc: add a little svn to doc
+
+2016-03-15 14:05  sbu062
+
+	* BASE_UTILS.adoc: added software reqs to doc
+
+2016-03-14 10:24  sbu062
+
+	* Makefile: minor changes
+
+2016-03-14 09:50  sbu062
+
+	* BASE_UTILS.adoc, Makefile: minor changes, remove static lib from
+	  normal build
+
+2016-03-13 08:02  sbu062
+
+	* Makefile: fix, doc out of all, rarely installed
+
+2016-03-13 07:53  sbu062
+
+	* Makefile: fix doc builder check if installed
+
+2016-03-13 07:45  sbu062
+
+	* doc/BASE_UTILS.pdf: pdf
+
+2016-03-13 07:43  sbu062
+
+	* Makefile: another minor fix - return to gfortran as defaulr
+
+2016-03-13 07:42  sbu062
+
+	* Makefile: minor fix, comment only
+
+2016-03-13 07:39  sbu062
+
+	* Makefile: minor fix
+
+2016-03-13 07:38  sbu062
+
+	* Makefile: fix Makefile to do docs
+
+2016-03-13 07:30  sbu062
+
+	* Makefile: set keywords on Makefile for HEDTOOLS
+
+2016-03-13 07:28  sbu062
+
+	* Makefile: added Makefile for HEDTOOL libs
+
+2016-03-11 16:53  sbu062
+
+	* doc/BASE_UTILS.pdf: fixed doc
+
+2016-03-11 16:50  sbu062
+
+	* BASE_UTILS.adoc: fixed doc
+
+2016-03-11 16:24  sbu062
+
+	* BASE_UTILS.adoc: added to doc
+
+2016-03-11 13:45  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-03-11 13:37  sbu062
+
+	* BASE_UTILS.adoc: fix doc manual
+
+2016-03-11 13:02  sbu062
+
+	* BASE_UTILS.adoc: updated manual
+
+2016-03-10 07:45  sbu062
+
+	* IEEE/README: updated doc to IEEE
+
+2016-03-08 19:29  sbu062
+
+	* BASE_ERRORS.f90, BASE_LOGGER.f90, BASE_UTILS.f90: update keywords
+	  for all files with svn dynamic keywords
+
+2016-03-08 19:27  sbu062
+
+	* BASE_CSV_IO.f90: update keywords
+
+2016-03-08 19:21  sbu062
+
+	* BASE_CSV_IO.f90, BASE_ERRORS.f90, BASE_LOGGER.f90,
+	  BASE_UTILS.f90: set tags for BASE_CSV_IO.f90 BASE_UTILS.f90
+	  BASE_LOGGER.f90 BASE_ERRORS.f90
+
+2016-03-01 11:43  sbu062
+
+	* .: resolved finally?
+
+2016-03-01 11:08  sbu062
+
+	* tests/test_SCRATCH.f90: delete scratch from tests, changes too
+	  often, actual delete
+
+2016-03-01 11:07  sbu062
+
+	* tests/test_SCRATCH.f90: delete scratch from tests, changes too
+	  often
+
+2016-03-01 10:15  sbu062
+
+	* tests/Makefile: made static library target, Makefile
+
+2016-02-25 07:30  sbu062
+
+	* doc/BASE_UTILS.pdf: update doc / pdf
+
+2016-02-18 14:11  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-02-18 08:45  sbu062
+
+	* BASE_UTILS.adoc: updated doc, arrays of user types
+
+2016-02-15 15:32  sbu062
+
+	* doc/BASE_UTILS.pdf: fix pdf
+
+2016-02-15 15:30  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-02-15 11:36  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-02-15 11:07  sbu062
+
+	* BASE_CSV_IO.f90, BASE_UTILS.adoc: CSV: changed order of arguments
+	  for matrix/array writing, fixed also doc
+
+2016-02-14 19:15  sbu062
+
+	* doc/BASE_UTILS.pdf: update pdf
+
+2016-02-14 19:14  sbu062
+
+	* BASE_UTILS.adoc: little update, doc
+
+2016-02-13 22:43  sbu062
+
+	* BASE_UTILS.adoc: fix doc
+
+2016-02-13 14:15  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-02-13 14:13  sbu062
+
+	* BASE_UTILS.adoc: Updated docs for
+
+2016-02-13 13:21  sbu062
+
+	* BASE_CSV_IO.f90: Implemented column names for matrix output,
+	  tested ok
+
+2016-02-13 09:29  sbu062
+
+	* BASE_CSV_IO.f90: implemented CSV_COLNAMES fo fit column names
+	  automatically
+
+2016-02-12 18:41  sbu062
+
+	* BASE_CSV_IO.f90, tests/test_SCRATCH.f90: Fixed logical
+	  csv_file_status bug occurring on Oracle Solaris Fortran,
+	  non-initialised got FALSE status even if all was ok, plus fixed
+	  CSV_FILE_LINES_COUNT
+
+2016-02-12 18:01  sbu062
+
+	* BASE_CSV_IO.f90: Implemented "vertical" and "horizontal table"
+	  write of 1-d array in CSV_ARRAY_WRITE
+
+2016-02-12 10:40  sbu062
+
+	* BASE_UTILS.adoc, doc/BASE_UTILS.pdf, tests/test_SCRATCH.f90:
+	  addad a little info on compiler diffs, docfile
+
+2016-02-11 22:10  sbu062
+
+	* doc/BASE_UTILS.pdf: updated pdf
+
+2016-02-11 21:47  sbu062
+
+	* BASE_UTILS.adoc: workaround to make icon in admonition Note
+
+2016-02-11 14:19  sbu062
+
+	* BASE_UTILS.adoc: Little fix in doc (add)
+
+2016-02-11 06:54  sbu062
+
+	* BASE_UTILS.adoc, doc/BASE_UTILS.pdf: little fix for doc
+
+2016-02-11 06:50  sbu062
+
+	* doc/BASE_UTILS.pdf: added compiled pdf doc to the doc area
+
+2016-02-11 06:48  sbu062
+
+	* BASE_UTILS.adoc: added csv_file object to the docs
+
+2016-02-10 16:43  sbu062
+
+	* BASE_UTILS.adoc: fix docs
+
+2016-02-10 16:06  sbu062
+
+	* BASE_UTILS.adoc: Small fixes to the draft documentation
+
+2016-02-10 15:31  sbu062
+
+	* BASE_UTILS.adoc: Manual first draft ready, will send it now
+
+2016-02-10 13:06  sbu062
+
+	* BASE_UTILS.adoc: attributes
+
+2016-02-10 12:57  sbu062
+
+	* BASE_UTILS.adoc: set keywords for svn property svn propset
+	  svn:keywords "Id Date Revision HeadURL LastChangedDate"
+	  BASE_UTILS.adoc
+
+2016-02-10 12:46  sbu062
+
+	* BASE_UTILS.adoc: further SVN tags
+
+2016-02-10 12:40  sbu062
+
+	* BASE_UTILS.adoc: Added SVN tags to doc file
+
+2016-02-10 11:20  sbu062
+
+	* BASE_UTILS.adoc: Added to documentation
+
+2016-02-10 05:22  sbu062
+
+	* BASE_UTILS.adoc: Updated doc for CSV_IO
+
+2016-02-09 14:19  sbu062
+
+	* BASE_UTILS.adoc: Update doc for HEDTOOLS
+
+2016-02-09 10:00  sbu062
+
+	* BASE_UTILS.adoc: updated docs for utils
+
+2016-02-09 04:27  sbu062
+
+	* BASE_UTILS.adoc: BASE_UTILS doc draft (.adoc)
+
+2016-02-09 04:26  sbu062
+
+	* tests/test_SCRATCH.f90: Started adding short documentation in
+	  asciidoc format (.adoc)
+
+2016-02-08 14:11  sbu062
+
+	* MODEL_UTILS_FISH_HED24.f90: maintenence
+
+2016-02-05 15:30  sbu062
+
+	* BASE_UTILS.f90: abother fix for STR_ITOA_LZ
+
+2016-02-05 15:26  sbu062
+
+	* BASE_UTILS.f90: minor fix in function description
+
+2016-02-05 15:24  sbu062
+
+	* BASE_UTILS.f90: minor comment fix
+
+2016-02-05 15:18  sbu062
+
+	* tests/test_SCRATCH.f90: small fix for test_SCRATCH.f90
+
+2016-02-05 14:55  sbu062
+
+	* tests/test_SCRATCH.f90: added test for new version of TOSTR
+
+2016-02-05 14:54  sbu062
+
+	* BASE_CSV_IO.f90, BASE_UTILS.f90: Implemented generic part for
+	  STR/TOSTR generating leading zeros for integers, useful for file
+	  names and variable names
+
+2016-02-04 15:53  sbu062
+
+	* tests/test_SCRATCH.f90: Added various array constructors to
+	  CSV_RECORD_APPEND test program
+
+2016-01-14 17:14  sbu062
+
+	* BASE_CSV_IO.f90, BASE_UTILS.f90: shorter STR "alias" for TOSTR
+	  function (e.g. qbasic STR$)
+
+2016-01-14 16:37  sbu062
+
+	* tests/test_SCRATCH.f90: Test file, use CSV_RECORD_APPEND with
+	  arrays using implied do loop and array slices
+
+2016-01-05 10:15  sbu062
+
+	* BASE_CSV_IO.f90, tests/test_SCRATCH.f90: Fixed whole array append
+	  with generic interface for CSV_RECORD_APPEND, works correct now
+
+2016-01-05 06:44  sbu062
+
+	* tests/test_SCRATCH.f90: test file for CSV derived type file
+	  handle
+
+2016-01-05 06:43  sbu062
+
+	* BASE_CSV_IO.f90: Implemented whole array append with generic
+	  interface for CSV_RECORD_APPEND
+
+2016-01-04 16:25  sbu062
+
+	* BASE_CSV_IO.f90: Implemented generic function to append whole
+	  list to CSV record in CSV_RECORD_APPEND, compiles but not tested
+	  yet
+
+2015-12-22 19:30  sbu062
+
+	* BASE_UTILS.f90: Implemented arbitrary optional format for integer
+	  conversion functions, STR_ITOA and STR_ARRAY_ITOA, tested with
+	  gfortran and Oracle f95
+
+2015-12-21 11:10  sbu062
+
+	* BASE_CSV_IO.f90: provide sensible dafault values for the file
+	  handle derived type
+
+2015-12-21 10:45  sbu062
+
+	* BASE_CSV_IO.f90: Little comment change (readability)
+
+2015-12-20 18:22  sbu062
+
+	* .svnignore: update .svnignore - add syncthing conflicting files
+	  to the list..
+
+2015-12-20 18:18  sbu062
+
+	* ., .svnignore: updated .svnignore files
+
+2015-12-20 11:29  sbu062
+
+	* tests/test_SCRATCH.f90: added svnignore for convenience
+
+2015-12-19 11:12  sbu062
+
+	* BASE_CSV_IO.f90: Little fix for comments on CSV_IO
+
+2015-12-19 10:41  sbu062
+
+	* HEDTOOLS_PRJ, HEDTOOLS_PRJW: Remove project def files for Geany
+	  editor from repo, they are always changing
+
+2015-12-19 10:10  sbu062
+
+	* BASE_CSV_IO.f90: Added file handle derived type to CSV_IO, need
+	  derived type as SRfileopen interface is confusing and error-prone
+	  with numerous files names and units; cannot be made simpler
+	  without derived type for output files.
+
+2015-12-16 11:45  sbu062
+
+	* HEDTOOLS_PRJ, IEEE/Makefile: Initial identification/ removal of
+	  global objects from SRinitfishmodel call params
+
+2015-12-15 18:40  sbu062
+
+	* HEDTOOLS_PRJ: Continue transforming SRinitrun == logging
+	  parameters
+
+2015-12-15 18:29  sbu062
+
+	* BASE_UTILS.f90: Fixed TOSTR, logger parameter was wrong
+
+2015-12-15 18:26  sbu062
+
+	* BASE_UTILS.f90: Added arbitrary delimiter to TOSTR with string
+	  array argument
+
+2015-12-15 13:15  sbu062
+
+	* BASE_UTILS.f90, tests/MODEL_PROTO.f90, tests/test_SCRATCH.f90:
+	  Added safety function TOSTR with string argument
+
+2015-12-15 12:08  sbu062
+
+	* tests/MODEL_PROTO.f90: Continue moving variables to commondata.
+	  Fixing interface to SRinitrun
+
+2015-12-14 15:41  sbu062
+
+	* doc/README.txt: Started adding documentation... Now only a couple
+	  of tips for Windows, e.g. how to get gfortran and tools (the
+	  simple way)...
+
+2015-12-11 13:19  sbu062
+
+	* BASE_UTILS.f90: Default integer in random seed init, base util
+
+2015-12-10 13:32  sbu062
+
+	* HEDTOOLS_PRJW: A little reorganisation of commondata
+
+2015-12-10 13:22  sbu062
+
+	* HEDTOOLS_PRJW, tests/MODEL_PROTO.f90: Small change in MODEL_PROTO
+	  (comments)
+
+2015-12-10 10:59  sbu062
+
+	* IEEE/Makefile, IEEE/README: Initial version of the Fish model --
+	  main program and commondata (incomplete, don't build)
+
+2015-12-08 16:31  sbu062
+
+	* HEDTOOLS_PRJ, IEEE/Makefile, IEEE/README: Modified (a little)
+	  Makefile for IEEE math modules
+
+2015-12-08 10:21  sbu062
+
+	* IEEE/README: Updated README with test results on fimm cluster.
+	  Fimm now PASSES. Laptop w/ Mint x86-32 does not fully pass tests,
+	  and Window modules do not compile due to probably absent asm. So
+	  need update to GCC 5 on Windows
+
+2015-12-08 09:59  sbu062
+
+	* IEEE/Makefile, IEEE/README: Added a Makefile for building IEEE_
+	  math modules, IEEE test not fully comply
+
+2015-12-08 06:44  sbu062
+
+	* IEEE/README: Added README to non-intrinsic IEEE modules for
+	  gfortran
+
+2015-12-07 15:27  sbu062
+
+	* tests/test_record_length.f90: Little change, added a tiny test
+	  record size program
+
+2015-12-07 10:49  sbu062
+
+	* HEDTOOLS_PRJ, HEDTOOLS_PRJW, IEEE, IEEE/IEEE.bib, IEEE/IEEE.pdf,
+	  IEEE/IEEE.tex, IEEE/IEEE_ARITHMETIC.f90,
+	  IEEE/IEEE_EXCEPTIONS.f90, IEEE/IEEE_FEATURES.f90,
+	  IEEE/IEEE_tests_gfortran.f90, IEEE/c_control.c, IEEE/list,
+	  IEEE/messy_m.f90, IEEE/precision_m.f90, tests/Makefile: Added
+	  non-intrinsic IEEE modules for GNU fortran, which does not fully
+	  support IEEE in older versions (perhaps prior to 6.0???)
+	  C doesn't compile on Windows
+
+2015-12-04 10:18  sbu062
+
+	* BASE_ERRORS.f90, tests/test_CSV_MAT.f90: BASE_ERROR modules are
+	  mainly ready, need a little bit more testing though
+
+2015-12-04 09:27  sbu062
+
+	* BASE_ERRORS.f90: Filled BASE_ERRORS.f90 with all error handling
+	  modules now
+
+2015-12-04 00:37  sbu062
+
+	* BASE_ERRORS.f90, HEDTOOLS_PRJ, tests/test_CSV_MAT.f90: Error
+	  handler included assert and exception modules
+
+2015-12-03 23:20  sbu062
+
+	* BASE_ERRORS.f90, HEDTOOLS_PRJ, HEDTOOLS_PRJW, tests/Makefile,
+	  tests/test_CSV_MAT.f90: Initial version of error collecting
+	  module
+
+2015-12-02 09:51  sbu062
+
+	* tests/test_CSV_MAT.f90: Added a small test program for CSV_IO
+
+2015-12-02 08:57  sbu062
+
+	* tests/MODEL_PROTO.f90, tests/Makefile: A little tweak for
+	  Makefile
+
+2015-12-01 23:06  sbu062
+
+	* BASE_CSV_IO.f90, BASE_LOGGER.f90, BASE_UTILS.f90, HEDTOOLS_PRJ,
+	  HEDTOOLS_PRJW, tests, tests/MODEL_PROTO.f90, tests/Makefile:
+	  Added Makefile (make run). Also, a couple of portability bug
+	  fixes for CSV_IO calling from MODEL_PROTO
+
+2015-11-30 13:44  sbu062
+
+	* BASE_CSV_IO.f90, BASE_UTILS.f90, HEDTOOLS_PRJ, HEDTOOLS_PRJW:
+	  Initial adaptation for the event logger in BASE_UTILS and CSV_IO
+
+2015-11-28 23:11  sbu062
+
+	* BASE_CSV_IO.f90, HEDTOOLS_PRJ, tests/MODEL_PROTO.f90,
+	  tests/test_SCRATCH.f90: Further fixed whole matrix/array
+	  functions in CSV_IO module for tables with lots of small numbers.
+	  Demo MODEL_PROTO works right
+
+2015-11-28 13:41  sbu062
+
+	* BASE_CSV_IO.f90, HEDTOOLS_PRJ, tests/test_CSV_IO.f90,
+	  tests/test_SCRATCH.f90: Fixed fhole MATRIX and ARRAY functions in
+	  CSV_IO module to work with big arbitrary-size records
+
+2015-11-27 23:50  sbu062
+
+	* tests/MODEL_PROTO.f90: Minor change
+
+2015-11-27 23:42  sbu062
+
+	* BASE_UTILS.f90, HEDTOOLS_PRJ, HEDTOOLS_PRJW,
+	  tests/MODEL_PROTO.f90, tests/test_CSV_IO.f90,
+	  tests/test_SCRATCH.f90: Added generic interfaces for array data
+	  to TOSTR (BASE_UTILS), produced a prototype model in tests
+	  directory
+
+2015-11-25 23:21  sbu062
+
+	* BASE_CSV_IO.f90, BASE_LOGGER.f90, HEDTOOLS_PRJ, README_Notes.txt,
+	  tests/test_CSV_IO.f90: Maintenance, fixed comments / docs, LOGGER
+	  module now working and tested
+
+2015-11-25 16:37  sbu062
+
+	* BASE_LOGGER.f90, HEDTOOLS_PRJW, tests/test_CSV_IO.f90: Logger
+	  module is now more or less working
+
+2015-11-25 15:39  sbu062
+
+	* BASE_LOGGER.f90, BASE_UTILS.f90, tests/test_SCRATCH.f90: Small
+	  modification of BASE_UTILS, added initial execution LOGGER and
+	  ASSERTION modules
+
+2015-11-25 14:14  sbu062
+
+	* BASE_UTILS.f90, HEDTOOLS_PRJW, tests/test_SCRATCH.f90:
+	  Portability: Finally fixed the miracluous Solaris fortran bug,
+	  added CLEANUP function to BASE_UTILS module
+
+2015-11-25 10:16  sbu062
+
+	* BASE_UTILS.f90, HEDTOOLS_PRJ, tests/test_SCRATCH.f90: Fixed bug
+	  caused by correcting Solaris compiler bug in BASE_UTIL, added
+	  output subs
+
+2015-11-25 09:10  sbu062
+
+	* BASE_UTILS.f90, HEDTOOLS_PRJ, README_Notes.txt,
+	  doc/BASE_STRINGS.pdf: Portability:: Located an Oracle Solaris
+	  compiler bug in string manipulation utils, did a workaround for
+	  BASE_UTILS
+
+2015-11-24 15:11  sbu062
+
+	* BASE_UTILS.f90, HEDTOOLS_PRJ, HEDTOOLS_PRJW: Fix comments/docs
+	  for BASE_UTILS.f90
+
+2015-11-24 14:36  sbu062
+
+	* BASE_UTILS.f90, HEDTOOLS_PRJW, tests/test_CSV_IO.f90: String
+	  conversion functions in BASE_UTILS now ready
+
+2015-11-24 13:51  sbu062
+
+	* HEDTOOLS_PRJ, HEDTOOLS_PRJW, tests/test_CSV_IO.f90: Little
+	  changes in test program and small reorganisation
+
+2015-11-24 11:33  sbu062
+
+	* BASE_STRINGS_MAIN.f90, BASE_STRINGS_PREC.f90, BASE_UTILS.f90,
+	  HEDTOOLS_PRJ, MODEL_UTILS_FISH_HED24.f90, README_Notes.txt, doc,
+	  doc/README.txt, tests/test_CSV_IO.f90: Added a few other modules
+	  and prototypes for new generation models
+
+2015-11-24 10:27  sbu062
+
+	* HEDTOOLS_PRJ, tests/test_CSV_IO.f90: A little reorganisation +
+	  versioned project file for Geany (unix)
+
+2015-11-24 10:00  sbu062
+
+	* .: Just created my branch of tools ...
+
+2015-11-24 05:16  sbu062
+
+	* Added functions to write one-dimensional arrays to CSV, along
+	  with generic interfaces
+
+2015-11-22 22:27  sbu062
+
+	* Added functions for whole matrix export to CSV, with generic
+	  interfaces
+
+2015-11-22 08:42  sbu062
+
+	* A little refactoring...
+
+2015-11-22 07:48  sbu062
+
+	* Added generic interface to CSV_RECORD_APPEND
+
+2015-11-20 13:26  sbu062
+
+	* Added base module CSV_IO for working (now almost exclusively Out)
+	  with the CSV file format
+
+2015-11-17 14:52  rdi003
+
+	* made trunk and branches directories more simply
+
+2015-11-09 10:25  sbu062
+
+	* HEDTOOLS will contain tools and modules for the next generation
+	  model. Now empty (only Roadmap)
+
