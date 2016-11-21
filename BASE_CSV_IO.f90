@@ -480,7 +480,6 @@ function CHECK_FILE_OPEN_S (csv_file_name, csv_file_unit, csv_file_status, &
   ! Local variables
   integer :: file_error_status
   logical :: openedq
-  logical :: supplied_file_name ! whether the user supplied file (T) or unit (F)
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "CHECK_FILE_OPEN"

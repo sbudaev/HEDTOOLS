@@ -1203,9 +1203,6 @@ subroutine RAND_ARRAY_1_R4(random_array, A, B)
 real, dimension(:) :: random_array
 real, optional, intent(in) :: A, B
 
-! local variables
-integer :: i
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -1227,9 +1224,6 @@ subroutine RAND_ARRAY_2_R4(random_array, A, B)
 real, dimension(:,:) :: random_array
 real, optional, intent(in) :: A, B
 
-! local variables
-integer :: i, j
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -1250,9 +1244,6 @@ subroutine RAND_ARRAY_3_R4(random_array, A, B)
 ! parameters
 real, dimension(:,:,:) :: random_array
 real, optional, intent(in) :: A, B
-
-! local variables
-integer :: i, j, k
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1299,9 +1290,6 @@ subroutine RAND_ARRAY_5_R4(random_array, A, B)
 real, dimension(:,:,:,:,:) :: random_array
 real, optional, intent(in) :: A, B
 
-! local variables
-integer :: i, j, k, l, m
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -1322,9 +1310,6 @@ subroutine RAND_ARRAY_6_R4(random_array, A, B)
 ! parameters
 real, dimension(:,:,:,:,:,:) :: random_array
 real, optional, intent(in) :: A, B
-
-! local variables
-integer :: i, j, k, l, m, n
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1347,9 +1332,6 @@ subroutine RAND_ARRAY_1_R8(random_array, A, B)
 real(kind=dp), dimension(:) :: random_array
 real(kind=dp), optional, intent(in) :: A, B
 
-! local variables
-integer :: i
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -1370,9 +1352,6 @@ subroutine RAND_ARRAY_2_R8(random_array, A, B)
 ! parameters
 real(kind=dp), dimension(:,:) :: random_array
 real(kind=dp), optional, intent(in) :: A, B
-
-! local variables
-integer :: i, j
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1395,9 +1374,6 @@ subroutine RAND_ARRAY_3_R8(random_array, A, B)
 real(kind=dp), dimension(:,:,:) :: random_array
 real(kind=dp), optional, intent(in) :: A, B
 
-! local variables
-integer :: i, j, k
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -1418,9 +1394,6 @@ subroutine RAND_ARRAY_4_R8(random_array, A, B)
 ! parameters
 real(kind=dp), dimension(:,:,:,:) :: random_array
 real(kind=dp), optional, intent(in) :: A, B
-
-! local variables
-integer :: i, j, k, l
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1443,9 +1416,6 @@ subroutine RAND_ARRAY_5_R8(random_array, A, B)
 real(kind=dp), dimension(:,:,:,:,:) :: random_array
 real(kind=dp), optional, intent(in) :: A, B
 
-! local variables
-integer :: i, j, k, l, m
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
@@ -1466,9 +1436,6 @@ subroutine RAND_ARRAY_6_R8(random_array, A, B)
 ! parameters
 real(kind=dp), dimension(:,:,:,:,:,:) :: random_array
 real(kind=dp), optional, intent(in) :: A, B
-
-! local variables
-integer :: i, j, k, l, m, n
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
