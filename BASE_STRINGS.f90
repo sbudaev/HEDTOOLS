@@ -36,7 +36,7 @@ end module precision_str
 
 
 
-module strings
+module base_strings
 !*******************************************************************************
 ! PURPOSE:
 ! Fortran Character String Utilities
@@ -831,4 +831,4 @@ end subroutine removebksl
 
 !**********************************************************************
 
-end module strings
+end module base_strings
