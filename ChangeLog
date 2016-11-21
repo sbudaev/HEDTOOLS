@@ -1,5 +1,12 @@
+2016-11-21  sbu062
+
+	* BASE_UTILS.adoc: short description of limitations in the strings
+	  module + disclaimer (parameters forbidden)
+	* BASE_STRINGS.f90: fix strings module name for Makefile
+
 2016-11-18  sbu062
 
+	* ChangeLog: update changelog
 	* BASE_UTILS.adoc: update fix doc, Change Log and svn log
 	* ChangeLog: update changelog
 	* BASE_UTILS.adoc: added some on svn log to manual
