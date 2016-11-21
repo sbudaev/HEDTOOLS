@@ -4010,6 +4010,32 @@ indexterm:[BASE_STRINGS]
 indexterm:[strings]
 indexterm:[string manipulation]
 
+IMPORTANT:  These utilities are currently provided "as is," not well tested,
+            contain unsafe code and probably some bugs.
+
+One issue is that they do *not* work with strings declared as *parameters*
+footnote:[They do not explicitly use +intent+.] For example, this code does
+work as expected:
+
+[source]
+--------------------------------------------------------------------------------
+character(len=40) :: st_inp = "AAA BBB CCC*DDD"           ! normal string
+character(len=6), dimension(6) :: st_out
+call parse(st_inp, " *", st_out, i)
+--------------------------------------------------------------------------------
+
+Whereas this (st_inp is a +parameter+) results in _invalid memory reference_:
+
+[source]
+--------------------------------------------------------------------------------
+character(len=*), parameter :: st_inp = "AAA BBB CCC*DDD" ! fixed parameter
+character(len=6), dimension(6) :: st_out
+call parse(st_inp, " *", st_out, i)
+--------------------------------------------------------------------------------
+
+*SB:* _I shall recode and fix them if and when I have time, but the priority is
+low_.
+
 *Fortran Character String Utilities.* A collection of string manipulation
 routines is contained in the module ‘strings’ found in the file
 stringmod.f90. To obtain this module as well as some other string utilities,
