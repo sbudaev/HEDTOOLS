@@ -2088,6 +2088,12 @@ only the objects that are in proximity of the agent.
 
 image:doc/img/aha_neurobio_appraisal.svg[width=510,align="left"]
 
+Behaviour units and expectancies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+image:doc/img/aha_neurobio_motivation.svg[width=510,align="left"]
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 *** HEDTOOLS DOCUMENTATION FOLLOWS BELOW
