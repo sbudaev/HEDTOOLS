@@ -1,5 +1,8 @@
 2016-11-21  sbu062
 
+	* Makefile: fixed strings module name
+	* BASE_CSV_IO.f90, BASE_RANDOM.f90: cleanup unused local names
+	* ChangeLog: changelog update
 	* BASE_UTILS.adoc: short description of limitations in the strings
 	  module + disclaimer (parameters forbidden)
 	* BASE_STRINGS.f90: fix strings module name for Makefile
