@@ -292,6 +292,16 @@ all: static
 
 lib: $(LIB)
 
+# Specific compiler targets: ibtel, GNU, Oracle/Sun
+intel:
+	@$(MAKE) -f $(THIS_FILE) FC=ifort
+
+gnu:
+	@$(MAKE) -f $(THIS_FILE) FC=gfortran
+
+sun:
+	@$(MAKE) -f $(THIS_FILE) FC=f95
+
 # Make static library
 static: $(LIB)
 
