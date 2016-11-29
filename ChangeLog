@@ -1,3 +1,35 @@
+2016-11-29  sbu062
+
+	* BASE_UTILS.adoc: added cross-ref to intel static library build
+
+2016-11-24  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: fix charts
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg,
+	  doc/img/aha_neurobio_motivation.odg,
+	  doc/img/aha_neurobio_motivation.svg: updated charts
+	* ChangeLog: changelog update
+
+2016-11-23  sbu062
+
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg: fix schemes after adding
+	  (MOTIVATION) intermediate class
+
+2016-11-22  sbu062
+
+	* BASE_UTILS.adoc, doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg,
+	  doc/img/aha_neurobio_motivation.odg,
+	  doc/img/aha_neurobio_motivation.svg: add behaviour chart, fix
+	  appreaisal and behaviour charts
+	* doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg,
+	  doc/img/aha_neurobio_motivation.odg,
+	  doc/img/aha_neurobio_motivation.svg: modified pics
+
 2016-11-21  sbu062
 
 	* Makefile: fixed strings module name
