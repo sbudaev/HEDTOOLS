@@ -374,6 +374,22 @@ elemental function alleleconv(raw_value) result (converted)
 end function alleleconv
 --------------------------------------------------------------------------------
 
+** Always explicitly set the *intent* of all parameters in any procedure.
+There should be no parameter without explicit intent. This helps avoid bugs
+and makes it much easier to convert procedures to +pure+ and +elemental+.
+
+** Declare procedures *pure* or *elemental* whenever possible. There is a huge
+advantage of using elemental procedures as they transparently work with arrays
+and can be automatically parallelized by the compiler too!
+
+[source]
+--------------------------------------------------------------------------------
+elemental function carea(R) result (area_circ)  ! Declare elemental
+  real(SRP), intent(in) :: R                    ! Set intent even in
+  real(SRP) :: area_circ                        !  the simplest cases.
+  area_circ = PI * R * R
+end function carea
+--------------------------------------------------------------------------------
 
 Efficient Fortran programming
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

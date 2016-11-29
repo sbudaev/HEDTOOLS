@@ -1,5 +1,7 @@
 2016-11-29  sbu062
 
+	* Makefile: added compiler target shortcuts (intel, gnu, sun)
+	* ChangeLog: changelog update
 	* BASE_UTILS.adoc: added cross-ref to intel static library build
 
 2016-11-24  sbu062
