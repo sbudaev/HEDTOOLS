@@ -2382,13 +2382,13 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
-Function: LINTERPOL
-~~~~~~~~~~~~~~~~~~~
+Interpolation: LINTERPOL, DDPINTERPOL, INTERP_LINEAR, INTERP_LAGRANGE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 indexterm:[LINTERPOL]
 indexterm:[interpolation, linear]
 
-*LINTERPOL* is a simple linear interpolation function. It takes a *sorted*
+*LINTERPOL* is a simple linear interpolation _function_. It takes a *sorted*
 independent variable (+X+) vector, a conforming (same dimensionality) dependent
 variable (+Y+) vector that set the grid data as well as a single +X+ argument
 to get the dependent variable +Y+ result of the function. An optional integer
@@ -2406,6 +2406,53 @@ with same type (i.e. no kind mixing within a single function call).
 [source]
 --------------------------------------------------------------------------------
 print *, LINTERPOL( [1.,2.,3.,6.,12.], [0.1, 0.5, 0.7, 0.95, 0.99], 0.2, IERR )
+--------------------------------------------------------------------------------
+
+The *DDPINTERPOL* _function_ works similarly to +LINTERPOL+, but uses the
+nonlinear Divided Difference Polynomials Interpolation algorithm.
+
+indexterm:[DDPINTERPOL]
+indexterm:[interpolation, polynomial]
+
+*INTERP_LINEAR* is a _subroutine_ that performs linear piecewise interpolation
+of a whole array. It takes the following arguments: (1) independent (_X_) grid
+data vector, (2) dependent (_Y_) grid data vector, (3) independent data vector
+for _interpolation_, (4) the dependent vector of the _resulting_ dependent
+data values.
+
+indexterm:[INTERP_LINEAR]
+indexterm:[interpolation, linear]
+
+[source]
+--------------------------------------------------------------------------------
+call INTERP_LINEAR ( XDAT, YDAT, [0.002, 0.1, 0.5, 0.9, 0.95, 0.98], OUT_Y )
+--------------------------------------------------------------------------------
+
+The *INTERP_LAGRANGE* _subroutine_ works similarly to +INTERP_LINEAR+ but
+performs Lagrange polynomial interpolation.
+
+indexterm:[INTERP_LAGRANGE]
+indexterm:[interpolation, polynomial]
+
+Thare are also two interpolation _functions_ that return a vector:
+*LIN_INTERPOL_VECTOR* and *LAGR_INTERPOL_VECTOR*. They do, respectively,
+linear and Lagrange polynomial interpolation.
+
+indexterm:[LIN_INTERPOL_VECTOR]
+indexterm:[LAGR_INTERPOL_VECTOR]
+indexterm:[interpolation, linear]
+indexterm:[interpolation, polynomial]
+
+[source]
+--------------------------------------------------------------------------------
+print *, LIN_INTERPOL_VECTOR( [1.,2.,3.,4.,5.],                               &
+                              [0.1, 0.5, 0.9, 0.95, 0.98 ],                   &
+                              [1.25, 1.1, 4.1, 1.9, 1.95, 1.98]  )
+
+
+print *, LAGR_INTERPOL_VECTOR( [1.,2.,3.,4.,5.],                              &
+                               [0.1, 0.5, 0.9, 0.95, 0.98 ],                  &
+                               [1.25, 1.1, 4.1, 1.9, 1.95, 1.98]  )
 --------------------------------------------------------------------------------
 
 
