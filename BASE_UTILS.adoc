@@ -313,6 +313,16 @@ real, parameter, public :: THYROID_INIT = 0.5
 call this%hormone_init(this%thyroid_level, THYROID_GENOTYPE_PHENOTYPE, THYROID_INIT)
 --------------------------------------------------------------------------------
 
+** *Global variables* that are defined in the upstream module but are not fixed
+parameters and so can change their value are in the "Camel Case".
+
+[source]
+--------------------------------------------------------------------------------
+!> The current time step of the model. This is the global non-fixed-parameter
+!! variable that is used and updated downstream in the subroutines.
+integer, public :: Time_Step_Model_Current
+--------------------------------------------------------------------------------
+
 ** *External and library procedures* that are not
 part of the Fortran intrinsic set and not part of the current model code
 should be in +UPPERCASE+. So they are easy to identify. Spherically, modelling
