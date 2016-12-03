@@ -314,10 +314,14 @@ call this%hormone_init(this%thyroid_level, THYROID_GENOTYPE_PHENOTYPE, THYROID_I
 --------------------------------------------------------------------------------
 
 ** *Global variables* that are defined in the upstream module but are not fixed
-parameters and so can change their value are in the "Camel Case".
+parameters and so can change their value are in the "Camel Case" or, when very
+short, in UPPERCASE.
 
 [source]
 --------------------------------------------------------------------------------
+!> MMDD tag, year, month and day, used in file names and outputs.
+character(LABEL_LENGTH), public :: MMDD
+
 !> The current time step of the model. This is the global non-fixed-parameter
 !! variable that is used and updated downstream in the subroutines.
 integer, public :: Time_Step_Model_Current
