@@ -1,5 +1,19 @@
+2016-12-03  sbu062
+
+	* BASE_UTILS.adoc: minor fix case rules
+
+2016-12-02  sbu062
+
+	* BASE_UTILS.adoc: added CamelCase global vars in code formatting
+	  rules
+
+2016-11-30  sbu062
+
+	* BASE_UTILS.adoc: added forgotten interpolation routines to doc
+
 2016-11-29  sbu062
 
+	* BASE_UTILS.adoc, ChangeLog: added tip on pure/elemental
 	* Makefile: added compiler target shortcuts (intel, gnu, sun)
 	* ChangeLog: changelog update
 	* BASE_UTILS.adoc: added cross-ref to intel static library build
