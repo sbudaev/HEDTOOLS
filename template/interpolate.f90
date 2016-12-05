@@ -100,8 +100,9 @@ if (n_cmds==1) then
   print *, ""
   print *, "Produce interpolation plot of data that are provided at the command line."
   print *, "Interpolation is basedon subroutines from in HEDTOOLS, so debug plots can"
-  print *, "easily be generated for a model code, independently from the code (i.e."
-  print *, "no calls to non-portable and potentially platform-specific graphics procedures"
+  print *, "easily be generated in the model independently from the code (i.e."
+  print *, "no calls to non-portable and potentially platform-specific graphics "
+  print *, "procedures)."
   print *, ""
   print *, "Input: Two arrays for the interpolation grid X, Y, they must be of the same"
   print *, "     size,the third array containing the interpolation data."
@@ -111,17 +112,18 @@ if (n_cmds==1) then
   print *, ""
   print *, "Examples:"
   print *, ""
-  print *, " Produce interpolation plot with the default non-linear algorithm, output"
+  print *, "* Produce interpolation plot with the default non-linear algorithm, output"
   print *, " to screen (X11):"
   print *, trim(command_str(1)), " [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]"
-  print *, ""
-  print *, " Produce interpolation plot with linear algorithm, output to the file"
+  print *, "* Produce interpolation plot with linear algorithm, output to the file"
   print *, trim(command_str(1)), " [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]"
   print *, ""
   stop
 end if
 
-!> Parse substring arrays elclosed into the square brackets.
+! Parse substring arrays elclosed into the square brackets.
+! NOTE: Star loopfrom 2 as the name of the executable file is also
+!       in the command line string parsed as the first substring.
 do i=2, n_cmds
 
   NONZERO: if (len(trim(command_str(i)))>0) then
@@ -129,8 +131,7 @@ do i=2, n_cmds
     ! Print out the string containing the array.
     if (IS_DEBUG) print *, "DEBUG:", i, ">",trim(command_str(i)), "<"
     ! Parse xx grid values, it is the second substring (first is command itself)
-    call PARSE( trim(command_str(i)), " " // STRDEL, tmp_array_str, n_sub )
-    !if (IS_DEBUG) print *, i, ">",tmp_array_str, "<"
+    call PARSE( trim(command_str(i)), " ," // STRDEL, tmp_array_str, n_sub )
 
     ! Parse xx numeric values, it is the 1st non-empty parameter string.
     PARSE_SEL: if (k==1) then
@@ -203,14 +204,16 @@ do i=1, size(xx_interpolate)
 end do
 
 ! Produce the plot itself -- using PGPLOT library.
-if (pgopen(output_dev) .lt. 1) stop
+if (pgopen(output_dev) .lt. 1) then
+  print *, "ERROR: Cannot open output device ", output_dev
+  stop
+end if
 call pgenv( minval(plotx), maxval(plotx), minval(ploty), maxval(ploty), 0, 0 )
 call pglab('X', 'Y', 'Interpolation value')
 call pgline( n_steps, plotx, ploty )  ! plot line of interpolation grid
 call pgpt( size(xx), xx, yy, 3 )      ! plot dots of interpolation grid
 ! Plot dots for the target interpolation data.
 call pgpt (size(xx_interpolate), xx_interpolate, yy_interpolate, 8)
-!call pgpt (2., 20., 1)
 call pgclos
 
 ! Rename the output file.
