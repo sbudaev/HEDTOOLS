@@ -70,17 +70,30 @@ integer int_alg   ! algorithm number
 ! Optional output file name.
 character(len=:), allocatable :: output_file
 
-! Output file name in PGPLOT library always has the same name.
-character(len=*), parameter :: pg_default_name="pgplot.ps"
-
 ! Delimiter characters for command line arguments:
 character(len=*), parameter :: STRDEL="[]" // '"' // "'"
 
-! Output device.
-character(len=:), allocatable :: output_dev
+! Output devices
+character(len=*), parameter :: DEV_XWIN = '/XWINDOW', EXT_XWIN = ""
+character(len=*), parameter :: DEV_PS   = '/PS',      EXT_PS   = ".ps"
+character(len=*), parameter :: DEV_PSV  = '/VPS',     EXT_VPS  = ".ps"
+character(len=*), parameter :: DEV_PNG  = '/PNG',     EXT_PNG  = ".png"
+character(len=*), parameter :: DEV_TPNG = '/TPNG',    EXT_TPNG = ".png"
 
-output_dev='/XWINDOW' ! default output device is X11.
-int_alg = 1           ! default algorithm is DDPINTERPOL
+! Output device.
+character(len=:), allocatable :: pg_default_name, output_dev, output_save
+
+!-------------------------------------------------------------------------------
+
+output_dev  = DEV_XWIN  ! default output device is X11.
+output_save = DEV_PS   ! default output for save file.
+
+! Output file name in PGPLOT library always has the same name.
+pg_default_name = "pgplot" // EXT_PS
+
+if (IS_DEBUG) print *, "DEBUG: ", pg_default_name
+
+int_alg = 1             ! default algorithm is DDPINTERPOL
 
 k=1
 
@@ -170,7 +183,7 @@ do i=2, n_cmds
         case ("LINTERPOL", "linear")
           int_alg = 2
         case default
-          output_dev='/PS'
+          output_dev=output_save
           output_file=trim(command_str(i))
         end select
 
@@ -209,7 +222,7 @@ if (pgopen(output_dev) .lt. 1) then
   stop
 end if
 call pgenv( minval(plotx), maxval(plotx), minval(ploty), maxval(ploty), 0, 0 )
-call pglab('X', 'Y', 'Interpolation value')
+call pglab('X', 'Y', 'Interpolation value ' // output_file)
 call pgline( n_steps, plotx, ploty )  ! plot line of interpolation grid
 call pgpt( size(xx), xx, yy, 3 )      ! plot dots of interpolation grid
 ! Plot dots for the target interpolation data.
@@ -219,9 +232,9 @@ call pgclos
 ! Rename the output file.
 ! WARNING:: rename subroutine is GNU extension and may not be available
 !           on all compiler systems. Does work with gfortran, Oracle f95
-if (output_dev=='/PS') then
+if (output_dev /= 'DEV_XWIN') then
   call rename (pg_default_name, output_file)
-  print *, "Wrote plot to PostScript file: ", output_file
+  print *, "Wrote plot to output file (", output_dev, "): " , output_file
 end if
 
 end program INTERPOLATE
