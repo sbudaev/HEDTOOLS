@@ -14,6 +14,10 @@
 !    Produce interpolation plot with linear algorithm, output to the file
 ! ./interpolate.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]
 !
+! Note: Quotes can also be used instead of square brackets, but the shell
+!       will normally process and remove them, so that backslash \ would be
+!       necessary for correct processing, e.g.:
+!       ./interpolate.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] \"linear\"
 !
 ! Build command on Linux:
 !   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe
@@ -33,7 +37,7 @@ use BASE_UTILS
 use BASE_STRINGS
 implicit none
 
-! Set DEBUG mode
+! Set DEBUG mode.
 logical, parameter :: IS_DEBUG=.FALSE.
 
 ! Command line arguments, whole line.
@@ -69,6 +73,9 @@ character(len=:), allocatable :: output_file
 ! Output file name in PGPLOT library always has the same name.
 character(len=*), parameter :: pg_default_name="pgplot.ps"
 
+! Delimiter characters for command line arguments:
+character(len=*), parameter :: STRDEL="[]" // '"' // "'"
+
 ! Output device.
 character(len=:), allocatable :: output_dev
 
@@ -77,11 +84,15 @@ int_alg = 1           ! default algorithm is DDPINTERPOL
 
 k=1
 
+if (IS_DEBUG) print *, "DEBUG: Delimiters: >",STRDEL, "<"
+
 ! Process command line arguments...
 call get_command(command_line_str)
 
-!> Parse grid arrays enclosed in square brackets
-call PARSE(command_line_str, "[]",command_str, n_cmds)
+!> Parse grid arrays enclosed in square brackets.
+call PARSE(command_line_str, STRDEL ,command_str, n_cmds)
+
+if (IS_DEBUG) print *, "DEBUG: >",command_line_str, "<"
 
 if (n_cmds==1) then
   print *, "ERROR: Requires command line arguments."
@@ -116,9 +127,10 @@ do i=2, n_cmds
   NONZERO: if (len(trim(command_str(i)))>0) then
 
     ! Print out the string containing the array.
-    if (IS_DEBUG) print *, i, ">",trim(command_str(i)), "<"
+    if (IS_DEBUG) print *, "DEBUG:", i, ">",trim(command_str(i)), "<"
     ! Parse xx grid values, it is the second substring (first is command itself)
-    call PARSE( trim(command_str(i)), " ", tmp_array_str, n_sub )
+    call PARSE( trim(command_str(i)), " " // STRDEL, tmp_array_str, n_sub )
+    !if (IS_DEBUG) print *, i, ">",tmp_array_str, "<"
 
     ! Parse xx numeric values, it is the 1st non-empty parameter string.
     PARSE_SEL: if (k==1) then
