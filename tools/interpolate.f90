@@ -114,8 +114,8 @@ call PARSE(command_line_str, STRDEL ,command_str, n_cmds)
 if (IS_DEBUG) print *, "DEBUG: >",command_line_str, "<"
 
 if (n_cmds==1) then
-  print *, "ERROR: Requires command line arguments."
-  print *, "---------------------------------------"
+  print *, "ERROR: Required command line arguments not found."
+  print *, "-------------------------------------------------"
   print *, ""
   print *, "Produce interpolation plot of data that are provided at the command line."
   print *, "Interpolation is basedon subroutines from in HEDTOOLS, so debug plots can"
