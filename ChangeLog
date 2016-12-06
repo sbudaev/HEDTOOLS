@@ -1,5 +1,25 @@
+2016-12-06  sbu062
+
+	* BASE_UTILS.adoc, BASE_UTILS.f90: implemented platform detection
+	  func. (PLATFORM_IS_WINDOWS)
+	* template/interpolate.f90: addad Lagrange interpolation
+	* template/interpolate.f90: various fixed to interpolation (done
+	  mainly in the bus)
+
+2016-12-05  sbu062
+
+	* template/interpolate.f90: more flexible output parameters (e.g.
+	  png) for the interpolation program
+	* template/run_interpol.f90: deleted obsolete code
+	* template/interpolate.f90: small fixes
+	* template/interpolate.f90: small fix added quotes
+	* template/Makefile, template/interpolate.f90: command line
+	  plotting program for producing interpolation debug plots, fixed
+	  makefile for strings module call
+
 2016-12-03  sbu062
 
+	* ChangeLog: update changelog
 	* BASE_UTILS.adoc: minor fix case rules
 
 2016-12-02  sbu062
