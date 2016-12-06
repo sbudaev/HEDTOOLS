@@ -1,4 +1,8 @@
 !-------------------------------------------------------------------------------
+! SVN version info:
+! $Id$
+! $HeadURL$
+!-------------------------------------------------------------------------------
 ! Produce interpolation plot of data that are ptovided at the command line
 ! Input: Two arrays for the interpolation grid X, Y, they must be of the same
 !        size,the third array containing the interpolation data.
@@ -28,18 +32,18 @@
 !   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe DEBUG=1
 !
 ! Build on Windows using GrWin (assuming the paths to the libraries and tools):
-!   make GF_FFLAGS="-LC:/GrWin/MinGW_gfortran_x6/lib -Wl,--subsystem,console 
-!         -O3 -funroll-loops -fforce-addr -mwindows" GRAPHLIB="-lpgplot -lGrWin" 
+!   make GF_FFLAGS="-LC:/GrWin/MinGW_gfortran_x6/lib -Wl,--subsystem,console
+!         -O3 -funroll-loops -fforce-addr -mwindows" GRAPHLIB="-lpgplot -lGrWin"
 !         SRC=interpolate.f90 OUT=interpolate.exe
 !
-! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting, 
+! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting,
 !          on Windows may also require GrWin.
 !
 ! WARNING: Building PGPLOTS on Windows platform might be non-trivial, also
 !          GUI window output interface (/XWINDOW) is not easily available,
 !          although PostScript (/PS) file output should work.
-!          The easiest way to get PGPLOT on Microsoft Windows is the 
-!          GrWin/GrWinC library by Tsuguhiro Tamaribuchi, freely available at 
+!          The easiest way to get PGPLOT on Microsoft Windows is the
+!          GrWin/GrWinC library by Tsuguhiro Tamaribuchi, freely available at
 !          http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/ . The program
 !          uses the /GR device that is available on Microsoft Windows from the
 !          GrWin library.
@@ -90,7 +94,7 @@ character(len=*), parameter :: STRDEL="[]" // '"' // "'"
 
 ! Output devices. See PGPLOT docs or set ? for runtime choice.
 ! NOTE: /XWINDOW is the standard native X11 graphics device for Unix systems.
-!       /GW is the native graphics device for Microsoft Windows, requires 
+!       /GW is the native graphics device for Microsoft Windows, requires
 !       separate GrWin/GrWinC library.
 character(len=*), parameter :: DEV_UNDEF = '?',        EXT_UNDEF = "" ! not file
 character(len=*), parameter :: DEV_XWIN  = '/XWINDOW', EXT_XWIN  = "" ! not file
