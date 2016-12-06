@@ -41,7 +41,7 @@ implicit none
 logical, parameter :: IS_DEBUG=.FALSE.
 
 ! Command line arguments, whole line.
-character(len=255) :: command_line_str !> Note: allocatable doesn't work
+character(len=255*3) :: command_line_str !> Note: allocatable doesn't work
 character(len=255), dimension(10) :: command_str
 integer :: n_cmds, n_sub, err_flag, n_xx, n_yy
 
@@ -73,27 +73,33 @@ character(len=:), allocatable :: output_file
 ! Delimiter characters for command line arguments:
 character(len=*), parameter :: STRDEL="[]" // '"' // "'"
 
-! Output devices
-character(len=*), parameter :: DEV_XWIN = '/XWINDOW', EXT_XWIN = ""
-character(len=*), parameter :: DEV_PS   = '/PS',      EXT_PS   = ".ps"
-character(len=*), parameter :: DEV_PSV  = '/VPS',     EXT_VPS  = ".ps"
-character(len=*), parameter :: DEV_PNG  = '/PNG',     EXT_PNG  = ".png"
-character(len=*), parameter :: DEV_TPNG = '/TPNG',    EXT_TPNG = ".png"
+! Output devices. See PGPLOT docs or set ? for runtime choice.
+character(len=*), parameter :: DEV_UNDEF = '?',        EXT_UNDEF = ""
+character(len=*), parameter :: DEV_XWIN  = '/XWINDOW', EXT_XWIN  = ""
+character(len=*), parameter :: DEV_PS    = '/PS',      EXT_PS    = ".ps"
+character(len=*), parameter :: DEV_PSV   = '/VPS',     EXT_VPS   = ".ps"
+character(len=*), parameter :: DEV_PNG   = '/PNG',     EXT_PNG   = ".png"
+character(len=*), parameter :: DEV_TPNG  = '/TPNG',    EXT_TPNG  = ".png"
 
 ! Output device.
 character(len=:), allocatable :: pg_default_name, output_dev, output_save
 
+! Interpolation algorithms for selection. Implemented in HEDTOOLS.
+integer, parameter :: ALG_DDPI = 1  ! Nonlinear, divided difference.
+integer, parameter :: ALG_LIN  = 2  ! Linear.
+integer, parameter :: ALG_LAG  = 3  ! Lagrange, array-based.
+
 !-------------------------------------------------------------------------------
 
 output_dev  = DEV_XWIN  ! default output device is X11.
-output_save = DEV_PS   ! default output for save file.
+output_save = DEV_PS    ! default output for save file.
 
 ! Output file name in PGPLOT library always has the same name.
 pg_default_name = "pgplot" // EXT_PS
 
 if (IS_DEBUG) print *, "DEBUG: ", pg_default_name
 
-int_alg = 1             ! default algorithm is DDPINTERPOL
+int_alg = ALG_DDPI       ! default algorithm is DDPINTERPOL
 
 k=1
 
@@ -179,9 +185,9 @@ do i=2, n_cmds
     else PARSE_SEL
       select case (trim(command_str(i)))
         case ("DDPINTERPOL", "nonlinear", "ddp")
-          int_alg = 1
+          int_alg = ALG_DDPI
         case ("LINTERPOL", "linear")
-          int_alg = 2
+          int_alg = ALG_LIN
         case default
           output_dev=output_save
           output_file=trim(command_str(i))
@@ -204,16 +210,18 @@ plotstep = (max_xx - min_xx) / real(n_steps)
 step = min_xx; i = 1
 do while (step <= max_xx)
   plotx(i) = step
-  if (int_alg==1) ploty(i) = DDPINTERPOL( xx, yy, plotx(i) )    ! Non-linear
-  if (int_alg==2) ploty(i) = LINTERPOL( xx, yy, plotx(i) )      ! Linear
+  if (int_alg==ALG_DDPI) ploty(i) = DDPINTERPOL( xx, yy, plotx(i) )
+  if (int_alg==ALG_LIN) ploty(i) = LINTERPOL( xx, yy, plotx(i) )
   step = step + plotstep
   i = i + 1
 end do
 
 !> Produce data for the interpolation target (non-grid) array
 do i=1, size(xx_interpolate)
-  if (int_alg==1) yy_interpolate(i) = DDPINTERPOL( xx, yy, xx_interpolate(i) )
-  if (int_alg==2) yy_interpolate(i) = LINTERPOL( xx, yy, xx_interpolate(i) )
+  if (int_alg==ALG_DDPI)                                                      &
+                  yy_interpolate(i) = DDPINTERPOL( xx, yy, xx_interpolate(i) )
+  if (int_alg==ALG_LIN)                                                       &
+                  yy_interpolate(i) = LINTERPOL( xx, yy, xx_interpolate(i) )
 end do
 
 ! Produce the plot itself -- using PGPLOT library.
@@ -232,7 +240,7 @@ call pgclos
 ! Rename the output file.
 ! WARNING:: rename subroutine is GNU extension and may not be available
 !           on all compiler systems. Does work with gfortran, Oracle f95
-if (output_dev /= 'DEV_XWIN') then
+if (output_dev /= DEV_XWIN) then
   call rename (pg_default_name, output_file)
   print *, "Wrote plot to output file (", output_dev, "): " , output_file
 end if
