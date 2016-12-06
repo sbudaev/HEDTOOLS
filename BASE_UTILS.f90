@@ -223,6 +223,36 @@ end subroutine LOG_DBG
 
 !-------------------------------------------------------------------------------
 
+!*******************************************************************************
+! PURPOSE: Determines the platform type the program is running on.
+! CALL PARAMETERS: none
+! NOTES:   This function implements a rudimentary detection of the runtime
+!          platform. It detects if the ComSpec environment variable is set,
+!          which means that the platform is Windows.
+! WARNING: The name of the environment variable appearss case-sensitive.
+!          Microsoft might change the the behaviour of the ComSpec environment
+!          variable, e.g. make it COMSPEC on different versions of Windows,
+!          so correctness of this function is not guaranteed.
+!*******************************************************************************
+function PLATFORM_IS_WINDOWS() result (is_windows_flag)
+
+  logical :: is_windows_flag
+
+  character(len=*), parameter :: COMSPEC = "ComSpec"
+  character(len=255) :: comspec_value_get
+
+  call get_environment_variable(name=COMSPEC, value=comspec_value_get)
+
+  if (len_trim(comspec_value_get)==0) then
+    is_windows_flag = .FALSE.
+  else
+    is_windows_flag = .TRUE.
+  end if
+
+end function PLATFORM_IS_WINDOWS
+
+!-------------------------------------------------------------------------------
+
 function STR_ITOA(i, formatstr) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.

@@ -2396,6 +2396,27 @@ print *, ">>", CLEANUP("This is along string blablabla"), "<<"
 produces >>Thisisalongstringblablabla<<
 --------------------------------------------------------------------------------
 
+
+Determining the runtime platform: PLATFORM_IS_WINDOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+indexterm:[PLATFORM_IS_WINDOWS]
+indexterm:[Runtime platform, Microsoft Windows]
+indexterm:[ComSpec]
+
+This function determines if the program is currently running on _Microsoft
+Windows_. If this is the case, returns +TRUE+, otherwise +FALSE+.
+
+The detection algorithm is very simple, it just checks if the Windows standard
+environment variable +ComSpec+ is set. +ComSpec+ appears to be case sensitive
+on recent versions of _Microsoft Windows,_ but this is not guaranteed.
+
+[source]
+--------------------------------------------------------------------------------
+if ( PLATFORM_IS_WINDOWS() ) print *, "Running on Windows."
+--------------------------------------------------------------------------------
+
+
 Interpolation: LINTERPOL, DDPINTERPOL, INTERP_LINEAR, INTERP_LAGRANGE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
