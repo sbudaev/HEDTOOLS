@@ -37,8 +37,8 @@ use BASE_UTILS
 use BASE_STRINGS
 implicit none
 
-! Set DEBUG mode.
-logical, parameter :: IS_DEBUG=.FALSE.
+! Set DEBUG mode. Debug mode prints more diagnostics.
+logical, parameter :: IS_DEBUG = .FALSE.
 
 ! Command line arguments, whole line.
 character(len=255*3) :: command_line_str !> Note: allocatable doesn't work
@@ -188,6 +188,8 @@ do i=2, n_cmds
           int_alg = ALG_DDPI
         case ("LINTERPOL", "linear")
           int_alg = ALG_LIN
+        case ("LAGRANGE", "lagrange")
+          int_alg = ALG_LAG
         case default
           output_dev=output_save
           output_file=trim(command_str(i))
@@ -216,13 +218,25 @@ do while (step <= max_xx)
   i = i + 1
 end do
 
-!> Produce data for the interpolation target (non-grid) array
-do i=1, size(xx_interpolate)
-  if (int_alg==ALG_DDPI)                                                      &
-                  yy_interpolate(i) = DDPINTERPOL( xx, yy, xx_interpolate(i) )
-  if (int_alg==ALG_LIN)                                                       &
-                  yy_interpolate(i) = LINTERPOL( xx, yy, xx_interpolate(i) )
-end do
+! Lagrange is array based
+if (int_alg==ALG_LAG) ploty = LAGR_INTERPOL_VECTOR( xx, yy, plotx )
+
+if (IS_DEBUG) print *, "Plot data X:", plotx
+if (IS_DEBUG) print *, "Plot data Y:", ploty
+
+!> Produce data for the interpolation target (non-grid) array.
+if (int_alg==ALG_LAG) then
+  ! Lagrange is array-based.
+  yy_interpolate = LAGR_INTERPOL_VECTOR( xx, yy, xx_interpolate )
+else
+  ! Those below are scalar-based.
+  do i=1, size(xx_interpolate)
+    if (int_alg==ALG_DDPI)                                                    &
+                    yy_interpolate(i) = DDPINTERPOL( xx, yy, xx_interpolate(i) )
+    if (int_alg==ALG_LIN)                                                     &
+                    yy_interpolate(i) = LINTERPOL( xx, yy, xx_interpolate(i) )
+  end do
+end if
 
 ! Produce the plot itself -- using PGPLOT library.
 if (pgopen(output_dev) .lt. 1) then
