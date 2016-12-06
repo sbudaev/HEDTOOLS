@@ -19,15 +19,30 @@
 !       necessary for correct processing, e.g.:
 !       ./interpolate.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] \"linear\"
 !
-! Build command on Linux:
+! BUILD: The program can be built using the standard Makefile from the
+!        HEDTOOLS subproject, but needs tweaking certain build options to plug
+!        the PGLIB.
+!
+! Build command on Linux (need to use external PGPLOT library!):
 !   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe
 !   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe DEBUG=1
 !
-! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting.
+! Build on Windows using GrWin (assuming the paths to the libraries and tools):
+!   make GF_FFLAGS="-LC:/GrWin/MinGW_gfortran_x6/lib -Wl,--subsystem,console 
+!         -O3 -funroll-loops -fforce-addr -mwindows" GRAPHLIB="-lpgplot -lGrWin" 
+!         SRC=interpolate.f90 OUT=interpolate.exe
+!
+! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting, 
+!          on Windows may also require GrWin.
 !
 ! WARNING: Building PGPLOTS on Windows platform might be non-trivial, also
 !          GUI window output interface (/XWINDOW) is not easily available,
 !          although PostScript (/PS) file output should work.
+!          The easiest way to get PGPLOT on Microsoft Windows is the 
+!          GrWin/GrWinC library by Tsuguhiro Tamaribuchi, freely available at 
+!          http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/ . The program
+!          uses the /GR device that is available on Microsoft Windows from the
+!          GrWin library.
 !
 ! Author: Sergey Budaev <sergey.budaev@uib.no>
 !-------------------------------------------------------------------------------
@@ -74,8 +89,12 @@ character(len=:), allocatable :: output_file
 character(len=*), parameter :: STRDEL="[]" // '"' // "'"
 
 ! Output devices. See PGPLOT docs or set ? for runtime choice.
-character(len=*), parameter :: DEV_UNDEF = '?',        EXT_UNDEF = ""
-character(len=*), parameter :: DEV_XWIN  = '/XWINDOW', EXT_XWIN  = ""
+! NOTE: /XWINDOW is the standard native X11 graphics device for Unix systems.
+!       /GW is the native graphics device for Microsoft Windows, requires 
+!       separate GrWin/GrWinC library.
+character(len=*), parameter :: DEV_UNDEF = '?',        EXT_UNDEF = "" ! not file
+character(len=*), parameter :: DEV_XWIN  = '/XWINDOW', EXT_XWIN  = "" ! not file
+character(len=*), parameter :: DEV_GW    = '/GW',      EXT_GW    = "" ! not file
 character(len=*), parameter :: DEV_PS    = '/PS',      EXT_PS    = ".ps"
 character(len=*), parameter :: DEV_PSV   = '/VPS',     EXT_VPS   = ".ps"
 character(len=*), parameter :: DEV_PNG   = '/PNG',     EXT_PNG   = ".png"
@@ -91,7 +110,13 @@ integer, parameter :: ALG_LAG  = 3  ! Lagrange, array-based.
 
 !-------------------------------------------------------------------------------
 
-output_dev  = DEV_XWIN  ! default output device is X11.
+! The default graphic output device is different for different platforms.
+if (PLATFORM_IS_WINDOWS()) then
+  output_dev  = DEV_GW   ! Default output device is GrWin on Microsoft Windows.
+else
+  output_dev  = DEV_XWIN ! Default output device is X11.
+end if
+
 output_save = DEV_PS    ! default output for save file.
 
 ! Output file name in PGPLOT library always has the same name.
@@ -254,7 +279,7 @@ call pgclos
 ! Rename the output file.
 ! WARNING:: rename subroutine is GNU extension and may not be available
 !           on all compiler systems. Does work with gfortran, Oracle f95
-if (output_dev /= DEV_XWIN) then
+if (output_dev /= DEV_XWIN .and. output_dev /= DEV_GW ) then
   call rename (pg_default_name, output_file)
   print *, "Wrote plot to output file (", output_dev, "): " , output_file
 end if
