@@ -121,9 +121,13 @@ else
   output_dev  = DEV_XWIN ! Default output device is X11.
 end if
 
-output_save = DEV_PS    ! default output for save file.
+! Default output device for file save. Default PostScript, but can be PNG
+! (= DEV_PNG then).
+output_save = DEV_PS
 
-! Output file name in PGPLOT library always has the same name.
+! Output file name in PGPLOT library always has the same name. EXT_xx should
+! agree with the default file output device that is set above by output_save.
+! For example, output_save = DEV_PS leads to ... EXT_PS
 pg_default_name = "pgplot" // EXT_PS
 
 if (IS_DEBUG) print *, "DEBUG: ", pg_default_name
