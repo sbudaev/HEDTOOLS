@@ -27,7 +27,7 @@
 !        HEDTOOLS subproject, but needs tweaking certain build options to plug
 !        the PGLIB.
 !
-! Build command on *Linux* with *gfortran* and PGPLOT (other compilers like 
+! Build command on *Linux* with *gfortran* and PGPLOT (other compilers like
 ! Oracle f95 also do work as usual with FC=f95):
 !   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe
 !
@@ -38,7 +38,7 @@
 !
 ! Build on *Windows* using *ifort* and GrWin (builds but failed to run):
 !   set LIB=%LIB%;C:/GrWin/Intel6/lib
-!   make FC=ifort GRAPHLIB="pgplot.lib GrWin.lib user32.lib gdi32.lib 
+!   make FC=ifort GRAPHLIB="pgplot.lib GrWin.lib user32.lib gdi32.lib
 !         Advapi32.lib" SRC=interpolate.f90 OUT=interpolate.exe
 !
 ! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting,
@@ -168,12 +168,12 @@ if (n_cmds==1) then
   print *, "     algorithm. Each of the parameters must be enclosed in square brackets."
   print *, ""
   print *, "Examples:"
-  print *, ""
-  print *, "* Produce interpolation plot with the default non-linear algorithm, output"
-  print *, " to screen (X11):"
+  print *, "* Produce interpolation plot with the default non-linear algorithm, screen output"
   print *, trim(command_str(1)), " [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]"
-  print *, "* Produce interpolation plot with linear algorithm, output to the file"
+  print *, "* Produce interpolation plot with linear algorithm, output to PS vector file:"
   print *, trim(command_str(1)), " [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]"
+  print *, "* Produce interpolation plot with linear algorithm, output to PNG image file:"
+  print *, trim(command_str(1)), " [1 2 3 4 ] [10, 45, 14, 10] [2.5 1.9] [linear] [file.png]"
   print *, ""
   stop
 end if
@@ -231,6 +231,22 @@ do i=2, n_cmds
         case default
           output_dev=output_save
           output_file=trim(command_str(i))
+          ! Check output file extension and select format (vector-based PS or
+          ! raster PNG):
+          OUT_FORMAT: if                                                      &
+          (LOWERCASE(output_file(len(output_file)-2:len(output_file)))==EXT_PS)&
+          then
+            output_save = DEV_PS
+            output_dev=output_save
+            pg_default_name = "pgplot" // EXT_PS
+          else if                                                             &
+          (LOWERCASE(output_file(len(output_file)-3:len(output_file)))==EXT_PNG)&
+          then OUT_FORMAT
+            output_save = DEV_PNG
+            output_dev=output_save
+            pg_default_name = "pgplot" // EXT_PNG
+          end if OUT_FORMAT
+          if (IS_DEBUG) print *, ">", output_save, "<, >", pg_default_name, "<"
         end select
 
     end if PARSE_SEL
