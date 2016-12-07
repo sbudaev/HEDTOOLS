@@ -123,6 +123,10 @@ integer, parameter :: ALG_DDPI = 1  ! Nonlinear, divided difference.
 integer, parameter :: ALG_LIN  = 2  ! Linear.
 integer, parameter :: ALG_LAG  = 3  ! Lagrange, array-based.
 
+! Exit codes.
+integer, parameter :: EXIT_CODE_CLEAN = 0
+integer, parameter :: EXIT_CODE_ERROR = 1
+
 !-------------------------------------------------------------------------------
 
 ! The default graphic output device is different for different platforms.
@@ -215,7 +219,7 @@ do i=2, n_cmds
         allocate(yy(n_yy))
       else
        print *, "ERROR: unequal size grid arrays."
-       stop
+       stop EXIT_CODE_ERROR
       end if
       do j=1, n_yy
         call VALUE(trim(tmp_array_str(j)), yy(j), err_flag)
@@ -323,7 +327,7 @@ end if
 ! Produce the plot itself -- using PGPLOT library.
 if (pgopen(output_dev) .lt. 1) then
   print *, "ERROR: Cannot open output device ", output_dev
-  stop
+  stop EXIT_CODE_ERROR
 end if
 call pgenv( minval(plotx), maxval(plotx), minval(ploty), maxval(ploty), 0, 0 )
 call pglab('X', 'Y', 'Interpolation value ' // output_file)
