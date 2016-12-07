@@ -462,7 +462,7 @@ endif
 # Return to default state
 distclean: clean
 	-rm -f $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
-					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj
+					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.ps *.png *.gif
 	-rm -fr $(DOXYPATH)
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
