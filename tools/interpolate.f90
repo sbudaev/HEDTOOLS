@@ -52,6 +52,8 @@
 !          http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/ . The program
 !          uses the /GR device that is available on Microsoft Windows from the
 !          GrWin library.
+!          Caveat: GrWin does not support any non-interactive devices other
+!                  than PostScript (.ps output) on Windows.
 !
 ! Author: Sergey Budaev <sergey.budaev@uib.no>
 !-------------------------------------------------------------------------------
@@ -162,7 +164,11 @@ if (n_cmds==1) then
   print *, "Interpolation is basedon subroutines from in HEDTOOLS, so debug plots can"
   print *, "easily be generated in the model independently from the code (i.e."
   print *, "no calls to non-portable and potentially platform-specific graphics "
-  print *, "procedures). File formats supported: .PS, .HPGL, .PNG, .GIF ."
+  if (PLATFORM_IS_WINDOWS()) then                         ! GrWin supports only
+    print *, "procedures). File formats supported: .PS."  ! PostScript format.
+  else
+    print *, "procedures). File formats supported: .PS, .HPGL, .PNG, .GIF ."
+  end if
   print *, ""
   print *, "Input: Two arrays for the interpolation grid X, Y, they must be of the same"
   print *, "     size,the third array containing the interpolation data."
