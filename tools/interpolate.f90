@@ -113,6 +113,7 @@ character(len=*), parameter :: DEV_TPNG  = '/TPNG',    EXT_TPNG  = ".png"
 character(len=*), parameter :: DEV_GIF   = '/GIF',     EXT_GIF   = ".gif"
 character(len=*), parameter :: DEV_VGIF  = '/VGIF',    EXT_VGIF  = ".gif"
 character(len=*), parameter :: DEV_HPGL  = '/HPGL',    EXT_HPGL  = ".hpgl"
+character(len=*), parameter :: DEV_HPGL2 = '/HPGL2',   EXT_HPGL2 = ".hpplot"
 
 ! Output device.
 character(len=:), allocatable :: pg_default_name, output_dev, output_save
@@ -167,11 +168,11 @@ if (n_cmds==1) then
   if (PLATFORM_IS_WINDOWS()) then                         ! GrWin supports only
     print *, "procedures). File formats supported: .PS."  ! PostScript format.
   else
-    print *, "procedures). File formats supported: .PS, .HPGL, .PNG, .GIF ."
+    print *, "procedures). File formats supported: .PS, .HPGL, .HPPLOT, .PNG, .GIF ."
   end if
   print *, ""
   print *, "Input: Two arrays for the interpolation grid X, Y, they must be of the same"
-  print *, "     size,the third array containing the interpolation data."
+  print *, "     size, the third array containing the interpolation data."
   print *, "     There may be also two other parameters: algorithm (linear, nonlinear,"
   print *, "     lagrange) and output file name. Defaults are nonlinear DDPINTERPOL"
   print *, "     algorithm. Each of the parameters must be enclosed in square brackets."
@@ -266,6 +267,12 @@ do i=2, n_cmds
             output_save = DEV_HPGL
             output_dev=output_save
             pg_default_name = "pgplot" // EXT_HPGL
+          else if                                                             &
+          (LOWERCASE(output_file(len(output_file)-6:len(output_file)))==EXT_HPGL2)&
+          then OUT_FORMAT
+            output_save = DEV_HPGL2
+            output_dev=output_save
+            pg_default_name = "pgplot" // EXT_HPGL2
           end if OUT_FORMAT
           if (IS_DEBUG) print *, ">", output_save, "<, >", pg_default_name, "<"
         end select
