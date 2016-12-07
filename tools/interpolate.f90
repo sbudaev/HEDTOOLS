@@ -168,7 +168,7 @@ if (n_cmds==1) then
   print *, "     algorithm. Each of the parameters must be enclosed in square brackets."
   print *, ""
   print *, "Examples:"
-  print *, "* Produce interpolation plot with the default non-linear algorithm, screen output"
+  print *, "* Produce interpolation screen plot with the default non-linear algorithm:"
   print *, trim(command_str(1)), " [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]"
   print *, "* Produce interpolation plot with linear algorithm, output to PS vector file:"
   print *, trim(command_str(1)), " [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]"
