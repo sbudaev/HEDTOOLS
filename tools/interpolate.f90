@@ -108,6 +108,9 @@ character(len=*), parameter :: DEV_PS    = '/PS',      EXT_PS    = ".ps"
 character(len=*), parameter :: DEV_PSV   = '/VPS',     EXT_VPS   = ".ps"
 character(len=*), parameter :: DEV_PNG   = '/PNG',     EXT_PNG   = ".png"
 character(len=*), parameter :: DEV_TPNG  = '/TPNG',    EXT_TPNG  = ".png"
+character(len=*), parameter :: DEV_GIF   = '/GIF',     EXT_GIF   = ".gif"
+character(len=*), parameter :: DEV_VGIF  = '/VGIF',    EXT_VGIF  = ".gif"
+character(len=*), parameter :: DEV_HPGL  = '/HPGL',    EXT_HPGL  = ".hpgl"
 
 ! Output device.
 character(len=:), allocatable :: pg_default_name, output_dev, output_save
@@ -159,7 +162,7 @@ if (n_cmds==1) then
   print *, "Interpolation is basedon subroutines from in HEDTOOLS, so debug plots can"
   print *, "easily be generated in the model independently from the code (i.e."
   print *, "no calls to non-portable and potentially platform-specific graphics "
-  print *, "procedures)."
+  print *, "procedures). File formats supported: .PS, .HPGL, .PNG, .GIF ."
   print *, ""
   print *, "Input: Two arrays for the interpolation grid X, Y, they must be of the same"
   print *, "     size,the third array containing the interpolation data."
@@ -245,6 +248,18 @@ do i=2, n_cmds
             output_save = DEV_PNG
             output_dev=output_save
             pg_default_name = "pgplot" // EXT_PNG
+          else if                                                             &
+          (LOWERCASE(output_file(len(output_file)-3:len(output_file)))==EXT_GIF)&
+          then OUT_FORMAT
+            output_save = DEV_GIF
+            output_dev=output_save
+            pg_default_name = "pgplot" // EXT_GIF
+          else if                                                             &
+          (LOWERCASE(output_file(len(output_file)-4:len(output_file)))==EXT_HPGL)&
+          then OUT_FORMAT
+            output_save = DEV_HPGL
+            output_dev=output_save
+            pg_default_name = "pgplot" // EXT_HPGL
           end if OUT_FORMAT
           if (IS_DEBUG) print *, ">", output_save, "<, >", pg_default_name, "<"
         end select
