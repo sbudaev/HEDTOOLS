@@ -27,14 +27,19 @@
 !        HEDTOOLS subproject, but needs tweaking certain build options to plug
 !        the PGLIB.
 !
-! Build command on Linux (need to use external PGPLOT library!):
+! Build command on *Linux* with *gfortran* and PGPLOT (other compilers like 
+! Oracle f95 also do work as usual with FC=f95):
 !   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe
-!   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe DEBUG=1
 !
-! Build on Windows using GrWin (assuming the paths to the libraries and tools):
+! Build on *Windows* using *gfortran* and GrWin:
 !   make GF_FFLAGS="-LC:/GrWin/MinGW_gfortran_x6/lib -Wl,--subsystem,console
 !         -O3 -funroll-loops -fforce-addr -mwindows" GRAPHLIB="-lpgplot -lGrWin"
 !         SRC=interpolate.f90 OUT=interpolate.exe
+!
+! Build on *Windows* using *ifort* and GrWin (builds but failed to run):
+!   set LIB=%LIB%;C:/GrWin/Intel6/lib
+!   make FC=ifort GRAPHLIB="pgplot.lib GrWin.lib user32.lib gdi32.lib 
+!         Advapi32.lib" SRC=interpolate.f90 OUT=interpolate.exe
 !
 ! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting,
 !          on Windows may also require GrWin.
@@ -158,8 +163,8 @@ if (n_cmds==1) then
   print *, ""
   print *, "Input: Two arrays for the interpolation grid X, Y, they must be of the same"
   print *, "     size,the third array containing the interpolation data."
-  print *, "     There may be also two other parameters: algorithm (linear or"
-  print *, "     nonlinear) and output file name. Defaults are nonlinear DDPINTERPOL"
+  print *, "     There may be also two other parameters: algorithm (linear, nonlinear,"
+  print *, "     lagrange) and output file name. Defaults are nonlinear DDPINTERPOL"
   print *, "     algorithm. Each of the parameters must be enclosed in square brackets."
   print *, ""
   print *, "Examples:"
