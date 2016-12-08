@@ -58,6 +58,7 @@
 !-------------------------------------------------------------------------------
 program INTERPOLATE
 
+use, intrinsic :: ISO_FORTRAN_ENV, only : ERROR_UNIT
 use BASE_UTILS
 use BASE_STRINGS
 implicit none
@@ -161,7 +162,7 @@ call PARSE(command_line_str, STRDEL ,command_str, n_cmds)
 if (IS_DEBUG) print *, "DEBUG: >",command_line_str, "<"
 
 if (n_cmds==1) then
-  print *, "ERROR: Required command line arguments not found."
+  write(ERROR_UNIT,*) "ERROR: Required command line arguments not found."
   print *, "-------------------------------------------------"
   print *, ""
   print *, "Produce interpolation plot of data that are provided at the command line."
@@ -217,7 +218,7 @@ do i=2, n_cmds
         n_yy = n_sub
         allocate(yy(n_yy))
       else
-       print *, "ERROR: unequal size grid arrays."
+       write(ERROR_UNIT,*) "ERROR: unequal size grid arrays."
        stop EXIT_CODE_ERROR
       end if
       do j=1, n_yy
@@ -325,7 +326,7 @@ end if
 
 ! Produce the plot itself -- using PGPLOT library.
 if (pgopen(output_dev) .lt. 1) then
-  print *, "ERROR: Cannot open output device ", output_dev
+  write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
   stop EXIT_CODE_ERROR
 end if
 call pgenv( minval(plotx), maxval(plotx), minval(ploty), maxval(ploty), 0, 0 )
