@@ -1,7 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
 ! $Id$
-! $HeadURL$
 !-------------------------------------------------------------------------------
 ! Produce interpolation plot of data that are ptovided at the command line
 ! Input: Two arrays for the interpolation grid X, Y, they must be of the same
