@@ -4144,6 +4144,8 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
 
     line_data_buff_length = len_trim(line_data_buff)
 
+    !print *, "ZZZ: ", line_data_buff
+
     ! An approximate upper bound for the number of data fields in the
     ! current record is len_trim(line_data_buff)/MIN_FIELD), so we can now
     ! allocate the temporary array of substrings.
@@ -4152,10 +4154,12 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
 
     call PARSE ( line_data_buff, SDELIM, line_data_substrings, line_data_nflds )
 
+    !print *, "ZZZ2:", line_data_nflds
+
     ! We have to allocate the array of row values and initialise it for correct
     ! processing by the VALUE subroutine.
     allocate(matrix_row(line_data_nflds))
-    matrix_row = MISSING
+    matrix_row = missing_code_here
 
     ! Empty lines are consideded non-data.
     if ( line_data_buff_length>0 ) then
@@ -4181,7 +4185,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
     ! and allocate the output data matrix.
     if (icase == 1) then
       nvars = line_data_nflds
-      allocate(matrix(nvars, ncases))
+      allocate(matrix(ncases, nvars))
     end if
 
 
@@ -4192,9 +4196,17 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
     !print *, ">,", [(i,i=1,nvars)]
 
     if (.not. not_a_data_row) then
-      !print *, "ZZZ", iline, icase, matrix_row, line_data_buff_length
-      matrix(icase,1:nvars) = matrix_row(1:nvars)
-      print *, iline, icase, matrix(icase,:)
+      !print *, "ZZZ", iline, icase, matrix_row, line_data_nflds
+      !print *, icase, nvars, size(matrix)
+      if (line_data_nflds<nvars) then
+        matrix(icase,1:line_data_nflds) = matrix_row(1:line_data_nflds)
+        matrix(icase,line_data_nflds+1:nvars) = MISSING
+      else
+        matrix(icase,1:nvars) = matrix_row(1:nvars)
+      end if
+      !matrix(icase,:) = matrix_row
+      !print *, iline, icase, matrix(icase,:)
+      print *, "ZZZ", iline, icase,  matrix(icase,:), line_data_nflds
     end if
     !print *, iline, matrix(icase,:)
 
