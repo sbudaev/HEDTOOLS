@@ -833,7 +833,7 @@ end subroutine removebksl
 !**********************************************************************
 !**********************************************************************
 
-function IS_NUMERIC(string) result (num_flag)
+function IS_NUMERIC(string, include_blank) result (num_flag)
 !*******************************************************************************
 ! IS_NUMERIC
 ! PURPOSE: Checks if a string is a string representation of a number, i.e.
@@ -843,19 +843,41 @@ function IS_NUMERIC(string) result (num_flag)
 ! Author: Sergey Budaev
 !*******************************************************************************
 
-  character(len=*), intent(in) :: string
+  character(len=*), intent(in)  :: string
+  logical, optional, intent(in) :: include_blank
   logical :: num_flag
 
   ! Local
   integer :: i
+  logical :: include_blank_here
 
   num_flag = .TRUE.
 
-  do i = 1, len_trim(string)
-    if ( .not. is_digit(string(i:i)) .and.                                    &
-          string(i:i)/="." .and.                                              &
-          string(i:i)/="," ) num_flag = .FALSE.
-  end do
+  if (len_trim(string)==0) then
+    num_flag=.FALSE.
+    return
+  end if
+
+  if(present(include_blank)) then
+    include_blank_here = include_blank
+  else
+    include_blank_here = .FALSE.
+  end if
+
+  if (include_blank_here) then
+    do i = 1, len_trim(string)
+      if ( .not. is_digit(string(i:i)) .and.                                  &
+            string(i:i)/="." .and.                                            &
+            string(i:i)/="," .and.                                            &
+            string(i:i)/=" " ) num_flag = .FALSE.
+    end do
+  else
+    do i = 1, len_trim(string)
+      if ( .not. is_digit(string(i:i)) .and.                                  &
+            string(i:i)/="." .and.                                            &
+            string(i:i)/="," ) num_flag = .FALSE.
+    end do
+  end if
 
 end function IS_NUMERIC
 
