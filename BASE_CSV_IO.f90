@@ -4055,7 +4055,8 @@ end function READLINE
 
 !-------------------------------------------------------------------------------
 
-function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) result (matrix)
+function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
+                      include_incomplete_records, missing_code) result (matrix_out)
 !*******************************************************************************
 ! CSV_MATRIX_READ_R4
 ! PURPOSE: Reads a matrix of real type from a CSV data file
@@ -4069,9 +4070,10 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
 !*******************************************************************************
 
   ! Calling parameters
-  real, dimension(:,:), allocatable :: matrix
+  real, dimension(:,:), allocatable :: matrix_out
   character (len=*), intent(in) :: csv_file_name
   logical, optional, intent(out) :: csv_file_status
+  logical, optional, intent(in) :: include_incomplete_records
   real, optional, intent(in) :: missing_code
 
   ! Local variables, operations with files
@@ -4079,6 +4081,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
   logical :: file_status
 
   ! Local variables, operations with the data array.
+  real, dimension(:,:), allocatable :: matrix
   integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
   integer, parameter :: LEN_CSV_FIELD = 64 ! The length of a single field within a record
@@ -4086,7 +4089,9 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
   character(len=LEN_CSV_FIELD), dimension(:), allocatable  :: line_data_substrings
   integer :: line_data_nflds
   real, allocatable, dimension(:) :: matrix_row
+  logical :: include_incomplete
   real ::missing_code_here
+  logical, allocatable, dimension(:) :: include_vector
   real, parameter :: MISSING = -9999.0
   logical :: not_a_data_row
   integer ::nvars
@@ -4095,6 +4100,11 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
   !> Delimiters for data fields:
   character(len=*), parameter :: SDELIM = " ,"
 
+  if (present(include_incomplete_records)) then
+    include_incomplete = include_incomplete_records
+  else
+    include_incomplete = .FALSE.
+  end if
 
   if(present(missing_code)) then
     missing_code_here = missing_code
@@ -4114,7 +4124,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
   ! First, get a free unit number.
   file_unit=GET_FREE_FUNIT(file_status, MAX_UNIT)
   if (.NOT. file_status) then ! File opening error, exit straight away.
-    allocate(matrix(0,0))
+    allocate(matrix_out(0,0))
     if (present(csv_file_status)) csv_file_status = .FALSE.
     return
   end if
@@ -4161,9 +4171,18 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
     allocate(matrix_row(line_data_nflds))
     matrix_row = missing_code_here
 
-    ! Empty lines are consideded non-data.
+    ! Only non-empty lines are considered data.
     if ( line_data_buff_length>0 ) then
-      not_a_data_row = .FALSE.
+      !print *, nvars, line_data_nflds
+      if (nvars > line_data_nflds ) then
+        print *, "XXXXXXXX", iline, icase, nvars
+        if (.not. include_incomplete ) then
+          ncases = ncases - 1
+          not_a_data_row = .TRUE.
+        end if
+      else
+        not_a_data_row = .FALSE.
+      end if
     else
       not_a_data_row = .TRUE.
     end if
@@ -4180,12 +4199,24 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
 
     end do
 
-    if (.not. not_a_data_row .and. line_data_buff_length>0 ) icase = icase + 1
+    if (.not. not_a_data_row .and. line_data_buff_length>0 ) then
+      icase = icase + 1
+      print *, "--- ", icase
+      if (icase>1) include_vector(icase) = .TRUE.
+!    else
+!      if (icase>1) include_vector(icase) = .FALSE.
+    end if
     ! If this is the first numeric case, we can assess the number of variables
     ! and allocate the output data matrix.
     if (icase == 1) then
-      nvars = line_data_nflds
-      allocate(matrix(ncases, nvars))
+      if (.not. allocated(matrix)) then
+        nvars = line_data_nflds
+        print *, "ALLOC:", ncases, nvars
+        allocate(matrix(ncases, nvars))
+        allocate(include_vector(ncases))
+        include_vector = .FALSE.
+        include_vector(icase) = .TRUE.
+      end if
     end if
 
 
@@ -4206,7 +4237,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
       end if
       !matrix(icase,:) = matrix_row
       !print *, iline, icase, matrix(icase,:)
-      print *, "ZZZ", iline, icase,  matrix(icase,:), line_data_nflds
+      !print *, "ZZZ", iline, icase,  matrix(icase,:), line_data_nflds
     end if
     !print *, iline, matrix(icase,:)
 
@@ -4217,7 +4248,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
 
   end do
 
-  print *, "MMM",  matrix
+
 
 
 
@@ -4228,6 +4259,27 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
   !matrix = 0.0
   print *, "XXX"
 
+  allocate(matrix_out(ncases, nvars))
+
+  do i=1, ncases
+    print *,  size(matrix_out,1),  matrix(i,:), include_vector(i)
+    if(include_vector(i)) matrix_out(i,1:nvars) = matrix(i,1:nvars)
+  end do
+
+  print *, "MMM",  nvars, ncases, matrix_out
+
+  print *, "M1", size(matrix,1)
+  do i=1, size(matrix,1)
+    print *, i, matrix(i,:), include_vector(i)
+  end do
+
+  print *, "M2", size(matrix_out,1), ncases
+  do i=1, size(matrix_out,1) !ncases
+    print *, i, matrix_out(i,:)
+  end do
+
+
+
   if (present(csv_file_status)) csv_file_status = .TRUE.
 
   return
@@ -4236,7 +4288,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, missing_code) resul
       ! File error, return after attemting to close straight away - do this now.
 1000  call CSV_FILE_CLOSE(csv_file_unit=file_unit)
       print *, "ERROR"
-      allocate(matrix(0,0))
+      allocate(matrix_out(0,0))
       if (present(csv_file_status)) csv_file_status = .FALSE.
       return
 
