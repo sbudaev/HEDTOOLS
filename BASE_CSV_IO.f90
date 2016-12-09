@@ -4209,10 +4209,10 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
     ! If this is the first numeric case, we can assess the number of variables
     ! and allocate the output data matrix.
     if (icase == 1) then
-      if (.not. allocated(matrix)) then
-        nvars = line_data_nflds
-        print *, "ALLOC:", ncases, nvars
-        allocate(matrix(ncases, nvars))
+      if (.not. allocated(matrix)) then  ! if we get there but matrix allocated
+        nvars = line_data_nflds          ! then  we got the second incomplete
+        print *, "ALLOC:", ncases, nvars ! record, but icase not yet updated to
+        allocate(matrix(ncases, nvars))  ! to 2
         allocate(include_vector(ncases))
         include_vector = .FALSE.
         include_vector(icase) = .TRUE.
@@ -4273,7 +4273,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
     print *, i, matrix(i,:), include_vector(i)
   end do
 
-  print *, "M2", size(matrix_out,1), ncases
+  print *, "M2", size(matrix_out,1), ncases, nvars
   do i=1, size(matrix_out,1) !ncases
     print *, i, matrix_out(i,:)
   end do
