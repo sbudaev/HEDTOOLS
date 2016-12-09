@@ -830,5 +830,34 @@ str=adjustl(outstr)
 end subroutine removebksl
 
 !**********************************************************************
+!**********************************************************************
+!**********************************************************************
+
+function IS_NUMERIC(string) result (num_flag)
+!*******************************************************************************
+! IS_NUMERIC
+! PURPOSE: Checks if a string is a string representation of a number, i.e.
+!          consists only of digits and ".," characters.
+! CALL PARAMETERS:
+!    Character string
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  character(len=*), intent(in) :: string
+  logical :: num_flag
+
+  ! Local
+  integer :: i
+
+  num_flag = .TRUE.
+
+  do i = 1, len_trim(string)
+    if ( .not. is_digit(string(i:i)) .and.                                    &
+          string(i:i)/="." .and.                                              &
+          string(i:i)/="," ) num_flag = .FALSE.
+  end do
+
+end function IS_NUMERIC
+
 
 end module base_strings
