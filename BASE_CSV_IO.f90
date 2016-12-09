@@ -38,6 +38,8 @@ module CSV_IO
 ! Author: Sergey Budaev, based on csv_io functions by John Burkardt
 !*******************************************************************************
 
+!use BASE_STRINGS, only : VALUE
+
 implicit none
 
 ! Public constants
@@ -4162,6 +4164,183 @@ end subroutine COMPACT
 
 
 
+
+
+!-------------------------------------------------------------------------------
+
+function READLINE (aunit, InLine, trimmed) result (OK)
+!*******************************************************************************
+! READLINE
+! PURPOSE: Read a line of arbitrary length from an input unit.
+! CALL PARAMETERS:
+!    Integer unit number.
+!    Output allocatable string
+!    Optional logical indicator flag to trim the output strings
+!    Return read success: TRUE if read successful
+!
+! Obtained from Stackoverflow.com, author unknown (wordy)
+!  (answered Feb 22 '14 at 11:23):
+! URL: https://stackoverflow.com/questions/14765382/
+!             reading-a-character-string-of-unknown-length
+!
+! NOTES:
+!     Here's a function for Fortran 2003, which sets an allocatable string
+!     (InLine) of exactly the length of the input string (optionally trimmed),
+!     or returns .false. if end of file.!
+!     For example to do something with all lines in a file with unit "aunit"
+!       do:
+!     .........................................................
+!     character(LEN=:), allocatable :: InLine
+!     ....
+!     do while (ReadLine(aunit, InLine))
+!       [.. something with InLine]
+!     end do
+!     .........................................................
+!*******************************************************************************
+
+integer, intent(IN) :: aunit
+character(LEN=:), allocatable, optional :: InLine
+logical, intent(in), optional :: trimmed
+
+integer, parameter :: line_buf_len= 1024*4
+character(LEN=line_buf_len) :: InS
+logical :: OK, set
+integer status, size
+
+OK = .false.
+set = .true.
+
+do
+    read (aunit,'(a)',advance='NO',iostat=status, size=size) InS
+    OK = .not. IS_IOSTAT_END(status)
+    if (.not. OK) return
+    if (present(InLine)) then
+        if (set) then
+            InLine = InS(1:size)
+            set=.false.
+        else
+            InLine = InLine // InS(1:size)
+        end if
+    end if
+    if (IS_IOSTAT_EOR(status)) exit
+end do
+
+if (present(trimmed) .and. present(InLine)) then
+    if (trimmed) InLine = trim(adjustl(InLine))
+end if
+
+end function READLINE
+
+!-------------------------------------------------------------------------------
+
+function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status) result (matrix)
+!*******************************************************************************
+! CSV_MATRIX_READ_R4
+! PURPOSE: Reads a matrix of real type from a CSV data file
+! CALL PARAMETERS:
+!    Character CSV_FILE_NAME, the name of the file.
+!    Matrix, 2-dimensional, of real type
+!    Integer number of variables in the matrix
+!    Integer number of cases in the matrix
+!    Logical CSV_FILE_STATUS, .TRUE. if successfull, no errors
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  ! Calling parameters
+  real, dimension(:,:), allocatable :: matrix
+  character (len=*), intent(in) :: csv_file_name
+  logical, optional, intent(out) :: csv_file_status
+
+  ! Local variables, operations with files
+  integer :: file_unit, error_iflag
+  logical :: file_status
+
+  ! Local variables, operations with the data array.                            line_data_string
+  integer :: lines_infile, iline, jfield
+  character(len=:), allocatable :: line_data_buff
+  integer, parameter :: LEN_CSV_FIELD = 64 ! The length of a single field within a record
+  integer, parameter :: MIN_FIELD = 2 ! Minimum length of a data field
+  character(len=LEN_CSV_FIELD), dimension(:), allocatable  :: line_data_substrings
+  integer :: line_data_nflds
+  real, allocatable, dimension(:) :: matrix_row
+  integer ::nvars
+  integer ::ncases
+
+  !> Delimiters for data fields:
+  character(len=*), parameter :: SDELIM = " ,"
+
+  print *, csv_file_name
+  file_status = .TRUE.
+
+
+  inquire(file=csv_file_name, size=nvars)
+  print *, nvars
+
+  !line_data_buff=repeat(" ", 255)
+  !line_data_buff="  "
+
+
+  ! First, get a free unit number.
+  file_unit=GET_FREE_FUNIT(file_status, MAX_UNIT)
+  if (.NOT. file_status) then ! File opening error, exit straight away.
+    allocate(matrix(0,0))
+    if (present(csv_file_status)) csv_file_status = .FALSE.
+    return
+  end if
+
+  ! Then try to open the CSV file.
+  call CSV_FILE_OPEN_READ (csv_file_name, file_unit, file_status)
+  if (.NOT. file_status) then ! File opening error, try to close and exit
+    goto 1000
+  end if
+
+
+  iline = 0
+  !do iline = 1, lines_infile
+  do while ( READLINE(file_unit, line_data_buff, .TRUE.) )
+    iline = iline + 1
+
+    allocate(line_data_substrings(len_trim(line_data_buff)/MIN_FIELD))
+
+    call PARSE ( line_data_buff, SDELIM, line_data_substrings, line_data_nflds )
+
+    allocate(matrix_row(line_data_nflds))
+
+    do jfield=1, line_data_nflds
+      !call VALUE(trim(line_data_substrings(jfield)), matrix_row(jfield), error_iflag)
+    end do
+
+    print *, "FF:", trim(line_data_substrings(1)), line_data_nflds, len_trim(line_data_buff)/MIN_FIELD
+
+
+    deallocate(matrix_row)
+    deallocate(line_data_substrings)
+
+  end do
+
+
+
+  !Debug:
+  nvars = 100
+  ncases = 100
+  allocate(matrix(nvars,ncases))
+  matrix = 0.0
+  print *, "XXX"
+
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+
+  return
+
+
+      ! File error, return after attemting to close straight away - do this now.
+1000  call CSV_FILE_CLOSE(csv_file_unit=file_unit)
+      print *, "ERROR"
+      allocate(matrix(0,0))
+      if (present(csv_file_status)) csv_file_status = .FALSE.
+      return
+
+
+end function CSV_MATRIX_READ_R4
 
 
 
