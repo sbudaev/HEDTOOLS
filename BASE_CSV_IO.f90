@@ -4055,10 +4055,13 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 ! CSV_MATRIX_READ_R4
 ! PURPOSE: Reads a matrix of real type from a CSV data file
 ! RETURNS:
-!    Allocatable matrix of the data. The sizes of the dimensions can be
-!      determined using intrinsic procedures (e.g. size). If the data file was
-!      not read successfully, the return matrix is allocated to zero size (0,0).
-!    The output matrix **must** be declared as:
+!    Allocatable matrix of the data. The number of columns is determined from
+!      the first whole-numeric row. The number of rows is determined as the
+!      number of whole-numeric rows in the data file. The sizes of the
+!      dimensions can be later determined using intrinsic procedures (e.g.
+!      size). If the data file was not read successfully, the return matrix
+!      is allocated to zero size (0,0).
+!    The matrix for return **must** be declared as:
 !       real, dimension(:,:), allocatable :: MATRIX
 ! CALL PARAMETERS:
 !    Character CSV_FILE_NAME, the name of the file.
