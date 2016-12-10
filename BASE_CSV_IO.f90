@@ -4058,6 +4058,8 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 !    Allocatable matrix of the data. The sizes of the dimensions can be
 !      determined using intrinsic procedures (e.g. size). If the data file was
 !      not read successfully, the return matrix is allocated to zero size (0,0).
+!    The output matrix **must** be declared as:
+!       real, dimension(:,:), allocatable :: MATRIX
 ! CALL PARAMETERS:
 !    Character CSV_FILE_NAME, the name of the file.
 !    Logical CSV_FILE_STATUS, .TRUE. if successfull, no errors
