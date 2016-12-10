@@ -1,5 +1,11 @@
 2016-12-10  sbu062
 
+	* template/Makefile: deleted precision_str
+	* BASE_STRINGS.f90, Makefile: deleted module precision_str in
+	  BASE_STRINGS, params moved to main module
+	* template/Makefile: updated makefile from the model code after the
+	  latest changes: csv depends on strings.
+	* ChangeLog: changelog updated
 	* BASE_CSV_IO.f90: minor fix header comments on
 	  (CSV_MATRIX_READ_R4)
 	* BASE_CSV_IO.f90: minor fix header comments on
