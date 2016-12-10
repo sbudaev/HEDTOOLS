@@ -62,9 +62,7 @@ HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
            BASE_RANDOM.f90 BASE_ERRORS.f90
 
 HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod  logger.mod \
-           base_random.mod assert.mod errors.mod exception.mod throwable.mod \
-           precision_str.mod
-
+           base_random.mod assert.mod errors.mod exception.mod throwable.mod
 
 # Path to HEDTOOLS and IEEE non-intrinsic libs
 HEDTOOLSDIR =  ../../HEDTOOLS
