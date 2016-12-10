@@ -840,6 +840,8 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
 !          consists only of digits and ".," characters.
 ! CALL PARAMETERS:
 !    Character string
+!    Logical flag to include some non-numeric space characters: space and
+!     horizontal tab.
 ! Author: Sergey Budaev
 !*******************************************************************************
 
@@ -850,6 +852,7 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
   ! Local
   integer :: i
   logical :: include_blank_here
+  character, parameter :: TAB =achar(9)
 
   num_flag = .TRUE.
 
@@ -869,7 +872,8 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
       if ( .not. is_digit(string(i:i)) .and.                                  &
             string(i:i)/="." .and.                                            &
             string(i:i)/="," .and.                                            &
-            string(i:i)/=" " ) num_flag = .FALSE.
+            string(i:i)/=" " .and.                                            &
+            string(i:i)/=TAB ) num_flag = .FALSE.
     end do
   else
     do i = 1, len_trim(string)
