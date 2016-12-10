@@ -860,6 +860,8 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
   if (include_blank_here) then
     do i = 1, len_trim(string)
       if ( .not. is_digit(string(i:i)) .and.                                  &
+            string(i:i)/="-" .and.                                            &
+            string(i:i)/="E" .and.                                            &
             string(i:i)/="." .and.                                            &
             string(i:i)/="," .and.                                            &
             string(i:i)/=" " .and.                                            &
@@ -868,6 +870,8 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
   else
     do i = 1, len_trim(string)
       if ( .not. is_digit(string(i:i)) .and.                                  &
+            string(i:i)/="-" .and.                                            &
+            string(i:i)/="E" .and.                                            &
             string(i:i)/="." .and.                                            &
             string(i:i)/="," ) num_flag = .FALSE.
     end do
