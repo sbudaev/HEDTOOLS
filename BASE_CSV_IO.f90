@@ -220,6 +220,8 @@ subroutine LOG_DBG(message_string, procname, modname)
 ! of the module behaviour is made by commenting out unused code, possibly
 ! change to conditional compilation with preprocessor... but portability will
 ! be problem in such a case...
+! NOTE: To use the LOGGER module, it must be compiled before CSV_IO, so
+!       (re)place LOGGER first in the Makefile.
 !*******************************************************************************
 
   !#ifdef USE_LOGGER_MODULE
@@ -3981,14 +3983,6 @@ function CLEANUP(instring) result (cleaned)  ! PRIVATE HERE, from UTILS
 end function CLEANUP
 
 !-------------------------------------------------------------------------------
-! The subroutines below are copied from BASE_STRINGS module for use in
-! CSV_MATRIX_READ and CSV_VECTOR_READ CSV read file procedures.
-! NOTE: Until the BASE_STRINGS is fully reimplemented here they should be
-!       *private* to avoid name conflicts with BASE_STRINGS!
-!-------------------------------------------------------------------------------
-
-
-!-------------------------------------------------------------------------------
 
 function READLINE (aunit, InLine, trimmed) result (OK)
 !*******************************************************************************
@@ -4056,7 +4050,7 @@ end function READLINE
 !-------------------------------------------------------------------------------
 
 function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
-                      include_incomplete_records, missing_code) result (matrix_out)
+                  include_incomplete_records, missing_code) result (matrix_out)
 !*******************************************************************************
 ! CSV_MATRIX_READ_R4
 ! PURPOSE: Reads a matrix of real type from a CSV data file
@@ -4097,39 +4091,37 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
   integer ::nvars
   integer ::ncases
 
-  !> Delimiters for data fields:
-  character(len=*), parameter :: SDELIM = " ,"
+  ! Delimiters for data fields:
+  character, parameter :: TAB =achar(9)
+  character(len=*), parameter :: SDELIM = " ," // TAB
 
+  ! Check optional parameters: flag to include incomplete records
+  ! (substitutes them with missing data code)
   if (present(include_incomplete_records)) then
     include_incomplete = include_incomplete_records
   else
     include_incomplete = .FALSE.
   end if
 
+  ! Check optional parameters: Optional missing data code
+  ! for incomplete records.
   if(present(missing_code)) then
     missing_code_here = missing_code
   else
     missing_code_here = MISSING
   end if
 
-
-  print *, csv_file_name
   file_status = .TRUE.
-
-
-  !line_data_buff=repeat(" ", 255)
-  !line_data_buff="  "
-
 
   ! First, get a free unit number.
   file_unit=GET_FREE_FUNIT(file_status, MAX_UNIT)
   if (.NOT. file_status) then ! File opening error, exit straight away.
-    allocate(matrix_out(0,0))
+    allocate(matrix_out(0,0)) ! But have to allocate the output return matrix.
     if (present(csv_file_status)) csv_file_status = .FALSE.
     return
   end if
 
-  ! Second, calculate the number of numeric-only lines in the file.
+  ! Second, calculate the number of *numeric-only* lines in the file.
   ncases = CSV_FILE_LINES_COUNT(  csv_file_name=csv_file_name,                &
                                   numeric_only=.TRUE.,                        &
                                   csv_file_status=file_status )
@@ -4143,18 +4135,16 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
     goto 1000
   end if
 
-
   iline = 0
   icase = 0
   nvars = 0
-  !do iline = 1, lines_infile
+
+  ! Now cycle through the data lines using the non-advancing READLINE
   do while ( READLINE(file_unit, line_data_buff, .TRUE.) )
 
     iline = iline + 1
 
     line_data_buff_length = len_trim(line_data_buff)
-
-    !print *, "ZZZ: ", line_data_buff
 
     ! An approximate upper bound for the number of data fields in the
     ! current record is len_trim(line_data_buff)/MIN_FIELD), so we can now
@@ -4164,8 +4154,6 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 
     call PARSE ( line_data_buff, SDELIM, line_data_substrings, line_data_nflds )
 
-    !print *, "ZZZ2:", line_data_nflds
-
     ! We have to allocate the array of row values and initialise it for correct
     ! processing by the VALUE subroutine.
     allocate(matrix_row(line_data_nflds))
@@ -4173,9 +4161,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 
     ! Only non-empty lines are considered data.
     if ( line_data_buff_length>0 ) then
-      !print *, nvars, line_data_nflds
       if (nvars > line_data_nflds ) then
-        print *, "XXXXXXXX", iline, icase, nvars
         if (.not. include_incomplete ) then
           ncases = ncases - 1
           not_a_data_row = .TRUE.
@@ -4188,110 +4174,58 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
     end if
 
     do jfield=1, line_data_nflds
-      !print *, "--->", jfield , trim(line_data_substrings(jfield)), IS_NUMERIC(trim(line_data_substrings(jfield)))
-
       if (IS_NUMERIC(line_data_substrings(jfield))) then
         call VALUE(trim(line_data_substrings(jfield)), matrix_row(jfield), error_iflag)
       else
         matrix_row(jfield) = missing_code_here
         not_a_data_row = .TRUE.
       end if
-
     end do
 
     if (.not. not_a_data_row .and. line_data_buff_length>0 ) then
       icase = icase + 1
-      print *, "--- ", icase
       if (icase>1) include_vector(icase) = .TRUE.
-!    else
-!      if (icase>1) include_vector(icase) = .FALSE.
     end if
     ! If this is the first numeric case, we can assess the number of variables
     ! and allocate the output data matrix.
     if (icase == 1) then
       if (.not. allocated(matrix)) then  ! if we get there but matrix allocated
         nvars = line_data_nflds          ! then  we got the second incomplete
-        print *, "ALLOC:", ncases, nvars ! record, but icase not yet updated to
-        allocate(matrix(ncases, nvars))  ! to 2
-        allocate(include_vector(ncases))
+        allocate(matrix(ncases, nvars))  ! record, but icase not yet updated to
+        allocate(include_vector(ncases)) ! to 2
         include_vector = .FALSE.
         include_vector(icase) = .TRUE.
       end if
     end if
 
-
-    !print *, "FF:", trim(line_data_substrings(1)), line_data_nflds, len_trim(line_data_buff)/MIN_FIELD
-    !print *, "FF:", iline, ncases, nvars, icase, matrix_row, line_data_nflds,  not_a_data_row
-    !print *, "FF:", iline, icase, ncases, nvars, matrix_row
-
-    !print *, ">,", [(i,i=1,nvars)]
-
     if (.not. not_a_data_row) then
-      !print *, "ZZZ", iline, icase, matrix_row, line_data_nflds
-      !print *, icase, nvars, size(matrix)
       if (line_data_nflds<nvars) then
         matrix(icase,1:line_data_nflds) = matrix_row(1:line_data_nflds)
-        matrix(icase,line_data_nflds+1:nvars) = MISSING
+        matrix(icase,line_data_nflds+1:nvars) = missing_code_here
       else
         matrix(icase,1:nvars) = matrix_row(1:nvars)
       end if
-      !matrix(icase,:) = matrix_row
-      !print *, iline, icase, matrix(icase,:)
-      !print *, "ZZZ", iline, icase,  matrix(icase,:), line_data_nflds
     end if
-    !print *, iline, matrix(icase,:)
-
-
 
     deallocate(matrix_row)
     deallocate(line_data_substrings)
 
   end do
 
-
-
-
-
-  !Debug:
-  !nvars = 100
-  !ncases = 100
-  !allocate(matrix(nvars,ncases))
-  !matrix = 0.0
-  print *, "XXX"
-
-  allocate(matrix_out(ncases, nvars))
+  allocate(matrix_out(ncases, nvars)) ! We can now allocate the return matrix.
 
   do i=1, ncases
-    print *,  size(matrix_out,1),  matrix(i,:), include_vector(i)
     if(include_vector(i)) matrix_out(i,1:nvars) = matrix(i,1:nvars)
   end do
 
-  print *, "MMM",  nvars, ncases, matrix_out
-
-  print *, "M1", size(matrix,1)
-  do i=1, size(matrix,1)
-    print *, i, matrix(i,:), include_vector(i)
-  end do
-
-  print *, "M2", size(matrix_out,1), ncases, nvars
-  do i=1, size(matrix_out,1) !ncases
-    print *, i, matrix_out(i,:)
-  end do
-
-
-
   if (present(csv_file_status)) csv_file_status = .TRUE.
-
   return
 
-
-      ! File error, return after attemting to close straight away - do this now.
+      ! File error, return after attempting to close straight away.
 1000  call CSV_FILE_CLOSE(csv_file_unit=file_unit)
-      print *, "ERROR"
-      allocate(matrix_out(0,0))
+      allocate(matrix_out(0,0)) ! But have to allocate the output return matrix.
       if (present(csv_file_status)) csv_file_status = .FALSE.
       return
-
 
 end function CSV_MATRIX_READ_R4
 
