@@ -54,17 +54,20 @@ DOXYCFG = Doxyfile
 DOXYPATH = $(shell grep ^OUTPUT_DIRECTORY Doxyfile | cut -d '=' -f 2)
 
 #*******************************************************************************
-# HEDTOOLS sources and module files
+# HEDTOOLS sources and module files:
+# Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
+#          depends on procedures from BASE_CSV_IO.
 
-HEDTOOLS = BASE_UTILS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 BASE_RANDOM.f90 \
-           BASE_ERRORS.f90 BASE_STRINGS.f90
+HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
+           BASE_RANDOM.f90 BASE_ERRORS.f90
 
-HTOOLMOD = base_utils.mod  csv_io.mod  logger.mod base_random.mod \
-           assert.mod errors.mod exception.mod throwable.mod precision_str.mod \
-           base_strings.mod
+HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod  logger.mod \
+           base_random.mod assert.mod errors.mod exception.mod throwable.mod \
+           precision_str.mod
+
 
 # Path to HEDTOOLS and IEEE non-intrinsic libs
-HEDTOOLSDIR = ../../HEDTOOLS
+HEDTOOLSDIR =  ../../HEDTOOLS
 IEEEPATH = $(HEDTOOLSDIR)/IEEE
 
 #*******************************************************************************
@@ -180,10 +183,12 @@ else
 endif
 
 #*******************************************************************************
-# HEDTOOLS object files
+# HEDTOOLS object files:
+# Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
+#          depends on procedures from BASE_CSV_IO.
 
-HTOOLOBJ = BASE_UTILS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) BASE_LOGGER.$(OBJEXT) \
-           BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT) BASE_STRINGS.$(OBJEXT)
+HTOOLOBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
+           BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT)
 
 #*******************************************************************************
 # Generate the list of modules used in the source.
