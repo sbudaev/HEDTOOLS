@@ -76,7 +76,7 @@ OBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
       BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT)
 
 MOD = base_utils.mod  base_strings.mod csv_io.mod  logger.mod base_random.mod \
-      assert.mod errors.mod exception.mod throwable.mod precision_str.mod
+      assert.mod errors.mod exception.mod throwable.mod
 
 DOC = BASE_UTILS.adoc
 
