@@ -1,5 +1,66 @@
+2016-12-10  sbu062
+
+	* BASE_CSV_IO.f90: minor fix header comments on
+	  (CSV_MATRIX_READ_R4)
+	* BASE_CSV_IO.f90: minor fix header comments on
+	  (CSV_MATRIX_READ_R4)
+	* BASE_CSV_IO.f90: fixed header comments, code beautified
+	* BASE_CSV_IO.f90: (CSV_MATRIX_READ_R4) now works correctly with
+	  tabs and incomplete data. Deleted all debug code and outputs, may
+	  still need more testing on big random data files, if ok, still
+	  missing kind=8 version and generic interface
+	* BASE_STRINGS.f90: (IS_NUMERIC) with optional include-blanks flag
+	  now also includes TAB (ascii 9)
+
+2016-12-09  sbu062
+
+	* BASE_CSV_IO.f90: minor change comments and debug
+	* BASE_CSV_IO.f90: fixed second case missing, need more testing
+	* BASE_CSV_IO.f90: fixed reading incomplete records
+	* BASE_CSV_IO.f90: first working version of (CSV_MATRIX_READ_R4)
+	* BASE_STRINGS.f90: in (is_numeric), added option to include spaces
+	* BASE_STRINGS.f90: implemented function (is_numeric)
+	* Makefile: the module CSV_IO now depends on BASE_STRINGS, changed
+	  makefile to include the strings module prior to CSV_IO
+	* BASE_CSV_IO.f90: need (value) from STRINGS
+	* BASE_CSV_IO.f90: placed private copy of (parse) along with
+	  dependants (split), (removebksl) and (compact) procedures for
+	  later use in CSV read, corrected implicit variables and
+	  parameters
+
+2016-12-08  sbu062
+
+	* tools/interpolate.f90: now use stderr for errors,
+	  useISO_FORTRAN_ENV
+	* tools/interpolate.f90: long HeadURL deleted
+
+2016-12-07  sbu062
+
+	* tools/interpolate.f90: added exit codes
+	* tools/interpolate.f90: added .hpplot (HPGL2) support
+	* tools/Makefile: delete graphics files on distclean
+	* tools/interpolate.f90: added notes on reduced non-interactive
+	  device support under Windows (GrWin)
+	* tools/interpolate.f90: added support for additional graphic
+	  formats gif, hpgl
+	* tools/interpolate.f90: minor fix help screen
+	* tools/interpolate.f90: added output file format selection by
+	  extension .ps .png
+	* tools/interpolate.f90: notes on windows build
+
 2016-12-06  sbu062
 
+	* doc/img/img_tools_interpolate.png: screenshot of interpolate
+	* tools/interpolate.f90: minor fix comments
+	* tools/interpolate.f90: set svn keywords
+	* tools/interpolate.f90: implemented GrWin build on MS Windows with
+	  graphic output using /GW device, added comments on Windows build
+	* tools/Makefile, tools/interpolate.f90: small fixes tools
+	* tools/Makefile: added makefile
+	* template/interpolate.f90, tools/interpolate.f90: moved
+	  interpolation code to tools
+	* tools: added dir for tools, we'll have several
+	* ChangeLog: changeloge updated
 	* BASE_UTILS.adoc, BASE_UTILS.f90: implemented platform detection
 	  func. (PLATFORM_IS_WINDOWS)
 	* template/interpolate.f90: addad Lagrange interpolation
