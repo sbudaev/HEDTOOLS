@@ -4054,12 +4054,19 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 !*******************************************************************************
 ! CSV_MATRIX_READ_R4
 ! PURPOSE: Reads a matrix of real type from a CSV data file
+! RETURNS:
+!    Allocatable matrix of the data. The sizes of the dimensions can be
+!      determined using intrinsic procedures (e.g. size). If the data file was
+!      not read successfully, the return matrix is allocated to zero size (0,0).
 ! CALL PARAMETERS:
 !    Character CSV_FILE_NAME, the name of the file.
-!    Matrix, 2-dimensional, of real type
-!    Integer number of variables in the matrix
-!    Integer number of cases in the matrix
 !    Logical CSV_FILE_STATUS, .TRUE. if successfull, no errors
+!    Optional logical flag to include incomplete records when the number of
+!       columns in the data file is shorter than determined. If set to TRUE,
+!       missing data values will be substituted by missing data code (default
+!       -9999.0)
+!    Optional missing data code that substitutes the default -9999.0
+!
 ! Author: Sergey Budaev
 !*******************************************************************************
 
@@ -4078,9 +4085,10 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
   real, dimension(:,:), allocatable :: matrix
   integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
-  integer, parameter :: LEN_CSV_FIELD = 64 ! The length of a single field within a record
+  integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
   integer, parameter :: MIN_FIELD = 2 ! Minimum length of a data field
-  character(len=LEN_CSV_FIELD), dimension(:), allocatable  :: line_data_substrings
+  character(len=LEN_CSV_FIELD), dimension(:), allocatable  ::                 &
+                                                          line_data_substrings
   integer :: line_data_nflds
   real, allocatable, dimension(:) :: matrix_row
   logical :: include_incomplete
@@ -4175,7 +4183,8 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 
     do jfield=1, line_data_nflds
       if (IS_NUMERIC(line_data_substrings(jfield))) then
-        call VALUE(trim(line_data_substrings(jfield)), matrix_row(jfield), error_iflag)
+        call VALUE( trim(line_data_substrings(jfield)), matrix_row(jfield),   &
+                    error_iflag)
       else
         matrix_row(jfield) = missing_code_here
         not_a_data_row = .TRUE.
@@ -4228,27 +4237,5 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
       return
 
 end function CSV_MATRIX_READ_R4
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 end module CSV_IO
