@@ -1,5 +1,6 @@
 2016-12-11  sbu062
 
+	* ChangeLog: update changelog
 	* BASE_UTILS.adoc: updated doc to include (CSV_MATRIX_READ), also
 	  updated (CSV_FILE_LINES_COUNT) - interface changed!!
 	* BASE_CSV_IO.f90: implemented real kind 8 of (CSV_MATRIX_READ_R8)
