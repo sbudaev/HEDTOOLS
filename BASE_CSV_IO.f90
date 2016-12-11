@@ -200,6 +200,13 @@ interface CSV_GUESS_RECORD_LENGTH
 
 end interface CSV_GUESS_RECORD_LENGTH
 
+interface CSV_MATRIX_READ
+
+  module procedure CSV_MATRIX_READ_R4
+  module procedure CSV_MATRIX_READ_R8
+
+end interface CSV_MATRIX_READ
+
 ! They are identical in CSV_IO and BASE_UTILS. Private here to avoid possible
 ! name conflicts, do we need them outside?
 private ::  I4_WIDTH, I4_LOG_10, STR_ITOA_LZ, STR_ITOA, CLEANUP
@@ -4077,10 +4084,10 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 
   ! Calling parameters
   real, dimension(:,:), allocatable :: matrix_out
-  character (len=*), intent(in) :: csv_file_name
-  logical, optional, intent(out) :: csv_file_status
-  logical, optional, intent(in) :: include_incomplete_records
-  real, optional, intent(in) :: missing_code
+  character (len=*), intent(in) :: csv_file_name     ! File name to read.
+  logical, optional, intent(out) :: csv_file_status  ! Read success status.
+  logical, optional, intent(in) :: include_incomplete_records ! Include truncated.
+  real, optional, intent(in) :: missing_code         ! Substitutes in truncated.
 
   ! Local variables, operations with files
   integer :: file_unit, error_iflag
@@ -4242,5 +4249,204 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
       return
 
 end function CSV_MATRIX_READ_R4
+
+!-------------------------------------------------------------------------------
+
+function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
+                  include_incomplete_records, missing_code) result (matrix_out)
+!*******************************************************************************
+! CSV_MATRIX_READ_R8
+! PURPOSE: Reads a matrix of real type from a CSV data file
+! RETURNS:
+!    Allocatable matrix of the data. The number of columns is determined from
+!      the first whole-numeric row. The number of rows is determined as the
+!      number of whole-numeric rows in the data file. The sizes of the
+!      dimensions can be later determined using intrinsic procedures (e.g.
+!      size). If the data file was not read successfully, the return matrix
+!      is allocated to zero size (0,0).
+!    The matrix for return **must** be declared as:
+!       real, dimension(:,:), allocatable :: MATRIX
+! CALL PARAMETERS:
+!    Character CSV_FILE_NAME, the name of the file.
+!    Logical CSV_FILE_STATUS, .TRUE. if successfull, no errors
+!    Optional logical flag to include incomplete records when the number of
+!       columns in the data file is shorter than determined. If set to TRUE,
+!       missing data values will be substituted by missing data code (default
+!       -9999.0)
+!    Missing data code that substitutes the default -9999.0.
+!        NOTE: The missing data code is used for the real kind output selector.
+!              if it has the kind 8, then the returned matrix also has kind 8.
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  ! Calling parameters
+  real (kind=8), dimension(:,:), allocatable :: matrix_out
+  character (len=*), intent(in) :: csv_file_name
+  logical, optional, intent(out) :: csv_file_status
+  logical, optional, intent(in) :: include_incomplete_records
+  real (kind=8), intent(in) :: missing_code ! MISSING code is the kind selector
+
+  ! Local variables, operations with files
+  integer :: file_unit, error_iflag
+  logical :: file_status
+
+  ! Local variables, operations with the data array.
+  real (kind=8), dimension(:,:), allocatable :: matrix
+  integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
+  character(len=:), allocatable :: line_data_buff
+  integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
+  integer, parameter :: MIN_FIELD = 2 ! Minimum length of a data field
+  character(len=LEN_CSV_FIELD), dimension(:), allocatable  ::                 &
+                                                          line_data_substrings
+  integer :: line_data_nflds
+  real (kind=8), allocatable, dimension(:) :: matrix_row
+  logical :: include_incomplete
+  real (kind=8) ::missing_code_here
+  logical, allocatable, dimension(:) :: include_vector
+  real (kind=8), parameter :: MISSING = -9999.0
+  logical :: not_a_data_row
+  integer ::nvars
+  integer ::ncases
+
+  ! Delimiters for data fields:
+  character, parameter :: TAB =achar(9)
+  character(len=*), parameter :: SDELIM = " ," // TAB
+
+  ! Check optional parameters: flag to include incomplete records
+  ! (substitutes them with missing data code)
+  if (present(include_incomplete_records)) then
+    include_incomplete = include_incomplete_records
+  else
+    include_incomplete = .FALSE.
+  end if
+
+  ! Check optional parameters: Optional missing data code
+  ! for incomplete records.
+  !if(present(missing_code)) then
+  missing_code_here = missing_code
+  !else
+  !  missing_code_here = MISSING
+  !end if
+
+  file_status = .TRUE.
+
+  ! First, get a free unit number.
+  file_unit=GET_FREE_FUNIT(file_status, MAX_UNIT)
+  if (.NOT. file_status) then ! File opening error, exit straight away.
+    allocate(matrix_out(0,0)) ! But have to allocate the output return matrix.
+    if (present(csv_file_status)) csv_file_status = .FALSE.
+    return
+  end if
+
+  ! Second, calculate the number of *numeric-only* lines in the file.
+  ncases = CSV_FILE_LINES_COUNT(  csv_file_name=csv_file_name,                &
+                                  numeric_only=.TRUE.,                        &
+                                  csv_file_status=file_status )
+  if (.NOT. file_status) then ! File opening error, try to close and exit
+    goto 1000
+  end if
+
+  ! Then try to open the CSV file.
+  call CSV_FILE_OPEN_READ (csv_file_name, file_unit, file_status)
+  if (.NOT. file_status) then ! File opening error, try to close and exit
+    goto 1000
+  end if
+
+  iline = 0
+  icase = 0
+  nvars = 0
+
+  ! Now cycle through the data lines using the non-advancing READLINE
+  do while ( READLINE(file_unit, line_data_buff, .TRUE.) )
+
+    iline = iline + 1
+
+    line_data_buff_length = len_trim(line_data_buff)
+
+    ! An approximate upper bound for the number of data fields in the
+    ! current record is len_trim(line_data_buff)/MIN_FIELD), so we can now
+    ! allocate the temporary array of substrings.
+    ! This is also the number of variables.
+    allocate(line_data_substrings(line_data_buff_length/MIN_FIELD))
+
+    call PARSE ( line_data_buff, SDELIM, line_data_substrings, line_data_nflds )
+
+    ! We have to allocate the array of row values and initialise it for correct
+    ! processing by the VALUE subroutine.
+    allocate(matrix_row(line_data_nflds))
+    matrix_row = missing_code_here
+
+    ! Only non-empty lines are considered data.
+    if ( line_data_buff_length>0 ) then
+      if (nvars > line_data_nflds ) then
+        if (.not. include_incomplete ) then
+          ncases = ncases - 1
+          not_a_data_row = .TRUE.
+        end if
+      else
+        not_a_data_row = .FALSE.
+      end if
+    else
+      not_a_data_row = .TRUE.
+    end if
+
+    do jfield=1, line_data_nflds
+      if (IS_NUMERIC(line_data_substrings(jfield))) then
+        call VALUE( trim(line_data_substrings(jfield)), matrix_row(jfield),   &
+                    error_iflag)
+      else
+        matrix_row(jfield) = missing_code_here
+        not_a_data_row = .TRUE.
+      end if
+    end do
+
+    if (.not. not_a_data_row .and. line_data_buff_length>0 ) then
+      icase = icase + 1
+      if (icase>1) include_vector(icase) = .TRUE.
+    end if
+    ! If this is the first numeric case, we can assess the number of variables
+    ! and allocate the output data matrix.
+    if (icase == 1) then
+      if (.not. allocated(matrix)) then  ! if we get there but matrix allocated
+        nvars = line_data_nflds          ! then  we got the second incomplete
+        allocate(matrix(ncases, nvars))  ! record, but icase not yet updated to
+        allocate(include_vector(ncases)) ! to 2
+        include_vector = .FALSE.
+        include_vector(icase) = .TRUE.
+      end if
+    end if
+
+    if (.not. not_a_data_row) then
+      if (line_data_nflds<nvars) then
+        matrix(icase,1:line_data_nflds) = matrix_row(1:line_data_nflds)
+        matrix(icase,line_data_nflds+1:nvars) = missing_code_here
+      else
+        matrix(icase,1:nvars) = matrix_row(1:nvars)
+      end if
+    end if
+
+    deallocate(matrix_row)
+    deallocate(line_data_substrings)
+
+  end do
+
+  allocate(matrix_out(ncases, nvars)) ! We can now allocate the return matrix.
+
+  do i=1, ncases
+    if(include_vector(i)) matrix_out(i,1:nvars) = matrix(i,1:nvars)
+  end do
+
+  if (present(csv_file_status)) csv_file_status = .TRUE.
+  return
+
+      ! File error, return after attempting to close straight away.
+1000  call CSV_FILE_CLOSE(csv_file_unit=file_unit)
+      allocate(matrix_out(0,0)) ! But have to allocate the output return matrix.
+      if (present(csv_file_status)) csv_file_status = .FALSE.
+      return
+
+end function CSV_MATRIX_READ_R8
+
 
 end module CSV_IO
