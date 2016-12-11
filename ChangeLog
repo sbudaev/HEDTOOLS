@@ -1,5 +1,16 @@
+2016-12-11  sbu062
+
+	* BASE_UTILS.adoc: updated doc to include (CSV_MATRIX_READ), also
+	  updated (CSV_FILE_LINES_COUNT) - interface changed!!
+	* BASE_CSV_IO.f90: implemented real kind 8 of (CSV_MATRIX_READ_R8)
+	  and generic interface (CSV_MATRIX_READ)
+
 2016-12-10  sbu062
 
+	* BASE_STRINGS.f90: added minus and E in (is_numeric) to fix read
+	  errors with random negative data and very small values
+	* tools/Makefile: updated makefile from template
+	* ChangeLog: changelog update
 	* template/Makefile: deleted precision_str
 	* BASE_STRINGS.f90, Makefile: deleted module precision_str in
 	  BASE_STRINGS, params moved to main module
