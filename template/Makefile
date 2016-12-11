@@ -56,7 +56,7 @@ DOXYPATH = $(shell grep ^OUTPUT_DIRECTORY Doxyfile | cut -d '=' -f 2)
 #*******************************************************************************
 # HEDTOOLS sources and module files:
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_CSV_IO.
+#          depends on procedures from BASE_STRINGS.
 
 HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
            BASE_RANDOM.f90 BASE_ERRORS.f90
@@ -183,7 +183,7 @@ endif
 #*******************************************************************************
 # HEDTOOLS object files:
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_CSV_IO.
+#          depends on procedures from BASE_STRINGS.
 
 HTOOLOBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
            BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT)

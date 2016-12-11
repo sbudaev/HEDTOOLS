@@ -68,7 +68,8 @@ K := $(foreach exec,$(REQUIRED_EXECS),\
 #*******************************************************************************
 # Main building blocks, define source and object files to include.
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_CSV_IO.
+#          depends on procedures from BASE_STRINGS.
+
 SRC = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90  \
       BASE_RANDOM.f90 BASE_ERRORS.f90
 
