@@ -87,6 +87,10 @@ integer, parameter :: EXIT_CODE_ERROR = 1
 ! Input CSV file name with the data, output plot file
 character(len=:), allocatable :: csv_file_name, output_file
 
+! Minimum length of the output file, if too short, ignore output
+! file name. 6 chars: xx.png
+character(len=*), parameter :: MIN_FILE_LENGTH = 6
+
 ! File read error flag
 logical :: errorflag
 
@@ -126,8 +130,8 @@ if (command_argument_count()==0) then
   print *, "Produce scatter plot of data that are provided at the command line."
   print *, "If the output plot file name is not provided, the plot goes to the "
   print *, "screen (X11 on Unix, GrWin on Windows)."
-  if (PLATFORM_IS_WINDOWS()) then                         ! GrWin supports only
-    print *, "File formats supported: .PS."  ! PostScript format.
+  if (PLATFORM_IS_WINDOWS()) then                       ! GrWin supports only
+    print *, "File formats supported: .PS."             ! PostScript format.
   else
     print *, "File formats supported: .PS, .HPGL, .HPPLOT, .PNG, .GIF ."
   end if
@@ -150,9 +154,8 @@ call get_command_argument(number=2, value=command_line_str)
 if (IS_DEBUG) print *, "DEBUG: >",trim(command_line_str), "<"
 output_file = trim(command_line_str)
 
-if (len(output_file)>1) then
+if (len(output_file)>MIN_FILE_LENGTH) then
   output_dev = output_save
-  !output_file = csv_file_name // EXT_PS
 
   OUT_FORMAT: if                                                              &
     (LOWERCASE(output_file(len(output_file)-2:len(output_file)))==EXT_PS)     &
@@ -198,6 +201,7 @@ end if
 
 data_matrix = CSV_MATRIX_READ(csv_file_name, errorflag)
 if (.not. errorflag) call error_csv(csv_file_name)
+if (IS_DEBUG) print *, "DEBUG: >", size(data_matrix,1), "/", size(data_matrix,2)
 
 ! Dot size depends on the sdample size.
 if (size(data_matrix, 1) < SMALL_DOTS_MIN) then
@@ -212,16 +216,19 @@ if (pgopen(output_dev) .lt. 1) then
   write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
   stop EXIT_CODE_ERROR
 end if
-call pgenv( minval(data_matrix(:,1)), maxval(data_matrix(:,1)),           &
+
+call pgenv( minval(data_matrix(:,1)), maxval(data_matrix(:,1)),               &
             minval(data_matrix(:,2)), maxval(data_matrix(:,2)), 0, 0 )
-if (IS_DEBUG) print *, "DEBUG: >", minval(data_matrix(:,1)),                &
-                                   maxval(data_matrix(:,1)),                &
-                                   minval(data_matrix(:,2)),                &
-                                   maxval(data_matrix(:,2))
+
+if (IS_DEBUG) print *, "DEBUG: >",    minval(data_matrix(:,1)),               &
+                                      maxval(data_matrix(:,1)),               &
+                                      minval(data_matrix(:,2)),               &
+                                      maxval(data_matrix(:,2))
+
 call pglab('X', 'Y', 'Scatterplot ' // output_file)
 
 ! Plot the scatterplot based on the first two columns of the data.
-call pgpt( size(data_matrix,1), data_matrix(:,1), data_matrix(:,2), plot_symbol )
+call pgpt(size(data_matrix,1), data_matrix(:,1), data_matrix(:,2), plot_symbol)
 
 ! Close the plot
 call pgclos
