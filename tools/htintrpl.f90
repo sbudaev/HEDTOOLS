@@ -12,15 +12,15 @@
 ! Example run:
 !    Produce interpolation plot with the default non-linear algorithm, output
 !    to screen (X11):
-! ./interpolate.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]
+! ./htintrpl.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]
 !
 !    Produce interpolation plot with linear algorithm, output to the file
-! ./interpolate.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]
+! ./htintrpl.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]
 !
 ! Note: Quotes can also be used instead of square brackets, but the shell
 !       will normally process and remove them, so that backslash \ would be
 !       necessary for correct processing, e.g.:
-!       ./interpolate.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] \"linear\"
+!       ./htintrpl.exe [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] \"linear\"
 !
 ! BUILD: The program can be built using the standard Makefile from the
 !        HEDTOOLS subproject, but needs tweaking certain build options to plug
@@ -28,17 +28,17 @@
 !
 ! Build command on *Linux* with *gfortran* and PGPLOT (other compilers like
 ! Oracle f95 also do work as usual with FC=f95):
-!   make GRAPHLIB=-lpgplot SRC=interpolate.f90 OUT=interpolate.exe
+!   make GRAPHLIB=-lpgplot SRC=htintrpl.f90 OUT=htintrpl.exe
 !
 ! Build on *Windows* using *gfortran* and GrWin:
 !   make GF_FFLAGS="-LC:/GrWin/MinGW_gfortran_x6/lib -Wl,--subsystem,console
 !         -O3 -funroll-loops -fforce-addr -mwindows" GRAPHLIB="-lpgplot -lGrWin"
-!         SRC=interpolate.f90 OUT=interpolate.exe
+!         SRC=htintrpl.f90 OUT=htintrpl.exe
 !
 ! Build on *Windows* using *ifort* and GrWin (builds but failed to run):
 !   set LIB=%LIB%;C:/GrWin/Intel6/lib
 !   make FC=ifort GRAPHLIB="pgplot.lib GrWin.lib user32.lib gdi32.lib
-!         Advapi32.lib" SRC=interpolate.f90 OUT=interpolate.exe
+!         Advapi32.lib" SRC=htintrpl.f90 OUT=htintrpl.exe
 !
 ! NOTE:    Depends on the HEDTOOLS and PGPLOT Fortran library for plotting,
 !          on Windows may also require GrWin.
