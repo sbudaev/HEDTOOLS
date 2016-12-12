@@ -1,6 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
-! $Id: htscatter.f90 2160 2016-12-08 12:19:11Z sbu062 $
+! $Id$
 !-------------------------------------------------------------------------------
 ! Produce scatter plot of data that are provided at the command line.
 ! If the output plot file name is not provided, the plot goes to the
