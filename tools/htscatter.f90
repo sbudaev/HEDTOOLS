@@ -89,7 +89,7 @@ character(len=:), allocatable :: csv_file_name, output_file
 
 ! Minimum length of the output file, if too short, ignore output
 ! file name. 6 chars: xx.png
-integer, parameter :: MIN_FILE_LENGTH = 6
+integer, parameter :: MIN_FILE_LENGTH = 5
 
 ! File read error flag
 logical :: errorflag
@@ -225,7 +225,8 @@ if (IS_DEBUG) print *, "DEBUG: >",    minval(data_matrix(:,1)),               &
                                       minval(data_matrix(:,2)),               &
                                       maxval(data_matrix(:,2))
 
-call pglab('X', 'Y', 'Scatterplot ' // output_file)
+call pglab('X', 'Y', 'Scatterplot (' // TOSTR(size(data_matrix,1)) // "," //  &
+                      TOSTR(size(data_matrix,2)) // ") " // csv_file_name   )
 
 ! Plot the scatterplot based on the first two columns of the data.
 call pgpt(size(data_matrix,1), data_matrix(:,1), data_matrix(:,2), plot_symbol)
