@@ -31,13 +31,18 @@ PLATFORM = $(shell uname)
 #IS_WINDOWS = $(shell uname | grep -ci windows)
 
 # A safer way to check platform if uname is not available, ComSpec on Windows
-# Note that ComSpec is (may be?) case-sensitive, check with env.exe
+# Note that ComSpec is (may be?) case-sensitive, check with env.exe;
+#      also we set the platform-specific null device NULLDEV for redirecting
+#      unneeded outputs (e.g. REQUIRED_EXECS below generates huge full PATH
+#      on Windows).
 ifdef ComSpec
 	PLATFORM_TYPE=Windows
 	IS_WINDOWS=1
+	NULLDEV=":NULL"
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
+	NULLDEV="/dev/null"
 endif
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
@@ -62,7 +67,7 @@ endif
 # uname and zip are not installed by default.
 REQUIRED_EXECS = uname zip a2x
 K := $(foreach exec,$(REQUIRED_EXECS),\
-	$(if $(shell which $(exec)),check executables,\
+	$(if $(shell which $(exec) 2>$(NULLDEV)),check executables,\
 	$(warning ************ No $(exec) available in PATH ************)))
 
 #*******************************************************************************
