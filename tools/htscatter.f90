@@ -89,7 +89,7 @@ character(len=:), allocatable :: csv_file_name, output_file
 
 ! Minimum length of the output file, if too short, ignore output
 ! file name. 6 chars: xx.png
-character(len=*), parameter :: MIN_FILE_LENGTH = 6
+integer, parameter :: MIN_FILE_LENGTH = 6
 
 ! File read error flag
 logical :: errorflag
