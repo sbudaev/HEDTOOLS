@@ -54,7 +54,7 @@ use BASE_STRINGS
 implicit none
 
 ! Set DEBUG mode. Debug mode prints more diagnostics.
-logical, parameter :: IS_DEBUG = .TRUE.
+logical, parameter :: IS_DEBUG = .FALSE.
 
 ! Command line argument(s)
 character(len=255) :: command_line_str !> Note: allocatable doesn't work
