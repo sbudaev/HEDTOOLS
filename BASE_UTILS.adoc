@@ -5619,8 +5619,6 @@ character(len=*), parameter, public :: EXEC_SCATTERPLOT = "htscatter.exe"
 ...
 ...
 !> Call external command to plot the data scatterplot.
-!! @note Note that we set background task as FALSE if removing CSV file
-!!       to avoid removing data before plot is produced.
 call call_external(                                                       &
       command = EXEC_SCATTERPLOT // " " // csv_file_here // " " //        &
                                            csv_file_here // PS,           &
