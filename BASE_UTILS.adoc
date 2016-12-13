@@ -5583,6 +5583,52 @@ program test_library
 end program test_library
 --------------------------------------------------------------------------------
 
+Plotting tools
+--------------
+
+There are a few plotting tools in the +HEDTOOLS/tools+ directory. They are
+non-essential and implemented separately from the main HEDTOOLS code, although
+do use HEDTOOLS code procedures. This is done to keep the dependencies to the
+absolute minimum.
+
+Currently they make use the http://www.astro.caltech.edu/~tjp/pgplot/[PGPLOT]
+Fortran plotting library, but the plotting part is quite small and simple, so
+they can be easily recoded to use a different toolbox for plotting (e.g. PlPlot
+or distlin). PGPLOT is chosen because it is very small, simple to use and
+can be built for Linux (and various Unix clones) and Windows.  PGPLOT in
+included in the standard Ubuntu Linux repositories. For Windows, PGPLOT is
+a part of the http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/[GrWin library].
+
+Plotting tools should be built separately from HEDTOOLS and the model code
+and then placed to some directory in the +PATH+ so the system is able to find
+the executables. They are subsequently called from the main model code using
+the standard intrinsic Fortran procedures to run the system (shell) commands:
++execute_command_line+ or (older +system+).
+
+Here is an example of calling the scatterplot using a wrapper (+call_external+)
+to the intrinsic +execute_command_line+ subroutine.
+
+[source]
+--------------------------------------------------------------------------------
+!> The name of the **scatterplot** program (htscatter.f90 from HEDTOOLS)
+!! executable.
+character(len=*), parameter, public :: EXEC_SCATTERPLOT = "htscatter.exe"
+...
+...
+!> Call external command to plot the data scatterplot.
+!! @note Note that we set background task as FALSE if removing CSV file
+!!       to avoid removing data before plot is produced.
+call call_external(                                                       &
+      command = EXEC_SCATTERPLOT // " " // csv_file_here // " " //        &
+                                           csv_file_here // PS,           &
+      suppress_output = .TRUE., suppress_error = .TRUE.,                  &
+      is_background_task = do_background )
+--------------------------------------------------------------------------------
+
+
+
+
+
 End of the document.
 
 ////////////////////////////////////////////////////////////////////////////////
