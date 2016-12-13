@@ -53,6 +53,10 @@ use BASE_UTILS
 use BASE_STRINGS
 implicit none
 
+! Warning: SVN_REVISION is updated automatically by Subversion at commit.
+!          do not edit manually!
+character(len=*), parameter :: SVN_REVISION = "$Revision$"
+
 ! Set DEBUG mode. Debug mode prints more diagnostics.
 logical, parameter :: IS_DEBUG = .FALSE.
 
@@ -126,6 +130,7 @@ if (IS_DEBUG) print *, "DEBUG: ", pg_default_name
 if (command_argument_count()==0) then
   write(ERROR_UNIT,*) "ERROR: Required command line arguments not found."
   print *, "-------------------------------------------------"
+  print *, "*** HTSCATTER --- ", SVN_REVISION
   print *, ""
   print *, "Produce scatter plot of data that are provided at the command line."
   print *, "If the output plot file name is not provided, the plot goes to the "
@@ -139,7 +144,7 @@ if (command_argument_count()==0) then
   print *, "Input: (1) input CSV filename, (2) output plot file name."
   print *, ""
   print *, "Example:"
-  print *, " htscatterplot data_file_csv plot_file.png"
+  print *, " htscatter data_file_csv plot_file.png"
   print *, ""
   stop
 end if

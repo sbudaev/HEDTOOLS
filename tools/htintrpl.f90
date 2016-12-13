@@ -63,6 +63,8 @@ use BASE_UTILS
 use BASE_STRINGS
 implicit none
 
+! Warning: SVN_REVISION is updated automatically by Subversion at commit.
+!          do not edit manually!
 character(len=*), parameter :: SVN_REVISION = "$Revision$"
 
 ! Set DEBUG mode. Debug mode prints more diagnostics.
@@ -166,6 +168,7 @@ if (IS_DEBUG) print *, "DEBUG: >",command_line_str, "<"
 if (n_cmds==1) then
   write(ERROR_UNIT,*) "ERROR: Required command line arguments not found."
   print *, "-------------------------------------------------"
+  print *, "*** HTINTRPL --- ", SVN_REVISION
   print *, ""
   print *, "Produce interpolation plot of data that are provided at the command line."
   print *, "Interpolation is basedon subroutines from in HEDTOOLS, so debug plots can"
