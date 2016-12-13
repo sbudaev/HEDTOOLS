@@ -5601,12 +5601,12 @@ a part of the http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/[GrWin library].
 
 Plotting tools should be built separately from HEDTOOLS and the model code
 and then placed to some directory in the +PATH+ so the system is able to find
-the executables. They are subsequently called from the main model code using
-the standard intrinsic Fortran procedures to run the system (shell) commands:
+the executables. They should be called from the main model code using the
+standard intrinsic Fortran procedures to run the system (shell) commands:
 +execute_command_line+ or (older +system+).
 
-Here is an example of calling the scatterplot using a wrapper (+call_external+)
-to the intrinsic +execute_command_line+ subroutine.
+Here is an example of calling the scatterplot utility using a wrapper
+(+call_external+) to the intrinsic +execute_command_line+ subroutine.
 
 [source]
 --------------------------------------------------------------------------------
@@ -5625,7 +5625,15 @@ call call_external(                                                       &
       is_background_task = do_background )
 --------------------------------------------------------------------------------
 
+List of utilities
+~~~~~~~~~~~~~~~~~
 
+* htintrpl.f90 -- linear and non-linear interpolation of data provided on
+  the command line. Example:
+  +htintrpl.exe [1 2 3 4] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]+
+
+* htscatter.f90 -- scatterplot of data saved in a CSV file. Example:
+  +htscatter data_file_csv plot_file.png+
 
 
 
