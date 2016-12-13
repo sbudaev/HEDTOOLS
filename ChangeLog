@@ -1,5 +1,22 @@
+2016-12-12  sbu062
+
+	* tools/htscatter.f90: minor fix
+	* tools/htscatter.f90: minor fix wrong type
+	* tools/htscatter.f90: minor fix
+	* tools/htscatter.f90: disabled debug
+	* tools/Makefile: makefile fixed names
+	* tools/htintrpl.f90, tools/interpolate.f90: renamed
+	  interpolate.f90 to htintrpl.f90, all HEDTOOLS utils start with ht
+	* tools/htscatter.f90: keywords on scatterplot program
+	* tools/htscatter.f90: added tool prog to plot scatterplot
+	* Makefile: platform-specific null device for redirecting unneeded
+	  outputs
+	* BASE_UTILS.adoc: using array constructor in column names
+
 2016-12-11  sbu062
 
+	* Makefile, template/Makefile: fixed comments in makefiles
+	* ChangeLog: changelog update
 	* ChangeLog: update changelog
 	* BASE_UTILS.adoc: updated doc to include (CSV_MATRIX_READ), also
 	  updated (CSV_FILE_LINES_COUNT) - interface changed!!
