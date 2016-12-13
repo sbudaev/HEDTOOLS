@@ -5586,6 +5586,9 @@ end program test_library
 Plotting tools
 --------------
 
+indexterm:[plotting, PGPLOT]
+indexterm:[plotting, GrWin]
+
 There are a few plotting tools in the +HEDTOOLS/tools+ directory. They are
 non-essential and implemented separately from the main HEDTOOLS code, although
 do use HEDTOOLS code procedures. This is done to keep the dependencies to the
@@ -5634,6 +5637,25 @@ List of utilities
 
 * htscatter.f90 -- scatterplot of data saved in a CSV file. Example:
   +htscatter data_file_csv plot_file.png+
+
+Notes on PGPLOT Windows (GrWin)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to build the Microsoft Windows executables of the plotting
+utilities on a machine with the GrWin library installed and run on another
+machine without these libraries. However, the GrWin graphics server will
+be unavailable on the later machine and the _interactive graphics display_
+window could not be opened. Therefore, only _saving_ the plot to a PostScript
+output file will work.
+
+There is an additional possible caveat: (a) there should be the PGPLOT main
+font file +grfont.dat+ installed somewhere on the system footnote:[If the
+font file is not found the system will issue this error: +PGPLOT, Unable to
+read font file: grfont.dat+] and (b) the +PGPLOT_FONT+ environment variable
+footnote:[it can be set in the Windows Control Panel.] must indicate the
+path where it is located. A quick and dirty method to make the graphics
+working is just to to copy the font file into the current directory.
+
 
 
 
