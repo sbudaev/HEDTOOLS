@@ -63,6 +63,8 @@ use BASE_UTILS
 use BASE_STRINGS
 implicit none
 
+character(len=*), parameter :: SVN_REVISION = "$Revision$"
+
 ! Set DEBUG mode. Debug mode prints more diagnostics.
 logical, parameter :: IS_DEBUG = .FALSE.
 
