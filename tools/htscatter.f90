@@ -211,28 +211,41 @@ else
 end if
 if (IS_DEBUG) print *, "DEBUG: >", plot_symbol
 
-! Produce the plot itself -- using PGPLOT library.
-if (pgopen(output_dev) .lt. 1) then
-  write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
-  stop EXIT_CODE_ERROR
-end if
+!-------------------------------------------------------------------------------
+! *** Use PGPLOT library functions to do the plot.
+! Note: block construct is F2008 and might not be supported by all compilers
+!       and systems. In such a case comment it out (along with end block) as
+!       it is not essential.
+!-------------------------------------------------------------------------------
+!PLOT_PGPLOT: block
 
-call pgenv( minval(data_matrix(:,1)), maxval(data_matrix(:,1)),               &
-            minval(data_matrix(:,2)), maxval(data_matrix(:,2)), 0, 0 )
+  ! Produce the plot itself -- using PGPLOT library.
+  if (pgopen(output_dev) .lt. 1) then
+    write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
+    stop EXIT_CODE_ERROR
+  end if
 
-if (IS_DEBUG) print *, "DEBUG: >",    minval(data_matrix(:,1)),               &
-                                      maxval(data_matrix(:,1)),               &
-                                      minval(data_matrix(:,2)),               &
-                                      maxval(data_matrix(:,2))
+  call pgenv( minval(data_matrix(:,1)), maxval(data_matrix(:,1)),             &
+              minval(data_matrix(:,2)), maxval(data_matrix(:,2)), 0, 0 )
 
-call pglab('X', 'Y', 'Scatterplot (' // TOSTR(size(data_matrix,1)) // "," //  &
-                      TOSTR(size(data_matrix,2)) // ") " // csv_file_name   )
+  if (IS_DEBUG) print *, "DEBUG: >",    minval(data_matrix(:,1)),             &
+                                        maxval(data_matrix(:,1)),             &
+                                        minval(data_matrix(:,2)),             &
+                                        maxval(data_matrix(:,2))
 
-! Plot the scatterplot based on the first two columns of the data.
-call pgpt(size(data_matrix,1), data_matrix(:,1), data_matrix(:,2), plot_symbol)
+  call pglab('X', 'Y', 'Scatterplot (' // TOSTR(size(data_matrix,1)) // "," //&
+                        TOSTR(size(data_matrix,2)) // ") " // csv_file_name  )
 
-! Close the plot
-call pgclos
+  ! Plot the scatterplot based on the first two columns of the data.
+  call pgpt(size(data_matrix,1), data_matrix(:,1), data_matrix(:,2), plot_symbol)
+
+  ! Close the plot
+  call pgclos
+
+!end block PLOT_PGPLOT
+!-------------------------------------------------------------------------------
+! *** End of the PGPLOT block
+!-------------------------------------------------------------------------------
 
 ! Rename the output file.
 ! WARNING:: rename subroutine is GNU extension and may not be available

@@ -324,18 +324,36 @@ else
   end do
 end if
 
-! Produce the plot itself -- using PGPLOT library.
-if (pgopen(output_dev) .lt. 1) then
-  write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
-  stop EXIT_CODE_ERROR
-end if
-call pgenv( minval(plotx), maxval(plotx), minval(ploty), maxval(ploty), 0, 0 )
-call pglab('X', 'Y', 'Interpolation value ' // output_file)
-call pgline( n_steps, plotx, ploty )  ! plot line of interpolation grid
-call pgpt( size(xx), xx, yy, 3 )      ! plot dots of interpolation grid
-! Plot dots for the target interpolation data.
-call pgpt (size(xx_interpolate), xx_interpolate, yy_interpolate, 8)
-call pgclos
+!-------------------------------------------------------------------------------
+! *** Use PGPLOT library functions to do the plot.
+! Note: block construct is F2008 and might not be supported by all compilers
+!       and systems. In such a case comment it out (along with end block) as
+!       it is not essential.
+!-------------------------------------------------------------------------------
+!PLOT_PGPLOT: block
+
+  if (pgopen(output_dev) .lt. 1) then
+    write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
+    stop EXIT_CODE_ERROR
+  end if
+
+  call pgenv( minval(plotx), maxval(plotx), minval(ploty), maxval(ploty), 0, 0 )
+
+  call pglab('X', 'Y', 'Interpolation value ' // output_file)
+
+  call pgline( n_steps, plotx, ploty )  ! plot line of interpolation grid
+
+  call pgpt( size(xx), xx, yy, 3 )      ! plot dots of interpolation grid
+
+  ! Plot dots for the target interpolation data.
+  call pgpt (size(xx_interpolate), xx_interpolate, yy_interpolate, 8)
+
+  call pgclos
+
+!end block PLOT_PGPLOT
+!-------------------------------------------------------------------------------
+! *** End of the PGPLOT block
+!-------------------------------------------------------------------------------
 
 ! Rename the output file.
 ! WARNING:: rename subroutine is GNU extension and may not be available
