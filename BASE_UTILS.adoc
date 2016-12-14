@@ -5629,12 +5629,22 @@ call call_external(                                                       &
 List of utilities
 ~~~~~~~~~~~~~~~~~
 
-* htintrpl.f90 -- linear and non-linear interpolation of data provided on
-  the command line. Example:
-  +htintrpl.exe [1 2 3 4] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]+
+* +htintrpl.f90+ -- linear and non-linear interpolation of data provided on
+  the command line.
+  Example:
 
-* htscatter.f90 -- scatterplot of data saved in a CSV file. Example:
-  +htscatter data_file_csv plot_file.png+
+[source, bash]
+--------------------------------------------------------------------------------
+htintrpl.exe [1 2 3 4] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]
+--------------------------------------------------------------------------------
+
+* +htscatter.f90+ -- scatterplot of data saved in a CSV file.
+  Example:
+
+[source, bash]
+--------------------------------------------------------------------------------
+htscatter data_file_csv plot_file.png
+--------------------------------------------------------------------------------
 
 Notes on PGPLOT Windows (GrWin)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -5644,13 +5654,14 @@ utilities on a machine with the GrWin library installed and run on another
 machine without these libraries. However, the GrWin graphics server will
 be unavailable on the later machine and the _interactive graphics display_
 window could not be opened. Therefore, only _saving_ the plot to a PostScript
-output file will work.
+output file will work footnote:[This is what is needed as we do not (normally)
+display plots on the screen.].
 
 There is an additional possible caveat: (a) there should be the PGPLOT main
 font file +grfont.dat+ installed somewhere on the system footnote:[If the
 font file is not found the system will issue this error: +PGPLOT, Unable to
 read font file: grfont.dat+] and (b) the +PGPLOT_FONT+ environment variable
-footnote:[it can be set in the Windows Control Panel.] must indicate the
+footnote:[It can be set in the Windows _Control Panel_.] must indicate the
 path where it is located. A quick and dirty method to make the graphics
 working is just to to copy the font file into the current directory.
 
