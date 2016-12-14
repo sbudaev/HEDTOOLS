@@ -1,5 +1,13 @@
+2016-12-14  sbu062
+
+	* Makefile, tools/Makefile: adapted makefiles for easy build of
+	  binary / plotting tools
+	* BASE_UTILS.adoc: minor fix doc on plots
+
 2016-12-13  sbu062
 
+	* BASE_UTILS.adoc, ChangeLog: minor fix and changelog
+	* BASE_UTILS.adoc: updated doc on plots
 	* tools/grfont.dat: added grfont.dat PGPLOT file from GrWin
 	* tools/htintrpl.f90: fixed string util name, command line
 	  parameter shows ugly on Windows
