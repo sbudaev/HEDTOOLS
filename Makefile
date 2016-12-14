@@ -19,6 +19,13 @@ SF_FC = f95
 # Choose the compiler type
 FC = $(GF_FC)
 
+#-------------------------------------------------------------------------------
+# Binary tools, basenames without .f90, their executables will have .exe suffix.
+TOOLS_LIST := htintrpl htscatter
+
+# Path to binary tools, normally subdirectory
+TOOLS_PATH = tools/
+
 #*******************************************************************************
 # Determine what is the build platform, Windows / non-Windows
 # Use uname -- but it may not be installed on Windows. Probably the method
@@ -299,13 +306,26 @@ all: static
 
 lib: $(LIB)
 
-# Specific compiler targets: ibtel, GNU, Oracle/Sun
+
+# Make the binary and plotting tools in the tools directory.
+.PHONY: tools
+
+tools:
+	for tool in $(basename $(TOOLS_LIST)); do \
+		$(MAKE) -C $(TOOLS_PATH) SRC=$$tool.f90 OUT=$$tool.exe; \
+	done
+
+# Specific compiler targets: intel, GNU, Oracle/Sun
+
+.PHONY: intel
 intel:
 	@$(MAKE) -f $(THIS_FILE) FC=ifort
 
+.PHONY: gnu
 gnu:
 	@$(MAKE) -f $(THIS_FILE) FC=gfortran
 
+.PHONY: sun
 sun:
 	@$(MAKE) -f $(THIS_FILE) FC=f95
 
@@ -330,6 +350,7 @@ doc: $(DOCFIL).$(DOCFMT)
 distclean: neat
 	-rm -f *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/BASE_UTILS.$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
+	$(MAKE) -C $(TOOLS_PATH) distclean
 
 # We don't clean .mod files as they are necessary for building with .so
 clean: neat
@@ -339,7 +360,7 @@ neat:
 	-rm -f $(TMPFILES) *conflict*  .syncthing*
 
 #-------------------------------------------------------------------------------
-
+.PHONY: help
 help:
 	@echo ""
 	@echo ------------------------------------------------------------------------
@@ -349,6 +370,9 @@ help:
 	@echo ""
 	@echo "Build the library with Intel Fortran Compiler:"
 	@echo "    make FC=ifort"
+	@echo ""
+	@echo "Build binary (and) plotting tools:"
+	@echo "    make tools"
 	@echo ""
 	@echo "Autogenerate documentation -- requires the asciidoc tool!"
 	@echo "    make doc"

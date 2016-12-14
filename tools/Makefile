@@ -7,6 +7,9 @@
 # author Sergey Budaev <sbudaev@gmail.com>
 #-------------------------------------------------------------------------------
 
+# WARNING: This file is adapted for building graphic tools and is different
+#          than that in the template folder.
+
 # Supported Fortran compiler types
 GF_FC = gfortran
 IF_FC = ifort
@@ -20,7 +23,11 @@ FC = $(GF_FC)
 #   -lpgplot
 # PLPLOT:
 #   -lplplotf95d -lplplotf95cd -lplf95demolibd -I/usr/lib/fortran/modules/plplot
-GRAPHLIB =
+GRAPHLIB = -lpgplot
+
+# Root directory of the GrWin installation on Windows.
+# NOTE: can differ in 32 and 64 bit distributions!
+GRWIN_ROOT = C:/GrWin/MinGW_gfortran_x6
 
 # Root of the host name to run in HPC cluster / batch mode, not directly
 HOST_HPC_ROOT=fimm
@@ -161,6 +168,8 @@ endif
 ifdef ComSpec
 	PLATFORM_TYPE=Windows
 	IS_WINDOWS=1
+	GF_FFLAGS += -L$(GRWIN_ROOT)/lib -Wl,--subsystem,console -mwindows
+	GRAPHLIB += -lGrWin
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
@@ -366,6 +375,7 @@ docs: $(DOXYCFG)
 #   This mitght be different on different systems, depending on the
 #   installation options for Intel Parallel Studio and the Windows platform
 #   type (e.g. 32 vs. 64 bit)
+.PHONY: help
 help:
 	@echo ""
 	@echo ------------------------------------------------------------------------
@@ -404,14 +414,17 @@ help:
 	@echo ------------------------------------------------------------------------
 
 # shortcut to build for GNU Fortran
+.PHONY: gnu
 gnu:
 	@$(MAKE) -f $(THIS_FILE) FC=gfortran
 
 # shortcut to build for Intel Fortran
+.PHONY: intel
 intel:
 	@$(MAKE) -f $(THIS_FILE) FC=ifort
 
 # shortcut to build for Solaris Studio Fortran
+.PHONY: sun
 sun:
 	@$(MAKE) -f $(THIS_FILE) FC=f95
 
@@ -465,7 +478,7 @@ endif
 # Return to default state
 distclean: clean
 	-rm -f $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
-					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj
+					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
 	-rm -fr $(DOXYPATH)
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
