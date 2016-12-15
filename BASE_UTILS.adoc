@@ -5608,6 +5608,26 @@ the executables. They should be called from the main model code using the
 standard intrinsic Fortran procedures to run the system (shell) commands:
 +execute_command_line+ or (older +system+).
 
+To build the plotting tools using the default parameters issue this command in
+the main +HEDTOOLS+ directory:
+
+[source, bash]
+--------------------------------------------------------------------------------
+make tools
+--------------------------------------------------------------------------------
+
+On the Microsoft Windows platform, depending on the directory location of the
+GrWin library (it is different on 32 and 64 bit versions of Windows), one may
+need to change the +GRWIN_ROOT+ value in the tools own +Makefile+ that is
+located in +HEDTOOLS/tools+:
+
+[source, bash]
+--------------------------------------------------------------------------------
+# Root directory of the GrWin installation on Windows.
+# NOTE: can differ in 32 and 64 bit distributions!
+GRWIN_ROOT = C:/GrWin/MinGW_gfortra
+--------------------------------------------------------------------------------
+
 Here is an example of calling the scatterplot utility using a wrapper
 (+call_external+) to the intrinsic +execute_command_line+ subroutine.
 
