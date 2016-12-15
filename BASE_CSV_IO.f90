@@ -4098,7 +4098,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
   integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
   integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
-  integer, parameter :: MIN_FIELD = 2 ! Minimum length of a data field
+  integer, parameter :: MIN_FIELD = 1      ! Minimum length of a data field.
   character(len=LEN_CSV_FIELD), dimension(:), allocatable  ::                 &
                                                           line_data_substrings
   integer :: line_data_nflds
@@ -4296,7 +4296,7 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
   integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
   integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
-  integer, parameter :: MIN_FIELD = 2 ! Minimum length of a data field
+  integer, parameter :: MIN_FIELD = 1      ! Minimum length of a data field.
   character(len=LEN_CSV_FIELD), dimension(:), allocatable  ::                 &
                                                           line_data_substrings
   integer :: line_data_nflds
