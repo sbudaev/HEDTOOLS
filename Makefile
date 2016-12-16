@@ -21,7 +21,7 @@ FC = $(GF_FC)
 
 #-------------------------------------------------------------------------------
 # Binary tools, basenames without .f90, their executables will have .exe suffix.
-TOOLS_LIST := htintrpl htscatter
+TOOLS_LIST := htintrpl htscatter hthist
 
 # Path to binary tools, normally subdirectory
 TOOLS_PATH = tools/
