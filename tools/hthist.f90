@@ -134,7 +134,7 @@ if (command_argument_count()==0) then
   print *, "-------------------------------------------------"
   print *, "*** HTHIST --- ", SVN_REVISION
   print *, ""
-  print *, "Produce scatter plot of data that are provided at the command line."
+  print *, "Produce a histogram  of data that are provided at the command line."
   print *, "If the output plot file name is not provided, the plot goes to the "
   print *, "screen (X11 on Unix, GrWin on Windows)."
   if (PLATFORM_IS_WINDOWS()) then                       ! GrWin supports only
