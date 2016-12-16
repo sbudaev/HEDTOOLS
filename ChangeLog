@@ -1,5 +1,35 @@
+2016-12-16  sbu062
+
+	* BASE_UTILS.adoc: added screenshot of pgplot_font environ var
+	* doc/img/img_doc_pgplot_font.png: added pgplot set font screenshot
+	  on Windows
+	* BASE_CSV_IO.f90: stripe away quotes when reading CSV, fixed wrong
+	  reads
+	* BASE_STRINGS.f90: ignore quotes in (IS_NUMERIC) when
+	  include_blank is TRUE, needed for correct treatment of quotes in
+	  csv read
+	* BASE_UTILS.adoc: added hthist to doc
+	* tools/hthist.f90: set keywords on hthist
+	* Makefile: histogram tool added to makefile
+	* tools/hthist.f90: fix help screen
+	* tools/hthist.f90: added utility to do histogram: hthist
+	* tools/Makefile: added platform-specific checks for non installed
+	  external commands
+	* Makefile, tools/Makefile: added platform-specific WHICH_CMD to
+	  check for non-installed tools, on Windows uses where (>=Win7)
+	* Makefile: included ifort and f95 in list for checking presence in
+	  path
+
+2016-12-15  sbu062
+
+	* BASE_CSV_IO.f90: set minimum field to one MIN_FIELD to correctly
+	  treat all zero lines like 0,0,0,0,0,0,0,0,0,0,0
+	* BASE_UTILS.adoc: building plot tools
+
 2016-12-14  sbu062
 
+	* tools/Makefile: enabled fast math on oracle f95 for graphic progs
+	* ChangeLog: changelog update
 	* Makefile, tools/Makefile: adapted makefiles for easy build of
 	  binary / plotting tools
 	* BASE_UTILS.adoc: minor fix doc on plots
