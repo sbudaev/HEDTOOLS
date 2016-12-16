@@ -45,10 +45,12 @@ PLATFORM = $(shell uname)
 ifdef ComSpec
 	PLATFORM_TYPE=Windows
 	IS_WINDOWS=1
+	WHICH_CMD=where
 	NULLDEV=":NULL"
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
+	WHICH_CMD=which
 	NULLDEV="/dev/null"
 endif
 
@@ -74,7 +76,7 @@ endif
 # uname and zip are not installed by default.
 REQUIRED_EXECS = uname zip a2x ifort f95 gfortran
 K := $(foreach exec,$(REQUIRED_EXECS),\
-	$(if $(shell which $(exec) 2>$(NULLDEV)),check executables,\
+	$(if $(shell $(WHICH_CMD) $(exec) 2>$(NULLDEV)),check executables,\
 	$(warning ************ No $(exec) available in PATH ************)))
 
 #*******************************************************************************

@@ -168,11 +168,13 @@ endif
 ifdef ComSpec
 	PLATFORM_TYPE=Windows
 	IS_WINDOWS=1
+	WHICH_CMD=where
 	GF_FFLAGS += -L$(GRWIN_ROOT)/lib -Wl,--subsystem,console -mwindows
 	GRAPHLIB += -lGrWin
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
+	WHICH_CMD=which
 endif
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
