@@ -5693,8 +5693,7 @@ footnote:[It can be set in the Windows _Control Panel_.] must indicate the
 path where it is located. A quick and dirty method to make the graphics
 working is just to to copy the font file into the current directory.
 
-
-
+image:doc/img/img_doc_pgplot_font.png[width=400,align="left"]
 
 End of the document.
 
