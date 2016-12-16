@@ -169,13 +169,23 @@ ifdef ComSpec
 	PLATFORM_TYPE=Windows
 	IS_WINDOWS=1
 	WHICH_CMD=where
+	NULLDEV=":NULL"
 	GF_FFLAGS += -L$(GRWIN_ROOT)/lib -Wl,--subsystem,console -mwindows
 	GRAPHLIB += -lGrWin
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
 	WHICH_CMD=which
+	NULLDEV="/dev/null"
 endif
+
+# Check if certain required executables exist and are callable in path. This is
+# important on the Windows platform because such GNU command line utilities as
+# uname and zip are not installed by default.
+REQUIRED_EXECS = uname zip a2x ifort f95 gfortran
+K := $(foreach exec,$(REQUIRED_EXECS),\
+	$(if $(shell $(WHICH_CMD) $(exec) 2>$(NULLDEV)),check executables,\
+	$(warning ************ No $(exec) available in PATH ************)))
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
 # two ways: (1) build options are different, start with slash and often have Q
