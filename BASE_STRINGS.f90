@@ -843,6 +843,9 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
   integer :: i
   logical :: include_blank_here
   character, parameter :: TAB =achar(9)
+  character, parameter :: DQT =achar(34) ! double quote "
+  character, parameter :: SQT =achar(39) ! single quote '
+
 
   num_flag = .TRUE.
 
@@ -865,6 +868,8 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
             string(i:i)/="." .and.                                            &
             string(i:i)/="," .and.                                            &
             string(i:i)/=" " .and.                                            &
+            string(i:i)/=DQT .and.                                            &
+            string(i:i)/=SQT .and.                                            &
             string(i:i)/=TAB ) num_flag = .FALSE.
     end do
   else
