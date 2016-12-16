@@ -1,6 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
-! $Id: hthist.f90 2224 2016-12-13 13:45:15Z sbu062 $
+! $Id$
 !-------------------------------------------------------------------------------
 ! Produce a histogram of data that are provided at the command line.
 ! If the output plot file name is not provided, the plot goes to the
@@ -55,7 +55,7 @@ implicit none
 
 ! Warning: SVN_REVISION is updated automatically by Subversion at commit.
 !          do not edit manually!
-character(len=*), parameter :: SVN_REVISION = "$Revision: 2224 $"
+character(len=*), parameter :: SVN_REVISION = "$Revision$"
 
 ! Set DEBUG mode. Debug mode prints more diagnostics.
 logical, parameter :: IS_DEBUG = .FALSE.
