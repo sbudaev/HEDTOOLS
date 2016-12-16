@@ -38,7 +38,7 @@ module CSV_IO
 ! Author: Sergey Budaev, based on csv_io functions by John Burkardt
 !*******************************************************************************
 
-use BASE_STRINGS, only : VALUE, PARSE, SPLIT, COMPACT, IS_NUMERIC
+use BASE_STRINGS, only : VALUE, PARSE, SPLIT, COMPACT, IS_NUMERIC, DELALL
 
 implicit none
 
@@ -4113,6 +4113,8 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 
   ! Delimiters for data fields:
   character, parameter :: TAB =achar(9)
+  character, parameter :: DQT =achar(34) ! double quote "
+  character, parameter :: SQT =achar(39) ! single quote '
   character(len=*), parameter :: SDELIM = " ," // TAB
 
   ! Check optional parameters: flag to include incomplete records
@@ -4163,6 +4165,10 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
   do while ( READLINE(file_unit, line_data_buff, .TRUE.) )
 
     iline = iline + 1
+
+    ! Stripe away single and double quotes if any.
+    call DELALL(line_data_buff, SQT)
+    call DELALL(line_data_buff, DQT)
 
     line_data_buff_length = len_trim(line_data_buff)
 
@@ -4311,6 +4317,8 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
 
   ! Delimiters for data fields:
   character, parameter :: TAB =achar(9)
+  character, parameter :: DQT =achar(34) ! double quote "
+  character, parameter :: SQT =achar(39) ! single quote '
   character(len=*), parameter :: SDELIM = " ," // TAB
 
   ! Check optional parameters: flag to include incomplete records
@@ -4361,6 +4369,10 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
   do while ( READLINE(file_unit, line_data_buff, .TRUE.) )
 
     iline = iline + 1
+
+    ! Stripe away single and double quotes if any.
+    call DELALL(line_data_buff, SQT)
+    call DELALL(line_data_buff, DQT)
 
     line_data_buff_length = len_trim(line_data_buff)
 
