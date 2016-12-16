@@ -5649,6 +5649,14 @@ call call_external(                                                       &
 List of utilities
 ~~~~~~~~~~~~~~~~~
 
+* +hthist.f90+ -- histogram of data saved in a CSV file, any column can be
+  plotted.
+
+[source, bash]
+--------------------------------------------------------------------------------
+hthist 2 data_file_csv plot_file.png
+--------------------------------------------------------------------------------
+
 * +htintrpl.f90+ -- linear and non-linear interpolation of data provided on
   the command line.
   Example:
