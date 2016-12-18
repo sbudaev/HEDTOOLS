@@ -3572,7 +3572,11 @@ Function: CSV_MATRIX_READ
 indexterm:[CSV_MATRIX_READ]
 
 This function reads a two-dimensional data matrix from a CSV or tab-separated
-data file.
+data file. It has a single mandatory input parameter: the name of the file.
+The other optional parameters are: (1) output file read logical status
+(if TRUE then the file was successfully read); (2) input logical flag to
+include truncated records (default FALSE); (3) input real type missing code
+for substituting data in truncated records.
 
 Input parameters:
 
