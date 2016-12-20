@@ -426,6 +426,13 @@ module MODCOMPS                 !> @note Module copies data from `COMMONDATA`.
     !> Local copies of optional parameters
     real(SRP) :: prey_area_here, prey_contrast_here
 
+    !> First, check if background irradiance is near zero and
+    !! return zero visual range.
+    if(irradiance < ZERO) then
+      visual_range_calculate = 0.0_SRP
+      return
+    end if
+
     if (present(prey_area)) then
       prey_area_here=prey_area
     else
