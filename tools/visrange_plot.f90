@@ -627,8 +627,8 @@ implicit none
                          COLNAMES  )
 
   !=============================================================================
-
   ! Produce the plot itself -- using PGPLOT library.
+
   if (pgopen(output_dev) .lt. 1) then
     write(ERROR_UNIT,*) "ERROR: Cannot open output device ", output_dev
     stop EXIT_CODE_ERROR
