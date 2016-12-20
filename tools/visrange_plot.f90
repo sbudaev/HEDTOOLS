@@ -633,11 +633,6 @@ implicit none
 
   !=============================================================================
 
-! call debug_scatterplot_save(                                            &
-!       x_data=object_length, y_data=visrange,                            &
-!       csv_file="plot_debug_visual_range_irradiance_"//TOSTR(irradiance)//csv,&
-!       delete_csv=.FALSE., enable_non_debug=.TRUE.)
-
 !end block VISRANGE_PLOT
 
 contains
