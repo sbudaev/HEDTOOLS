@@ -604,6 +604,10 @@ implicit none
   else
     output_dev  = DEV_XWIN ! Default output device is X11.
   end if
+
+  !> Define fixed output device manually.
+  !output_dev = DEV_UNDEF
+
   print *, "Output graphical device: ", output_dev
 
   irradiance =  DAYLIGHT !/2.0
