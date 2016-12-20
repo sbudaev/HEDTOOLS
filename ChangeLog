@@ -1,5 +1,23 @@
+2016-12-20  sbu062
+
+	* tools/visrange_plot.f90: manual output device
+	* BASE_UTILS.adoc, BASE_UTILS.f90: implemented TOSTR for real kind
+	  16
+	* tools/visrange_plot.f90: code formatting only
+	* tools/visrange_plot.f90: minor fixes, plus saving now raw data
+	  CSV output, works fine with Oracle f95 quirks
+	* tools/visrange_plot.f90: small changes, converted units cm,
+	  Oracle f95 doesn't tolerate MAX_LOG in (deriv)
+	* tools/visrange_plot.f90: minor change
+	* tools/visrange_plot.f90: added visual range program in 128 bit
+
+2016-12-18  sbu062
+
+	* BASE_UTILS.adoc: description of parameters in (CSV_MATRIX_READ)
+
 2016-12-16  sbu062
 
+	* ChangeLog: changelog updated
 	* BASE_UTILS.adoc: added screenshot of pgplot_font environ var
 	* doc/img/img_doc_pgplot_font.png: added pgplot set font screenshot
 	  on Windows
