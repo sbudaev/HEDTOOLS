@@ -607,10 +607,14 @@ implicit none
 
   !> Define fixed output device manually.
   !output_dev = DEV_UNDEF
+  !output_dev = DEV_PS
+  !output_dev = DEV_PNG
 
   print *, "Output graphical device: ", output_dev
 
+  !> Background irradiance is the ambient illumination.
   irradiance =  DAYLIGHT !/2.0
+
   do i = 1, MAXSCALE
     !object_length(i) = (PREDATOR_BODY_SIZE/100.0_SRP) * real(i, SRP)
     object_length(i) = (700.0/real(MAXSCALE,SRP)) * real(i, SRP)
@@ -627,7 +631,7 @@ implicit none
   !> Save raw data to CSV
   call CSV_MATRIX_WRITE ( reshape( [object_length, object_area, visrange],    &
                                    [size(object_length), 3]  ),               &
-                         "visrange_output_raw_data.csv",                      &
+                         "visrange_output_raw_" // TOSTR(irradiance) // ".csv",&
                          COLNAMES  )
 
   !=============================================================================
