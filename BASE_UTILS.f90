@@ -48,12 +48,14 @@ interface TOSTR                  ! Generic interface to number-to-string
   module procedure STR_ITOA      ! NUMTOSTR ( number) and TOSTR ( number)
   module procedure STR_RTOA      ! for convenience, they're identical
   module procedure STR_R8TOA
+  module procedure STR_R16TOA
   module procedure STR_LTOA
   module procedure STR_ATOA
 
   module procedure STR_ARRAY_ITOA
   module procedure STR_ARRAY_RTOA
   module procedure STR_ARRAY_R8TOA
+  module procedure STR_ARRAY_R16TOA
   module procedure STR_ARRAY_LTOA
   module procedure STR_ARRAY_ATOA
   module procedure STR_ITOA_LZ
@@ -423,6 +425,68 @@ end function STR_R8TOA
 
 !-------------------------------------------------------------------------------
 
+function STR_R16TOA(r,formatstr) result (ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert REAL to a string type.
+! CALL PARAMETERS: single double precision (kind 16) value
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "Pi=" // STR_R8TOA(rNumberPi)
+!          Str_NAME = "Pi=" // STR_R8TOA(3.14159265359_8)
+!          Str_Header = STR_R8TOA(rNumber, "(f4.2)")
+!*******************************************************************************
+
+! Convert REAL to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+! as used to be in old fortran.
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  real (kind=16), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character(len=68) :: tmpStr ! quick and dirty, with allowance for a big float
+  character(len=:), allocatable :: tmpFormat
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_R16TOA"
+
+  !-------------------------------------------------------
+
+  ! we use the present() function to check for optional arguments
+  if (present(formatstr))  then
+    tmpFormat=formatstr
+    write(tmpStr,tmpFormat) r
+  else
+    write(tmpStr,*) r               ! if format isn't provided on call do *
+  endif
+
+  ToStrA = CLEANUP(tmpStr)          ! we have to remove leading/trailing blanks
+  ! Portability note: direct assignment
+  !   ToStrA = trim(adjustl(tmpStr))
+  ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
+  ! and Solaris OS) ::
+  ! <---cut--->
+  ! ../BASE_UTILS.f90:
+  ! f90comp: /scratch/bldmstr/hudson_prod/workspace/z-trunk-lang/label/ &
+  ! intel-Linux-5/f90/fe/srcme/compiler/phases/concretize/concretize_&
+  ! intrinsic.cpp:231: Assertion `assign' failed.
+  ! f90: Fatal error in /home/budaev/bin/solarisstudio12.4/lib/compilers/ &
+  ! f90comp : Signal number = 6
+  ! <---end cut--->
+  ! Therefore, we now use a portable function CLEANUP
+
+end function STR_R16TOA
+
+!-------------------------------------------------------------------------------
+
 function STR_LTOA (L) result (ToStrA)
 
 !*******************************************************************************
@@ -622,6 +686,54 @@ function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
   ToStrA = tmpStr
 
 end function STR_ARRAY_R8TOA
+
+!-------------------------------------------------------------------------------
+
+function STR_ARRAY_R16TOA (r,formatstr) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert REAL kind 8 array to a string type.
+! CALL PARAMETERS: real kind 8 array
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "Pi=" // STR_ARRAY_RTOA(rNumbers)
+!*******************************************************************************
+
+! Convert REAL to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ITOA should not
+! be declared separately  (e.g. with variables)
+! as used to be in old fortran.
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  real (kind=16), dimension(:), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_R16TOA"
+
+  !-------------------------------------------------------
+  tmpStr=""
+
+  do i=lbound(r,1), ubound(r,1)
+    if (present(formatstr)) then
+      tmpStr=tmpStr // " " // STR_R16TOA(r(i), formatstr)
+    else
+      tmpStr = tmpStr // " " // STR_R16TOA(r(i))
+    end if
+  end do
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_R16TOA
 
 !-------------------------------------------------------------------------------
 

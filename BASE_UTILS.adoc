@@ -2144,7 +2144,7 @@ Function: TOSTR
 ~~~~~~~~~~~~~~~
 
 *TOSTR* converts everything to a string. Accepts any numeric or non-numeric
-type, including integer and real (kind 4 and 8), logical and strings. Also
+type, including integer and real (kind 4, 8, 16), logical and strings. Also
 accepts arrays of these numeric types. Outputs just the string representation
 of the number. Aliases: *STR* (same as *TOSTR*), *NUMTOSTR* (accepts only
 numeric input parameter, not logical or string)
