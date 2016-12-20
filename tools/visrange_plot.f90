@@ -558,10 +558,9 @@ use CONST
 use AKVISRANGE
 use MODCOMPS
 use BASE_UTILS
+use CSV_IO
 
 implicit none
-
-!VISRANGE_PLOT: block
 
   integer, parameter :: MAXSCALE=100
   real(SRP), dimension(MAXSCALE) :: visrange, object_length, object_area
@@ -592,6 +591,12 @@ implicit none
   integer, parameter :: EXIT_CODE_CLEAN = 0
   integer, parameter :: EXIT_CODE_ERROR = 1
 
+  !> @warning Note that Oracle f95 does not tolerate column names array
+  !!          constructor within the `CSV_MATRIX_WRITE` call **inline**.
+  !!          So do colimn names seperately.
+  character(len=*), dimension(3), parameter :: COLNAMES =                     &
+                                            ["LENGTH  ","AREA    ","VISRANGE"]
+
 
   ! The default graphic output device is different for different platforms.
   if (PLATFORM_IS_WINDOWS()) then
@@ -615,6 +620,12 @@ implicit none
     !print *, object_length(i), object_area(i), visrange(i)
   end do
 
+  !> Save raw data to CSV
+  call CSV_MATRIX_WRITE ( reshape( [object_length, object_area, visrange],    &
+                                   [size(object_length), 3]  ),               &
+                         "visrange_output_raw_data.csv",                      &
+                         COLNAMES  )
+
   !=============================================================================
 
   ! Produce the plot itself -- using PGPLOT library.
@@ -626,17 +637,16 @@ implicit none
   call pgenv( minval(object_length), maxval(object_length),                   &
               minval(visrange), maxval(visrange), 0, 0 )
 
-  call pglab('Fish length, cm', 'Visual range, cm', 'Irradiance=' // TOSTR(irradiance))
+  call pglab('Fish length, cm', 'Visual range, cm', 'Irradiance=' //          &
+              TOSTR(irradiance))
 
   call pgline( MAXSCALE, object_length, visrange )  ! plot line
 
-  call pgpt( 1, [50.], [visrange_m(carea(cm2m(50.)))], 8 )      ! plot dots of interpolation grid
+  call pgpt( 1, [50.], [m2cm(visrange_m(carea(cm2m(50.))))], 8 )   ! plot dots
 
   call pgclos
 
   !=============================================================================
-
-!end block VISRANGE_PLOT
 
 contains
 
