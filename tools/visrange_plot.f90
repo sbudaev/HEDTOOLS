@@ -245,8 +245,8 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
     !! line value would set a safe limit for **64-bit** `HRP` calculations.
     !! A benefit of this approach is that it doesn't require IEEE exception
     !! handling with not fully portable optional IEEE modules.
-    real(HRP), parameter :: HUGE_REAL = huge(0.0_HRP)/1000.0_HRP
-    real(HRP), parameter :: MAX_LOG = log(HUGE_REAL)
+    real(HRP), parameter :: HUGE_REAL = huge(0.0_HRP)
+    ! real(HRP) :: MAX_LOG = log(HUGE_REAL) ! not tolerated by Oracle f95!
 
     !> PROCNAME is the procedure name for logging and debugging (with MODNAME).
     character(len=*), parameter :: PROCNAME = "(deriv)"
@@ -259,7 +259,10 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
     !! @warning The resulting calculations are then most probably grossly
     !!          wrong but we nonetheless avoid FPU runtime error: incorrect
     !!          arithmetic calculations.
-    if (c*r < MAX_LOG) then
+    !! @warning Using full `log(HUGE_REAL)` instead of `MAX_LOG` parameter
+    !!          constant that is not tolerated by Oracle f95 and perhaps some
+    !!          other compiler systems.
+    if ( c*r < log(HUGE_REAL) ) then
       FR1=log(((Ke+Eb)/Eb)*r*r*exp(c*r))
     else
       FR1=HUGE_REAL
@@ -608,7 +611,7 @@ implicit none
     !      irradiance = irradiance,                                            &
     !      prey_area = object_area(i),                                         &
     !      prey_contrast = PREYCONTRAST_DEFAULT ) )
-    visrange(i) = visrange_cm( object_area(i) )
+    visrange(i) = m2cm( visrange_m( object_area(i) ) )
     !print *, object_length(i), object_area(i), visrange(i)
   end do
 
@@ -623,11 +626,11 @@ implicit none
   call pgenv( minval(object_length), maxval(object_length),                   &
               minval(visrange), maxval(visrange), 0, 0 )
 
-  call pglab('Fish length', 'Visual range', 'Irradiance=' // TOSTR(irradiance))
+  call pglab('Fish length, cm', 'Visual range, cm', 'Irradiance=' // TOSTR(irradiance))
 
   call pgline( MAXSCALE, object_length, visrange )  ! plot line
 
-  call pgpt( 1, [50.], [visrange_cm(carea(cm2m(50.)))], 8 )      ! plot dots of interpolation grid
+  call pgpt( 1, [50.], [visrange_m(carea(cm2m(50.)))], 8 )      ! plot dots of interpolation grid
 
   call pgclos
 
@@ -637,16 +640,15 @@ implicit none
 
 contains
 
-  function visrange_cm(area) result (fn_val)
+  function visrange_m(area) result (fn_val)
     real(SRP), intent(in) :: area
     real(SRP) :: fn_val
 
-    fn_val = m2cm (  visual_range (                                           &
-                        irradiance = irradiance,                              &
-                        prey_area = area,                                     &
-                        prey_contrast = PREYCONTRAST_DEFAULT ) )
+    fn_val =   visual_range ( irradiance = irradiance,                        &
+                              prey_area = area,                               &
+                              prey_contrast = PREYCONTRAST_DEFAULT )
 
-  end function visrange_cm
+  end function visrange_m
 
 end program VISRANGE_PLOT
 
