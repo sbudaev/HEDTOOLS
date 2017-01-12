@@ -255,7 +255,7 @@ end function PLATFORM_IS_WINDOWS
 
 !-------------------------------------------------------------------------------
 
-function STR_ITOA(i, formatstr) result (ToStrA)
+pure function STR_ITOA(i, formatstr) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.
 ! CALL PARAMETERS: single integer value
@@ -301,7 +301,7 @@ end function STR_ITOA
 
 !-------------------------------------------------------------------------------
 
-function STR_RTOA(r,formatstr) result (ToStrA)
+pure function STR_RTOA(r,formatstr) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
 ! CALL PARAMETERS: single real value
@@ -363,7 +363,7 @@ end function STR_RTOA
 
 !-------------------------------------------------------------------------------
 
-function STR_R8TOA(r,formatstr) result (ToStrA)
+pure function STR_R8TOA(r,formatstr) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
 ! CALL PARAMETERS: single double precision (kind 8) value
@@ -425,7 +425,7 @@ end function STR_R8TOA
 
 !-------------------------------------------------------------------------------
 
-function STR_R16TOA(r,formatstr) result (ToStrA)
+pure function STR_R16TOA(r,formatstr) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
 ! CALL PARAMETERS: single double precision (kind 16) value
@@ -487,7 +487,7 @@ end function STR_R16TOA
 
 !-------------------------------------------------------------------------------
 
-function STR_LTOA (L) result (ToStrA)
+pure function STR_LTOA (L) result (ToStrA)
 
 !*******************************************************************************
 ! PURPOSE: Convert LOGICAL to a string type.
@@ -503,7 +503,7 @@ function STR_LTOA (L) result (ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  logical :: L
+  logical, intent(in) :: L
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "STR_LTOA"
@@ -520,7 +520,7 @@ end function STR_LTOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ATOA (A) result (ToStrA)
+pure function STR_ATOA (A) result (ToStrA)
 
 !*******************************************************************************
 ! PURPOSE: Convert STRING to a string type.
@@ -536,7 +536,7 @@ function STR_ATOA (A) result (ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  character(len=*) :: A
+  character(len=*), intent(in) :: A
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "STR_ATOA"
@@ -549,7 +549,7 @@ end function STR_ATOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_ITOA (r,formatstr) result(ToStrA)
+pure function STR_ARRAY_ITOA (r,formatstr) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert integer array to a string type.
 ! CALL PARAMETERS: integer array
@@ -593,7 +593,7 @@ end function STR_ARRAY_ITOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_RTOA (r,formatstr) result(ToStrA)
+pure function STR_ARRAY_RTOA (r,formatstr) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL array to a string type.
 ! CALL PARAMETERS: real array
@@ -641,7 +641,7 @@ end function STR_ARRAY_RTOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
+pure function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL kind 8 array to a string type.
 ! CALL PARAMETERS: real kind 8 array
@@ -689,7 +689,7 @@ end function STR_ARRAY_R8TOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_R16TOA (r,formatstr) result(ToStrA)
+pure function STR_ARRAY_R16TOA (r,formatstr) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL kind 8 array to a string type.
 ! CALL PARAMETERS: real kind 8 array
@@ -737,7 +737,7 @@ end function STR_ARRAY_R16TOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_LTOA (r) result(ToStrA)
+pure function STR_ARRAY_LTOA (r) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert LOGICAL array to a string type.
 ! CALL PARAMETERS: Logical array
@@ -780,7 +780,7 @@ end function STR_ARRAY_LTOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ARRAY_ATOA (r, delimiter) result(ToStrA)
+pure function STR_ARRAY_ATOA (r, delimiter) result(ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert STRING array to string type.
 ! CALL PARAMETERS: STRING array
@@ -825,7 +825,7 @@ end function STR_ARRAY_ATOA
 
 !-------------------------------------------------------------------------------
 
-function CLEANUP(instring) result (cleaned)
+pure function CLEANUP(instring) result (cleaned)
 !*******************************************************************************
 ! PURPOSE: Removes spaces, tabs, and control characters in string
 ! CALL PARAMETERS: Character string
@@ -1141,7 +1141,7 @@ end function TIMESTAMP_FULL
 
 !-------------------------------------------------------------------------------
 
-function STR_ITOA_LZ(i, maxi) result (ToStrA)
+pure function STR_ITOA_LZ(i, maxi) result (ToStrA)
 !*******************************************************************************
 ! STR_ITOA_LZ
 ! PURPOSE: Convert integer to a string type including leading zeros.
@@ -1182,7 +1182,7 @@ end function STR_ITOA_LZ
 
 !-------------------------------------------------------------------------------
 
-function I4_WIDTH (i) result (i4width)
+pure function I4_WIDTH (i) result (i4width)
 !*******************************************************************************
 ! I4_WIDTH
 ! PURPOSE: returns the "width" of an I4, the number of characters necessary
@@ -1218,7 +1218,7 @@ function I4_WIDTH (i) result (i4width)
   integer :: i4width
 
   ! Calling parameters
-  integer :: i
+  integer, intent(in) :: i
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "I4_WIDTH"
@@ -1237,7 +1237,7 @@ end function I4_WIDTH
 
 !-------------------------------------------------------------------------------
 
-function I4_LOG_10 (i) result(i4log10)
+pure function I4_LOG_10 (i) result(i4log10)
 !*******************************************************************************
 ! I4_LOG_10
 ! PURPOSE: returns the integer part of the logarithm base 10 of the absolute
@@ -1272,7 +1272,7 @@ function I4_LOG_10 (i) result(i4log10)
   integer :: i4log10
 
   ! Calling parameters
-  integer :: i
+  integer, intent(in) :: i
 
   ! Local variables
   integer :: i_abs
