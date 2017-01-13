@@ -97,12 +97,18 @@ end module CONST
 !! not supported by all compiler systems.
 module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
 
+  ! WARNING: The HRP 128 precision model should be used, anything smaller
+  !          can produce FPU overflows! Precision is defined in COMMONDATA.
+  !integer, parameter, public :: Q_PREC_128 = selected_real_kind(33, 4931)
+  !integer, parameter, public :: HRP = Q_PREC_128 ! D_PREC_64
+
   use PRECIS
   use CONST
   use BASE_UTILS
   implicit none
 
   contains
+
   !-----------------------------------------------------------------------------
   !> Obtain visual range by solving the non-linear equation
   !! by means of Newton-Raphson iteration and derivation in
@@ -110,14 +116,14 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
   !! The calculation is based on the model described in Aksnes &
   !! Utne (1997) Sarsia 83:137-147.
   !! @note Programmed and tested 29 January 2001 Dag L Aksnes.
-  !! @note This subroutine is left almost intact, only (a) added `SRP`
-  !!       precision specifier to real type specifiers, (b) added
-  !!       `_SRP` for literal constants and (`SRP` is *stadard real
-  !!       precision* and is defined in COMMONDATA), and (c) restored
-  !!       diagnostic IER output from archival Hed11.f90.
-  !! @note In the new code it should be wrapped into an OO friendly
-  !!       function.
-  subroutine srgetr(r, c, C0, Ap, Vc, Ke, Eb, IER)
+  !! @note This subroutine is left with only the most crucial changes.
+  !!       (a) added `HRP` precision specifier (128 bit precision model)
+  !!           to real type specifiers and `_HRP` for literal constants;
+  !!       (b) restored diagnostic IER output from archival Hed11.f90.
+  !!       (c) added explicit `intent` and declared the procedures as
+  !!           `pure` that is required for being parallel-friendly.
+  !! @note In the new code it should be wrapped into an OO friendly function.
+  elemental subroutine srgetr(r, c, C0, Ap, Vc, Ke, Eb, IER)
   ! Input parameters
   !     RST       : start value of r calculated by `easyr`
   !     c         : beam attenuation coefficient (m-1)
@@ -135,10 +141,13 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
   !              = 2, Return in case of zero divisor.
   !              = 3, r out of allowed range (negative)
   !              = 0, valid r returned
-  real(HRP) :: r, c, C0, Vc, Ap, Ke, Eb
+  real(HRP), intent(in)   :: c, C0, Ap, Vc, Ke, Eb
+  real(HRP), intent(out)  :: r
+  integer, optional, intent(out) :: IER
+
   real(HRP) :: AS, EPS, RST, TOL, TOLF, F1, FDER, DX
   integer   :: IEND, I
-  integer, optional :: IER
+
   !.............................................................................
 
     ! Initial guess of visual range (RST)
@@ -161,6 +170,8 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
     TOLF = 100._SRP * EPS
 
     ! Start iteration expmt
+    ! @warning Cannot probably be converted to `do concurrent` due to exits
+    !!         from the loop.
     do 6 I = 1, IEND
       if (F1 == 0._SRP) goto 7
 
@@ -206,8 +217,9 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
   !! @note This subroutine is left almost intact, only (a) added
   !!       `SRP` for real type (`SRP` is *standard realprecision*
   !!       and is defined in COMMONDATA).
-  subroutine easyr(r, C0, Ap, Vc, Ke, Eb)
-    real(HRP) :: r, C0, Ap, Vc, Ke, Eb
+  elemental subroutine easyr(r, C0, Ap, Vc, Ke, Eb)
+    real(HRP), intent(out) :: r
+    real(HRP), intent(in)  :: C0, Ap, Vc, Ke, Eb
     real(HRP) :: R2
     ! See the calling routine `srgetr` for explanation of parameters
     R2 = abs(C0)*Ap*Vc*Eb/(Ke+Eb)
@@ -224,7 +236,7 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
   !!       real precision* and is defined in COMMONDATA), (b) added numerical
   !!       overflow safeguard code based on `MAX_LOG` exponentiability limit;
   !!       added logging of overflow using `LOG_MSG`.
-  subroutine deriv(r, F1, FDER, c, C0, Ap, Vc, Ke, Eb)
+  elemental subroutine deriv(r, F1, FDER, c, C0, Ap, Vc, Ke, Eb)
     ! Input parameters
     !     See explanation in calling routine
     ! Output parameters
@@ -234,19 +246,26 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
     !
     !    The function and the derivative is calculated on the basis of the
     !    log-transformed expression
-    real(HRP) :: r, c, C0, Ap, Vc, Ke, Eb
-    real(HRP) :: FR1, FR2, F1, FDER
+    real(HRP), intent(inout) :: r
+    real(HRP), intent(out)   :: F1, FDER
+    real(HRP), intent(in)    :: c, C0, Ap, Vc, Ke, Eb
+
+    real(HRP) :: FR1, FR2
 
     !> `MAX_LOG` is a parameter determining the safe limit of `exp` function
     !! overflow in the current float point precision model, well below this.
     !! We cannot calculate precise exponent of a value exceeding this
     !! parameter. The maximum possible exponentiation-able value is set
-    !! to the maximum **32-bit** real value kind `S_PREC_32`, this bottom
+    !! to the maximum **128-bit** real value kind `Q_PREC_128`, this bottom
     !! line value would set a safe limit for **64-bit** `HRP` calculations.
     !! A benefit of this approach is that it doesn't require IEEE exception
     !! handling with not fully portable optional IEEE modules.
+    !! @note  The real 128 bit limit (Q_PREC_128) is sufficient to calculate
+    !!        visual range up to the fish length of approximately 700 cm
+    !!        (area 153.9 cm2). At this level, the maximum visual range is
+    !!        1343.34 cm. This would be sufficient for non-whales.
     real(HRP), parameter :: HUGE_REAL = huge(0.0_HRP)
-    ! real(HRP) :: MAX_LOG = log(HUGE_REAL) ! not tolerated by Oracle f95!
+    real(HRP), parameter :: MAX_LOG = log(HUGE_REAL)
 
     !> PROCNAME is the procedure name for logging and debugging (with MODNAME).
     character(len=*), parameter :: PROCNAME = "(deriv)"
@@ -259,18 +278,21 @@ module AKVISRANGE ! Dag AKsnes VISual RANGEe utilities.
     !! @warning The resulting calculations are then most probably grossly
     !!          wrong but we nonetheless avoid FPU runtime error: incorrect
     !!          arithmetic calculations.
-    !! @warning Using full `log(HUGE_REAL)` instead of `MAX_LOG` parameter
-    !!          constant that is not tolerated by Oracle f95 and perhaps some
-    !!          other compiler systems.
-    if ( c*r < log(HUGE_REAL) ) then
+    if (c*r < MAX_LOG) then
       FR1=log(((Ke+Eb)/Eb)*r*r*exp(c*r))
     else
       FR1=HUGE_REAL
       !> Subroutine `LOG_MSG` is defined in `LOGGER` module. It reports
       !! numerical overflow errors.
-      print *,  "ERROR in " , PROCNAME , ":  FR1 overflow ",      &
-                      "exceeding " , HUGE_REAL, " limit :",       &
-                      " c*r =", c*r
+      !! @warning `LOG_MSG` is **disabled** here as it cannot be **pure** and
+      !!          hampers purifying `deriv` for parallel processing.
+      !!          A negative side is no error report logging. But the `HRP`
+      !!          64 bit precision model seems to work okay. There is also
+      !!          a guarantee against overflow and gross errors with the
+      !!          `HUGE_REAL` parameter.
+      !call LOG_MSG (  "ERROR in " // PROCNAME // ":  FR1 overflow "  //      &
+      !                "exceeding " // TOSTR(HUGE_REAL) // " limit :" //      &
+      !                " c*r =" // TOSTR(c*r)  )
     end if
 
     F1 = FR1-FR2
