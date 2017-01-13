@@ -576,7 +576,9 @@ module MODCOMPS                 !> @note Module copies data from `COMMONDATA`.
 
   !-----------------------------------------------------------------------------
   !> New parallel-ready visual range function making use the elemental
-  !! computation backend
+  !! computation backend. NOTE: It is simplified, e.g. no error reporting is
+  !! done, debugging the old code has shown it works okay up to the MAX_LOG
+  !! limit.
   elemental function visual_range_new(irradiance, prey_area, prey_contrast)    &
                                                 result (visual_range_calculate)
 
@@ -758,6 +760,8 @@ contains
                               prey_contrast = PREYCONTRAST_DEFAULT )
 
   end function visrange_m
+
+  !.............................................................................
 
   elemental function visrange_m_new(area) result (fn_val)
     real(SRP), intent(in) :: area
