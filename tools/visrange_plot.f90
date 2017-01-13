@@ -574,6 +574,56 @@ module MODCOMPS                 !> @note Module copies data from `COMMONDATA`.
 
   end function visual_range_vector
 
+  !-----------------------------------------------------------------------------
+  !> New parallel-ready visual range function making use the elemental
+  !! computation backend
+  elemental function visual_range_new(irradiance, prey_area, prey_contrast)    &
+                                                result (visual_range_calculate)
+
+    !> @param irradiance background irradiance at specific depth
+    real(SRP), intent(in) :: irradiance
+
+    !> @param prey_area prey area, m^2
+    real(SRP), optional, intent(in) :: prey_area
+
+    !> @param prey_contrast optional prey inherent contrast or default
+    !!        parameter if not present.
+    real(SRP), optional, intent(in) :: prey_contrast
+
+    !> @return Returns visual range of the fish predator
+    real(SRP) :: visual_range_calculate
+
+    !> Local high precision value of `visual_range_calculate`, explicitly
+    !! converted to `SRP` at the end.
+    real(HRP) :: visual_range_HRP_here
+
+    !> Local copies of optional parameters
+    real(SRP) :: prey_area_here, prey_contrast_here
+
+    if (present(prey_area)) then
+      prey_area_here=prey_area
+    else
+      prey_area_here=PREYAREA_DEFAULT
+    end if
+
+    if (present(prey_contrast)) then
+      prey_contrast_here=prey_contrast
+    else
+      prey_contrast_here=PREYCONTRAST_DEFAULT
+    end if
+
+    !> @note Note that `srgetr` and the whole computational backend are now
+    !!       in `HRP` precision to avoid numerical overflow errors.
+    call srgetr(  visual_range_HRP_here,                                    &
+                  real(BEAMATT,HRP), real(prey_contrast_here,HRP),          &
+                  real(prey_area_here,HRP), real(VISCAP,HRP),               &
+                  real(EYESAT,HRP), real(irradiance,HRP)   )
+
+
+    !> finally, do explicit conversion from `HRP` to `SRP`.
+    visual_range_calculate = real(visual_range_HRP_here, SRP)
+
+  end function visual_range_new
 
 end module MODCOMPS
 
@@ -644,18 +694,30 @@ implicit none
   !> Background irradiance is the ambient illumination.
   irradiance =  DAYLIGHT !/2.0
 
-  do i = 1, MAXSCALE
-    !object_length(i) = (PREDATOR_BODY_SIZE/100.0_SRP) * real(i, SRP)
-    object_length(i) = (700.0/real(MAXSCALE,SRP)) * real(i, SRP)
-    ! Calculate visual range for the predator
-    object_area(i) = carea( cm2m( object_length(i) ) )
-    !visrange(i) = m2cm (  visual_range (                                      &
-    !      irradiance = irradiance,                                            &
-    !      prey_area = object_area(i),                                         &
-    !      prey_contrast = PREYCONTRAST_DEFAULT ) )
-    visrange(i) = m2cm( visrange_m( object_area(i) ) )
-    !print *, object_length(i), object_area(i), visrange(i)
-  end do
+!  !=============================================================================
+!  !> NOTE: This is the old **loop-based** calculation procedure, **disabled**.
+!  do i = 1, MAXSCALE
+!    !object_length(i) = (PREDATOR_BODY_SIZE/100.0_SRP) * real(i, SRP)
+!    object_length(i) = (700.0/real(MAXSCALE,SRP)) * real(i, SRP)
+!    ! Calculate visual range for the predator
+!    object_area(i) = carea( cm2m( object_length(i) ) )
+!    !visrange(i) = m2cm (  visual_range (                                      &
+!    !      irradiance = irradiance,                                            &
+!    !      prey_area = object_area(i),                                         &
+!    !      prey_contrast = PREYCONTRAST_DEFAULT ) )
+!    visrange(i) = m2cm( visrange_m( object_area(i) ) )
+!    !print *, object_length(i), object_area(i), visrange(i)
+!  end do
+!  !=============================================================================
+
+  !=============================================================================
+  !> NOTE: This is the new **whole-array-based** procedure making use the
+  !!       elemental functions.
+  object_length = (700.0/real(MAXSCALE,SRP)) *                                &
+                                      [( real(i,SRP), i=1,size(object_length) )]
+  object_area = carea( cm2m( object_length ) )
+  visrange = m2cm( visrange_m_new( object_area ) )
+  !=============================================================================
 
   !> Save raw data to CSV
   call CSV_MATRIX_WRITE ( reshape( [object_length, object_area, visrange],    &
@@ -696,6 +758,16 @@ contains
                               prey_contrast = PREYCONTRAST_DEFAULT )
 
   end function visrange_m
+
+  elemental function visrange_m_new(area) result (fn_val)
+    real(SRP), intent(in) :: area
+    real(SRP) :: fn_val
+
+    fn_val =   visual_range_new ( irradiance = irradiance,                    &
+                              prey_area = area,                               &
+                              prey_contrast = PREYCONTRAST_DEFAULT )
+
+  end function visrange_m_new
 
 end program VISRANGE_PLOT
 
