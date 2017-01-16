@@ -743,7 +743,7 @@ implicit none
 
   call pgline( MAXSCALE, object_length, visrange )  ! plot line
 
-  call pgpt( 1, [50.], [m2cm(visrange_m(carea(cm2m(50.))))], 8 )   ! plot dots
+  call pgpt( 1, [50.], [m2cm(visrange_m_new(carea(cm2m(50.))))], 8 )   ! plot dots
 
   call pgclos
 
@@ -768,8 +768,8 @@ contains
     real(SRP) :: fn_val
 
     fn_val =   visual_range_new ( irradiance = irradiance,                    &
-                              prey_area = area,                               &
-                              prey_contrast = PREYCONTRAST_DEFAULT )
+                                  prey_area = area,                           &
+                                  prey_contrast = PREYCONTRAST_DEFAULT )
 
   end function visrange_m_new
 
