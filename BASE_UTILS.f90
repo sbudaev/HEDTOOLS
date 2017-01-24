@@ -1299,7 +1299,7 @@ end function I4_LOG_10
 
 !-------------------------------------------------------------------------------
 
-subroutine MRGRNK_R4 (xdont, irngt)
+pure subroutine MRGRNK_R4 (xdont, irngt)
 !*******************************************************************************
 ! MRGRNK_R
 ! PURPOSE: Unconditionally rank real vector placing ranks into an integer
@@ -1513,7 +1513,7 @@ end subroutine MRGRNK_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine MRGRNK_R8 (xdont, irngt)
+pure subroutine MRGRNK_R8 (xdont, irngt)
 !*******************************************************************************
 ! MRGRNK_R8
 ! PURPOSE: Unconditionally rank real vector placing ranks into an integer
@@ -1727,7 +1727,7 @@ end subroutine MRGRNK_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine MRGRNK_I (xdont, irngt)
+pure subroutine MRGRNK_I (xdont, irngt)
 !*******************************************************************************
 ! MRGRNK_I
 ! PURPOSE: Unconditionally rank real vector placing ranks into an integer
@@ -1941,7 +1941,7 @@ end subroutine MRGRNK_I
 
 !-------------------------------------------------------------------------------
 
-subroutine ARRAY_RANK(Indx, Ranks)
+pure subroutine ARRAY_RANK(Indx, Ranks)
 !*******************************************************************************
 ! ARRAY_RANK
 ! PURPOSE: Calculate the rank order of an array elements from the rank indices
@@ -1960,7 +1960,7 @@ end subroutine ARRAY_RANK
 
 !-------------------------------------------------------------------------------
 
-subroutine RNKPAR_R4 (xdont, irngt, nord)
+pure subroutine RNKPAR_R4 (xdont, irngt, nord)
 !*******************************************************************************
 ! RNKPAR_R4
 ! PURPOSE: Partial ranking of a vector up to a specific order.
@@ -2494,7 +2494,7 @@ end subroutine RNKPAR_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine RNKPAR_R8 (xdont, irngt, nord)
+pure subroutine RNKPAR_R8 (xdont, irngt, nord)
 !*******************************************************************************
 ! RNKPAR_R8
 ! PURPOSE: Partial ranking of a vector up to a specific order.
@@ -3027,7 +3027,7 @@ end subroutine RNKPAR_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine RNKPAR_I (xdont, irngt, nord)
+pure subroutine RNKPAR_I (xdont, irngt, nord)
 !*******************************************************************************
 ! RNKPAR_I
 ! PURPOSE: Partial ranking of a vector up to a specific order.
@@ -3738,7 +3738,7 @@ end function LINTERPOL_R8
 ! http://people.sc.fsu.edu/~jburkardt%20/f_src/interp/interp.html
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
+pure subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 !*******************************************************************************
 !
 ! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
@@ -3846,7 +3846,7 @@ end subroutine INTERP_LAGRANGE_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
+pure subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
 !*******************************************************************************
 !
 ! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
@@ -3917,7 +3917,7 @@ subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_code )
   integer left
   real ( kind = 8 ), intent(in) :: p_data(:,:)
   real ( kind = 8 ), intent(out) ::  p_interp(:,:)
-  logical, optional :: error_code      !> Error code if not strictly increasing.
+  logical, optional, intent(out) :: error_code  !> Error code if not increasing.
 
   integer :: interp_num
   integer :: data_num
@@ -3962,7 +3962,7 @@ end subroutine INTERP_LINEAR_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp )
+pure subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp )
 !*******************************************************************************
 !
 ! LAGRANGE_VALUE_R8 evaluates the Lagrange polynomials.
@@ -4029,14 +4029,14 @@ subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_interp 
 
   implicit none
 
-  integer data_num
-  integer interp_num
+  integer, intent(in) :: data_num
+  integer, intent(in) :: interp_num
 
   integer i
   integer j
-  real ( kind = 8 ) l_interp(data_num,interp_num)
-  real ( kind = 8 ) t_data(data_num)
-  real ( kind = 8 ) t_interp(interp_num)
+  real ( kind = 8 ), intent(out) :: l_interp(data_num,interp_num)
+  real ( kind = 8 ), intent(in) :: t_data(data_num)
+  real ( kind = 8 ), intent(in) :: t_interp(interp_num)
 !
 !  Evaluate the polynomial.
 !
@@ -4063,7 +4063,7 @@ end subroutine LAGRANGE_VALUE_R8
 
 !-------------------------------------------------------------------------------
 
-function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
+pure function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 !*******************************************************************************
 !
 ! R8VEC_ASCENDS_STRICTLY determines if an R8VEC is strictly ascending.
@@ -4111,11 +4111,11 @@ function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 
   implicit none
 
-  integer n
+  integer, intent(in) :: n
 
   integer i
   logical is_increasing
-  real ( kind = 8 ) x(n)
+  real ( kind = 8 ), intent(in) :: x(n)
 
   do i = 1, n - 1
     if ( x(i+1) <= x(i) ) then
@@ -4132,7 +4132,7 @@ end function R8VEC_ASCENDS_STRICTLY
 
 !-------------------------------------------------------------------------------
 
-subroutine R8VEC_BRACKET ( n, x, xval, left, right )
+pure subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 !*******************************************************************************
 !
 ! R8VEC_BRACKET searches a sorted R8VEC for successive brackets of a value.
@@ -4179,13 +4179,13 @@ subroutine R8VEC_BRACKET ( n, x, xval, left, right )
 
   implicit none
 
-  integer n
+  integer, intent(in) :: n
 
   integer i
-  integer left
-  integer right
-  real ( kind = 8 ) x(n)
-  real ( kind = 8 ) xval
+  integer, intent(out) :: left
+  integer, intent(out) :: right
+  real ( kind = 8 ), intent(in) :: x(n)
+  real ( kind = 8 ), intent(in) :: xval
 
   do i = 2, n - 1
 
@@ -4206,7 +4206,7 @@ end subroutine R8VEC_BRACKET
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
+pure subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
 !*******************************************************************************
 !
 ! INTERP_LAGRANGE: Lagrange polynomial interpolant to a curve in M dimensions.
@@ -4309,7 +4309,7 @@ end subroutine INTERP_LAGRANGE_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
+pure subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
 !*******************************************************************************
 !
 ! INTERP_LINEAR: piecewise linear interpolation to a curve in M dimensions.
@@ -4380,7 +4380,7 @@ subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_code )
   integer :: left
   real, intent(in) :: p_data(:,:)
   real, intent(out) ::  p_interp(:,:)
-  logical, optional :: error_code      !> Error code if not strictly increasing.
+  logical, optional, intent(out) :: error_code !> Error code if not increasing.
 
   integer :: interp_num
   integer :: data_num
@@ -4425,7 +4425,7 @@ end subroutine INTERP_LINEAR_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_interp )
+pure subroutine LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_interp )
 !*******************************************************************************
 !
 ! LAGRANGE_VALUE_R8 evaluates the Lagrange polynomials.
@@ -4492,14 +4492,14 @@ subroutine LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_interp 
 
   implicit none
 
-  integer :: data_num
-  integer :: interp_num
+  integer, intent(in) :: data_num
+  integer, intent(in) :: interp_num
 
   integer :: i
   integer :: j
-  real :: l_interp(data_num,interp_num)
-  real :: t_data(data_num)
-  real :: t_interp(interp_num)
+  real, intent(out) :: l_interp(data_num,interp_num)
+  real, intent(in) :: t_data(data_num)
+  real, intent(in) :: t_interp(interp_num)
 !
 !  Evaluate the polynomial.
 !
@@ -4526,7 +4526,7 @@ end subroutine LAGRANGE_VALUE_R4
 
 !-------------------------------------------------------------------------------
 
-function R4VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
+pure function R4VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 !*******************************************************************************
 !
 ! R4VEC_ASCENDS_STRICTLY determines if an R8VEC is strictly ascending.
@@ -4575,11 +4575,11 @@ function R4VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 
   implicit none
 
-  integer :: n
+  integer, intent(in) :: n
 
   integer :: i
   logical :: is_increasing
-  real :: x(n)
+  real, intent(in) :: x(n)
 
   do i = 1, n - 1
     if ( x(i+1) <= x(i) ) then
@@ -4596,7 +4596,7 @@ end function R4VEC_ASCENDS_STRICTLY
 
 !-------------------------------------------------------------------------------
 
-subroutine R4VEC_BRACKET ( n, x, xval, left, right )
+pure subroutine R4VEC_BRACKET ( n, x, xval, left, right )
 !*******************************************************************************
 !
 ! R4VEC_BRACKET searches a sorted R8VEC for successive brackets of a value.
@@ -4643,13 +4643,13 @@ subroutine R4VEC_BRACKET ( n, x, xval, left, right )
 
   implicit none
 
-  integer n
+  integer, intent(in) :: n
 
   integer i
-  integer left
-  integer right
-  real :: x(n)
-  real :: xval
+  integer, intent(out) :: left
+  integer, intent(out) :: right
+  real, intent(in) :: x(n)
+  real, intent(in) :: xval
 
   do i = 2, n - 1
 
@@ -4670,7 +4670,7 @@ end subroutine R4VEC_BRACKET
 
 !-------------------------------------------------------------------------------
 
-function LAGR_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+pure function LAGR_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
 ! LAGR_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
 !      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (default
@@ -4708,7 +4708,7 @@ end function LAGR_INTERPOL_VECTOR_R4
 
 !-------------------------------------------------------------------------------
 
-function LIN_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+pure function LIN_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
 ! LIN_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
 !      INTERP_LINEAR, linear interpolation subroutine (default
@@ -4742,7 +4742,7 @@ end function LIN_INTERPOL_VECTOR_R4
 
 !-------------------------------------------------------------------------------
 
-function LAGR_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
+pure function LAGR_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
 ! LAGR_INTERPOL_VECTOR_R8: A vector (one-dimensional) wrapper to the
 !      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (kind 8
@@ -4780,7 +4780,7 @@ end function LAGR_INTERPOL_VECTOR_R8
 
 !-------------------------------------------------------------------------------
 
-function LIN_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
+pure function LIN_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
 ! LIN_INTERPOL_VECTOR_R8: A vector (one-dimensional) wrapper to the
 !      INTERP_LINEAR, linear interpolation subroutine (kind 8
@@ -4814,7 +4814,7 @@ end function LIN_INTERPOL_VECTOR_R8
 
 !-------------------------------------------------------------------------------
 
-function DDINT_R4 (xi, yi, xx, n_points) result (ddint_out)
+pure function DDINT_R4 (xi, yi, xx, n_points) result (ddint_out)
 !*******************************************************************************
 ! Interpolation based on Divided Difference Polynomials:
 ! Alex G: January 2010
@@ -4942,7 +4942,7 @@ end function DDINT_R4
 
 !-------------------------------------------------------------------------------
 
-function DDINT_R8 (xi, yi, xx, n_points) result (ddint_out)
+pure function DDINT_R8 (xi, yi, xx, n_points) result (ddint_out)
 !*******************************************************************************
 ! Interpolation based on Divided Difference Polynomials:
 ! Alex G: January 2010
