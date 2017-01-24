@@ -1,5 +1,34 @@
+2017-01-24  sbu062
+
+	* BASE_UTILS.f90: added two pure sub-versions for LINTERPOL , the
+	  whole module is now fully 'purified'
+	* BASE_UTILS.f90: set explicit 'intent' and made procedures 'pure',
+	  so far except (LINTERPOL)
+
+2017-01-16  sbu062
+
+	* tools/visrange_plot.f90: minor reformat code
+
+2017-01-13  sbu062
+
+	* tools/visrange_plot.f90: fix comments
+	* tools/visrange_plot.f90: whole-array calculation procedure using
+	  the renewed elemental parallel-safe backend, the old loop-based
+	  remained there so far
+	* tools/visrange_plot.f90: updated the new parallel-ready visual
+	  range calculation backend
+
+2017-01-12  sbu062
+
+	* BASE_UTILS.f90: re-declared simple functions to pure, still need
+	  to purify complex ones
+
 2016-12-20  sbu062
 
+	* tools/visrange_plot.f90: check for zero irradiance
+	* tools/visrange_plot.f90: minor change, include irradianceto file
+	  name
+	* ChangeLog: changelog updated
 	* tools/visrange_plot.f90: manual output device
 	* BASE_UTILS.adoc, BASE_UTILS.f90: implemented TOSTR for real kind
 	  16
