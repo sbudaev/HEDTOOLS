@@ -107,6 +107,8 @@ interface LINTERPOL              ! Generic interface for simple linear
                                  ! interpolation functions.
    module procedure LINTERPOL_R4
    module procedure LINTERPOL_R8
+   module procedure LINTERPOL_R4_PURE  ! Note: These pure functions do not have
+   module procedure LINTERPOL_R8_PURE  !       the output error parameter ierr.
 
 end interface LINTERPOL
 
@@ -3606,7 +3608,7 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 
    real, dimension(:), intent(in) :: xx, yy  ! Indep. and dep. variable arrays.
    real, intent(in) :: x                     ! Interpolate at x
-   integer, optional, intent(out) :: ierr    ! Returned error code.
+   integer, intent(out) :: ierr              ! Returned error code.
 
    real :: y                                 ! Interpolated value y(x).
 
@@ -3617,7 +3619,7 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 
    ! Check if the input vector is strictly increasing.
    if ( .not. R4VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
-      if (present(ierr)) ierr=-9999
+      ierr=-9999
       y = INVALID
       return
    end if
@@ -3644,7 +3646,7 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
       ierr_here = ierr_here                  ! set no error code to 0 (or 100).
    end if
 
-   if (present(ierr)) ierr = ierr_here
+   ierr = ierr_here
 
 end function LINTERPOL_R4
 
@@ -3691,7 +3693,7 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
    real(kind=8), dimension(:), intent(in) :: xx ! Indep. variable array.
    real(kind=8), dimension(:), intent(in) :: yy ! Dep. variable array.
    real(kind=8), intent(in) :: x             ! Interpolate at x
-   integer, optional, intent(out) :: ierr    ! Returned error code.
+   integer, intent(out) :: ierr              ! Returned error code.
 
    real(kind=8) :: y                         ! Interpolated value y(x).
 
@@ -3702,7 +3704,7 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
 
    ! Check if the input vector is strictly increasing.
    if ( .not. R8VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
-      if (present(ierr)) ierr=-9999
+      ierr=-9999
       y = INVALID
       return
    end if
@@ -3729,9 +3731,181 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
       ierr_here = ierr_here                  ! set no error code to 0 (or 100).
    end if
 
-   if (present(ierr)) ierr = ierr_here
+   ierr = ierr_here
 
 end function LINTERPOL_R8
+
+!-------------------------------------------------------------------------------
+
+pure function LINTERPOL_R4_PURE (xx, yy, x) result (y)
+!*******************************************************************************
+! LINTERPOL
+!
+! PURPOSE: Simple piecewise liner interpolation.  This is a kind 4 real version
+!
+! CALL PARAMETERS: Ordered array for independent variable, array for the
+!          dependent variable, independent variable X value  to interpolate,
+!          optional integer error code.
+!
+! RETURNS: Interpolated value Y(X)
+!
+! NOTES:   Piecewise linear interpolation.  Given input arrays XX (independent
+!          variable) and YY (dependent variable), both of dimension NN,
+!          this routine finds, by linear interpolation, the value of Y(X).
+!          Array XX must be in ascending order.
+!          The flag IERR is returned as -1 if X is below the low end of XX
+!          (an error), +1 if X is above the high end of XX (also an error),
+!          or 0 if there was no error.
+!          If the xx and yy input arrays are not conforming, the ierr error is
+!          multiplied by 100.
+!
+!          Error codes ierr:
+!                         0 = no error;
+!                       100 = input arrays not conforming;
+!                        -1 = X below the low limit;
+!                         1 = X above the upper limit;
+!                      -101 = input arrays not conforming, X below low limit;
+!                       101 = input arrays not conforming, X above upper limit,
+!                     -9999 = X array is not strictly increasing ordered.
+!
+! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
+!         Maryland  20771; Version 1.00a, October 29, 2013
+! From:   http://www.davidgsimpson.com/software/linterpol_f90.txt
+!
+! Modified by Sergey Budaev
+!*******************************************************************************
+   implicit none
+
+   real, dimension(:), intent(in) :: xx, yy  ! Indep. and dep. variable arrays.
+   real, intent(in) :: x                     ! Interpolate at x
+   !integer, optional, intent(out) :: ierr    ! Returned error code.
+
+   real :: y                                 ! Interpolated value y(x).
+
+   integer :: nn                             ! dimension of xx and yy arrays
+
+   integer :: i                              ! Local counter.
+   integer :: ierr_here                      ! Local copy of ierr.
+
+   ! Check if the input vector is strictly increasing.
+   if ( .not. R4VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
+      !if (present(ierr)) ierr=-9999
+      y = INVALID
+      return
+   end if
+
+   if (size(xx) == size(yy)) then            ! Check the sizes of the arrays
+      nn = size(xx)                          ! set as normal if equal...
+      ierr_here = 0
+   else
+      nn = min(size(xx),size(yy))            ! .. or to minimum size otherwise
+      ierr_here = 100                        ! (error factor updated by 100),
+   end if                                    ! extra values are ignored.
+
+   if (x .lt. xx(1)) then                    ! If below low end of xx (error)..
+      y = yy(1)                              !  set y = first yy value,
+      ierr_here = (ierr_here + 1) * (-1)     !  return error code -1 (or -101);
+   else if (x .gt. xx(nn)) then              ! if above high end of xx (error)..
+      y = yy(nn)                             !  set y = last yy value,
+      ierr_here = ierr_here + 1              !  return error code +1 (or 101),
+   else                                      ! if ok
+      do i = 2, nn                           ! loop to find first xx > x .
+         if (xx(i) .gt. x) exit
+      end do
+      y = (yy(i)-yy(i-1))/(xx(i)-xx(i-1))*(x-xx(i-1))+yy(i-1) ! Do interpolate.
+      ierr_here = ierr_here                  ! set no error code to 0 (or 100).
+   end if
+
+   !if (present(ierr)) ierr = ierr_here
+
+end function LINTERPOL_R4_PURE
+
+!-------------------------------------------------------------------------------
+
+pure function LINTERPOL_R8_PURE (xx, yy, x) result (y)
+!*******************************************************************************
+! LINTERPOL
+!
+! PURPOSE: Simple piecewise liner interpolation. This is a kind 8 real version
+!
+! CALL PARAMETERS: Ordered array for independent variable, array for the
+!          dependent variable, independent variable X value  to interpolate,
+!          optional integer error code.
+!
+! RETURNS: Interpolated value Y(X)
+!
+! NOTES:   Piecewise linear interpolation.  Given input arrays XX (independent
+!          variable) and YY (dependent variable), both of dimension NN,
+!          this routine finds, by linear interpolation, the value of Y(X).
+!          Array XX must be in ascending order.
+!          The flag IERR is returned as -1 if X is below the low end of XX
+!          (an error), +1 if X is above the high end of XX (also an error),
+!          or 0 if there was no error.
+!          If the xx and yy input arrays are not conforming, the ier error is
+!          multiplied by 100.
+!
+!          Error codes ierr:
+!                         0 = no error;
+!                       100 = input arrays not conforming;
+!                        -1 = X below the low limit;
+!                         1 = X above the upper limit;
+!                      -101 = input arrays not conforming, X below low limit;
+!                       101 = input arrays not conforming, X above upper limit,
+!                     -9999 = X array is not strictly increasing ordered.
+!
+! Author: David G. Simpson, NASA Goddard Space Flight Center, Greenbelt,
+!         Maryland  20771; Version 1.00a, October 29, 2013
+! From:   http://www.davidgsimpson.com/software/linterpol_f90.txt
+! Modified by Sergey Budaev
+!*******************************************************************************
+   implicit none
+
+   real(kind=8), dimension(:), intent(in) :: xx ! Indep. variable array.
+   real(kind=8), dimension(:), intent(in) :: yy ! Dep. variable array.
+   real(kind=8), intent(in) :: x             ! Interpolate at x
+   !integer, optional, intent(out) :: ierr    ! Returned error code.
+
+   real(kind=8) :: y                         ! Interpolated value y(x).
+
+   integer :: nn                             ! dimension of xx and yy arrays
+
+   integer :: i                              ! Local counter.
+   integer :: ierr_here                      ! Local copy of ierr.
+
+   ! Check if the input vector is strictly increasing.
+   if ( .not. R8VEC_ASCENDS_STRICTLY ( size(xx), xx ) ) then
+      !if (present(ierr)) ierr=-9999
+      y = INVALID
+      return
+   end if
+
+   if (size(xx) == size(yy)) then            ! Check the sizes of the arrays
+      nn = size(xx)                          ! set as normal if equal...
+      ierr_here = 0
+   else
+      nn = min(size(xx),size(yy))            ! .. or to minimum size otherwise
+      ierr_here = 100                        ! (error factor updated by 100),
+   end if                                    ! extra values are ignored.
+
+   if (x .lt. xx(1)) then                    ! If below low end of xx (error)..
+      y = yy(1)                              !  set y = first yy value,
+      ierr_here = (ierr_here + 1) * (-1)     !  return error code -1 (or -101);
+   else if (x .gt. xx(nn)) then              ! if above high end of xx (error)..
+      y = yy(nn)                             !  set y = last yy value,
+      ierr_here = ierr_here + 1              !  return error code +1 (or 101),
+   else                                      ! if ok
+      do i = 2, nn                           ! loop to find first xx > x .
+         if (xx(i) .gt. x) exit
+      end do
+      y = (yy(i)-yy(i-1))/(xx(i)-xx(i-1))*(x-xx(i-1))+yy(i-1) ! Do interpolate.
+      ierr_here = ierr_here                  ! set no error code to 0 (or 100).
+   end if
+
+   !if (present(ierr)) ierr = ierr_here
+
+end function LINTERPOL_R8_PURE
+
+!-------------------------------------------------------------------------------
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ! The procedures below are taken from the INTERP library by John Burkardt
