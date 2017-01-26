@@ -117,7 +117,7 @@ indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Intel Fortran]
 indexterm:[compiler,Oracle Fortran]
 
-** *GNU Make* (Mandatory)
+** *GNU Make and utils* (Mandatory)
 [[MAKE_GET]]
 
 This is an automated program build system that keeps track of changes
@@ -128,15 +128,20 @@ make is trivial to install on Linux. For Windows, it goes bundled with the
 Equation solution
 http://www.equation.com/servlet/equation.cmd?fa=fortran[GNU Fortran].
 
-If GNU Fortran is not needed, executable *make* can be downloaded *separately*
+If GNU Fortran is not needed, executable *make* can be downloaded separately
 from the
 http://www.equation.com/servlet/equation.cmd?fa=make[Equation solution web site].
-It is also available from the
-http://sourceforge.net/projects/ezwinports/[ezwinports bundle] and other GNU
-core utils <<GNUCORE_GET, distros for Windows>>.
+It is also available from the http://www.cygwin.com/[Cygwin system] and other
+GNU core utils <<GNUCORE_GET, distros for Windows>>.
+
+IMPORTANT: Two GNU core utilities are *mandatory* to use the GNU make system:
+           https://en.wikipedia.org/wiki/Grep[grep] and
+           https://en.wikipedia.org/wiki/Expr[expr]. They can be installed
+           from any of the <<GNUCORE_GET, GNU distros for Windows>>.
 
 The official site of GNU make with the code, manuals etc. is here:
-https://www.gnu.org/software/make/
+https://www.gnu.org/software/make/. An almost complete GNU distribution for
+Windows is here: http://www.cygwin.com/.
 
 ** *Subversion* (Mandatory)
 [[SVN_GET]]
@@ -173,9 +178,11 @@ image:doc/img/img_doc_far.png[height=200,align="left"]
 It is also very helpful to have (on the Microsoft Windows) the
 https://en.wikipedia.org/wiki/GNU_Core_Utilities[GNU core utilities]
 (+grep+, +cut+, +sed+, +awk+ etc.). Some of them are used in the GNU make build
-system, and some are included with the Equation solutions gfortran (*TODO: have
-to check what is really necessary*). There are several distributions available,
-e.g.
+system, and the bare minimum set is included with the Equation solutions
+gfortran.  However, mandatory +grep+ and +expr+ are not there should be
+installed separately.
+
+There are several distributions available, e.g.
 http://gnuwin32.sourceforge.net/[GnuWin32],
 http://www.cygwin.com/[Cygwin],
 http://www.mingw.org/[MinGW],
@@ -184,8 +191,10 @@ http://sourceforge.net/projects/ezwinports/[ezwinports],
 http://unxutils.sourceforge.net/[UnxUtils],
 http://github.com/bmatzelle/gow/wiki[Gow],
 http://win-bash.sourceforge.net/[winbash].
+Among these available distros, http://www.cygwin.com/[Cygwin] is the most
+complete and available for both 32 and 64 bit Windows platforms. It is
+recommended for installation.
 [[GNUCORE_GET]]
-
 
 ** *Doxygen: Automatically generate program
 documentation* (Highly Recommended)
