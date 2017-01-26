@@ -142,6 +142,7 @@ IMPORTANT: Two GNU core utilities are *mandatory* to use the GNU make system:
 The official site of GNU make with the code, manuals etc. is here:
 https://www.gnu.org/software/make/. An almost complete GNU distribution for
 Windows is here: http://www.cygwin.com/.
+indexterm:[GNU,Cygwin]
 
 ** *Subversion* (Mandatory)
 [[SVN_GET]]
@@ -195,6 +196,7 @@ Among these available distros, http://www.cygwin.com/[Cygwin] is the most
 complete and available for both 32 and 64 bit Windows platforms. It is
 recommended for installation.
 [[GNUCORE_GET]]
+indexterm:[GNU,Cygwin]
 
 ** *Doxygen: Automatically generate program
 documentation* (Highly Recommended)
