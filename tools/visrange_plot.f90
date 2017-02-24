@@ -1,6 +1,7 @@
 !> Produce a plot of the relationship between the fish size
 !! and its visual range for the predator
 !! make SRC=visrange_plot.f90 OUT=visrange_plot
+!! $Id$
 !-------------------------------------------------------------------------------
 module PRECIS                     !> @note Module copies data from `COMMONDATA`.
 
@@ -738,7 +739,7 @@ implicit none
   call pgenv( minval(object_length), maxval(object_length),                   &
               minval(visrange), maxval(visrange), 0, 0 )
 
-  call pglab('Object length, cm', 'Visual range, cm', 'Irradiance=' //          &
+  call pglab('Object radius, cm', 'Visual range, cm', 'Irradiance=' //        &
               TOSTR(irradiance))
 
   call pgline( MAXSCALE, object_length, visrange )  ! plot line
