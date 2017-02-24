@@ -952,6 +952,23 @@ This is rendered as follows:
 
 image:doc/img/img_doc_doxygen_formula.png[width=490,align="left"]
 
+To make the formula appear on a separate line, delimit it within +@f[+ and
++@f]+.
+
+[source]
+--------------------------------------------------------------------------------
+!> ### Implementation details ###
+!> The cost of swimming is calculated as:
+!! @f[ C_{s} = M^{0.6} \cdot \beta \cdot d / L , @f] where
+!! @f$ M @f$ is the body mass, @f$ \beta @f$ is a parameter factor
+!! defined as `SWIMMING_SPEED_COST_BURST`, @f$ d / L @f$ is the distance
+!! in units of the agent's body length.
+cost_swimming = this%body_mass**SWIM_COST_EXP * SWIMMING_SPEED_COST_BURST &
+                    * distance / this%body_length
+--------------------------------------------------------------------------------
+
+image:doc/img/img_doc_doxygen_formula2.png[width=490,align="left"]
+
 IMPORTANT: +LaTeX+, +dvips+ and +Ghostscript+ should be installed for the
            formula rendering to work correctly. There are web-based LaTeX
            equation editors, e.g. https://www.codecogs.com/latex/eqneditor.php
@@ -2035,109 +2052,15 @@ upper-level directory, so ../. The <<MAKE_OVERVIEW, make system>> used to
 build the model cares about the HEDTOOLS modules automatically.
 ================================================================================
 
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
-*** CLASS DIAGRAMS AND THE BEAST FRAMEWORK TOOLS FOLLOW BELOW
+*** The file MOD_AHA.adoc contains descriptions of the AHA model modules. They
+    are a separate part of the documentation.
 ////////////////////////////////////////////////////////////////////////////////
 
-Building blocks of the AHA Model
---------------------------------
+include::MOD_AHA.adoc[]
 
 ////////////////////////////////////////////////////////////////////////////////
-Note -- shading in svg files produced by LO lead to massive memory leak in
-        asciidos, use colour.
-////////////////////////////////////////////////////////////////////////////////
-
-The environment
-~~~~~~~~~~~~~~~
-
-Outline of THE_ENVIRONMENT module.
-
-image:doc/img/aha_environment_diagr.svg[width=510,align="left"]
-
-
-
-The genome structure
-~~~~~~~~~~~~~~~~~~~~
-
-Outline of the AHA Model code. So far very little.
-
-Implementation of the genome.
-
-Genome object types
-
-image:doc/img/aha_genome_01.svg[width=400,align="left"]
-
-Implementation of the chromosome structure. Arbitrary number of chromosomes,
-arbitrary size (alleles), arbitrary number of additive components. Arbitrary
-ploidity (diploid, polyploid).
-
-Correspondence between the genotype and the phenotype (hormones,
-neurobiological modules etc.) are represented by the boolean Gene x Phenotype
-matrices. Any arbitrary structure can be implemented, many traits controlled
-by a single gene, many genes controlling a specific single trait.
-
-Genetic trait architecture
-
-image:doc/img/aha_genome_02.svg[width=400,align="left"]
-
-
-
-The individual agent
-~~~~~~~~~~~~~~~~~~~~
-
-Class diagram for the structure of the individual agents, from
-individual person to the population membership (incomplete yet):
-
-Individual, class hierarchy
-
-image:doc/img/aha_individual_class.svg[width=510,align="left"]
-Mostly to be written yet.
-
-
-The perception mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Class diagram of the perception structure. Perception objects of three types,
-(1) external spatial perception objects (perception depends on visual range),
-(2) internal perception objects, depend on the body. (3) Light perception is
-separate in that it gets this environmental factor directly.
-
-image:doc/img/aha_neurobio_percept.svg[width=510,align="left"]
-
-External spatial perception components are truly "localist" and proximate, they
-get individual environmental objects (e.g. food items, individual conspecifics
-or predators). This allows to produce very complex environmental structures
-(e.g. patchy foods with Gaussian scatter). Also, every individual environmental
-object is perceived only if it is within the specific visual range. This means
-that, as food items are stochastic (have random Gaussian size), perception of
-each food item depends on its individually-adjusted visual range. The same is
-for conspecifics, predators, etc.
-
-Selection of the nearest environmental objects that are within the current
-visual range is based on partial indexing (segmentation) of potentially huge
-arrays of different objects (e.g. thousands of individual stochastic food
-items, each with specific visual range). This allows very fast processing of
-only the objects that are in proximity of the agent.
-
-image:doc/img/aha_neurobio_appraisal.svg[width=510,align="left"]
-
-Behaviour units and expectancies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-image:doc/img/aha_neurobio_motivation.svg[width=510,align="left"]
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-*** HEDTOOLS DOCUMENTATION FOLLOWS BELOW
+HEDTOOLS DOCUMENTATION FOLLOWS BELOW
 ////////////////////////////////////////////////////////////////////////////////
 
 Module: BASE_UTILS

@@ -93,7 +93,7 @@ OBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
 MOD = base_utils.mod  base_strings.mod csv_io.mod  logger.mod base_random.mod \
       assert.mod errors.mod exception.mod throwable.mod
 
-DOC = BASE_UTILS.adoc
+DOC = HEDTOOLS.adoc
 
 LIBNAME = lib_hedutils
 LIB = $(LIBNAME).$(LIBEXT)
@@ -185,7 +185,7 @@ endif
 #-------------------------------------------------------------------------------
 # Documentation builder parameters (asciidoc)
 
-DOCFIL = BASE_UTILS
+DOCFIL = HEDTOOLS
 DOCFMT = pdf
 DOCDIR = doc/
 
@@ -350,7 +350,7 @@ doc: $(DOCFIL).$(DOCFMT)
 
 # Clean workspace completely - distribution state
 distclean: neat
-	-rm -f *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/BASE_UTILS.$(DOCFMT) \
+	-rm -f *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
 	$(MAKE) -C $(TOOLS_PATH) distclean
 
@@ -408,7 +408,7 @@ $(DIB): $(SRC)
 	zip $(ZIPFILE) $(MOD) $(DIB) $(AUTOGEN_README_FILE)
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
-	a2x -f$(DOCFMT) BASE_UTILS.adoc
+	a2x -f$(DOCFMT) $(DOC)
 	mv $(DOCFIL).$(DOCFMT) $(DOCDIR)
 
 #-------------------------------------------------------------------------------
