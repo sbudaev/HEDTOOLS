@@ -1,5 +1,60 @@
+2017-02-24  sbu062
+
+	* doc/img/aha_environment_diagr.eps, doc/img/aha_genome_01.eps,
+	  doc/img/aha_genome_02.eps, doc/img/aha_individual_class.eps,
+	  doc/img/aha_neurobio_appraisal.eps,
+	  doc/img/aha_neurobio_appraisal.odg,
+	  doc/img/aha_neurobio_appraisal.svg,
+	  doc/img/aha_neurobio_percept.eps,
+	  doc/img/aha_neurobio_percept.odg,
+	  doc/img/aha_neurobio_percept.svg: modified plots, e.g. added
+	  reproductive factor perception, added eps for doxygen latex
+	* HEDTOOLS.adoc: aha model (building blocks...) are now in doxygen
+	  docs
+	* tools/visrange_plot.f90: fix scale name, added keywords
+	* tools/visrange_plot.f90: fix scale name
+	* BASE_UTILS.adoc, HEDTOOLS.adoc, MOD_AHA.adoc, Makefile,
+	  doc/img/img_doc_doxygen_formula2.png: renamed BASE_UTILS.adoc to
+	  HEDTOOLS.adoc, AHA model modules isolated into a separate include
+	  file MOD_AHA.adoc
+
+2017-02-22  sbu062
+
+	* doc/img/aha_modules.eps, doc/img/img_doxy_aha-gos-delta.eps,
+	  doc/img/img_doxy_aha2-attention-modulation.eps,
+	  doc/img/img_doxy_aha2-gos-threshold.eps,
+	  doc/img/img_doxygen_dissipate_nonpar.eps,
+	  doc/img/img_doxygen_dissipate_nonpar.svg: added graphs for
+	  doxygen docs
+	* doc/img/img_doxy_aha-gos-delta.svg: resize plot for doxygen, 75%
+	  1px width
+
+2017-02-21  sbu062
+
+	* doc/img/img_doxy_aha-gos-delta.svg: scaled big plot down,
+	  rendered too big in doxygen
+	* doc/img/img_doxy_aha-gos-delta.svg: added plot for doxygen docs
+
+2017-02-19  sbu062
+
+	* doc/img/img_doxy_aha2-attention-modulation.svg,
+	  doc/img/img_doxy_aha2-gos-threshold.svg: added external graphs
+	  for doxygen-generated documentation
+
+2017-02-14  sbu062
+
+	* BASE_UTILS.adoc: fix outdated pdf web address
+
+2017-01-26  sbu062
+
+	* doc/img/img_doc_log.png: replace log image from real debug log
+	* BASE_UTILS.adoc: added index
+	* BASE_UTILS.adoc: added mandatory GNU utils for Windows, Cygwin
+	  cecommended, TODO deleted
+
 2017-01-24  sbu062
 
+	* ChangeLog: changelog updated
 	* BASE_UTILS.f90: added two pure sub-versions for LINTERPOL , the
 	  whole module is now fully 'purified'
 	* BASE_UTILS.f90: set explicit 'intent' and made procedures 'pure',
