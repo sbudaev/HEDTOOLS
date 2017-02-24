@@ -738,7 +738,7 @@ implicit none
   call pgenv( minval(object_length), maxval(object_length),                   &
               minval(visrange), maxval(visrange), 0, 0 )
 
-  call pglab('Fish length, cm', 'Visual range, cm', 'Irradiance=' //          &
+  call pglab('Object length, cm', 'Visual range, cm', 'Irradiance=' //          &
               TOSTR(irradiance))
 
   call pgline( MAXSCALE, object_length, visrange )  ! plot line
