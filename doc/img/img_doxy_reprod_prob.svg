@@ -69,7 +69,7 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="1.2332947"
-     inkscape:cx="351.78574"
+     inkscape:cx="211.91649"
      inkscape:cy="255.008"
      inkscape:window-x="0"
      inkscape:window-y="29"
@@ -2158,7 +2158,9 @@
            id="tspan7327-2"
            x="1628.066"
            y="1558.8855"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:100px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:5.625px">The actor agent is smaller              The actor agent is larger</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:100px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:5.625px">The actor agent is <tspan
+   style="font-weight:bold"
+   id="tspan5045">smaller</tspan> </tspan></text>
 <rect
          style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.29590225;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.2959021, 2.2959021;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
          id="rect7333"
@@ -2166,4 +2168,18 @@
          height="3369.314"
          x="1526.7725"
          y="1392.1432"
-         transform="matrix(0,1,1,0,0,0)" /></g></g></svg>
+         transform="matrix(0,1,1,0,0,0)" /><text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;line-height:140.625px;font-family:Sans;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5.625px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="3281.2043"
+         y="1564.7705"
+         id="text7329-5-9"
+         transform="matrix(0,1,1,0,0,0)"><tspan
+           sodipodi:role="line"
+           id="tspan7327-2-6"
+           x="3281.2043"
+           y="1564.7705"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:100px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:5.625px">The actor agent is <tspan
+   style="font-weight:bold"
+   id="tspan5043">larger </tspan></tspan></text>
+</g></g></svg>
