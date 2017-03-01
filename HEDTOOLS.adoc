@@ -5436,6 +5436,15 @@ image:doc/img/img_doc_cb_makefile_bld.png[width=400,align="left"]
 This is the most universal and flexible method that uses the same +Makefile+
 for building both on the command line and from the IDE.
 
+IMPORTANT: A Code::Blocks project template for the AHA Model is available
+    in the +^/trunk/scripts+ folder on the Subversion repository:
+    https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp[Project.cbp],
+    https://svn.uib.no/aha-fortran/trunk/scripts/Project.bmarks[Project.bmarks],
+    https://svn.uib.no/aha-fortran/trunk/scripts/Project.layout[Project.layout].
+    All the three files should be copied to the project folder and then
+    tweaked as needed.
+
+
 Manual builds of HEDTOOLS
 -------------------------
 
