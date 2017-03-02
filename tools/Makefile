@@ -19,8 +19,13 @@ SF_FC = f95
 FC = $(GF_FC)
 
 # Graphics library to use, for example:
-# PGPLOT:
+# PGPLOT, if installed by the system:
 #   -lpgplot
+# If PGPLOT is manually installed by the user into /usr/local/pgplot with
+#   X11 development libraries in /usr/lib/x86_64-linux-gnu (as in a
+#   Debian system), use this value for GRAPHLIB:
+# -L/usr/local/pgplot -L/usr/lib/x86_64-linux-gnu -lpgplot -lX11
+# --------------------------------------
 # PLPLOT:
 #   -lplplotf95d -lplplotf95cd -lplf95demolibd -I/usr/lib/fortran/modules/plplot
 GRAPHLIB = -lpgplot
