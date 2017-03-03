@@ -5652,7 +5652,6 @@ The University of Bergen provides a cloud-based Infrastructure as a Service
 https://en.wikipedia.org/wiki/OpenStack[OpenStack]. There is a virtual
 workstation for developing the AHA Model based on this cloud infrastructure.
 The "virtual developer 's computer" has the
-
 https://en.wikipedia.org/wiki/Debian[Debian Linux] OS and has
 all the essential software pre-installed and ready for use out of the box.
 
