@@ -5650,7 +5650,7 @@ Linux-based Workstation
 The University of Bergen provides a cloud-based Infrastructure as a Service
 (http://docs.uh-iaas.no/en/latest/[IaaS]). There is a virtual workstation for
 developing the AHA Model based on this cloud infrastructure. The "virtual
-developer 's computer is based on the Debian Linux OS and has all the
+developer 's computer" is based on the Debian Linux OS and has all the
 essential software pre-installed and ready for use out of the box.
 
 IMPORTANT: The current system is based on GNU gfortran and
