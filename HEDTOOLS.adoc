@@ -5669,6 +5669,13 @@ image:doc/img/img_doc_cloud_workshop_linux.png[width=510,align="left"]
 *X2Go Client* can be downloaded for Windows from the official website:
 http://wiki.x2go.org/doku.php/start .
 
+On the Ubuntu Linux installation is by command line:
+
+[source,bash]
+--------------------------------------------------------------------------------
+sudo apt-get install x2goclient
+--------------------------------------------------------------------------------
+
 The access is based on ssh *key file*. You can supply your own ssh public key
 or get a private secret ssh key (+xxx.pem+) from the administrator.
 
