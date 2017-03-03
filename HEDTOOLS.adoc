@@ -5648,28 +5648,38 @@ Linux-based Workstation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 The University of Bergen provides a cloud-based Infrastructure as a Service
-(http://docs.uh-iaas.no/en/latest/[IaaS]). There is a virtual workstation for
-developing the AHA Model based on this cloud infrastructure. The "virtual
-developer 's computer" is based on the Debian Linux OS and has all the
-essential software pre-installed and ready for use out of the box.
+(http://docs.uh-iaas.no/en/latest/[IaaS]) system based on
+https://en.wikipedia.org/wiki/OpenStack[OpenStack]. There is a virtual
+workstation for developing the AHA Model based on this cloud infrastructure.
+The "virtual developer 's computer" has the
+
+https://en.wikipedia.org/wiki/Debian[Debian Linux] OS and has
+all the essential software pre-installed and ready for use out of the box.
 
 IMPORTANT: The current system is based on GNU gfortran and
-           <<CODEBLOCKS_USE, Code::Blocks IDE>>.
+           <<CODEBLOCKS_USE, Code::Blocks IDE>>. This is open source software
+           under the GNU license. Intel Fortran and any other proprietary
+           software  can be installed individually provided there is valid
+           license.
 
 indexterm:[IaaS]
 indexterm:[AHA Workshop, cloud-based workstation]
 
-To connect the cloud-based AHA Workshop you need the *x2go* client software for
-the local physical computer that is used to access the cloud workstation. Once
-connected, it works just like a physical Linux computer preloaded with all the
-<<FORTRAN_GET, required software>>:
+To connect the cloud-based AHA Workshop you need the
+https://en.wikipedia.org/wiki/X2Go[X2Go] client software installed on the
+local physical computer that is used to access the cloud workstation. Once
+connected, it works just like a physical Linux computer preloaded with all
+the <<FORTRAN_GET, required software>>:
 
 image:doc/img/img_doc_cloud_workshop_linux.png[width=510,align="left"]
+
+There is even less difference from the look and feel of a physical system if
+the remote access X2Go client is working in the full screen mode.
 
 *X2Go Client* can be downloaded for Windows from the official website:
 http://wiki.x2go.org/doku.php/start .
 
-On the Ubuntu Linux installation is by command line:
+On the Ubuntu Linux installation is trivial from the command line:
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -5681,15 +5691,16 @@ or get a private secret ssh key (+xxx.pem+) from the administrator.
 
 indexterm:[ssh key, key]
 
-IMPORTANT: If you have got an ssh key file (.pem), it should be kept secret
+IMPORTANT: If you have got an ssh key file (.pem), it should be kept *secret*
            in a secure place not accessible for anyone else.  This key file
-           is the only method to get access to the cloud AHA Workshop workstation
-           (there is no password).
+           is the only method to get access to the cloud AHA Workshop
+           workstation (there is no password).
 
-The user name at the AHA Workshop workstation is *debian*. To connect, you
-will also be given an unique ip address. The session type for the Linux machine
-is always XFCE. Xfce is a simple and lightweight desktop environment. Check out
-its official web site: https://www.xfce.org/ .
+The *user name* at the AHA Workshop workstation is *debian*. To connect,
+you will also be given an unique *ip address*. The session type for the
+Linux machine is always XFCE. Xfce is a simple and lightweight desktop
+environment. Check out its official web site: https://www.xfce.org/ and the
+http://docs.xfce.org/xfce/getting-started[Getting Started] guide.
 
 A typical setup of the AHA Workshop is like this:
 
@@ -5700,7 +5711,9 @@ is also a useful tab for setting the *Shared folders*: you can automatically
 mount your local folder into the remote system. It is then easy to transfer
 data to and from the local to the cloud machine. Do not forget to tick
 "automatically mount" here. The mounted remote folders are under
-+/home/debian/media/disk/+.
++/home/debian/media/disk/+:
+
+image:doc/img/img_doc_cloud_workshop_shared.png[width=400,align="left"]
 
 It is also possible to connect the remote system via plain ssh:
 
@@ -5708,6 +5721,10 @@ It is also possible to connect the remote system via plain ssh:
 --------------------------------------------------------------------------------
 ssh debian@ip_address
 --------------------------------------------------------------------------------
+
+It is then recommended to use the
+https://www.gnu.org/software/screen/manual/screen.html[screen] (pre-installed)
+or https://tmux.github.io/[tmux] utilities for terminal session management.
 
 ////////////////////////////////////////////////////////////////////////////////
 // End of main text
