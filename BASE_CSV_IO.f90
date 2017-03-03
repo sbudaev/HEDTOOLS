@@ -2849,7 +2849,7 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, colnames, csv_file_status
   COLNAMES_WRT: if (write_colnames) then
     ! determine the maximum length of column names
     do i=LBndj,UBndj
-      len_col(i) = len_trim(colnames(i))
+      len_col(i) = len_trim(colnames_here(i))
     end do
     csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(maxval(len_col)+4))
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
@@ -2960,7 +2960,7 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, colnames, csv_file_status
   COLNAMES_WRT: if (write_colnames) then
     ! determine the maximum length of column names
     do i=LBndj,UBndj
-      len_col(i) = len_trim(colnames(i))
+      len_col(i) = len_trim(colnames_here(i))
     end do
     csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(maxval(len_col)+4))
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
@@ -3077,7 +3077,7 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, colnames, csv_file_status)
   COLNAMES_WRT: if (write_colnames) then
     ! determine the maximum length of column names
     do i=LBndj,UBndj
-      len_col(i) = len_trim(colnames(i))
+      len_col(i) = len_trim(colnames_here(i))
     end do
     csv_record=repeat(" ", (abs(UBndj-LBndj)+1)*(maxval(len_col)+4))
     call CSV_RECORD_APPEND_ARRAY_S(csv_record, colnames_output)
