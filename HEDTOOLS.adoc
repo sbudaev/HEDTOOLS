@@ -5438,12 +5438,10 @@ for building both on the command line and from the IDE.
 
 IMPORTANT: A Code::Blocks project template for the AHA Model is available
     in the +^/trunk/scripts+ folder on the Subversion repository:
-    https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp[Project.cbp],
-    https://svn.uib.no/aha-fortran/trunk/scripts/Project.bmarks[Project.bmarks],
-    https://svn.uib.no/aha-fortran/trunk/scripts/Project.layout[Project.layout].
-    All the three files should be copied to the project folder and then
-    tweaked as needed.
-
+    https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp[Project.cbp].
+    This file should be copied to the project folder. the svn command for
+    this is: +
+    +svn export https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp+
 
 Manual builds of HEDTOOLS
 -------------------------
@@ -5643,7 +5641,66 @@ working is just to to copy the font file into the current directory.
 
 image:doc/img/img_doc_pgplot_font.png[width=400,align="left"]
 
-End of the document.
+Using IaaS workstation: AHA_Workshop
+------------------------------------
+
+Linux-based Workstation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The University of Bergen provides a cloud-based Infrastructure as a Service
+(http://docs.uh-iaas.no/en/latest/[IaaS]). There is a virtual workstation for
+developing the AHA Model based on this cloud infrastructure. The "virtual
+developer 's computer is based on the Debian Linux OS and has all the
+essential software pre-installed and ready for use out of the box.
+
+IMPORTANT: The current system is based on GNU gfortran and
+           <<CODEBLOCKS_USE, Code::Blocks IDE>>.
+
+indexterm:[IaaS]
+indexterm:[AHA Workshop, cloud-based workstation]
+
+To connect the cloud-based AHA Workshop you need the *x2go* client software for
+the local physical computer that is used to access the cloud workstation. Once
+connected, it works just like a physical Linux computer preloaded with all the
+<<FORTRAN_GET, required software>>:
+
+image:doc/img/img_doc_cloud_workshop_linux.png[width=510,align="left"]
+
+*X2Go Client* can be downloaded for Windows from the official website:
+http://wiki.x2go.org/doku.php/start .
+
+The access is based on ssh *key file*. You can supply your own ssh public key
+or get a private secret ssh key (+xxx.pem+) from the administrator.
+
+indexterm:[ssh key, key]
+
+IMPORTANT: If you have got an ssh key file (.pem), it should be kept secret
+           in a secure place not accessible for anyone else.  This key file
+           is the only method to get access to the cloud AHA Workshop workstation
+           (there is no password).
+
+The user name at the AHA Workshop workstation is *debian*. To connect, you
+will also be given an unique ip address. The session type for the Linux machine
+is always XFCE. Xfce is a simple and lightweight desktop environment. Check out
+its official web site: https://www.xfce.org/ .
+
+A typical setup of the AHA Workshop is like this:
+
+image:doc/img/img_doc_cloud_workshop_login.png[width=400,align="left"]
+
+You may also like to set up the screen resolution in the *Settings* tab. There
+is also a useful tab for setting the *Shared folders*: you can automatically
+mount your local folder into the remote system. It is then easy to transfer
+data to and from the local to the cloud machine. Do not forget to tick
+"automatically mount" here. The mounted remote folders are under
++/home/debian/media/disk/+.
+
+It is also possible to connect the remote system via plain ssh:
+
+[source,bash]
+--------------------------------------------------------------------------------
+ssh debian@ip_address
+--------------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////////////
 // End of main text
