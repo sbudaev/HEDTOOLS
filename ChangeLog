@@ -1,5 +1,91 @@
+2017-03-04  sbu062
+
+	* template/Makefile: updated template from working file
+	* tools/Makefile: portability, use unix/windows platform utils via
+	  variables
+	* Makefile: portability, use unix/windows platform utils via
+	  variables
+	* HEDTOOLS.adoc: web ip address of ahaweb server
+
+2017-03-03  sbu062
+
+	* HEDTOOLS.adoc: minor fix
+	* MOD_AHA.adoc: deleted MOD_AHA.adoc as it is now fully in
+	  doxygen-generated part, not this general manual
+	* HEDTOOLS.adoc, doc/img/img_doc_cloud_workshop_shared.png: more
+	  info on cloud -based IaaS system.
+	* HEDTOOLS.adoc: minor fix
+	* HEDTOOLS.adoc: minor fix
+	* HEDTOOLS.adoc: added cloud-based workstation AHA_Workshop to doc
+	* doc/img/img_doc_cloud_workshop_linux.png,
+	  doc/img/img_doc_cloud_workshop_login.png: added screenshots for
+	  IaaS workstation
+	* BASE_CSV_IO.f90: fix uninitialised vars
+
+2017-03-02  sbu062
+
+	* tools/Makefile: added installation for user-built PGPLOT
+
+2017-03-01  sbu062
+
+	* HEDTOOLS.adoc: added template for cb
+
+2017-02-28  sbu062
+
+	* doc/img/aha_environment_diagr.eps,
+	  doc/img/aha_environment_diagr.odg,
+	  doc/img/aha_environment_diagr.svg: changed environmant class
+	  diagram; reduced big svg schemes to 75% for doxygen fit
+	* doc/img/aha_environment_diagr.eps,
+	  doc/img/aha_environment_diagr.svg, doc/img/aha_genome_01.eps,
+	  doc/img/aha_genome_01.svg, doc/img/aha_genome_02.eps,
+	  doc/img/aha_genome_02.svg, doc/img/aha_individual_class.eps,
+	  doc/img/aha_individual_class.odg,
+	  doc/img/aha_individual_class.svg: simplified individual class
+	  diagram; reduced big svg schemes to 75% for doxygen fit
+	* doc/img/aha_neurobio_appraisal.eps,
+	  doc/img/aha_neurobio_appraisal.svg,
+	  doc/img/aha_neurobio_motivation.eps,
+	  doc/img/aha_neurobio_motivation.odg,
+	  doc/img/aha_neurobio_motivation.svg,
+	  doc/img/aha_neurobio_percept.eps,
+	  doc/img/aha_neurobio_percept.svg: reduced big svg schemes to 75%
+	  for doxygen fit
+
+2017-02-27  sbu062
+
+	* doc/img/img_doxy_reprod_prob.eps,
+	  doc/img/img_doxy_reprod_prob.svg: test split as rendered poorly
+	  in svg
+	* doc/img/img_doxy_reprod_prob.eps,
+	  doc/img/img_doxy_reprod_prob.svg: deleted arrows that render
+	  poorly in svg
+	* doc/img/img_doxy_reprod_prob.eps,
+	  doc/img/img_doxy_reprod_prob.svg: added probability of
+	  reproduction delta mass interpolator
+
 2017-02-24  sbu062
 
+	* doc/img/img_doxy_visrange-005.eps,
+	  doc/img/img_doxy_visrange-005.svg,
+	  doc/img/img_doxy_visrange-250.eps,
+	  doc/img/img_doxy_visrange-250.svg,
+	  doc/img/img_doxy_visrange-500.eps,
+	  doc/img/img_doxy_visrange-500.svg: added visual range plots for
+	  doxygen
+	* doc/img/img_doxy_visrange-005.eps,
+	  doc/img/img_doxy_visrange-005.svg,
+	  doc/img/img_doxy_visrange-250.eps,
+	  doc/img/img_doxy_visrange-250.svg,
+	  doc/img/img_doxy_visrange-500.eps,
+	  doc/img/img_doxy_visrange-500.svg: added visual range plots
+	* doc/img/img_doxygen_capture_prob.eps,
+	  doc/img/img_doxygen_capture_prob.svg: reduced plot size to 75%
+	* doc/img/img_doxygen_capture_prob.eps,
+	  doc/img/img_doxygen_capture_prob.svg: added capture probability
+	  plot for doxygen
+	* ChangeLog: changelog updated
+	* HEDTOOLS.adoc: fix web name for new pdf
 	* doc/img/aha_environment_diagr.eps, doc/img/aha_genome_01.eps,
 	  doc/img/aha_genome_02.eps, doc/img/aha_individual_class.eps,
 	  doc/img/aha_neurobio_appraisal.eps,
