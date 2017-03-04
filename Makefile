@@ -47,11 +47,15 @@ ifdef ComSpec
 	IS_WINDOWS=1
 	WHICH_CMD=where
 	NULLDEV=":NULL"
+	RM ?= del
+	MV ?= move
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
 	WHICH_CMD=which
 	NULLDEV="/dev/null"
+	RM ?= rm -f
+	MV ?= mv -f
 endif
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
@@ -149,13 +153,13 @@ SF_DYLIBBLD = $(FC) -fast -autopar -depend=yes -pic $(SF_TRAPS) -G -o $(DIB)
 #-------------------------------------------------------------------------------
 # Set other build options depending on the specific compiler
 
-ifeq ($(FC),gfortran)
+ifeq ($(FC),$(GF_FC))
 	FFLAGS = $(GF_FFLAGS)
 	STLIBBLD =  $(GF_STLIBBLD)
 	DYLIBBLD =  $(GF_DYLIBBLD)
 endif
 
-ifeq ($(FC),ifort)
+ifeq ($(FC),$(IF_FC))
 	FFLAGS = $(IF_FFLAGS)
 	STLIBBLD = $(IF_STLIBBLD)
 	DYLIBBLD = $(IF_DYLIBBLD)
@@ -167,7 +171,7 @@ ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
 	DYLIBBLD = $(IF_DYLIBBLD_WINDOWS)
 endif
 
-ifeq ($(FC),f95)
+ifeq ($(FC),$(SF_FC))
 	FFLAGS = $(SF_FFLAGS)
 	STLIBBLD = $(SF_STLIBBLD)
 	DYLIBBLD = $(SF_DYLIBBLD)
@@ -350,16 +354,16 @@ doc: $(DOCFIL).$(DOCFMT)
 
 # Clean workspace completely - distribution state
 distclean: neat
-	-rm -f *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
+	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
 	$(MAKE) -C $(TOOLS_PATH) distclean
 
 # We don't clean .mod files as they are necessary for building with .so
 clean: neat
-	-rm -f *.o *.obj
+	-$(RM) *.o *.obj
 
 neat:
-	-rm -f $(TMPFILES) *conflict*  .syncthing*
+	-$(RM) $(TMPFILES) *conflict*  .syncthing*
 
 #-------------------------------------------------------------------------------
 .PHONY: help
