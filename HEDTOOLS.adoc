@@ -5732,10 +5732,10 @@ on the Terminal command line or using the simple Subversion client
 image:doc/img/img_doc_cloud_svn1.png[width=400,align="left"]
 
 The <<CODEBLOCKS_USE, Code::Block>> installation on the AHA Workshop machines
-has a simple Subversion integrated into the tools menu. This allows to run
+has a simple Subversion menu integrated into the tools menu. This allows to run
 basic elementary commands like `update`, `diff`, `commit` and `reverse`.
 
-image:doc/img/img_doc_cloud_cb_tools.png[width=400,align="left"]
+image:doc/img/img_doc_cloud_cb_tools.png[width=500,align="left"]
 
 For example, **commit** calls an entry field for the commit message:
 
