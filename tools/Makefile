@@ -137,7 +137,7 @@ endif
 #-------------------------------------------------------------------------------
 # Set other build options depending on the specific compiler
 
-ifeq ($(FC),gfortran)
+ifeq ($(FC),$(GF_FC))
 	FFLAGS = $(GF_FFLAGS)
 	STATIC = $(GF_STATIC)
 	TRAPS = $(GF_TRAPS)
@@ -145,14 +145,14 @@ ifeq ($(FC),gfortran)
 	CC=gcc
 endif
 
-ifeq ($(FC),ifort)
+ifeq ($(FC),$(IF_FC))
 	FFLAGS = $(IF_FFLAGS)
 	STATIC = $(IF_STATIC)
 	TRAPS = $(IF_TRAPS)
 	RCHECKS = $(IF_RCHECKS)
 endif
 
-ifeq ($(FC),f95)
+ifeq ($(FC),$(SF_FC))
 	FFLAGS = $(SF_FFLAGS)
 	STATIC = $(SF_STATIC)
 	TRAPS = $(SF_TRAPS)
@@ -177,11 +177,15 @@ ifdef ComSpec
 	NULLDEV=":NULL"
 	GF_FFLAGS += -L$(GRWIN_ROOT)/lib -Wl,--subsystem,console -mwindows
 	GRAPHLIB += -lGrWin
+	RM ?= del
+	MV ?= move
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
 	WHICH_CMD=which
 	NULLDEV="/dev/null"
+	RM ?= rm -fr
+	MV ?= mv -f
 endif
 
 # Check if certain required executables exist and are callable in path. This is
@@ -486,25 +490,25 @@ headtools: $(HTOOLOBJ)
 
 # Cleanup data files, quotes needed on Windows if file starts from blank
 cleandata:
-	rm -f -r HED*.txt ?HED*.txt HED18*.log behaviour gene*
-	rm -f -r *.csv
+	-$(RM) -f -r HED*.txt ?HED*.txt HED18*.log behaviour gene*
+	-$(RM) -f -r *.csv
 ifeq ($(IS_WINDOWS),1)
-	rm -f -r "?HED*.txt" "HED*.txt"
+	-$(RM) -f -r "?HED*.txt" "HED*.txt"
 endif
 
 # Return to default state
 distclean: clean
-	-rm -f $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
+	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
 					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
-	-rm -fr $(DOXYPATH)
+	-$(RM) $(DOXYPATH)
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
 clean: neat
-	-rm -f $(OBJ) $(OUT) $(MOD_SRC) *.csv
+	-$(RM) $(OBJ) $(OUT) $(MOD_SRC) *.csv
 
 # Cean temporary files and conflict that remain from syncthing synchronisation.
 neat:
-	-rm -f $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.*
+	-$(RM) $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.*
 
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
