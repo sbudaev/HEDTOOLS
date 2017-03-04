@@ -7,6 +7,9 @@
 # author Sergey Budaev <sbudaev@gmail.com>
 #-------------------------------------------------------------------------------
 
+# WARNING: This file is adapted for building graphic tools and is different
+#          than that in the template folder.
+
 # Supported Fortran compiler types
 GF_FC = gfortran
 IF_FC = ifort
@@ -16,11 +19,20 @@ SF_FC = f95
 FC = $(GF_FC)
 
 # Graphics library to use, for example:
-# PGPLOT:
+# PGPLOT, if installed by the system:
 #   -lpgplot
+# If PGPLOT is manually installed by the user into /usr/local/pgplot with
+#   X11 development libraries in /usr/lib/x86_64-linux-gnu (as in a
+#   Debian system), use this value for GRAPHLIB:
+# -L/usr/local/pgplot -L/usr/lib/x86_64-linux-gnu -lpgplot -lX11
+# --------------------------------------
 # PLPLOT:
 #   -lplplotf95d -lplplotf95cd -lplf95demolibd -I/usr/lib/fortran/modules/plplot
-GRAPHLIB =
+GRAPHLIB = -lpgplot
+
+# Root directory of the GrWin installation on Windows.
+# NOTE: can differ in 32 and 64 bit distributions!
+GRWIN_ROOT = C:/GrWin/MinGW_gfortran_x6
 
 # Root of the host name to run in HPC cluster / batch mode, not directly
 HOST_HPC_ROOT=fimm
@@ -56,7 +68,7 @@ DOXYPATH = $(shell grep ^OUTPUT_DIRECTORY Doxyfile | cut -d '=' -f 2)
 #*******************************************************************************
 # HEDTOOLS sources and module files:
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_STRINGS.
+#          depends on procedures from BASE_CSV_IO.
 
 HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
            BASE_RANDOM.f90 BASE_ERRORS.f90
@@ -100,9 +112,9 @@ IF_FFLAGS_WINDOWS = /Qsox /fast /Qparallel
 SF_STATIC = -Bstatic -dn
 SF_TRAPS = -ftrap=%none
 SF_RCHECKS = -C
-SF_FFLAGS = -O1 -depend=yes
+# SF_FFLAGS = -O1 -depend=yes
 # NOTE: optimisations exceeding -O1 might not work with all CSV_IO routines
-# SF_FFLAGS = -fast -autopar -depend=yes
+SF_FFLAGS = -fast -autopar -depend=yes
 # -fast = O5
 # -ftrap=common is a macro for -ftrap=invalid,overflow,division.
 # -ftrap=%all, %none, common
@@ -125,7 +137,7 @@ endif
 #-------------------------------------------------------------------------------
 # Set other build options depending on the specific compiler
 
-ifeq ($(FC),gfortran)
+ifeq ($(FC),$(GF_FC))
 	FFLAGS = $(GF_FFLAGS)
 	STATIC = $(GF_STATIC)
 	TRAPS = $(GF_TRAPS)
@@ -133,14 +145,14 @@ ifeq ($(FC),gfortran)
 	CC=gcc
 endif
 
-ifeq ($(FC),ifort)
+ifeq ($(FC),$(IF_FC))
 	FFLAGS = $(IF_FFLAGS)
 	STATIC = $(IF_STATIC)
 	TRAPS = $(IF_TRAPS)
 	RCHECKS = $(IF_RCHECKS)
 endif
 
-ifeq ($(FC),f95)
+ifeq ($(FC),$(SF_FC))
 	FFLAGS = $(SF_FFLAGS)
 	STATIC = $(SF_STATIC)
 	TRAPS = $(SF_TRAPS)
@@ -161,10 +173,28 @@ endif
 ifdef ComSpec
 	PLATFORM_TYPE=Windows
 	IS_WINDOWS=1
+	WHICH_CMD=where
+	NULLDEV=":NULL"
+	GF_FFLAGS += -L$(GRWIN_ROOT)/lib -Wl,--subsystem,console -mwindows
+	GRAPHLIB += -lGrWin
+	RM ?= del
+	MV ?= move
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
+	WHICH_CMD=which
+	NULLDEV="/dev/null"
+	RM ?= rm -fr
+	MV ?= mv -f
 endif
+
+# Check if certain required executables exist and are callable in path. This is
+# important on the Windows platform because such GNU command line utilities as
+# uname and zip are not installed by default.
+REQUIRED_EXECS = uname zip a2x ifort f95 gfortran
+K := $(foreach exec,$(REQUIRED_EXECS),\
+	$(if $(shell $(WHICH_CMD) $(exec) 2>$(NULLDEV)),check executables,\
+	$(warning ************ No $(exec) available in PATH ************)))
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
 # two ways: (1) build options are different, start with slash and often have Q
@@ -183,7 +213,7 @@ endif
 #*******************************************************************************
 # HEDTOOLS object files:
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_STRINGS.
+#          depends on procedures from BASE_CSV_IO.
 
 HTOOLOBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
            BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT)
@@ -366,6 +396,7 @@ docs: $(DOXYCFG)
 #   This mitght be different on different systems, depending on the
 #   installation options for Intel Parallel Studio and the Windows platform
 #   type (e.g. 32 vs. 64 bit)
+.PHONY: help
 help:
 	@echo ""
 	@echo ------------------------------------------------------------------------
@@ -404,14 +435,17 @@ help:
 	@echo ------------------------------------------------------------------------
 
 # shortcut to build for GNU Fortran
+.PHONY: gnu
 gnu:
 	@$(MAKE) -f $(THIS_FILE) FC=gfortran
 
 # shortcut to build for Intel Fortran
+.PHONY: intel
 intel:
 	@$(MAKE) -f $(THIS_FILE) FC=ifort
 
 # shortcut to build for Solaris Studio Fortran
+.PHONY: sun
 sun:
 	@$(MAKE) -f $(THIS_FILE) FC=f95
 
@@ -456,25 +490,25 @@ headtools: $(HTOOLOBJ)
 
 # Cleanup data files, quotes needed on Windows if file starts from blank
 cleandata:
-	rm -f -r HED*.txt ?HED*.txt HED18*.log behaviour gene*
-	rm -f -r *.csv
+	-$(RM) -f -r HED*.txt ?HED*.txt HED18*.log behaviour gene*
+	-$(RM) -f -r *.csv
 ifeq ($(IS_WINDOWS),1)
-	rm -f -r "?HED*.txt" "HED*.txt"
+	-$(RM) -f -r "?HED*.txt" "HED*.txt"
 endif
 
 # Return to default state
 distclean: clean
-	-rm -f $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
-					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj
-	-rm -fr $(DOXYPATH)
+	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
+					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
+	-$(RM) $(DOXYPATH)
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
 clean: neat
-	-rm -f $(OBJ) $(OUT) $(MOD_SRC) *.csv
+	-$(RM) $(OBJ) $(OUT) $(MOD_SRC) *.csv
 
 # Cean temporary files and conflict that remain from syncthing synchronisation.
 neat:
-	-rm -f $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.*
+	-$(RM) $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.*
 
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
