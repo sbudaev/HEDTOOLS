@@ -5818,7 +5818,12 @@ image:doc/img/img_doc_cloud_thunar_tools.png[width=480,align="left"]
 Then right clicking on a file will also bring a menu entry to check the
 difference between the local and SVN versions:
 
-image:doc/img/img_doc_cloud_thunar_diff.png[width=400,align="left"]
+image:doc/img/img_doc_cloud_thunar_diff.png[width=300,align="left"]
+
+Similarly, one can configure menu items for performing other actions, for
+example the +make+ and +make distclean+:
+
+image:doc/img/img_doc_cloud_thunar_tools2.png[width=370,align="left"]
 
 
 ////////////////////////////////////////////////////////////////////////////////
