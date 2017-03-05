@@ -5780,6 +5780,16 @@ For example, **commit** calls an entry field for the commit message:
 
 image:doc/img/img_doc_cloud_cb_tools_cimsg.png[width=400,align="left"]
 
+The Xfce Thunar file manager has a useful feature allowing to configure
+custom commands and actions on files and folders. For this click *Edit*, then
+*Configure custom actions*. For example, it is easy to make a right-click menu
+entry to check the differences between the working file and the SVN server
+version (i.e. do svn diff using a graphical program, e.g. *meld*).
+
+image:doc/img/img_doc_cloud_thunar_tools.png[width=480,align="left"]
+
+Then right clicking on a file will also bring a menu entry to check the
+difference between the local and SVN versions.
 
 ////////////////////////////////////////////////////////////////////////////////
 // End of main text
