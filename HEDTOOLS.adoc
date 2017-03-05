@@ -5714,7 +5714,8 @@ data to and from the local to the cloud machine. Do not forget to tick
 
 image:doc/img/img_doc_cloud_workshop_shared.png[width=400,align="left"]
 
-It is also possible to connect the remote system via plain ssh:
+It is also possible to connect the remote system via plain ssh (using the
+Terminal):
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -5725,13 +5726,51 @@ It is then recommended to use the
 https://www.gnu.org/software/screen/manual/screen.html[screen] (pre-installed)
 or https://tmux.github.io/[tmux] utilities for terminal session management.
 
-Getting the <<SVN_INTRO, Subversion>> branch is simple, it can be done either
-on the Terminal command line or using the simple Subversion client
-<<SVN_INTEGR, integrated>> into the default _Thunar_ file manager.
+
+Initial setup: Subversion and Project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Subversion command line client is installed here. To get your <<SVN_INTRO,
+Subversion>> files in the _Documents_ folder double-click _Home_ to open
+the file manager, then _Documents_, right click and select *Open Terminal
+here*. When the Terminal window opens issue this command:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn --username your_user_name checkout https://svn.uib.no/aha-fortran/_your_svn_path
+--------------------------------------------------------------------------------
+
+It will also ask your *svn password* on the first run, use option to save it.
+Good to save to avoid retyping the password on any svn operation.
+
+This can also be done using the SVN client <<SVN_INTEGR, integrated>> into
+the default _Thunar_ file manager: go to _Documents_, right-click and select
+*Create Folder,* enter the *name* of this new folder footnote:[Caveat: the
+built-in svn client does *checkout* into an *existing* folder.], it will then
+contain the code. Second, go into the new folder, right-click, select *SVN*
+then *Checkout*:
 
 image:doc/img/img_doc_cloud_svn1.png[width=400,align="left"]
 
-The <<CODEBLOCKS_USE, Code::Block>> installation on the AHA Workshop machines
+and finally put the SVN branch URL into the opening window.
+
+It is also easy to get an initial <<CODEBLOCKS_USE, Code::Blocks IDE>> *Project
+file*. Go to the working copy containing the code, open Terminal and issue:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn export https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp
+--------------------------------------------------------------------------------
+
+The same using the file manager: go to the working directory
+containing the model code, right-click and select *SVN* then
+*Export*, and then put the Code:Blocks *Project* file path
+(https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp).
+
+Notes on the tools
+^^^^^^^^^^^^^^^^^^
+
+The <<CODEBLOCKS_USE, Code::Blocks>> installation on the AHA Workshop machines
 has a simple Subversion menu integrated into the tools menu. This allows to run
 basic elementary commands like `update`, `diff`, `commit` and `reverse`.
 
