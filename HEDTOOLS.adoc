@@ -5784,6 +5784,13 @@ project*:
 
 image:doc/img/img_doc_cloud_cb_files.png[width=500,align="left"]
 
+To complete the Code:Blocks project configuration, set the correct *executable*
+name that is generated into the build options. Go to the menu *Project*, then
+*Project options* and switch to the *Build targets* tab:
+
+image:doc/img/img_doc_cloud_cb_tools_exec.png[width=400,align="left"]
+
+
 Notes on the tools
 ^^^^^^^^^^^^^^^^^^
 
