@@ -5666,6 +5666,9 @@ IMPORTANT: The current system is based on GNU gfortran and
 indexterm:[IaaS]
 indexterm:[AHA Workshop, cloud-based workstation]
 
+Connecting the cloud workstation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 To connect the cloud-based AHA Workshop you need the
 https://en.wikipedia.org/wiki/X2Go[X2Go] client software installed on the
 local physical computer that is used to access the cloud workstation. Once
