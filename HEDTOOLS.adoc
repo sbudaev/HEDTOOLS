@@ -5774,7 +5774,7 @@ Notes on the tools
 
 The <<CODEBLOCKS_USE, Code::Blocks>> installation on the AHA Workshop machines
 has a simple Subversion menu integrated into the tools menu. This allows to run
-basic elementary commands like `update`, `diff`, `commit` and `reverse`.
+basic elementary commands like `update`, `diff`, `commit` and `revert`.
 
 image:doc/img/img_doc_cloud_cb_tools.png[width=500,align="left"]
 
