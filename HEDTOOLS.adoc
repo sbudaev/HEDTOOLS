@@ -5776,6 +5776,14 @@ containing the model code, right-click and select *SVN* then
 *Export*, and then put the Code:Blocks *Project* file path
 (https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp).
 
+Then you can open this project file from the Code:Blocks IDE. The first thing
+to do here is (1) delete the fake Fortran file +some_file.f90+ from the
+Workspace pane and (2) Open valid Fortran source code files (can be easily
+done by drag and drop), right click the file tab and select *Add to active
+project*:
+
+image:doc/img/img_doc_cloud_cb_files.png[width=500,align="left"]
+
 Notes on the tools
 ^^^^^^^^^^^^^^^^^^
 
