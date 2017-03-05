@@ -112,7 +112,9 @@ and other tools is available from the Equation solution
 http://www.equation.com/servlet/equation.cmd?fa=fortran. There is also *Oracle
 Solaris Studio* combining Fortran compiler and an NetBeans-based IDE, freely
 available from http://www.oracle.com/technetwork/server-storage/solarisstudio,
-Linux and Solaris OSs only (no Windows or Mac).
+Linux and Solaris OSs only (no Windows or Mac). An extensive set of
+documentation for GNU gfortran can be found here:
+https://gcc.gnu.org/onlinedocs/gfortran
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,Intel Fortran]
 indexterm:[compiler,Oracle Fortran]
