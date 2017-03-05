@@ -5741,7 +5741,7 @@ indexterm:[svn, Subversion, AHA Workshop]
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn --username your_user_name checkout https://svn.uib.no/aha-fortran/_your_svn_path
+svn --username user_name checkout https://svn.uib.no/aha-fortran/_your_svn_path
 --------------------------------------------------------------------------------
 
 It will also ask your *svn password* on the first run, use option to save it.
