@@ -5692,8 +5692,8 @@ or get a private secret ssh key (+xxx.pem+) from the administrator.
 
 indexterm:[ssh key, key]
 
-IMPORTANT: If you have got an ssh key file (.pem), it should be kept *secret*
-           in a secure place not accessible for anyone else.  This key file
+IMPORTANT: If you have got an *ssh key file* (.pem), *it should be kept secret
+           in a secure place not accessible for anyone else.*  This key file
            is the only method to get access to the cloud AHA Workshop
            workstation (there is no password).
 
