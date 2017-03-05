@@ -1203,6 +1203,8 @@ Standard workflow
 
 Now you can work within this directory. This is the standard workflow.
 
+[[SVN_WORKFLOW]]
+
 * *update* code from the server: +svn up+
 * edit the code using any favoured tools, build, run model etc...
 * *diff* (+svn diff+) to check what are the differences between the local
@@ -5774,7 +5776,8 @@ Notes on the tools
 
 The <<CODEBLOCKS_USE, Code::Blocks>> installation on the AHA Workshop machines
 has a simple Subversion menu integrated into the tools menu. This allows to run
-basic elementary commands like `update`, `diff`, `commit` and `revert`.
+basic <<SVN_WORKFLOW, elementary commands>> like `update`, `diff`, `commit`
+and `revert`.
 
 image:doc/img/img_doc_cloud_cb_tools.png[width=500,align="left"]
 
