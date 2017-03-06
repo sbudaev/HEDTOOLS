@@ -5763,13 +5763,20 @@ image:doc/img/img_doc_cloud_svn1.png[width=400,align="left"]
 
 and finally put the SVN branch URL into the opening window.
 
-It is also easy to get an initial <<CODEBLOCKS_USE, Code::Blocks IDE>> *Project
-file*. Go to the working copy containing the code, open Terminal and issue:
+It is also easy to get an initial <<CODEBLOCKS_USE, Code::Blocks IDE>>
+*Project file* linked with the Makefile. Go to the working copy containing
+the code, open Terminal and issue:
 
 [source,bash]
 --------------------------------------------------------------------------------
 svn export https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp
 --------------------------------------------------------------------------------
+
+IMPORTANT: Configuring the project file is only necessary if the +Makefile+ is
+           used for building the project. The +Project.cbp+ file is configured
+           to use the existing +Makefile+ in the current directory. If the
+           existing +Makefile+ is not used, Code:Blocks project should be
+           configured from scratch, as needed.
 
 The same using the file manager: go to the working directory
 containing the model code, right-click and select *SVN* then
@@ -5785,8 +5792,9 @@ project*:
 image:doc/img/img_doc_cloud_cb_files.png[width=500,align="left"]
 
 To complete the Code:Blocks project configuration, set the correct *executable*
-name that is generated into the build options. Go to the menu *Project*, then
-*Project options* and switch to the *Build targets* tab:
+name that is generated into the build options. The executable name *should
+coincide* with that in the +Makefile+: variable +$(OUT)+. Go to the menu
+*Project*, then *Project options* and switch to the *Build targets* tab:
 
 image:doc/img/img_doc_cloud_cb_tools_exec.png[width=400,align="left"]
 
@@ -5832,7 +5840,8 @@ Note that a better command for pasting into the Make is this long:
 xfce4-terminal -x bash -c "time make ; echo BUILD DONE, ENTER to CLOSE ; read"
 --------------------------------------------------------------------------------
 
-It does not close the terminal upon completion.
+It does not close the terminal upon completion and also shows how long it took
+to do the build (the +time+ command is used for this).
 
 
 ////////////////////////////////////////////////////////////////////////////////
