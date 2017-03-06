@@ -180,7 +180,7 @@ endif
 # DEBUG turns off all optimisations and keeps debug symbols.
 ifdef DEBUG
 	GF_FFLAGS = -O0 -g -ffpe-trap=zero,invalid,overflow,underflow $(GF_RCHECKS)
-	IF_FFLAGS = -O0 -g -fpe0 $(IF_RCHECKS)
+	IF_FFLAGS = -O0 -g -debug all -fpe0 -traceback $(IF_RCHECKS)
 	IF_FFLAGS_WINDOWS = /c /Zi /Od /debug:full /fpe:0 /nopdbfile
 	#$(IF_RCHECKS_WINDOWS)
 	SF_FFLAGS = -O0 -g -ftrap=%all $(SF_RCHECKS)
