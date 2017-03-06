@@ -5764,8 +5764,8 @@ image:doc/img/img_doc_cloud_svn1.png[width=400,align="left"]
 and finally put the SVN branch URL into the opening window.
 
 *Code:Blocks.* It is also easy to get an initial <<CODEBLOCKS_USE, Code::Blocks
-IDE>> *Project file* linked with the +Makefile+. Go to the working copy
-containing the code, open Terminal and issue:
+IDE>> *Project file template* linked with the +Makefile+. Go to the working
+copy containing the code, open Terminal and issue:
 
 [source,bash]
 --------------------------------------------------------------------------------
