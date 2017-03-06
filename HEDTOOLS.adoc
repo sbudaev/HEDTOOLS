@@ -5708,7 +5708,7 @@ Linux machine is always XFCE. Xfce is a simple and lightweight desktop
 environment. Check out its official web site: https://www.xfce.org/ and the
 http://docs.xfce.org/xfce/getting-started[Getting Started] guide.
 
-A typical setup of the AHA Workshop is like this:
+A typical configuration of the AHA Workshop connection is like this:
 
 image:doc/img/img_doc_cloud_workshop_login.png[width=400,align="left"]
 
@@ -5734,10 +5734,10 @@ https://www.gnu.org/software/screen/manual/screen.html[screen] (pre-installed)
 or https://tmux.github.io/[tmux] utilities for terminal session management.
 
 
-Initial setup: Subversion and Project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Initial setup: Subversion and IDE Project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Subversion command line client is installed here. To get your <<SVN_INTRO,
+*Subversion* command line client is installed here. To get your <<SVN_INTRO,
 Subversion>> files in the _Documents_ folder double-click _Home_ to open
 the file manager, then _Documents_, right click and select *Open Terminal
 here*. When the Terminal window opens issue this command:
@@ -5763,9 +5763,9 @@ image:doc/img/img_doc_cloud_svn1.png[width=400,align="left"]
 
 and finally put the SVN branch URL into the opening window.
 
-It is also easy to get an initial <<CODEBLOCKS_USE, Code::Blocks IDE>>
-*Project file* linked with the Makefile. Go to the working copy containing
-the code, open Terminal and issue:
+*Code:Blocks.* It is also easy to get an initial <<CODEBLOCKS_USE, Code::Blocks
+IDE>> *Project file* linked with the +Makefile+. Go to the working copy
+containing the code, open Terminal and issue:
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -5793,7 +5793,8 @@ image:doc/img/img_doc_cloud_cb_files.png[width=500,align="left"]
 
 To complete the Code:Blocks project configuration, set the correct *executable*
 name that is generated into the build options. The executable name *should
-coincide* with that in the +Makefile+: variable +$(OUT)+. Go to the menu
+coincide* with that in the +Makefile+: variable +$(OUT)+ footnote:[It is
+defined as +OUT=executable_name.exe+ in the +Makefile+.]. Go to the menu
 *Project*, then *Project options* and switch to the *Build targets* tab:
 
 image:doc/img/img_doc_cloud_cb_tools_exec.png[width=400,align="left"]
