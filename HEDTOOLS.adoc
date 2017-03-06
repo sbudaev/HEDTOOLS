@@ -5825,6 +5825,15 @@ example the +make+ and +make distclean+:
 
 image:doc/img/img_doc_cloud_thunar_tools2.png[width=370,align="left"]
 
+Note that a better command for pasting into the Make is this long:
+
+[source,bash]
+--------------------------------------------------------------------------------
+xfce4-terminal -x bash -c "time make ; echo BUILD DONE, ENTER to CLOSE ; read"
+--------------------------------------------------------------------------------
+
+It does not close the terminal upon completion.
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // End of main text
