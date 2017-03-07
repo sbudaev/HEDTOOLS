@@ -5728,6 +5728,10 @@ a case one has to adjust the screen DPI: Go to *Settings* tab and set
 *Set display DPI* to *100* or a higher value if your display is in HD mode
 (default DPI is 96).
 
+It also makes sense to disable the remote sound support in the Settings tab as
+it could reduce CPU load on the local machine and avoid any sound errors.
+There is no sound on the AHA Workshop cloud PC anyway.
+
 In addition to the full graphical connection mode, it is also possible to
 connect the remote system via plain ssh (using the Terminal):
 
