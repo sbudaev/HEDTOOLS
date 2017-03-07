@@ -5700,7 +5700,8 @@ indexterm:[ssh key, key]
 IMPORTANT: If you have got an *ssh key file* (.pem), *it should be kept secret
            in a secure place not accessible for anyone else.*  This key file
            is the only method to get access to the cloud AHA Workshop
-           workstation (there is no password).
+           workstation (there is no password). The graphical connection session
+           is tunnelled via ssh and is secure.
 
 The *user name* at the AHA Workshop workstation is *debian*. To connect,
 you will also be given an unique *ip address*. The session type for the
@@ -5721,8 +5722,14 @@ data to and from the local to the cloud machine. Do not forget to tick
 
 image:doc/img/img_doc_cloud_workshop_shared.png[width=400,align="left"]
 
-It is also possible to connect the remote system via plain ssh (using the
-Terminal):
+If the local system has a high resolution display, the AHA Workshop virtual
+PC may have *huge fonts* (that looks as if everything just in zoom-in). In such
+a case one has to adjust the screen DPI: Go to *Settings* tab and set
+*Set display DPI* to *100* or a higher value if your display is in HD mode
+(default DPI is 96).
+
+In addition to the full graphical connection mode, it is also possible to
+connect the remote system via plain ssh (using the Terminal):
 
 [source,bash]
 --------------------------------------------------------------------------------
