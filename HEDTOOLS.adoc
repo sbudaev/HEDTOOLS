@@ -5810,7 +5810,6 @@ defined as +OUT=executable_name.exe+ in the +Makefile+.]. Go to the menu
 
 image:doc/img/img_doc_cloud_cb_tools_exec.png[width=400,align="left"]
 
-
 Notes on the tools
 ^^^^^^^^^^^^^^^^^^
 
@@ -5854,6 +5853,44 @@ xfce4-terminal -x bash -c "time make ; echo BUILD DONE, ENTER to CLOSE ; read"
 
 It does not close the terminal upon completion and also shows how long it took
 to do the build (the +time+ command is used for this).
+
+System maintenance
+^^^^^^^^^^^^^^^^^^
+
+The cloud PC should be kept in secure condition by regular software
+updates. This is done easily from the terminal using this command:
+
+[source,bash]
+--------------------------------------------------------------------------------
+sudo apt-get update && sudo apt-get upgrade
+--------------------------------------------------------------------------------
+
+The Linux package system might sometimes keep downloaded updates and dependency
+components that no longer required. To clean these dependencies issue this
+command in the terminal:
+
+[source,bash]
+--------------------------------------------------------------------------------
+sudo apt-get clean && sudo apt-get autoremove
+--------------------------------------------------------------------------------
+
+Installing additional software can be done using the synaptic GUI system:
+
+[source,bash]
+--------------------------------------------------------------------------------
+sudo synaptic
+--------------------------------------------------------------------------------
+
+Or on the command line from the terminal. For example, to install the R base
+package issue this:
+
+[source,bash]
+--------------------------------------------------------------------------------
+sudo apt-get install r-base
+--------------------------------------------------------------------------------
+
+For more details check the Debian Linux documentation site:
+https://www.debian.org/doc/user-manuals
 
 
 ////////////////////////////////////////////////////////////////////////////////
