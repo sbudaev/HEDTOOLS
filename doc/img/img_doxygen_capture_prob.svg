@@ -33,9 +33,9 @@
      inkscape:window-height="847"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="1.3183985"
-     inkscape:cx="299.31413"
-     inkscape:cy="236.69074"
+     inkscape:zoom="1.2477972"
+     inkscape:cx="348.26894"
+     inkscape:cy="252.04416"
      inkscape:window-x="0"
      inkscape:window-y="29"
      inkscape:window-maximized="1"
@@ -1997,19 +1997,15 @@
          inkscape:connector-curvature="0" /><text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;line-height:140.625px;font-family:Sans;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5.625px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="3500.0364"
+         x="3049.2419"
          y="5082.2637"
          id="text6593"
          transform="matrix(0,1,1,0,0,0)"><tspan
            sodipodi:role="line"
            id="tspan6591"
-           x="3500.0364"
+           x="3049.2419"
            y="5082.2637"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:120px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:5.625px">Visual range (<tspan
-   style="font-style:italic;stroke-width:5.625px"
-   id="tspan5002">R</tspan><tspan
-   style="font-style:italic;font-size:90px;baseline-shift:sub;stroke-width:5.625px"
-   id="tspan4992">v</tspan>), cm</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:120px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:5.625px">Distance to food item, cm</tspan></text>
 <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;line-height:140.625px;font-family:Sans;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5.625px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
