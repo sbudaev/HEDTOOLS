@@ -101,6 +101,9 @@ On Windows they can be installed manually from their official web sites. On
 Mac use http://brew.sh[homebrew] to install many of the utils. Below are
 some details on the Windows software.
 
+The UiB IaaS-based <<UIB_CLOUD_DESKTOP, virtual cloud desktop>> includes all
+the essential software components for working with and developing the model.
+
 ** *Fortran Compiler* (Mandatory)
 [[FORTRAN_GET]]
 
@@ -5650,6 +5653,8 @@ Using IaaS workstation: AHA_Workshop
 
 Linux-based Workstation
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+[[UIB_CLOUD_DESKTOP]]
 
 The University of Bergen provides a cloud-based Infrastructure as a Service
 (http://docs.uh-iaas.no/en/latest/[IaaS]) system based on
