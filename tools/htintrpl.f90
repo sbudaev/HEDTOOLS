@@ -144,6 +144,9 @@ end if
 ! (= DEV_PNG then).
 output_save = DEV_PS
 
+! Initialise output file to default empty.
+output_file = ""
+
 ! Output file name in PGPLOT library always has the same name. EXT_xx should
 ! agree with the default file output device that is set above by output_save.
 ! For example, output_save = DEV_PS leads to ... EXT_PS
@@ -296,6 +299,15 @@ end do
 
 min_xx = minval(xx)
 max_xx = maxval(xx)
+
+! If there is no interpolation array provided on the command line, allocate
+! a single-value array slightly outside of the grid xx array range, so it
+! won't show on the plot.
+if (.not. allocated(xx_interpolate)) then
+  allocate(xx_interpolate(1)); allocate(yy_interpolate(1))
+  xx_interpolate = max_xx + 0.1 * max_xx
+  print *, "WARNING: no interpolation array provided. Grid plot only."
+end if
 
 plotstep = (max_xx - min_xx) / real(n_steps)
 
