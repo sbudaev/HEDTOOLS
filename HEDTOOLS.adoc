@@ -1372,6 +1372,14 @@ Merge can be conducted in both ways (to and from different branches to keep
 them in sync). This is the main component in branch maintenance. And it is quite
 trivial. Make a branch -- merge changes from trunk or another branch.
 
+To *undo* a merge that has not yet been committed to the server, e.g. if it
+was done by mistake in a wrong directory, do this:
+
+[source,bash]
+--------------------------------------------------------------------------------
+svn revert -R .
+--------------------------------------------------------------------------------
+
 indexterm:[Subversion,merge]
 
 IMPORTANT: Only the simple *merge* is enough in most cases, e.g. merge from
