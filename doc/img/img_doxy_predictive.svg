@@ -1,372 +1,1541 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
-<svg width="57cm" height="67cm" viewBox="-220 -441 1122 1323" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <g>
-    <rect style="fill: #e5e5e5" x="-20" y="120" width="280" height="480"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-20" y="120" width="280" height="480"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120" y="363.9">
-      <tspan x="120" y="363.9"></tspan>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="17.026604cm"
+   height="20.091103cm"
+   viewBox="-220 -441 335.15525 396.72431"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r"
+   sodipodi:docname="img_doxy_predictive.svg">
+  <metadata
+     id="metadata580">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs578" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1143"
+     id="namedview576"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.2796931"
+     inkscape:cx="301.65243"
+     inkscape:cy="355.94473"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <g
+     id="g4"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#e5e5e5"
+       x="-20"
+       y="120"
+       width="280"
+       height="480"
+       id="rect6" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="-20"
+       y="120"
+       width="280"
+       height="480"
+       id="rect8" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="120"
+       y="363.89999"
+       id="text10">
+      <tspan
+         x="120"
+         y="363.89999"
+         id="tspan12" />
     </text>
   </g>
-  <g>
-    <rect style="fill: #e5e5e5" x="300" y="120" width="280" height="480"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="300" y="120" width="280" height="480"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="363.9">
-      <tspan x="440" y="363.9"></tspan>
+  <g
+     id="g14"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#e5e5e5"
+       x="300"
+       y="120"
+       width="280"
+       height="480"
+       id="rect16" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="300"
+       y="120"
+       width="280"
+       height="480"
+       id="rect18" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="363.89999"
+       id="text20">
+      <tspan
+         x="440"
+         y="363.89999"
+         id="tspan22" />
     </text>
   </g>
-  <g>
-    <rect style="fill: #e5e5e5" x="620" y="120" width="280" height="480"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="620" y="120" width="280" height="480"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="363.9">
-      <tspan x="760" y="363.9"></tspan>
+  <g
+     id="g24"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#e5e5e5"
+       x="620"
+       y="120"
+       width="280"
+       height="480"
+       id="rect26" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="620"
+       y="120"
+       width="280"
+       height="480"
+       id="rect28" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="760"
+       y="363.89999"
+       id="text30">
+      <tspan
+         x="760"
+         y="363.89999"
+         id="tspan32" />
     </text>
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="193.637" y="275.988">
-    <tspan x="193.637" y="275.988"></tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-200.67258"
+     y="-186.85696"
+     id="text34">
+    <tspan
+       x="-200.67258"
+       y="-186.85696"
+       id="tspan36" />
   </text>
-  <g>
-    <rect style="fill: #e5e5e5" x="-20" y="-20" width="280" height="100"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-20" y="-20" width="280" height="100"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="8" y1="-20" x2="8" y2="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="232" y1="-20" x2="232" y2="80"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120" y="34">
-      <tspan x="120" y="34">do_this()</tspan>
+  <g
+     id="g38"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#e5e5e5"
+       x="-20"
+       y="-20"
+       width="280"
+       height="100"
+       id="rect40" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="-20"
+       y="-20"
+       width="280"
+       height="100"
+       id="rect42" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="8"
+       y1="-20"
+       x2="8"
+       y2="80"
+       id="line44" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="232"
+       y1="-20"
+       x2="232"
+       y2="80"
+       id="line46" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="120"
+       y="34"
+       id="text48">
+      <tspan
+         x="120"
+         y="34"
+         id="tspan50">do_this()</tspan>
     </text>
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="0" y="140" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="0" y="140" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="24" y1="140" x2="24" y2="220"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="216" y1="140" x2="216" y2="220"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120" y="184">
-      <tspan x="120" y="184">motivation_components()</tspan>
+  <g
+     id="g52"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="0"
+       y="140"
+       width="240"
+       height="80"
+       id="rect54" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="0"
+       y="140"
+       width="240"
+       height="80"
+       id="rect56" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="24"
+       y1="140"
+       x2="24"
+       y2="220"
+       id="line58" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="216"
+       y1="140"
+       x2="216"
+       y2="220"
+       id="line60" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="120"
+       y="184"
+       id="text62">
+      <tspan
+         x="120"
+         y="184"
+         id="tspan64">motivation_components()</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="120" y1="80.9949" x2="120" y2="129.834"/>
-    <polygon style="fill: #000000" points="120,137.334 115,127.334 120,129.834 125,127.334 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,137.334 115,127.334 120,129.834 125,127.334 "/>
+  <g
+     id="g66"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="120"
+       y1="80.994904"
+       x2="120"
+       y2="129.834"
+       id="line68" />
+    <polygon
+       style="fill:#000000"
+       points="120,137.334 115,127.334 120,129.834 125,127.334 "
+       id="polygon70" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,137.334 115,127.334 120,129.834 125,127.334 "
+       id="polygon72" />
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="0" y="320" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="0" y="320" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="24" y1="320" x2="24" y2="400"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="216" y1="320" x2="216" y2="400"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120" y="356">
-      <tspan x="120" y="356">calculate motivation </tspan>
-      <tspan x="120" y="372">values</tspan>
+  <g
+     id="g74"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="0"
+       y="320"
+       width="240"
+       height="80"
+       id="rect76" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="0"
+       y="320"
+       width="240"
+       height="80"
+       id="rect78" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="24"
+       y1="320"
+       x2="24"
+       y2="400"
+       id="line80" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="216"
+       y1="320"
+       x2="216"
+       y2="400"
+       id="line82" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="120"
+       y="356"
+       id="text84">
+      <tspan
+         x="120"
+         y="356"
+         id="tspan86">calculate motivation</tspan>
+      <tspan
+         x="120"
+         y="372"
+         id="tspan88">values</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="120" y1="220" x2="120" y2="249.256"/>
-    <polygon style="fill: #000000" points="120,256.756 115,246.756 120,249.256 125,246.756 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,256.756 115,246.756 120,249.256 125,246.756 "/>
+  <g
+     id="g90"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="120"
+       y1="220"
+       x2="120"
+       y2="249.256"
+       id="line92" />
+    <polygon
+       style="fill:#000000"
+       points="120,256.756 115,246.756 120,249.256 125,246.756 "
+       id="polygon94" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,256.756 115,246.756 120,249.256 125,246.756 "
+       id="polygon96" />
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="0" y="500" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="0" y="500" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="24" y1="500" x2="24" y2="580"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="216" y1="500" x2="216" y2="580"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120" y="536">
-      <tspan x="120" y="536">Calculate expected</tspan>
-      <tspan x="120" y="552">arousal</tspan>
+  <g
+     id="g98"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="0"
+       y="500"
+       width="240"
+       height="80"
+       id="rect100" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="0"
+       y="500"
+       width="240"
+       height="80"
+       id="rect102" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="24"
+       y1="500"
+       x2="24"
+       y2="580"
+       id="line104" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="216"
+       y1="500"
+       x2="216"
+       y2="580"
+       id="line106" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="120"
+       y="536"
+       id="text108">
+      <tspan
+         x="120"
+         y="536"
+         id="tspan110">Calculate expected</tspan>
+      <tspan
+         x="120"
+         y="552"
+         id="tspan112">arousal</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="120" y1="400" x2="120" y2="410.264"/>
-    <polygon style="fill: #000000" points="120,417.764 115,407.764 120,410.264 125,407.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,417.764 115,407.764 120,410.264 125,407.764 "/>
+  <g
+     id="g114"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="120"
+       y1="400"
+       x2="120"
+       y2="410.26401"
+       id="line116" />
+    <polygon
+       style="fill:#000000"
+       points="120,417.764 115,407.764 120,410.264 125,407.764 "
+       id="polygon118" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,417.764 115,407.764 120,410.264 125,407.764 "
+       id="polygon120" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-220" y="-10">
-    <tspan x="-220" y="-10">Perform behaviour in a </tspan>
-    <tspan x="-220" y="6">"subjective" space without </tspan>
-    <tspan x="-220" y="22">affecting the state of the </tspan>
-    <tspan x="-220" y="38">actor agent or the </tspan>
-    <tspan x="-220" y="54">environment, obtain "fake" </tspan>
-    <tspan x="-220" y="70">perceptions</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-221.85675"
+     y="-311.69998"
+     id="text122">
+    <tspan
+       x="-221.85675"
+       y="-311.69998"
+       id="tspan124">Perform behaviour in a</tspan>
+    <tspan
+       x="-221.85675"
+       y="-306.89999"
+       id="tspan126">&quot;subjective&quot; space without</tspan>
+    <tspan
+       x="-221.85675"
+       y="-302.09998"
+       id="tspan128">affecting the state of the</tspan>
+    <tspan
+       x="-221.85675"
+       y="-297.29999"
+       id="tspan130">actor agent or the</tspan>
+    <tspan
+       x="-221.85675"
+       y="-292.5"
+       id="tspan132">environment, obtain &quot;fake&quot;</tspan>
+    <tspan
+       x="-221.85675"
+       y="-287.69998"
+       id="tspan134">perceptions</tspan>
   </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-220" y="160">
-    <tspan x="-220" y="160">Call gamma2gene peocedure </tspan>
-    <tspan x="-220" y="176">with "fake" perceptions to </tspan>
-    <tspan x="-220" y="192">get internal representations </tspan>
-    <tspan x="-220" y="208">for motivational values</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-221.85675"
+     y="-260.69998"
+     id="text136">
+    <tspan
+       x="-221.85675"
+       y="-260.69998"
+       id="tspan138">Call gamma2gene peocedure</tspan>
+    <tspan
+       x="-221.85675"
+       y="-255.89999"
+       id="tspan140">with &quot;fake&quot; perceptions to</tspan>
+    <tspan
+       x="-221.85675"
+       y="-251.09999"
+       id="tspan142">get internal representations</tspan>
+    <tspan
+       x="-221.85675"
+       y="-246.3"
+       id="tspan144">for motivational values</tspan>
   </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-220" y="340">
-    <tspan x="-220" y="340">Calculate primary and final </tspan>
-    <tspan x="-220" y="356">motivations</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-221.85675"
+     y="-206.69998"
+     id="text146">
+    <tspan
+       x="-221.85675"
+       y="-206.69998"
+       id="tspan148">Calculate primary and final</tspan>
+    <tspan
+       x="-221.85675"
+       y="-201.89999"
+       id="tspan150">motivations</tspan>
   </text>
-  <g>
-    <polygon style="fill: #ffffff" points="320,-440 560,-440 440,-240 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="320,-440 560,-440 440,-240 "/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="-394">
-      <tspan x="440" y="-394">perception</tspan>
-      <tspan x="440" y="-378">components</tspan>
+  <g
+     id="g152"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#ffffff"
+       points="560,-440 440,-240 320,-440 "
+       id="polygon154" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="560,-440 440,-240 320,-440 "
+       id="polygon156" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="-394"
+       id="text158">
+      <tspan
+         x="440"
+         y="-394"
+         id="tspan160">perception</tspan>
+      <tspan
+         x="440"
+         y="-378"
+         id="tspan162">components</tspan>
     </text>
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="513.636" y="275.988">
-    <tspan x="513.636" y="275.988"></tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="119.32642"
+     y="-186.85696"
+     id="text164">
+    <tspan
+       x="119.32642"
+       y="-186.85696"
+       id="tspan166" />
   </text>
-  <g>
-    <rect style="fill: #e5e5e5" x="300" y="-20" width="280" height="100"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="300" y="-20" width="280" height="100"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="328" y1="-20" x2="328" y2="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="552" y1="-20" x2="552" y2="80"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="34">
-      <tspan x="440" y="34">do_this()</tspan>
+  <g
+     id="g168"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#e5e5e5"
+       x="300"
+       y="-20"
+       width="280"
+       height="100"
+       id="rect170" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="300"
+       y="-20"
+       width="280"
+       height="100"
+       id="rect172" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="328"
+       y1="-20"
+       x2="328"
+       y2="80"
+       id="line174" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="552"
+       y1="-20"
+       x2="552"
+       y2="80"
+       id="line176" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="34"
+       id="text178">
+      <tspan
+         x="440"
+         y="34"
+         id="tspan180">do_this()</tspan>
     </text>
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="320" y="140" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="320" y="140" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="344" y1="140" x2="344" y2="220"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="536" y1="140" x2="536" y2="220"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="184">
-      <tspan x="440" y="184">motivation_components()</tspan>
+  <g
+     id="g182"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="320"
+       y="140"
+       width="240"
+       height="80"
+       id="rect184" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="320"
+       y="140"
+       width="240"
+       height="80"
+       id="rect186" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="344"
+       y1="140"
+       x2="344"
+       y2="220"
+       id="line188" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="536"
+       y1="140"
+       x2="536"
+       y2="220"
+       id="line190" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="184"
+       id="text192">
+      <tspan
+         x="440"
+         y="184"
+         id="tspan194">motivation_components()</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="440" y1="80.9949" x2="440" y2="129.834"/>
-    <polygon style="fill: #000000" points="440,137.334 435,127.334 440,129.834 445,127.334 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,137.334 435,127.334 440,129.834 445,127.334 "/>
+  <g
+     id="g196"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="440"
+       y1="80.994904"
+       x2="440"
+       y2="129.834"
+       id="line198" />
+    <polygon
+       style="fill:#000000"
+       points="440,137.334 435,127.334 440,129.834 445,127.334 "
+       id="polygon200" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,137.334 435,127.334 440,129.834 445,127.334 "
+       id="polygon202" />
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="320" y="320" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="320" y="320" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="344" y1="320" x2="344" y2="400"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="536" y1="320" x2="536" y2="400"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="356">
-      <tspan x="440" y="356">calculate motivation </tspan>
-      <tspan x="440" y="372">values</tspan>
+  <g
+     id="g204"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="320"
+       y="320"
+       width="240"
+       height="80"
+       id="rect206" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="320"
+       y="320"
+       width="240"
+       height="80"
+       id="rect208" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="344"
+       y1="320"
+       x2="344"
+       y2="400"
+       id="line210" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="536"
+       y1="320"
+       x2="536"
+       y2="400"
+       id="line212" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="356"
+       id="text214">
+      <tspan
+         x="440"
+         y="356"
+         id="tspan216">calculate motivation</tspan>
+      <tspan
+         x="440"
+         y="372"
+         id="tspan218">values</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="440" y1="220" x2="440" y2="249.256"/>
-    <polygon style="fill: #000000" points="440,256.756 435,246.756 440,249.256 445,246.756 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,256.756 435,246.756 440,249.256 445,246.756 "/>
+  <g
+     id="g220"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="440"
+       y1="220"
+       x2="440"
+       y2="249.256"
+       id="line222" />
+    <polygon
+       style="fill:#000000"
+       points="440,256.756 435,246.756 440,249.256 445,246.756 "
+       id="polygon224" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,256.756 435,246.756 440,249.256 445,246.756 "
+       id="polygon226" />
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="320" y="500" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="320" y="500" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="344" y1="500" x2="344" y2="580"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="536" y1="500" x2="536" y2="580"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="536">
-      <tspan x="440" y="536">Calculate expected</tspan>
-      <tspan x="440" y="552">arousal</tspan>
+  <g
+     id="g228"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="320"
+       y="500"
+       width="240"
+       height="80"
+       id="rect230" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="320"
+       y="500"
+       width="240"
+       height="80"
+       id="rect232" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="344"
+       y1="500"
+       x2="344"
+       y2="580"
+       id="line234" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="536"
+       y1="500"
+       x2="536"
+       y2="580"
+       id="line236" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="536"
+       id="text238">
+      <tspan
+         x="440"
+         y="536"
+         id="tspan240">Calculate expected</tspan>
+      <tspan
+         x="440"
+         y="552"
+         id="tspan242">arousal</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="440" y1="400" x2="440" y2="410.264"/>
-    <polygon style="fill: #000000" points="440,417.764 435,407.764 440,410.264 445,407.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,417.764 435,407.764 440,410.264 445,407.764 "/>
+  <g
+     id="g244"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="440"
+       y1="400"
+       x2="440"
+       y2="410.26401"
+       id="line246" />
+    <polygon
+       style="fill:#000000"
+       points="440,417.764 435,407.764 440,410.264 445,407.764 "
+       id="polygon248" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,417.764 435,407.764 440,410.264 445,407.764 "
+       id="polygon250" />
   </g>
-  <g>
-    <ellipse style="fill: #ffffff" cx="120" cy="280" rx="20" ry="20"/>
-    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="120" cy="280" rx="20" ry="20"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="105.858" y1="265.858" x2="134.142" y2="294.142"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="105.858" y1="294.142" x2="134.142" y2="265.858"/>
+  <g
+     id="g252"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <circle
+       style="fill:#ffffff"
+       cx="120"
+       cy="280"
+       id="ellipse254"
+       r="20" />
+    <circle
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       cx="120"
+       cy="280"
+       id="ellipse256"
+       r="20" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="105.858"
+       y1="265.858"
+       x2="134.142"
+       y2="294.142"
+       id="line258" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="105.858"
+       y1="294.142"
+       x2="134.142"
+       y2="265.858"
+       id="line260" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="833.636" y="275.988">
-    <tspan x="833.636" y="275.988"></tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="439.32642"
+     y="-186.85696"
+     id="text262">
+    <tspan
+       x="439.32642"
+       y="-186.85696"
+       id="tspan264" />
   </text>
-  <g>
-    <rect style="fill: #e5e5e5" x="620" y="-20" width="280" height="100"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="620" y="-20" width="280" height="100"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="648" y1="-20" x2="648" y2="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="872" y1="-20" x2="872" y2="80"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="34">
-      <tspan x="760" y="34">do_this()</tspan>
+  <g
+     id="g266"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#e5e5e5"
+       x="620"
+       y="-20"
+       width="280"
+       height="100"
+       id="rect268" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="620"
+       y="-20"
+       width="280"
+       height="100"
+       id="rect270" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="648"
+       y1="-20"
+       x2="648"
+       y2="80"
+       id="line272" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="872"
+       y1="-20"
+       x2="872"
+       y2="80"
+       id="line274" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="760"
+       y="34"
+       id="text276">
+      <tspan
+         x="760"
+         y="34"
+         id="tspan278">do_this()</tspan>
     </text>
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="640" y="140" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="640" y="140" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="664" y1="140" x2="664" y2="220"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="856" y1="140" x2="856" y2="220"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="184">
-      <tspan x="760" y="184">motivation_components()</tspan>
+  <g
+     id="g280"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="640"
+       y="140"
+       width="240"
+       height="80"
+       id="rect282" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="640"
+       y="140"
+       width="240"
+       height="80"
+       id="rect284" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="664"
+       y1="140"
+       x2="664"
+       y2="220"
+       id="line286" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="856"
+       y1="140"
+       x2="856"
+       y2="220"
+       id="line288" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="760"
+       y="184"
+       id="text290">
+      <tspan
+         x="760"
+         y="184"
+         id="tspan292">motivation_components()</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="760" y1="80.9949" x2="760" y2="129.834"/>
-    <polygon style="fill: #000000" points="760,137.334 755,127.334 760,129.834 765,127.334 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,137.334 755,127.334 760,129.834 765,127.334 "/>
+  <g
+     id="g294"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="760"
+       y1="80.994904"
+       x2="760"
+       y2="129.834"
+       id="line296" />
+    <polygon
+       style="fill:#000000"
+       points="760,137.334 755,127.334 760,129.834 765,127.334 "
+       id="polygon298" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,137.334 755,127.334 760,129.834 765,127.334 "
+       id="polygon300" />
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="640" y="320" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="640" y="320" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="664" y1="320" x2="664" y2="400"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="856" y1="320" x2="856" y2="400"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="356">
-      <tspan x="760" y="356">calculate motivation </tspan>
-      <tspan x="760" y="372">values</tspan>
+  <g
+     id="g302"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="640"
+       y="320"
+       width="240"
+       height="80"
+       id="rect304" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="640"
+       y="320"
+       width="240"
+       height="80"
+       id="rect306" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="664"
+       y1="320"
+       x2="664"
+       y2="400"
+       id="line308" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="856"
+       y1="320"
+       x2="856"
+       y2="400"
+       id="line310" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="760"
+       y="356"
+       id="text312">
+      <tspan
+         x="760"
+         y="356"
+         id="tspan314">calculate motivation</tspan>
+      <tspan
+         x="760"
+         y="372"
+         id="tspan316">values</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="760" y1="220" x2="760" y2="249.256"/>
-    <polygon style="fill: #000000" points="760,256.756 755,246.756 760,249.256 765,246.756 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,256.756 755,246.756 760,249.256 765,246.756 "/>
+  <g
+     id="g318"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="760"
+       y1="220"
+       x2="760"
+       y2="249.256"
+       id="line320" />
+    <polygon
+       style="fill:#000000"
+       points="760,256.756 755,246.756 760,249.256 765,246.756 "
+       id="polygon322" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,256.756 755,246.756 760,249.256 765,246.756 "
+       id="polygon324" />
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="640" y="500" width="240" height="80"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="640" y="500" width="240" height="80"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="664" y1="500" x2="664" y2="580"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="856" y1="500" x2="856" y2="580"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="536">
-      <tspan x="760" y="536">Calculate expected</tspan>
-      <tspan x="760" y="552">arousal</tspan>
+  <g
+     id="g326"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <rect
+       style="fill:#ffffff"
+       x="640"
+       y="500"
+       width="240"
+       height="80"
+       id="rect328" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="640"
+       y="500"
+       width="240"
+       height="80"
+       id="rect330" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="664"
+       y1="500"
+       x2="664"
+       y2="580"
+       id="line332" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="856"
+       y1="500"
+       x2="856"
+       y2="580"
+       id="line334" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="760"
+       y="536"
+       id="text336">
+      <tspan
+         x="760"
+         y="536"
+         id="tspan338">Calculate expected</tspan>
+      <tspan
+         x="760"
+         y="552"
+         id="tspan340">arousal</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="760" y1="400" x2="760" y2="410.264"/>
-    <polygon style="fill: #000000" points="760,417.764 755,407.764 760,410.264 765,407.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,417.764 755,407.764 760,410.264 765,407.764 "/>
+  <g
+     id="g342"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="760"
+       y1="400"
+       x2="760"
+       y2="410.26401"
+       id="line344" />
+    <polygon
+       style="fill:#000000"
+       points="760,417.764 755,407.764 760,410.264 765,407.764 "
+       id="polygon346" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,417.764 755,407.764 760,410.264 765,407.764 "
+       id="polygon348" />
   </g>
-  <g>
-    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 386.058 -328.013 C 206.058,-288.013 320,180 249.736,180"/>
-    <polygon style="fill: #000000" points="242.236,180 252.236,175 249.736,180 252.236,185 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="242.236,180 252.236,175 249.736,180 252.236,185 "/>
+  <g
+     id="g350"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="M 386.058,-328.013 C 206.058,-288.013 320,180 249.736,180"
+       id="path352"
+       inkscape:connector-curvature="0" />
+    <polygon
+       style="fill:#000000"
+       points="242.236,180 252.236,175 249.736,180 252.236,185 "
+       id="polygon354" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="242.236,180 252.236,175 249.736,180 252.236,185 "
+       id="polygon356" />
   </g>
-  <g>
-    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 493.187 -326.703 C 653.187,-286.703 540,180 630.264,180"/>
-    <polygon style="fill: #000000" points="637.764,180 627.764,185 630.264,180 627.764,175 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="637.764,180 627.764,185 630.264,180 627.764,175 "/>
+  <g
+     id="g358"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="M 493.187,-326.703 C 653.187,-286.703 540,180 630.264,180"
+       id="path360"
+       inkscape:connector-curvature="0" />
+    <polygon
+       style="fill:#000000"
+       points="637.764,180 627.764,185 630.264,180 627.764,175 "
+       id="polygon362" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="637.764,180 627.764,185 630.264,180 627.764,175 "
+       id="polygon364" />
   </g>
-  <g>
-    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 385.415 -329.083 C 285.415,-309.083 260,160 310.764,176.921"/>
-    <polygon style="fill: #000000" points="317.879,179.293 306.811,180.874 310.764,176.921 309.973,171.387 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="317.879,179.293 306.811,180.874 310.764,176.921 309.973,171.387 "/>
+  <g
+     id="g366"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="M 385.415,-329.083 C 285.415,-309.083 260,160 310.764,176.921"
+       id="path368"
+       inkscape:connector-curvature="0" />
+    <polygon
+       style="fill:#000000"
+       points="317.879,179.293 306.811,180.874 310.764,176.921 309.973,171.387 "
+       id="polygon370" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="317.879,179.293 306.811,180.874 310.764,176.921 309.973,171.387 "
+       id="polygon372" />
   </g>
-  <g>
-    <polygon style="fill: #ffffff" points="440,630 500,680 440,730 380,680 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,630 500,680 440,730 380,680 "/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="683.9">
-      <tspan x="440" y="683.9">min</tspan>
+  <g
+     id="g374"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#ffffff"
+       points="440,630 500,680 440,730 380,680 "
+       id="polygon376" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,630 500,680 440,730 380,680 "
+       id="polygon378" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="683.90002"
+       id="text380">
+      <tspan
+         x="440"
+         y="683.90002"
+         id="tspan382">min</tspan>
     </text>
   </g>
-  <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,580 120,620 410,620 410,645.264 "/>
-    <polygon style="fill: #000000" points="410,652.764 405,642.764 410,645.264 415,642.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="410,652.764 405,642.764 410,645.264 415,642.764 "/>
+  <g
+     id="g384"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,580 120,620 410,620 410,645.264 "
+       id="polyline386" />
+    <polygon
+       style="fill:#000000"
+       points="410,652.764 405,642.764 410,645.264 415,642.764 "
+       id="polygon388" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="410,652.764 405,642.764 410,645.264 415,642.764 "
+       id="polygon390" />
   </g>
-  <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,580 760,620 470,620 470,645.264 "/>
-    <polygon style="fill: #000000" points="470,652.764 465,642.764 470,645.264 475,642.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="470,652.764 465,642.764 470,645.264 475,642.764 "/>
+  <g
+     id="g392"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,580 760,620 470,620 470,645.264 "
+       id="polyline394" />
+    <polygon
+       style="fill:#000000"
+       points="470,652.764 465,642.764 470,645.264 475,642.764 "
+       id="polygon396" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="470,652.764 465,642.764 470,645.264 475,642.764 "
+       id="polygon398" />
   </g>
-  <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,580 440,620.264 "/>
-    <polygon style="fill: #000000" points="440,627.764 435,617.764 440,620.264 445,617.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,627.764 435,617.764 440,620.264 445,617.764 "/>
+  <g
+     id="g400"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,580 440,620.264 "
+       id="polyline402" />
+    <polygon
+       style="fill:#000000"
+       points="440,627.764 435,617.764 440,620.264 445,617.764 "
+       id="polygon404" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,627.764 435,617.764 440,620.264 445,617.764 "
+       id="polygon406" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="180" y="680">
-    <tspan x="180" y="680">Select behaviour with the </tspan>
-    <tspan x="180" y="696">minimum expected arousal</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-101.85674"
+     y="-104.69998"
+     id="text408">
+    <tspan
+       x="-101.85674"
+       y="-104.69998"
+       id="tspan410">Select behaviour with the</tspan>
+    <tspan
+       x="-101.85674"
+       y="-99.899994"
+       id="tspan412">minimum expected arousal</tspan>
   </text>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="120" y1="300.945" x2="120" y2="310.264"/>
-    <polygon style="fill: #000000" points="120,317.764 115,307.764 120,310.264 125,307.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,317.764 115,307.764 120,310.264 125,307.764 "/>
+  <g
+     id="g414"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="120"
+       y1="300.94501"
+       x2="120"
+       y2="310.26401"
+       id="line416" />
+    <polygon
+       style="fill:#000000"
+       points="120,317.764 115,307.764 120,310.264 125,307.764 "
+       id="polygon418" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,317.764 115,307.764 120,310.264 125,307.764 "
+       id="polygon420" />
   </g>
-  <g>
-    <ellipse style="fill: #ffffff" cx="440" cy="280" rx="20" ry="20"/>
-    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="440" cy="280" rx="20" ry="20"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="425.858" y1="265.858" x2="454.142" y2="294.142"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="425.858" y1="294.142" x2="454.142" y2="265.858"/>
+  <g
+     id="g422"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <circle
+       style="fill:#ffffff"
+       cx="440"
+       cy="280"
+       id="ellipse424"
+       r="20" />
+    <circle
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       cx="440"
+       cy="280"
+       id="ellipse426"
+       r="20" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="425.858"
+       y1="265.858"
+       x2="454.142"
+       y2="294.142"
+       id="line428" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="425.858"
+       y1="294.142"
+       x2="454.142"
+       y2="265.858"
+       id="line430" />
   </g>
-  <g>
-    <ellipse style="fill: #ffffff" cx="760" cy="280" rx="20" ry="20"/>
-    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="760" cy="280" rx="20" ry="20"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="745.858" y1="265.858" x2="774.142" y2="294.142"/>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="745.858" y1="294.142" x2="774.142" y2="265.858"/>
+  <g
+     id="g432"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <circle
+       style="fill:#ffffff"
+       cx="760"
+       cy="280"
+       id="ellipse434"
+       r="20" />
+    <circle
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       cx="760"
+       cy="280"
+       id="ellipse436"
+       r="20" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="745.85797"
+       y1="265.858"
+       x2="774.14203"
+       y2="294.142"
+       id="line438" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="745.85797"
+       y1="294.142"
+       x2="774.14203"
+       y2="265.858"
+       id="line440" />
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="440" y1="300" x2="440" y2="310.264"/>
-    <polygon style="fill: #000000" points="440,317.764 435,307.764 440,310.264 445,307.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,317.764 435,307.764 440,310.264 445,307.764 "/>
+  <g
+     id="g442"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="440"
+       y1="300"
+       x2="440"
+       y2="310.26401"
+       id="line444" />
+    <polygon
+       style="fill:#000000"
+       points="440,317.764 435,307.764 440,310.264 445,307.764 "
+       id="polygon446" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,317.764 435,307.764 440,310.264 445,307.764 "
+       id="polygon448" />
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="760" y1="300" x2="760" y2="310.264"/>
-    <polygon style="fill: #000000" points="760,317.764 755,307.764 760,310.264 765,307.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,317.764 755,307.764 760,310.264 765,307.764 "/>
+  <g
+     id="g450"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="760"
+       y1="300"
+       x2="760"
+       y2="310.26401"
+       id="line452" />
+    <polygon
+       style="fill:#000000"
+       points="760,317.764 755,307.764 760,310.264 765,307.764 "
+       id="polygon454" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,317.764 755,307.764 760,310.264 765,307.764 "
+       id="polygon456" />
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="440" y1="730" x2="440" y2="749.271"/>
-    <polygon style="fill: #000000" points="440,756.771 435,746.771 440,749.271 445,746.771 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,756.771 435,746.771 440,749.271 445,746.771 "/>
+  <g
+     id="g458"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="440"
+       y1="730"
+       x2="440"
+       y2="749.271"
+       id="line460" />
+    <polygon
+       style="fill:#000000"
+       points="440,756.771 435,746.771 440,749.271 445,746.771 "
+       id="polygon462" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,756.771 435,746.771 440,749.271 445,746.771 "
+       id="polygon464" />
   </g>
-  <g>
-    <polygon style="fill: #ffffff" points="120,420 160,450 120,480 80,450 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,420 160,450 120,480 80,450 "/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120" y="453.9">
-      <tspan x="120" y="453.9"></tspan>
+  <g
+     id="g466"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#ffffff"
+       points="120,420 160,450 120,480 80,450 "
+       id="polygon468" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,420 160,450 120,480 80,450 "
+       id="polygon470" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="120"
+       y="453.89999"
+       id="text472">
+      <tspan
+         x="120"
+         y="453.89999"
+         id="tspan474" />
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="120" y1="480" x2="120" y2="490.264"/>
-    <polygon style="fill: #000000" points="120,497.764 115,487.764 120,490.264 125,487.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="120,497.764 115,487.764 120,490.264 125,487.764 "/>
+  <g
+     id="g476"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="120"
+       y1="480"
+       x2="120"
+       y2="490.26401"
+       id="line478" />
+    <polygon
+       style="fill:#000000"
+       points="120,497.764 115,487.764 120,490.264 125,487.764 "
+       id="polygon480" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="120,497.764 115,487.764 120,490.264 125,487.764 "
+       id="polygon482" />
   </g>
-  <g>
-    <polygon style="fill: #ffffff" points="440,420 480,450 440,480 400,450 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,420 480,450 440,480 400,450 "/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="440" y="453.9">
-      <tspan x="440" y="453.9"></tspan>
+  <g
+     id="g484"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#ffffff"
+       points="440,420 480,450 440,480 400,450 "
+       id="polygon486" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,420 480,450 440,480 400,450 "
+       id="polygon488" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="440"
+       y="453.89999"
+       id="text490">
+      <tspan
+         x="440"
+         y="453.89999"
+         id="tspan492" />
     </text>
   </g>
-  <g>
-    <polygon style="fill: #ffffff" points="760,420 800,450 760,480 720,450 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,420 800,450 760,480 720,450 "/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="453.9">
-      <tspan x="760" y="453.9"></tspan>
+  <g
+     id="g494"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#ffffff"
+       points="760,420 800,450 760,480 720,450 "
+       id="polygon496" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,420 800,450 760,480 720,450 "
+       id="polygon498" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+       x="760"
+       y="453.89999"
+       id="text500">
+      <tspan
+         x="760"
+         y="453.89999"
+         id="tspan502" />
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="440" y1="480" x2="440" y2="490.264"/>
-    <polygon style="fill: #000000" points="440,497.764 435,487.764 440,490.264 445,487.764 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="440,497.764 435,487.764 440,490.264 445,487.764 "/>
+  <g
+     id="g504"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="440"
+       y1="480"
+       x2="440"
+       y2="490.26401"
+       id="line506" />
+    <polygon
+       style="fill:#000000"
+       points="440,497.764 435,487.764 440,490.264 445,487.764 "
+       id="polygon508" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="440,497.764 435,487.764 440,490.264 445,487.764 "
+       id="polygon510" />
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="760" y1="480" x2="760" y2="489.365"/>
-    <polygon style="fill: #000000" points="760,496.865 755,486.865 760,489.365 765,486.865 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="760,496.865 755,486.865 760,489.365 765,486.865 "/>
+  <g
+     id="g512"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="760"
+       y1="480"
+       x2="760"
+       y2="489.36499"
+       id="line514" />
+    <polygon
+       style="fill:#000000"
+       points="760,496.865 755,486.865 760,489.365 765,486.865 "
+       id="polygon516" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="760,496.865 755,486.865 760,489.365 765,486.865 "
+       id="polygon518" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-200" y="460">
-    <tspan x="-200" y="460">Obtain expected GOS ...</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-215.85675"
+     y="-170.69998"
+     id="text520">
+    <tspan
+       x="-215.85675"
+       y="-170.69998"
+       id="tspan522">Obtain expected GOS ...</tspan>
   </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-200" y="540">
-    <tspan x="-200" y="540">... and GOS arousal level</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-215.85675"
+     y="-146.69998"
+     id="text524">
+    <tspan
+       x="-215.85675"
+       y="-146.69998"
+       id="tspan526">... and GOS arousal level</tspan>
   </text>
-  <g>
-    <polygon style="fill: #e5e5e5" points="410,760 410,820 380,820 440,880 500,820 470,820 470,760 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="410,760 410,820 380,820 440,880 500,820 470,820 470,760 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="410,760 410,820 380,820 440,880 500,820 470,820 470,760 "/>
+  <g
+     id="g528"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#e5e5e5"
+       points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
+       id="polygon530" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
+       id="polygon532" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
+       id="polygon534" />
   </g>
-  <g>
-    <polygon style="fill: #e5e5e5" points="90,-180 90,-120 60,-120 120,-60 180,-120 150,-120 150,-180 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="90,-180 90,-120 60,-120 120,-60 180,-120 150,-120 150,-180 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="90,-180 90,-120 60,-120 120,-60 180,-120 150,-120 150,-180 "/>
+  <g
+     id="g536"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#e5e5e5"
+       points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
+       id="polygon538" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
+       id="polygon540" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
+       id="polygon542" />
   </g>
-  <g>
-    <polygon style="fill: #e5e5e5" points="730,-180 730,-120 700,-120 760,-60 820,-120 790,-120 790,-180 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="730,-180 730,-120 700,-120 760,-60 820,-120 790,-120 790,-180 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="730,-180 730,-120 700,-120 760,-60 820,-120 790,-120 790,-180 "/>
+  <g
+     id="g544"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#e5e5e5"
+       points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
+       id="polygon546" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
+       id="polygon548" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
+       id="polygon550" />
   </g>
-  <g>
-    <polygon style="fill: #e5e5e5" points="410,-180 410,-120 380,-120 440,-60 500,-120 470,-120 470,-180 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="410,-180 410,-120 380,-120 440,-60 500,-120 470,-120 470,-180 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="410,-180 410,-120 380,-120 440,-60 500,-120 470,-120 470,-180 "/>
+  <g
+     id="g552"
+     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+    <polygon
+       style="fill:#e5e5e5"
+       points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
+       id="polygon554" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
+       id="polygon556" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
+       id="polygon558" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="80" y="-200">
-    <tspan x="80" y="-200">Behaviour A</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-131.85675"
+     y="-368.69998"
+     id="text560">
+    <tspan
+       x="-131.85675"
+       y="-368.69998"
+       id="tspan562">Behaviour A</tspan>
   </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="400" y="-200">
-    <tspan x="400" y="-200">Behaviour B</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-35.856747"
+     y="-368.69998"
+     id="text564">
+    <tspan
+       x="-35.856747"
+       y="-368.69998"
+       id="tspan566">Behaviour B</tspan>
   </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="720" y="-200">
-    <tspan x="720" y="-200">Behaviour C</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="60.143253"
+     y="-368.69998"
+     id="text568">
+    <tspan
+       x="60.143253"
+       y="-368.69998"
+       id="tspan570">Behaviour C</tspan>
   </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="250" y="790">
-    <tspan x="250" y="790">Execute behaviour</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-80.856743"
+     y="-71.699982"
+     id="text572">
+    <tspan
+       x="-80.856743"
+       y="-71.699982"
+       id="tspan574">Execute behaviour</tspan>
   </text>
 </svg>
