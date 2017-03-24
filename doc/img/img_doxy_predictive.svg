@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="17.026604cm"
-   height="20.091103cm"
-   viewBox="-220 -441 335.15525 396.72431"
+   width="22.702139cm"
+   height="26.788136cm"
+   viewBox="-220 -441 446.87368 528.96572"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r"
@@ -45,16 +45,16 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:zoom="1.2796931"
-     inkscape:cx="301.65243"
-     inkscape:cy="355.94473"
+     inkscape:zoom="0.95976984"
+     inkscape:cx="402.20325"
+     inkscape:cy="474.59295"
      inkscape:window-x="0"
      inkscape:window-y="33"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <g
      id="g4"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#e5e5e5"
        x="-20"
@@ -83,7 +83,7 @@
   </g>
   <g
      id="g14"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#e5e5e5"
        x="300"
@@ -112,7 +112,7 @@
   </g>
   <g
      id="g24"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#e5e5e5"
        x="620"
@@ -142,17 +142,17 @@
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-200.67258"
-     y="-186.85696"
+     x="-144.63725"
+     y="-120.73625"
      id="text34">
     <tspan
-       x="-200.67258"
-       y="-186.85696"
+       x="-144.63725"
+       y="-120.73625"
        id="tspan36" />
   </text>
   <g
      id="g38"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#e5e5e5"
        x="-20"
@@ -195,7 +195,7 @@
   </g>
   <g
      id="g52"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="0"
@@ -238,7 +238,7 @@
   </g>
   <g
      id="g66"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -257,7 +257,7 @@
   </g>
   <g
      id="g74"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="0"
@@ -304,7 +304,7 @@
   </g>
   <g
      id="g90"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -323,7 +323,7 @@
   </g>
   <g
      id="g98"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="0"
@@ -370,7 +370,7 @@
   </g>
   <g
      id="g114"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -389,76 +389,76 @@
   </g>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-221.85675"
-     y="-311.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-221.88612"
+     y="-268.60001"
      id="text122">
     <tspan
-       x="-221.85675"
-       y="-311.69998"
+       x="-221.88612"
+       y="-268.60001"
        id="tspan124">Perform behaviour in a</tspan>
     <tspan
-       x="-221.85675"
-       y="-306.89999"
+       x="-221.88612"
+       y="-262.20001"
        id="tspan126">&quot;subjective&quot; space without</tspan>
     <tspan
-       x="-221.85675"
-       y="-302.09998"
+       x="-221.88612"
+       y="-255.79999"
        id="tspan128">affecting the state of the</tspan>
     <tspan
-       x="-221.85675"
-       y="-297.29999"
+       x="-221.88612"
+       y="-249.39999"
        id="tspan130">actor agent or the</tspan>
     <tspan
-       x="-221.85675"
-       y="-292.5"
+       x="-221.88612"
+       y="-243"
        id="tspan132">environment, obtain &quot;fake&quot;</tspan>
     <tspan
-       x="-221.85675"
-       y="-287.69998"
+       x="-221.88612"
+       y="-236.59999"
        id="tspan134">perceptions</tspan>
   </text>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-221.85675"
-     y="-260.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-221.88612"
+     y="-200.59999"
      id="text136">
     <tspan
-       x="-221.85675"
-       y="-260.69998"
+       x="-221.88612"
+       y="-200.59999"
        id="tspan138">Call gamma2gene peocedure</tspan>
     <tspan
-       x="-221.85675"
-       y="-255.89999"
+       x="-221.88612"
+       y="-194.2"
        id="tspan140">with &quot;fake&quot; perceptions to</tspan>
     <tspan
-       x="-221.85675"
-       y="-251.09999"
+       x="-221.88612"
+       y="-187.79999"
        id="tspan142">get internal representations</tspan>
     <tspan
-       x="-221.85675"
-       y="-246.3"
+       x="-221.88612"
+       y="-181.39999"
        id="tspan144">for motivational values</tspan>
   </text>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-221.85675"
-     y="-206.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-221.88612"
+     y="-128.59999"
      id="text146">
     <tspan
-       x="-221.85675"
-       y="-206.69998"
+       x="-221.88612"
+       y="-128.59999"
        id="tspan148">Calculate primary and final</tspan>
     <tspan
-       x="-221.85675"
-       y="-201.89999"
+       x="-221.88612"
+       y="-122.2"
        id="tspan150">motivations</tspan>
   </text>
   <g
      id="g152"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#ffffff"
        points="560,-440 440,-240 320,-440 "
@@ -486,17 +486,17 @@
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="119.32642"
-     y="-186.85696"
+     x="175.36174"
+     y="-120.73625"
      id="text164">
     <tspan
-       x="119.32642"
-       y="-186.85696"
+       x="175.36174"
+       y="-120.73625"
        id="tspan166" />
   </text>
   <g
      id="g168"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#e5e5e5"
        x="300"
@@ -539,7 +539,7 @@
   </g>
   <g
      id="g182"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="320"
@@ -582,7 +582,7 @@
   </g>
   <g
      id="g196"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -601,7 +601,7 @@
   </g>
   <g
      id="g204"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="320"
@@ -648,7 +648,7 @@
   </g>
   <g
      id="g220"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -667,7 +667,7 @@
   </g>
   <g
      id="g228"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="320"
@@ -714,7 +714,7 @@
   </g>
   <g
      id="g244"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -733,7 +733,7 @@
   </g>
   <g
      id="g252"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <circle
        style="fill:#ffffff"
        cx="120"
@@ -764,17 +764,17 @@
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="439.32642"
-     y="-186.85696"
+     x="495.36176"
+     y="-120.73625"
      id="text262">
     <tspan
-       x="439.32642"
-       y="-186.85696"
+       x="495.36176"
+       y="-120.73625"
        id="tspan264" />
   </text>
   <g
      id="g266"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#e5e5e5"
        x="620"
@@ -817,7 +817,7 @@
   </g>
   <g
      id="g280"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="640"
@@ -860,7 +860,7 @@
   </g>
   <g
      id="g294"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -879,7 +879,7 @@
   </g>
   <g
      id="g302"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="640"
@@ -926,7 +926,7 @@
   </g>
   <g
      id="g318"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -945,7 +945,7 @@
   </g>
   <g
      id="g326"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <rect
        style="fill:#ffffff"
        x="640"
@@ -992,7 +992,7 @@
   </g>
   <g
      id="g342"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -1011,7 +1011,7 @@
   </g>
   <g
      id="g350"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <path
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        d="M 386.058,-328.013 C 206.058,-288.013 320,180 249.736,180"
@@ -1028,7 +1028,7 @@
   </g>
   <g
      id="g358"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <path
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        d="M 493.187,-326.703 C 653.187,-286.703 540,180 630.264,180"
@@ -1045,7 +1045,7 @@
   </g>
   <g
      id="g366"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <path
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        d="M 385.415,-329.083 C 285.415,-309.083 260,160 310.764,176.921"
@@ -1062,7 +1062,7 @@
   </g>
   <g
      id="g374"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#ffffff"
        points="440,630 500,680 440,730 380,680 "
@@ -1085,7 +1085,7 @@
   </g>
   <g
      id="g384"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polyline
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        points="120,580 120,620 410,620 410,645.264 "
@@ -1101,7 +1101,7 @@
   </g>
   <g
      id="g392"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polyline
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        points="760,580 760,620 470,620 470,645.264 "
@@ -1117,7 +1117,7 @@
   </g>
   <g
      id="g400"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polyline
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        points="440,580 440,620.264 "
@@ -1133,22 +1133,22 @@
   </g>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-101.85674"
-     y="-104.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-61.88612"
+     y="7.4000077"
      id="text408">
     <tspan
-       x="-101.85674"
-       y="-104.69998"
+       x="-61.88612"
+       y="7.4000077"
        id="tspan410">Select behaviour with the</tspan>
     <tspan
-       x="-101.85674"
-       y="-99.899994"
+       x="-61.88612"
+       y="13.800001"
        id="tspan412">minimum expected arousal</tspan>
   </text>
   <g
      id="g414"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -1167,7 +1167,7 @@
   </g>
   <g
      id="g422"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <circle
        style="fill:#ffffff"
        cx="440"
@@ -1197,7 +1197,7 @@
   </g>
   <g
      id="g432"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <circle
        style="fill:#ffffff"
        cx="760"
@@ -1227,7 +1227,7 @@
   </g>
   <g
      id="g442"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -1246,7 +1246,7 @@
   </g>
   <g
      id="g450"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -1265,7 +1265,7 @@
   </g>
   <g
      id="g458"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -1284,7 +1284,7 @@
   </g>
   <g
      id="g466"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#ffffff"
        points="120,420 160,450 120,480 80,450 "
@@ -1307,7 +1307,7 @@
   </g>
   <g
      id="g476"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -1326,7 +1326,7 @@
   </g>
   <g
      id="g484"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#ffffff"
        points="440,420 480,450 440,480 400,450 "
@@ -1349,7 +1349,7 @@
   </g>
   <g
      id="g494"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#ffffff"
        points="760,420 800,450 760,480 720,450 "
@@ -1372,7 +1372,7 @@
   </g>
   <g
      id="g504"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -1391,7 +1391,7 @@
   </g>
   <g
      id="g512"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -1410,29 +1410,29 @@
   </g>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-215.85675"
-     y="-170.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-213.88612"
+     y="-80.599991"
      id="text520">
     <tspan
-       x="-215.85675"
-       y="-170.69998"
+       x="-213.88612"
+       y="-80.599991"
        id="tspan522">Obtain expected GOS ...</tspan>
   </text>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-215.85675"
-     y="-146.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-213.88612"
+     y="-48.599991"
      id="text524">
     <tspan
-       x="-215.85675"
-       y="-146.69998"
+       x="-213.88612"
+       y="-48.599991"
        id="tspan526">... and GOS arousal level</tspan>
   </text>
   <g
      id="g528"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#e5e5e5"
        points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
@@ -1448,7 +1448,7 @@
   </g>
   <g
      id="g536"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#e5e5e5"
        points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
@@ -1464,7 +1464,7 @@
   </g>
   <g
      id="g544"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#e5e5e5"
        points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
@@ -1480,7 +1480,7 @@
   </g>
   <g
      id="g552"
-     transform="matrix(0.3,0,0,0.3,-155.85675,-308.7)">
+     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
     <polygon
        style="fill:#e5e5e5"
        points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
@@ -1496,46 +1496,46 @@
   </g>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-131.85675"
-     y="-368.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-101.88612"
+     y="-344.60001"
      id="text560">
     <tspan
-       x="-131.85675"
-       y="-368.69998"
+       x="-101.88612"
+       y="-344.60001"
        id="tspan562">Behaviour A</tspan>
   </text>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-35.856747"
-     y="-368.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="26.11388"
+     y="-344.60001"
      id="text564">
     <tspan
-       x="-35.856747"
-       y="-368.69998"
+       x="26.11388"
+       y="-344.60001"
        id="tspan566">Behaviour B</tspan>
   </text>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="60.143253"
-     y="-368.69998"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="154.11388"
+     y="-344.60001"
      id="text568">
     <tspan
-       x="60.143253"
-       y="-368.69998"
+       x="154.11388"
+       y="-344.60001"
        id="tspan570">Behaviour C</tspan>
   </text>
   <text
      font-size="12.8"
-     style="font-style:normal;font-weight:normal;font-size:3.84000015px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-80.856743"
-     y="-71.699982"
+     style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="-33.88612"
+     y="51.400009"
      id="text572">
     <tspan
-       x="-80.856743"
-       y="-71.699982"
+       x="-33.88612"
+       y="51.400009"
        id="tspan574">Execute behaviour</tspan>
   </text>
 </svg>
