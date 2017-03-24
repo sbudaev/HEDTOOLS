@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="22.702139cm"
-   height="26.788136cm"
-   viewBox="-220 -441 446.87368 528.96572"
+   width="23.502136cm"
+   height="27.588133cm"
+   viewBox="-220 -441 462.621 544.76269"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r"
@@ -41,20 +41,20 @@
      inkscape:window-height="1143"
      id="namedview576"
      showgrid="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
+     fit-margin-top="0.4"
+     fit-margin-left="0.4"
+     fit-margin-right="0.4"
+     fit-margin-bottom="0.4"
      inkscape:zoom="0.95976984"
-     inkscape:cx="402.20325"
-     inkscape:cy="474.59295"
+     inkscape:cx="213.48268"
+     inkscape:cy="528.35887"
      inkscape:window-x="0"
      inkscape:window-y="33"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <g
      id="g4"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#e5e5e5"
        x="-20"
@@ -83,7 +83,7 @@
   </g>
   <g
      id="g14"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#e5e5e5"
        x="300"
@@ -112,7 +112,7 @@
   </g>
   <g
      id="g24"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#e5e5e5"
        x="620"
@@ -142,17 +142,17 @@
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-144.63725"
-     y="-120.73625"
+     x="-135.71179"
+     y="-112.83775"
      id="text34">
     <tspan
-       x="-144.63725"
-       y="-120.73625"
+       x="-135.71179"
+       y="-112.83775"
        id="tspan36" />
   </text>
   <g
      id="g38"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#e5e5e5"
        x="-20"
@@ -195,7 +195,7 @@
   </g>
   <g
      id="g52"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="0"
@@ -238,7 +238,7 @@
   </g>
   <g
      id="g66"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -248,16 +248,16 @@
        id="line68" />
     <polygon
        style="fill:#000000"
-       points="120,137.334 115,127.334 120,129.834 125,127.334 "
+       points="120,129.834 125,127.334 120,137.334 115,127.334 "
        id="polygon70" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="120,137.334 115,127.334 120,129.834 125,127.334 "
+       points="120,129.834 125,127.334 120,137.334 115,127.334 "
        id="polygon72" />
   </g>
   <g
      id="g74"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="0"
@@ -304,7 +304,7 @@
   </g>
   <g
      id="g90"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -314,16 +314,16 @@
        id="line92" />
     <polygon
        style="fill:#000000"
-       points="120,256.756 115,246.756 120,249.256 125,246.756 "
+       points="120,249.256 125,246.756 120,256.756 115,246.756 "
        id="polygon94" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="120,256.756 115,246.756 120,249.256 125,246.756 "
+       points="120,249.256 125,246.756 120,256.756 115,246.756 "
        id="polygon96" />
   </g>
   <g
      id="g98"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="0"
@@ -370,7 +370,7 @@
   </g>
   <g
      id="g114"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -380,85 +380,85 @@
        id="line116" />
     <polygon
        style="fill:#000000"
-       points="120,417.764 115,407.764 120,410.264 125,407.764 "
+       points="120,410.264 125,407.764 120,417.764 115,407.764 "
        id="polygon118" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="120,417.764 115,407.764 120,410.264 125,407.764 "
+       points="120,410.264 125,407.764 120,417.764 115,407.764 "
        id="polygon120" />
   </g>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-221.88612"
-     y="-268.60001"
+     x="-212.96066"
+     y="-260.70151"
      id="text122">
     <tspan
-       x="-221.88612"
-       y="-268.60001"
+       x="-212.96066"
+       y="-260.70151"
        id="tspan124">Perform behaviour in a</tspan>
     <tspan
-       x="-221.88612"
-       y="-262.20001"
+       x="-212.96066"
+       y="-254.3015"
        id="tspan126">&quot;subjective&quot; space without</tspan>
     <tspan
-       x="-221.88612"
-       y="-255.79999"
+       x="-212.96066"
+       y="-247.90147"
        id="tspan128">affecting the state of the</tspan>
     <tspan
-       x="-221.88612"
-       y="-249.39999"
+       x="-212.96066"
+       y="-241.50148"
        id="tspan130">actor agent or the</tspan>
     <tspan
-       x="-221.88612"
-       y="-243"
+       x="-212.96066"
+       y="-235.10149"
        id="tspan132">environment, obtain &quot;fake&quot;</tspan>
     <tspan
-       x="-221.88612"
-       y="-236.59999"
+       x="-212.96066"
+       y="-228.70148"
        id="tspan134">perceptions</tspan>
   </text>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-221.88612"
-     y="-200.59999"
+     x="-212.96066"
+     y="-192.70148"
      id="text136">
     <tspan
-       x="-221.88612"
-       y="-200.59999"
+       x="-212.96066"
+       y="-192.70148"
        id="tspan138">Call gamma2gene peocedure</tspan>
     <tspan
-       x="-221.88612"
-       y="-194.2"
+       x="-212.96066"
+       y="-186.30148"
        id="tspan140">with &quot;fake&quot; perceptions to</tspan>
     <tspan
-       x="-221.88612"
-       y="-187.79999"
+       x="-212.96066"
+       y="-179.90147"
        id="tspan142">get internal representations</tspan>
     <tspan
-       x="-221.88612"
-       y="-181.39999"
+       x="-212.96066"
+       y="-173.50148"
        id="tspan144">for motivational values</tspan>
   </text>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-221.88612"
-     y="-128.59999"
+     x="-212.96066"
+     y="-120.70148"
      id="text146">
     <tspan
-       x="-221.88612"
-       y="-128.59999"
+       x="-212.96066"
+       y="-120.70148"
        id="tspan148">Calculate primary and final</tspan>
     <tspan
-       x="-221.88612"
-       y="-122.2"
+       x="-212.96066"
+       y="-114.30149"
        id="tspan150">motivations</tspan>
   </text>
   <g
      id="g152"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#ffffff"
        points="560,-440 440,-240 320,-440 "
@@ -486,17 +486,17 @@
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="175.36174"
-     y="-120.73625"
+     x="184.2872"
+     y="-112.83775"
      id="text164">
     <tspan
-       x="175.36174"
-       y="-120.73625"
+       x="184.2872"
+       y="-112.83775"
        id="tspan166" />
   </text>
   <g
      id="g168"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#e5e5e5"
        x="300"
@@ -539,7 +539,7 @@
   </g>
   <g
      id="g182"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="320"
@@ -582,7 +582,7 @@
   </g>
   <g
      id="g196"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -592,16 +592,16 @@
        id="line198" />
     <polygon
        style="fill:#000000"
-       points="440,137.334 435,127.334 440,129.834 445,127.334 "
+       points="440,129.834 445,127.334 440,137.334 435,127.334 "
        id="polygon200" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,137.334 435,127.334 440,129.834 445,127.334 "
+       points="440,129.834 445,127.334 440,137.334 435,127.334 "
        id="polygon202" />
   </g>
   <g
      id="g204"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="320"
@@ -648,7 +648,7 @@
   </g>
   <g
      id="g220"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -658,16 +658,16 @@
        id="line222" />
     <polygon
        style="fill:#000000"
-       points="440,256.756 435,246.756 440,249.256 445,246.756 "
+       points="440,249.256 445,246.756 440,256.756 435,246.756 "
        id="polygon224" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,256.756 435,246.756 440,249.256 445,246.756 "
+       points="440,249.256 445,246.756 440,256.756 435,246.756 "
        id="polygon226" />
   </g>
   <g
      id="g228"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="320"
@@ -714,7 +714,7 @@
   </g>
   <g
      id="g244"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -724,16 +724,16 @@
        id="line246" />
     <polygon
        style="fill:#000000"
-       points="440,417.764 435,407.764 440,410.264 445,407.764 "
+       points="440,410.264 445,407.764 440,417.764 435,407.764 "
        id="polygon248" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,417.764 435,407.764 440,410.264 445,407.764 "
+       points="440,410.264 445,407.764 440,417.764 435,407.764 "
        id="polygon250" />
   </g>
   <g
      id="g252"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <circle
        style="fill:#ffffff"
        cx="120"
@@ -764,17 +764,17 @@
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="495.36176"
-     y="-120.73625"
+     x="504.28723"
+     y="-112.83775"
      id="text262">
     <tspan
-       x="495.36176"
-       y="-120.73625"
+       x="504.28723"
+       y="-112.83775"
        id="tspan264" />
   </text>
   <g
      id="g266"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#e5e5e5"
        x="620"
@@ -817,7 +817,7 @@
   </g>
   <g
      id="g280"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="640"
@@ -860,7 +860,7 @@
   </g>
   <g
      id="g294"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -870,16 +870,16 @@
        id="line296" />
     <polygon
        style="fill:#000000"
-       points="760,137.334 755,127.334 760,129.834 765,127.334 "
+       points="760,129.834 765,127.334 760,137.334 755,127.334 "
        id="polygon298" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="760,137.334 755,127.334 760,129.834 765,127.334 "
+       points="760,129.834 765,127.334 760,137.334 755,127.334 "
        id="polygon300" />
   </g>
   <g
      id="g302"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="640"
@@ -926,7 +926,7 @@
   </g>
   <g
      id="g318"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -936,16 +936,16 @@
        id="line320" />
     <polygon
        style="fill:#000000"
-       points="760,256.756 755,246.756 760,249.256 765,246.756 "
+       points="760,249.256 765,246.756 760,256.756 755,246.756 "
        id="polygon322" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="760,256.756 755,246.756 760,249.256 765,246.756 "
+       points="760,249.256 765,246.756 760,256.756 755,246.756 "
        id="polygon324" />
   </g>
   <g
      id="g326"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <rect
        style="fill:#ffffff"
        x="640"
@@ -992,7 +992,7 @@
   </g>
   <g
      id="g342"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -1002,16 +1002,16 @@
        id="line344" />
     <polygon
        style="fill:#000000"
-       points="760,417.764 755,407.764 760,410.264 765,407.764 "
+       points="760,410.264 765,407.764 760,417.764 755,407.764 "
        id="polygon346" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="760,417.764 755,407.764 760,410.264 765,407.764 "
+       points="760,410.264 765,407.764 760,417.764 755,407.764 "
        id="polygon348" />
   </g>
   <g
      id="g350"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <path
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        d="M 386.058,-328.013 C 206.058,-288.013 320,180 249.736,180"
@@ -1019,16 +1019,16 @@
        inkscape:connector-curvature="0" />
     <polygon
        style="fill:#000000"
-       points="242.236,180 252.236,175 249.736,180 252.236,185 "
+       points="249.736,180 252.236,185 242.236,180 252.236,175 "
        id="polygon354" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="242.236,180 252.236,175 249.736,180 252.236,185 "
+       points="249.736,180 252.236,185 242.236,180 252.236,175 "
        id="polygon356" />
   </g>
   <g
      id="g358"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <path
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        d="M 493.187,-326.703 C 653.187,-286.703 540,180 630.264,180"
@@ -1036,16 +1036,16 @@
        inkscape:connector-curvature="0" />
     <polygon
        style="fill:#000000"
-       points="637.764,180 627.764,185 630.264,180 627.764,175 "
+       points="630.264,180 627.764,175 637.764,180 627.764,185 "
        id="polygon362" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="637.764,180 627.764,185 630.264,180 627.764,175 "
+       points="630.264,180 627.764,175 637.764,180 627.764,185 "
        id="polygon364" />
   </g>
   <g
      id="g366"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <path
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        d="M 385.415,-329.083 C 285.415,-309.083 260,160 310.764,176.921"
@@ -1053,23 +1053,23 @@
        inkscape:connector-curvature="0" />
     <polygon
        style="fill:#000000"
-       points="317.879,179.293 306.811,180.874 310.764,176.921 309.973,171.387 "
+       points="310.764,176.921 309.973,171.387 317.879,179.293 306.811,180.874 "
        id="polygon370" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="317.879,179.293 306.811,180.874 310.764,176.921 309.973,171.387 "
+       points="310.764,176.921 309.973,171.387 317.879,179.293 306.811,180.874 "
        id="polygon372" />
   </g>
   <g
      id="g374"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#ffffff"
-       points="440,630 500,680 440,730 380,680 "
+       points="440,730 380,680 440,630 500,680 "
        id="polygon376" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,630 500,680 440,730 380,680 "
+       points="440,730 380,680 440,630 500,680 "
        id="polygon378" />
     <text
        font-size="12.8"
@@ -1085,70 +1085,70 @@
   </g>
   <g
      id="g384"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polyline
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        points="120,580 120,620 410,620 410,645.264 "
        id="polyline386" />
     <polygon
        style="fill:#000000"
-       points="410,652.764 405,642.764 410,645.264 415,642.764 "
+       points="410,645.264 415,642.764 410,652.764 405,642.764 "
        id="polygon388" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="410,652.764 405,642.764 410,645.264 415,642.764 "
+       points="410,645.264 415,642.764 410,652.764 405,642.764 "
        id="polygon390" />
   </g>
   <g
      id="g392"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polyline
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        points="760,580 760,620 470,620 470,645.264 "
        id="polyline394" />
     <polygon
        style="fill:#000000"
-       points="470,652.764 465,642.764 470,645.264 475,642.764 "
+       points="470,645.264 475,642.764 470,652.764 465,642.764 "
        id="polygon396" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="470,652.764 465,642.764 470,645.264 475,642.764 "
+       points="470,645.264 475,642.764 470,652.764 465,642.764 "
        id="polygon398" />
   </g>
   <g
      id="g400"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polyline
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        points="440,580 440,620.264 "
        id="polyline402" />
     <polygon
        style="fill:#000000"
-       points="440,627.764 435,617.764 440,620.264 445,617.764 "
+       points="440,620.264 445,617.764 440,627.764 435,617.764 "
        id="polygon404" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,627.764 435,617.764 440,620.264 445,617.764 "
+       points="440,620.264 445,617.764 440,627.764 435,617.764 "
        id="polygon406" />
   </g>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-61.88612"
-     y="7.4000077"
+     x="-52.960663"
+     y="15.298512"
      id="text408">
     <tspan
-       x="-61.88612"
-       y="7.4000077"
+       x="-52.960663"
+       y="15.298512"
        id="tspan410">Select behaviour with the</tspan>
     <tspan
-       x="-61.88612"
-       y="13.800001"
+       x="-52.960663"
+       y="21.698505"
        id="tspan412">minimum expected arousal</tspan>
   </text>
   <g
      id="g414"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -1158,16 +1158,16 @@
        id="line416" />
     <polygon
        style="fill:#000000"
-       points="120,317.764 115,307.764 120,310.264 125,307.764 "
+       points="120,310.264 125,307.764 120,317.764 115,307.764 "
        id="polygon418" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="120,317.764 115,307.764 120,310.264 125,307.764 "
+       points="120,310.264 125,307.764 120,317.764 115,307.764 "
        id="polygon420" />
   </g>
   <g
      id="g422"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <circle
        style="fill:#ffffff"
        cx="440"
@@ -1197,7 +1197,7 @@
   </g>
   <g
      id="g432"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <circle
        style="fill:#ffffff"
        cx="760"
@@ -1227,7 +1227,7 @@
   </g>
   <g
      id="g442"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -1237,16 +1237,16 @@
        id="line444" />
     <polygon
        style="fill:#000000"
-       points="440,317.764 435,307.764 440,310.264 445,307.764 "
+       points="440,310.264 445,307.764 440,317.764 435,307.764 "
        id="polygon446" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,317.764 435,307.764 440,310.264 445,307.764 "
+       points="440,310.264 445,307.764 440,317.764 435,307.764 "
        id="polygon448" />
   </g>
   <g
      id="g450"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -1256,16 +1256,16 @@
        id="line452" />
     <polygon
        style="fill:#000000"
-       points="760,317.764 755,307.764 760,310.264 765,307.764 "
+       points="760,310.264 765,307.764 760,317.764 755,307.764 "
        id="polygon454" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="760,317.764 755,307.764 760,310.264 765,307.764 "
+       points="760,310.264 765,307.764 760,317.764 755,307.764 "
        id="polygon456" />
   </g>
   <g
      id="g458"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -1275,23 +1275,23 @@
        id="line460" />
     <polygon
        style="fill:#000000"
-       points="440,756.771 435,746.771 440,749.271 445,746.771 "
+       points="440,749.271 445,746.771 440,756.771 435,746.771 "
        id="polygon462" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,756.771 435,746.771 440,749.271 445,746.771 "
+       points="440,749.271 445,746.771 440,756.771 435,746.771 "
        id="polygon464" />
   </g>
   <g
      id="g466"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#ffffff"
-       points="120,420 160,450 120,480 80,450 "
+       points="120,480 80,450 120,420 160,450 "
        id="polygon468" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="120,420 160,450 120,480 80,450 "
+       points="120,480 80,450 120,420 160,450 "
        id="polygon470" />
     <text
        font-size="12.8"
@@ -1307,7 +1307,7 @@
   </g>
   <g
      id="g476"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="120"
@@ -1317,23 +1317,23 @@
        id="line478" />
     <polygon
        style="fill:#000000"
-       points="120,497.764 115,487.764 120,490.264 125,487.764 "
+       points="120,490.264 125,487.764 120,497.764 115,487.764 "
        id="polygon480" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="120,497.764 115,487.764 120,490.264 125,487.764 "
+       points="120,490.264 125,487.764 120,497.764 115,487.764 "
        id="polygon482" />
   </g>
   <g
      id="g484"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#ffffff"
-       points="440,420 480,450 440,480 400,450 "
+       points="440,480 400,450 440,420 480,450 "
        id="polygon486" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,420 480,450 440,480 400,450 "
+       points="440,480 400,450 440,420 480,450 "
        id="polygon488" />
     <text
        font-size="12.8"
@@ -1349,14 +1349,14 @@
   </g>
   <g
      id="g494"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#ffffff"
-       points="760,420 800,450 760,480 720,450 "
+       points="760,480 720,450 760,420 800,450 "
        id="polygon496" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="760,420 800,450 760,480 720,450 "
+       points="760,480 720,450 760,420 800,450 "
        id="polygon498" />
     <text
        font-size="12.8"
@@ -1372,7 +1372,7 @@
   </g>
   <g
      id="g504"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="440"
@@ -1382,16 +1382,16 @@
        id="line506" />
     <polygon
        style="fill:#000000"
-       points="440,497.764 435,487.764 440,490.264 445,487.764 "
+       points="440,490.264 445,487.764 440,497.764 435,487.764 "
        id="polygon508" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="440,497.764 435,487.764 440,490.264 445,487.764 "
+       points="440,490.264 445,487.764 440,497.764 435,487.764 "
        id="polygon510" />
   </g>
   <g
      id="g512"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <line
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
        x1="760"
@@ -1401,141 +1401,141 @@
        id="line514" />
     <polygon
        style="fill:#000000"
-       points="760,496.865 755,486.865 760,489.365 765,486.865 "
+       points="760,489.365 765,486.865 760,496.865 755,486.865 "
        id="polygon516" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="760,496.865 755,486.865 760,489.365 765,486.865 "
+       points="760,489.365 765,486.865 760,496.865 755,486.865 "
        id="polygon518" />
   </g>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-213.88612"
-     y="-80.599991"
+     x="-204.96066"
+     y="-72.701485"
      id="text520">
     <tspan
-       x="-213.88612"
-       y="-80.599991"
+       x="-204.96066"
+       y="-72.701485"
        id="tspan522">Obtain expected GOS ...</tspan>
   </text>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-213.88612"
-     y="-48.599991"
+     x="-204.96066"
+     y="-40.701485"
      id="text524">
     <tspan
-       x="-213.88612"
-       y="-48.599991"
+       x="-204.96066"
+       y="-40.701485"
        id="tspan526">... and GOS arousal level</tspan>
   </text>
   <g
      id="g528"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#e5e5e5"
-       points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
+       points="440,880 500,820 470,820 470,760 410,760 410,820 380,820 "
        id="polygon530" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
+       points="440,880 500,820 470,820 470,760 410,760 410,820 380,820 "
        id="polygon532" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="500,820 470,820 470,760 410,760 410,820 380,820 440,880 "
+       points="440,880 500,820 470,820 470,760 410,760 410,820 380,820 "
        id="polygon534" />
   </g>
   <g
      id="g536"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#e5e5e5"
-       points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
+       points="120,-60 180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 "
        id="polygon538" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
+       points="120,-60 180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 "
        id="polygon540" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 120,-60 "
+       points="120,-60 180,-120 150,-120 150,-180 90,-180 90,-120 60,-120 "
        id="polygon542" />
   </g>
   <g
      id="g544"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#e5e5e5"
-       points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
+       points="760,-60 820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 "
        id="polygon546" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
+       points="760,-60 820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 "
        id="polygon548" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 760,-60 "
+       points="760,-60 820,-120 790,-120 790,-180 730,-180 730,-120 700,-120 "
        id="polygon550" />
   </g>
   <g
      id="g552"
-     transform="matrix(0.4,0,0,0.4,-133.88611,-264.6)">
+     transform="matrix(0.4,0,0,0.4,-124.96065,-256.70149)">
     <polygon
        style="fill:#e5e5e5"
-       points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
+       points="440,-60 500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 "
        id="polygon554" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
+       points="440,-60 500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 "
        id="polygon556" />
     <polygon
        style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
-       points="500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 440,-60 "
+       points="440,-60 500,-120 470,-120 470,-180 410,-180 410,-120 380,-120 "
        id="polygon558" />
   </g>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-101.88612"
-     y="-344.60001"
+     x="-92.960663"
+     y="-336.70151"
      id="text560">
     <tspan
-       x="-101.88612"
-       y="-344.60001"
+       x="-92.960663"
+       y="-336.70151"
        id="tspan562">Behaviour A</tspan>
   </text>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="26.11388"
-     y="-344.60001"
+     x="35.039337"
+     y="-336.70151"
      id="text564">
     <tspan
-       x="26.11388"
-       y="-344.60001"
+       x="35.039337"
+       y="-336.70151"
        id="tspan566">Behaviour B</tspan>
   </text>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="154.11388"
-     y="-344.60001"
+     x="163.03934"
+     y="-336.70151"
      id="text568">
     <tspan
-       x="154.11388"
-       y="-344.60001"
+       x="163.03934"
+       y="-336.70151"
        id="tspan570">Behaviour C</tspan>
   </text>
   <text
      font-size="12.8"
      style="font-style:normal;font-weight:normal;font-size:5.11999989px;font-family:sans-serif;text-anchor:start;fill:#000000"
-     x="-33.88612"
-     y="51.400009"
+     x="-24.960659"
+     y="59.298515"
      id="text572">
     <tspan
-       x="-33.88612"
-       y="51.400009"
+       x="-24.960659"
+       y="59.298515"
        id="tspan574">Execute behaviour</tspan>
   </text>
 </svg>
