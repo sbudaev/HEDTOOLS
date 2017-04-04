@@ -529,11 +529,10 @@ module THE_GENOME
 end module THE_GENOME
 --------------------------------------------------------------------------------
 
-** *Use short "atomic" procedures* rather than
-long ones. A single subroutine/function should _ideally_ occupy not more
-than a single screen page (with vertical screen orientation). So the whole
-bunch of code is easy to overview and work with. "Atomic" operations are
-particularly helpful in the object oriented code.
+** *Use short procedures* rather than long ones. A single subroutine/function
+should _ideally_ occupy not more than a single screen page (with vertical
+screen orientation). So the whole bunch of code is easy to overview and work
+with. Short procedures are particularly helpful in the object oriented code.
 
 [source]
 --------------------------------------------------------------------------------
@@ -612,6 +611,7 @@ timing is by Linux +time+).
 indexterm:[speed, execution speed]
 indexterm:[nested loops]
 indexterm:[array, nested loops,indices order]
+indexterm:[parallel computations]
 
 [source]
 --------------------------------------------------------------------------------
@@ -705,6 +705,7 @@ code below illustrates some loop-free constructions:
 indexterm:[array, nested loops]
 indexterm:[array, loop-free functions]
 indexterm:[array, whole-array functions]
+indexterm:[parallel computations]
 
 [source]
 --------------------------------------------------------------------------------
@@ -770,6 +771,26 @@ the order of looping in the machine code. Nonetheless it is better to write
 order, such as *loop-free array constructions,* that works fast just
 everywhere. Many of the Fortran loop-free constructions actually resemble
 similar Matlab functions.
+
+** *Use parallel processing constructions.* The latest F2008 standard includes
+specific language constructs that enable parallel processing in a standard
+and portable way: +do concurrent+ and *coarray* Fortran. This is an example
+of a parallel looping construction implementing +do concurrent+:
+indexterm:[parallel computations]
+
+[source]
+--------------------------------------------------------------------------------
+do concurrent (i=1:ADDITIVE_COMPS)
+  d1 = ( perception / alleleconv( allelescale(gh(i)) )                    &
+        ) ** alleleconv( allelescale(gs(i)) )
+  neuronal_response = neuronal_response + d1/(1._SRP+d1)
+end do
+--------------------------------------------------------------------------------
+
+On systems and compilers that do not yet support automatic parallel processing,
+this is equivalent to the standard +do+-loop. Note that parallel processing
+capability should be invoked in the compiler. For Intel Fortran it is
++-parallel+ (Linux) or +/Qparallel+ (Windows) compiler options.
 
 Using strings
 ~~~~~~~~~~~~~
