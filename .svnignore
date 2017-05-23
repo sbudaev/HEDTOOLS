@@ -5,6 +5,9 @@
 # Hidden files on Linux
 .hidden
 
+# PDF files are not included into the Mercurial repos
+*.pdf
+
 # Git files
 .git
 .gitignore
