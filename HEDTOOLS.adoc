@@ -75,8 +75,6 @@ svn propset svn:keywords "Id Date Revision HeadURL LastChangedDate" BASE_UTILS.a
 svn commit BASE_UTILS.adoc -m 'set keywords for svn tags""
 ////////////////////////////////////////////////////////////////////////////////
 
-SVN address of this document source is: +
-$HeadURL$
 
 ////////////////////////////////////////////////////////////////////////////////
 NOTE: PDF svn path is ****** updated MANUALLY ******
