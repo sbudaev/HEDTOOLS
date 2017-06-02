@@ -156,7 +156,7 @@ end interface LAGR_INTERPOL_VECTOR
 
 interface LINSPACE               ! Equally spaced linear array procedures.
 
-   module procedure LINSPACE_R
+   module procedure LINSPACE_R4
    module procedure LINSPACE_R8
 
 end interface LINSPACE
@@ -5252,7 +5252,7 @@ end function DDINT_R8
 
 !-------------------------------------------------------------------------------
 
-function LINSPACE_R (x_min, x_max_n, n) result (value_out)
+function LINSPACE_R4 (x_min, x_max_n, n) result (value_out)
 !*******************************************************************************
 ! PURPOSE: Calculate an array of values equally spaced in the linear space.
 ! CALL PARAMETERS: minimum value, maximum value, number
@@ -5272,7 +5272,7 @@ function LINSPACE_R (x_min, x_max_n, n) result (value_out)
     value_out(i) = x_min+(((x_max_n-x_min)*(real(i-1)))/(real(n-1)))
   end do
 
-end function LINSPACE_R
+end function LINSPACE_R4
 
 !-------------------------------------------------------------------------------
 
