@@ -154,6 +154,14 @@ interface LAGR_INTERPOL_VECTOR   ! Generic interface to Lagrange polynominal
 
 end interface LAGR_INTERPOL_VECTOR
 
+interface LINSPACE               ! Equally spaced linear array procedures.
+
+   module procedure LINSPACE_R
+   module procedure LINSPACE_R8
+
+end interface LINSPACE
+
+
 !-------------------------------------------------------------------------------
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
@@ -5241,6 +5249,54 @@ pure function DDINT_R8 (xi, yi, xx, n_points) result (ddint_out)
   ddint_out = Pn
 
 end function DDINT_R8
+
+!-------------------------------------------------------------------------------
+
+function LINSPACE_R (x_min, x_max_n, n) result (value_out)
+!*******************************************************************************
+! PURPOSE: Calculate an array of values equally spaced in the linear space.
+! CALL PARAMETERS: minimum value, maximum value, number
+! EXAMPLE:
+!          linspace(1., 10., 10)
+!*******************************************************************************
+
+  real :: x_min, x_max_n
+  integer :: n
+  integer:: i
+
+  real, allocatable, dimension(:) :: value_out
+
+  allocate ( value_out(n) )
+
+  do i = 1, n
+    value_out(i) = x_min+(((x_max_n-x_min)*(real(i-1)))/(real(n-1)))
+  end do
+
+end function LINSPACE_R
+
+!-------------------------------------------------------------------------------
+
+function LINSPACE_R8 (x_min, x_max_n, n) result (value_out)
+!*******************************************************************************
+! PURPOSE: Calculate an array of values equally spaced in the linear space.
+! CALL PARAMETERS: minimum value, maximum value, number
+! EXAMPLE:
+!          linspace(1., 10., 10)
+!*******************************************************************************
+
+  real(kind=8) :: x_min, x_max_n
+  integer :: n
+  integer:: i
+
+  real(kind=8), allocatable, dimension(:) :: value_out
+
+  allocate ( value_out(n) )
+
+  do i = 1, n
+    value_out(i) = x_min + (((x_max_n-x_min)*(real(i-1, kind=8)))/(real(n-1, kind=8)))
+  end do
+
+end function LINSPACE_R8
 
 
 end module BASE_UTILS
