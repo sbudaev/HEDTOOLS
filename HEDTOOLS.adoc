@@ -2385,6 +2385,20 @@ on recent versions of _Microsoft Windows,_ but this is not guaranteed.
 if ( PLATFORM_IS_WINDOWS() ) print *, "Running on Windows."
 --------------------------------------------------------------------------------
 
+Linearly spaced array: LINSPACE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[LINSPACE]
+
+This function calculates an array of values that are equally spaced in the
+linear space. It accepts three parameters: real minimum value, real maximum
+value and an integer number indicating how many values should be generated.
+The output array is allocatable to the size of the number of values.
+
+[source]
+--------------------------------------------------------------------------------
+print *, LINSPACE(1.0, 10.0, 10)
+--------------------------------------------------------------------------------
+
 
 Interpolation: LINTERPOL, DDPINTERPOL, INTERP_LINEAR, INTERP_LAGRANGE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
