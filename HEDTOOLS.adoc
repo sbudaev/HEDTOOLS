@@ -3061,28 +3061,6 @@ if (CHECK_FILE_OPEN(output_handle)) then
 ...
 --------------------------------------------------------------------------------
 
-Subroutine: CSV_MKDIR
-~~~~~~~~~~~~~~~~~~~~~
-indexterm:[CSV_MKDIR, Make directory]
-
-Make a directory indicated by the first character string parameter. The second
-optional integer parameter +iostat+ returns the error status of the oprration,
-0 in case of success, -1 if there was an error creating the directory.
-
-The subroutine is implemented using a POSIX standard C call via the Fortran
-interface. This might not work on all systems. Works on gfortran and ifort on
-both Linux and Windows and f95 (Oracle) on Linux.
-
-NOTE: The error -1 is returned if there is already a directory with the same
-      name, so it may not be very informative.
-
-[source]
---------------------------------------------------------------------------------
-dirname = "./model_output"
-...
-call CSV_MKDIR(dirname, ierr)
---------------------------------------------------------------------------------
-
 Subroutine: CSV_RECORD_APPEND
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_RECORD_APPEND]
@@ -3777,6 +3755,73 @@ characters.
 indexterm:[allocatable string,portability,compiler limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,limitation]
+
+
+Procedures to manipulate files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are several procedures for simple manipulations of the filesystem that
+are implemented as Fortran bindings to the standard POSIX C functions via
+Fortran interfaces.
+
+The procedures have an optional parameter +iostat+ for reporting the status
+of the operation. It retrns 0 in case of success and -1 if there was an error.
+
+IMPORTANT: These subroutines might not work on all systems. However, tested
+           and work on gfortran and ifort on both Linux and Windows and f95
+           (Oracle) on Linux.
+
+Subroutine: FS_MKDIR
+^^^^^^^^^^^^^^^^^^^^
+indexterm:[FS_MKDIR, Make directory]
+
+Make a directory indicated by the first character string parameter. The second
+optional integer parameter +iostat+ returns the error status of the oprration,
+0 in case of success, -1 if there was an error creating the directory.
+
+The error -1 is returned also if there is already a directory with the same
+name, so it may not be very informative.
+
+[source]
+--------------------------------------------------------------------------------
+dirname = "./model_output"
+...
+call FS_MKDIR(dirname, ierr)
+--------------------------------------------------------------------------------
+
+Subroutine FS_RENAME
+^^^^^^^^^^^^^^^^^^^^
+indexterm:[FS_RENAME, rename file]
+
+Rename a file.
+
+[source]
+--------------------------------------------------------------------------------
+call FS_RENAME("old_name", "new_name", i)
+--------------------------------------------------------------------------------
+
+Subroutine FS_UNLINK
+^^^^^^^^^^^^^^^^^^^^
+indexterm:[FS_UNLINK, delete file]
+
+Deletes a file from the filesystem. Note that this subroutine does not delete
+directories for safety. Use FS_REMOVE subroutine for this.
+
+[source]
+--------------------------------------------------------------------------------
+call FS_UNLINK("obsolete_file", i)
+--------------------------------------------------------------------------------
+
+Subroutine FS_REMOVE
+^^^^^^^^^^^^^^^^^^^^
+indexterm:[FS_REMOVE, delete file or directory]
+
+Deletes a file or a directory from the filesystem.
+
+[source]
+--------------------------------------------------------------------------------
+call FS_REMOVE("delete_me", i)
+--------------------------------------------------------------------------------
 
 Module: BASE_RANDOM
 ------------------

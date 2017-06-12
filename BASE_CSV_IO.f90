@@ -4461,10 +4461,13 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
 end function CSV_MATRIX_READ_R8
 
 !-------------------------------------------------------------------------------
+! FS_MKDIR, FS_RENAME, FS_UNLINK, FS_REMOVE are Fortran bindings to the
+! standard C POSIX filesystem functions.
+!-------------------------------------------------------------------------------
 
-subroutine CSV_MKDIR(dirname, iostat)
+subroutine FS_MKDIR(dirname, iostat)
 !*******************************************************************************
-! CSV_MKDIR
+! FS_MKDIR
 ! PURPOSE: Makes a durectory using a POSIX standard C call via the Fortran
 !          interface.
 ! See C file system interface docs (GNU C):
@@ -4505,13 +4508,13 @@ use ISO_C_BINDING
   ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
 
-end subroutine CSV_MKDIR
+end subroutine FS_MKDIR
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RENAME(dir_from, dir_to, iostat)
+subroutine FS_RENAME(dir_from, dir_to, iostat)
 !*******************************************************************************
-! CSV_RENAME
+! FS_RENAME
 ! PURPOSE: Renames a file or directory using a POSIX standard C call via the
 !          Fortran interface.
 !
@@ -4553,16 +4556,16 @@ use ISO_C_BINDING
   ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
 
-end subroutine CSV_RENAME
+end subroutine FS_RENAME
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_UNLINK(filename, iostat)
+subroutine FS_UNLINK(filename, iostat)
 !*******************************************************************************
-! CSV_UNLINK
+! FS_UNLINK
 ! PURPOSE: Deletes a file (NOT a directory) using a POSIX standard C call via
 !          the Fortran interface. Note that this subroutine does not delete
-!          directories for safety. Use CSV_REMOVE for this.
+!          directories for safety. Use FS_REMOVE for this.
 !
 ! See C file system interface docs (GNU C):
 ! https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
@@ -4599,13 +4602,13 @@ use ISO_C_BINDING
   ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
 
-end subroutine CSV_UNLINK
+end subroutine FS_UNLINK
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_REMOVE(filename, iostat)
+subroutine FS_REMOVE(filename, iostat)
 !*******************************************************************************
-! CSV_REMOVE
+! FS_REMOVE
 ! PURPOSE: Deletes a file or a directory using a POSIX standard C call via
 !          the Fortran interface.
 !
@@ -4644,7 +4647,7 @@ use ISO_C_BINDING
   ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
 
-end subroutine CSV_REMOVE
+end subroutine FS_REMOVE
 
 
 end module CSV_IO
