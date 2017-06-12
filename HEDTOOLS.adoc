@@ -3049,7 +3049,7 @@ if (.not. CHECK_FILE_OPEN("file_out.csv")) call OPEN_OUTPUT
 if (CHECK_FILE_OPEN(csv_file_unit=12)) goto 100
 ...
 file_is_open = CHECK_FILE_OPEN(csv_file_name="data_out.csv", &
-                               get_csv_file_unit=fileunit, &
+                               get_csv_file_unit=fileunit,   &
                                csv_file_status=error_flag)
 --------------------------------------------------------------------------------
 
@@ -3059,6 +3059,28 @@ type (csv_file) :: output_handle
 ...
 if (CHECK_FILE_OPEN(output_handle)) then
 ...
+--------------------------------------------------------------------------------
+
+Subroutine: CSV_MKDIR
+~~~~~~~~~~~~~~~~~~~~~
+indexterm:[CSV_MKDIR, Make directory]
+
+Make a directory indicated by the first character string parameter. The second
+optional integer parameter +iostat+ returns the error status of the oprration,
+0 in case of success, -1 if there was an error creating the directory.
+
+The subroutine is implemented using a POSIX standard C call via the Fortran
+interface. This might not work on all systems. Works on gfortran and ifort on
+both Linux and Windows and f95 (Oracle) on Linux.
+
+NOTE: The error -1 is returned if there is already a directory with the same
+      name, so it may not be very informative.
+
+[source]
+--------------------------------------------------------------------------------
+dirname = "./model_output"
+...
+call CSV_MKDIR(dirname, ierr)
 --------------------------------------------------------------------------------
 
 Subroutine: CSV_RECORD_APPEND
