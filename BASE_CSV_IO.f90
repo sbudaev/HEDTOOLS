@@ -4503,9 +4503,9 @@ use ISO_C_BINDING
   end interface
 
   ! Call C through interface/binding. Requires F2003 to work.
-  ! Note: o'772' is the default octal permissions on the directory, if
+  ! Note: o'755' is the default octal permissions on the directory, if
   !       supported by the system.
-  cret = mkdir (dirname // char(0), int(o'772',c_int16_t) )
+  cret = mkdir (dirname // char(0), int(o'755',c_int16_t) )
 
   ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
