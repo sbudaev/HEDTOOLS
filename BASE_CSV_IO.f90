@@ -4467,6 +4467,9 @@ subroutine CSV_MKDIR(dirname, iostat)
 ! CSV_MKDIR
 ! PURPOSE: Makes a durectory using a POSIX standard C call via the Fortran
 !          interface.
+! See C file system interface docs (GNU C):
+! https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
+!
 ! CALL PARAMETERS:
 !    Character directory name.
 !    Optional iostat integer parameter reports the success, however, Fortran
@@ -4499,10 +4502,107 @@ use ISO_C_BINDING
   ! Call C through interface/binding. Requires F2003 to work.
   cret = mkdir (dirname // char(0), int(o'772',c_int16_t) )
 
-  ! This return parameter may not actually work.
+  ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
 
 end subroutine CSV_MKDIR
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_RENAME(dir_from, dir_to, iostat)
+!*******************************************************************************
+! CSV_RENAME
+! PURPOSE: Renames a file or directory using a POSIX standard C call via the
+!          Fortran interface.
+!
+! See C file system interface docs (GNU C):
+! https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
+!
+! CALL PARAMETERS:
+!    Character existing file/directory name.
+!    Character rename to name.
+!    Optional iostat integer parameter reports the success, however, Fortran
+!          may not support POSIX bindings, so the output may have no use
+!          (have to check!). Works on gfortran, ifort, f95 (Oracle)
+!             0 = success (directory created);
+!            -1 = there was an error creating directory. Note that this error
+!                 is reported even if the directory with the same name already
+!                 exists. So error reporting is not fully useful here.
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+use ISO_C_BINDING
+
+  character(len=*), intent(in) :: dir_from
+  character(len=*), intent(in) :: dir_to
+  integer, optional, intent(out) :: iostat
+
+  integer :: cret
+
+  interface
+    function rename(frompath,topath) bind(c,name="rename")
+      use iso_c_binding
+      integer(c_int) :: rename
+      character(kind=c_char,len=1) :: frompath(*)
+      character(kind=c_char,len=1) :: topath(*)
+    end function rename
+  end interface
+
+  ! Call C through interface/binding. Requires F2003 to work.
+  cret = rename (dir_from // char(0), dir_to // char(0) )
+
+  ! This return parameter might not actually work on all systems.
+  if (present(iostat)) iostat = cret
+
+end subroutine CSV_RENAME
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_UNLINK(filename, iostat)
+!*******************************************************************************
+! CSV_UNLINK
+! PURPOSE: Deletes a file using a POSIX standard C call via the
+!          Fortran interface.
+!
+! See C file system interface docs (GNU C):
+! https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
+!
+! CALL PARAMETERS:
+!    Character existing file name to be deleted.
+!    Optional iostat integer parameter reports the success, however, Fortran
+!          may not support POSIX bindings, so the output may have no use
+!          (have to check!). Works on gfortran, ifort, f95 (Oracle)
+!             0 = success (directory created);
+!            -1 = there was an error creating directory. Note that this error
+!                 is reported even if the directory with the same name already
+!                 exists. So error reporting is not fully useful here.
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+use ISO_C_BINDING
+
+  character(len=*), intent(in) :: filename
+  integer, optional, intent(out) :: iostat
+
+  integer :: cret
+
+  interface
+    function unlink(filename) bind(c,name="unlink")
+      use iso_c_binding
+      integer(c_int) :: unlink
+      character(kind=c_char,len=1) :: filename(*)
+    end function unlink
+  end interface
+
+  ! Call C through interface/binding. Requires F2003 to work.
+  cret = unlink (filename // char(0) )
+
+  ! This return parameter might not actually work on all systems.
+  if (present(iostat)) iostat = cret
+
+end subroutine CSV_UNLINK
 
 
 end module CSV_IO
