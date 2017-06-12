@@ -4478,7 +4478,7 @@ subroutine CSV_MKDIR(dirname, iostat)
 !             0 = success (directory created);
 !            -1 = there was an error creating directory. Note that this error
 !                 is reported even if the directory with the same name already
-!                 exists. So error reporting is not fully useful here.
+!                 exists. So error reporting might not be fully useful.
 !
 ! Author: Sergey Budaev
 !*******************************************************************************
@@ -4562,8 +4562,9 @@ end subroutine CSV_RENAME
 subroutine CSV_UNLINK(filename, iostat)
 !*******************************************************************************
 ! CSV_UNLINK
-! PURPOSE: Deletes a file using a POSIX standard C call via the
-!          Fortran interface.
+! PURPOSE: Deletes a file (NOT a directory) using a POSIX standard C call via
+!          the Fortran interface. Note that this subroutine does not delete
+!          directories for safety. Use CSV_REMOVE for this.
 !
 ! See C file system interface docs (GNU C):
 ! https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
@@ -4603,6 +4604,53 @@ use ISO_C_BINDING
   if (present(iostat)) iostat = cret
 
 end subroutine CSV_UNLINK
+
+!-------------------------------------------------------------------------------
+
+subroutine CSV_REMOVE(filename, iostat)
+!*******************************************************************************
+! CSV_REMOVE
+! PURPOSE: Deletes a file or a directory using a POSIX standard C call via
+!          the Fortran interface.
+!
+! See C file system interface docs (GNU C):
+! https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
+!
+! CALL PARAMETERS:
+!    Character existing file name to be deleted.
+!    Optional iostat integer parameter reports the success, however, Fortran
+!          may not support POSIX bindings, so the output may have no use
+!          (have to check!). Works on gfortran, ifort, f95 (Oracle)
+!             0 = success (directory created);
+!            -1 = there was an error creating directory. Note that this error
+!                 is reported even if the directory with the same name already
+!                 exists. So error reporting is not fully useful here.
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+use ISO_C_BINDING
+
+  character(len=*), intent(in) :: filename
+  integer, optional, intent(out) :: iostat
+
+  integer :: cret
+
+  interface
+    function remove(filename) bind(c,name="remove")
+      use iso_c_binding
+      integer(c_int) :: remove
+      character(kind=c_char,len=1) :: filename(*)
+    end function remove
+  end interface
+
+  ! Call C through interface/binding. Requires F2003 to work.
+  cret = remove (filename // char(0) )
+
+  ! This return parameter might not actually work on all systems.
+  if (present(iostat)) iostat = cret
+
+end subroutine CSV_REMOVE
 
 
 end module CSV_IO
