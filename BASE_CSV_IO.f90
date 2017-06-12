@@ -4460,5 +4460,49 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
 
 end function CSV_MATRIX_READ_R8
 
+!-------------------------------------------------------------------------------
+
+subroutine CSV_MKDIR(dirname, iostat)
+!*******************************************************************************
+! CSV_MKDIR
+! PURPOSE: Makes a durectory using a POSIX standard C call via the Fortran
+!          interface.
+! CALL PARAMETERS:
+!    Character directory name.
+!    Optional iostat integer parameter reports the success, however, Fortran
+!          may not support POSIX bindings, so the output may have no use
+!          (have to check!). Works on gfortran, ifort, f95 (Oracle)
+!             0 = success (directory created);
+!            -1 = there was an error creating directory. Note that this error
+!                 is reported even if the directory with the same name already
+!                 exists. So error reporting is not fully useful here.
+!
+! Author: Sergey Budaev
+!*******************************************************************************
+
+use ISO_C_BINDING
+
+  character(len=*), intent(in) :: dirname
+  integer, optional, intent(out) :: iostat
+
+  integer :: cret
+
+  interface
+    function mkdir(path,mode) bind(c,name="mkdir")
+      use ISO_C_BINDING
+      integer(c_int) :: mkdir
+      character(kind=c_char,len=1) :: path(*)
+      integer(c_int16_t), value :: mode
+    end function mkdir
+  end interface
+
+  ! Call C through interface/binding. Requires F2003 to work.
+  cret = mkdir (dirname, int(o'772',c_int16_t) )
+
+  ! This return parameter may not actually work.
+  if (present(iostat)) iostat = cret
+
+end subroutine CSV_MKDIR
+
 
 end module CSV_IO
