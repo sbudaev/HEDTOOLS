@@ -11,6 +11,11 @@ syntax: glob
 .git
 .gitignore
 
+# Version information, hg hook 
+# [hooks]
+# commit = hg -q id > .hg.version
+.hg.version
+
 # AHA output
 outputs_*
 BUILD-ERR-GCC.txt
