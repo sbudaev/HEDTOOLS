@@ -4497,7 +4497,7 @@ use ISO_C_BINDING
   end interface
 
   ! Call C through interface/binding. Requires F2003 to work.
-  cret = mkdir (dirname, int(o'772',c_int16_t) )
+  cret = mkdir (dirname // char(0), int(o'772',c_int16_t) )
 
   ! This return parameter may not actually work.
   if (present(iostat)) iostat = cret
