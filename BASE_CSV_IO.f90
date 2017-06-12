@@ -4525,9 +4525,7 @@ subroutine CSV_RENAME(dir_from, dir_to, iostat)
 !          may not support POSIX bindings, so the output may have no use
 !          (have to check!). Works on gfortran, ifort, f95 (Oracle)
 !             0 = success (directory created);
-!            -1 = there was an error creating directory. Note that this error
-!                 is reported even if the directory with the same name already
-!                 exists. So error reporting is not fully useful here.
+!            -1 = there was an error.
 !
 ! Author: Sergey Budaev
 !*******************************************************************************
@@ -4575,9 +4573,7 @@ subroutine CSV_UNLINK(filename, iostat)
 !          may not support POSIX bindings, so the output may have no use
 !          (have to check!). Works on gfortran, ifort, f95 (Oracle)
 !             0 = success (directory created);
-!            -1 = there was an error creating directory. Note that this error
-!                 is reported even if the directory with the same name already
-!                 exists. So error reporting is not fully useful here.
+!            -1 = there was an error.
 !
 ! Author: Sergey Budaev
 !*******************************************************************************
@@ -4622,9 +4618,7 @@ subroutine CSV_REMOVE(filename, iostat)
 !          may not support POSIX bindings, so the output may have no use
 !          (have to check!). Works on gfortran, ifort, f95 (Oracle)
 !             0 = success (directory created);
-!            -1 = there was an error creating directory. Note that this error
-!                 is reported even if the directory with the same name already
-!                 exists. So error reporting is not fully useful here.
+!            -1 = there was an error.
 !
 ! Author: Sergey Budaev
 !*******************************************************************************
