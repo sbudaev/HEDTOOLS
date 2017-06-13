@@ -3757,8 +3757,8 @@ indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,limitation]
 
 
-Procedures to manipulate files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Procedures to manipulate the filesystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are several procedures for simple manipulations of the filesystem that
 are implemented as Fortran bindings to the standard POSIX C functions via
@@ -3776,17 +3776,27 @@ Subroutine: FS_MKDIR
 indexterm:[FS_MKDIR, Make directory]
 
 Make a directory indicated by the first character string parameter. The second
-optional integer parameter +iostat+ returns the error status of the oprration,
+optional integer parameter +iostat+ returns the error status of the operation,
 0 in case of success, -1 if there was an error creating the directory.
 
 The error -1 is returned also if there is already a directory with the same
 name, so it may not be very informative.
 
+The third, logical, optional parameter +is_writeable+ can be used to check if
+the directory that has to be created is actually writeable. This parameter is
+useful, for example, in case when one need to create a directory, but the
+directory happened to exist already (so +iostat+ returns -1), although this
+is not a problem because the directory is still writeable (+is_writeable+
+returns TRUE).
+
 [source]
 --------------------------------------------------------------------------------
 dirname = "./model_output"
 ...
-call FS_MKDIR(dirname, ierr)
+call FS_MKDIR(dirname, ierr) ! This checks the status if the mkdir itself.
+....
+call FS_MKDIR(dirname, is_writeable=success_write) ! This checks if the
+                                                   ! directory is writeable.
 --------------------------------------------------------------------------------
 
 Subroutine FS_RENAME
