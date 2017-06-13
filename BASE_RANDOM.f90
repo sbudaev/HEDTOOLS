@@ -1,4 +1,3 @@
-module BASE_RANDOM
 !*******************************************************************************
 ! SVN $Id$
 !*******************************************************************************
@@ -20,6 +19,7 @@ module BASE_RANDOM
 ! SUPPORTED COMPILERS:
 !  GNU Fortran, Intel Fortran, Oracle Solaris Studio Fortran
 !*******************************************************************************
+module BASE_RANDOM
 
 implicit none
 

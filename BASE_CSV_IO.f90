@@ -1,4 +1,3 @@
-module CSV_IO
 !*******************************************************************************
 ! SVN $Id$
 !*******************************************************************************
@@ -37,6 +36,7 @@ module CSV_IO
 !
 ! Author: Sergey Budaev, based on csv_io functions by John Burkardt
 !*******************************************************************************
+module CSV_IO
 
 use BASE_STRINGS, only : VALUE, PARSE, SPLIT, COMPACT, IS_NUMERIC, DELALL
 

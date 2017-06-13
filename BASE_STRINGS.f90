@@ -13,21 +13,7 @@
 ! to the top of the program. These routines were developed primarily to aid
 ! in the reading and manipulation of input data from an ASCII text file.
 !*******************************************************************************
-
 module base_strings
-!*******************************************************************************
-! PURPOSE:
-! Fortran Character String Utilities
-! A collection of string manipulation routines is contained in the module
-! ‘strings’ found in the file stringmod.f90. To obtain this module as well as
-! some other string utilities, go to the website
-!     http://www.gbenthien.net/strings/index.html.
-! To use the routines in the module ‘strings’ the user needs to add the
-! statement
-!     Use strings
-! to the top of the program. These routines were developed primarily to aid
-! in the reading and manipulation of input data from an ASCII text file.
-!*******************************************************************************
 
 ! Real kinds
 integer, parameter :: kr4=selected_real_kind(6,37)   ! single precision real

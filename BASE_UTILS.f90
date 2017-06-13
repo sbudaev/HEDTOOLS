@@ -1,4 +1,3 @@
-module BASE_UTILS
 !*******************************************************************************
 ! SVN $Id$
 !*******************************************************************************
@@ -6,6 +5,7 @@ module BASE_UTILS
 ! PURPOSE: This module provides basic high level utilities that are used in
 !   Different models (and should be of general applicability).
 !*******************************************************************************
+module BASE_UTILS
 
 implicit none
 
