@@ -48,11 +48,15 @@ These are the top priorities for the modelling tools:
 Abstract
 --------
 
-This document describes the modelling tools and approaches used for the
-new individual-based and agent-based model environment (framework). First,
-it documents the modelling *modules* that are developed to make coding such
-models simpler. Second, it outlines the general coding style and an aproach
-based on *object-oriented* programming.
+HEDTOOLS is a set of modelling utilities and tools (implemented as portable
+Fortran modules, not object-oriented) that have general applicability and
+are used for data conversion, input/output, random number generation and
+execution logging. There are also a few computational tools. Even though
+HEDTOOLS modules are primarily designed to be used in the AHA Model, they
+are designed such that they can be used in many different simulation projects.
+
+This document describes HEDTOOLS and outlines the software requirements and
+general coding style for the AHA model.
 
 Modern *Fortran* can be considered as an almost ideal language for agent-based
 modelling. It is high-level (e.g. it allows to work with whole arrays and
