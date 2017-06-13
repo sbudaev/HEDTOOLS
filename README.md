@@ -13,8 +13,8 @@ are designed such that they can be used in many different simulation projects.
 
 HEDTOOLS use modules and pieces from these sources:
 
-- [FLIBS - A collection of Fortran modules, by by Arjen Markus and Michael Baudin ](http://flibs.sourceforge.net/);
+- [FLIBS - A collection of Fortran modules, by by Arjen Markus and Michael Baudin](http://flibs.sourceforge.net/);
 - [Source Codes in Fortran90 by John Burkardt](https://people.sc.fsu.edu/~jburkardt/f_src/f_src.html);
 - [Fortran Strings Module by George Benthien](http://gbenthien.net/strings/str-index.html);
 - [Michel Olagnon ranking codes](http://www.fortran-2000.com/rank/);
-- [Linear interpolation by David G. Simpson](http://www.davidgsimpson.com/software/linterpol_f90.txt);
+- [Linear interpolation by David G. Simpson](http://www.davidgsimpson.com/software/linterpol_f90.txt).
