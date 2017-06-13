@@ -4465,7 +4465,7 @@ end function CSV_MATRIX_READ_R8
 ! standard C POSIX filesystem functions.
 !-------------------------------------------------------------------------------
 
-subroutine FS_MKDIR(dirname, iostat)
+subroutine FS_MKDIR(dirname, iostat, is_writeable)
 !*******************************************************************************
 ! FS_MKDIR
 ! PURPOSE: Makes a durectory using a POSIX standard C call via the Fortran
@@ -4490,8 +4490,12 @@ use ISO_C_BINDING
 
   character(len=*), intent(in) :: dirname
   integer, optional, intent(out) :: iostat
+  logical, optional, intent(out) :: is_writeable
 
   integer :: cret
+
+  character(len=*), parameter :: f_name_tmp = ".tmpfile"
+  integer :: f_unit_tmp
 
   interface
     function mkdir(path,mode) bind(c,name="mkdir")
@@ -4509,6 +4513,19 @@ use ISO_C_BINDING
 
   ! This return parameter might not actually work on all systems.
   if (present(iostat)) iostat = cret
+
+  ! Try to make sure the directory is writeable, if is_writeable optional
+  ! parameter was requested. Open a small tmp file for writing and check
+  ! the operation status.
+  CHECK_WRITE_DIR: if (present(is_writeable)) then
+    is_writeable = .FALSE.
+    f_unit_tmp = GET_FREE_FUNIT()
+    open( unit=f_unit_tmp, file=trim(dirname) // f_name_tmp, status='replace',&
+          iostat=iostat )
+    if (iostat == 0) is_writeable = .TRUE.
+    close(f_unit_tmp)
+    call FS_UNLINK( trim(dirname) // f_name_tmp )
+  end if CHECK_WRITE_DIR
 
 end subroutine FS_MKDIR
 
