@@ -17,4 +17,5 @@ HEDTOOLS use modules and pieces from these sources:
 - [Source Codes in Fortran90 by John Burkardt](https://people.sc.fsu.edu/~jburkardt/f_src/f_src.html);
 - [Fortran Strings Module by George Benthien](http://gbenthien.net/strings/str-index.html);
 - [Michel Olagnon ranking codes](http://www.fortran-2000.com/rank/);
-- [Linear interpolation by David G. Simpson](http://www.davidgsimpson.com/software/linterpol_f90.txt).
+- [Linear interpolation by David G. Simpson](http://www.davidgsimpson.com/software/linterpol_f90.txt);
+- [Non-intrinsic IEEE modules for gfortran by R. J. Hanson](http://mathalacarte.com/hpcconsult).
