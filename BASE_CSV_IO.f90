@@ -4495,7 +4495,7 @@ use ISO_C_BINDING
   integer :: cret
 
   character(len=*), parameter :: f_name_tmp = ".tmpfile"
-  integer :: f_unit_tmp
+  integer :: f_unit_tmp, iostat_f_tmp
 
   interface
     function mkdir(path,mode) bind(c,name="mkdir")
@@ -4518,11 +4518,14 @@ use ISO_C_BINDING
   ! parameter was requested. Open a small tmp file for writing and check
   ! the operation status.
   CHECK_WRITE_DIR: if (present(is_writeable)) then
-    is_writeable = .FALSE.
     f_unit_tmp = GET_FREE_FUNIT()
     open( unit=f_unit_tmp, file=trim(dirname) // f_name_tmp, status='replace',&
-          iostat=iostat )
-    if (iostat == 0) is_writeable = .TRUE.
+          iostat=iostat_f_tmp )
+    if (iostat_f_tmp == 0) then
+      is_writeable = .TRUE.
+    else
+      is_writeable = .FALSE.
+    end if
     close(f_unit_tmp)
     call FS_UNLINK( trim(dirname) // f_name_tmp )
   end if CHECK_WRITE_DIR
