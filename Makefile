@@ -89,13 +89,12 @@ K := $(foreach exec,$(REQUIRED_EXECS),\
 #          depends on procedures from BASE_STRINGS.
 
 SRC = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90  \
-      BASE_RANDOM.f90 BASE_ERRORS.f90
+      BASE_RANDOM.f90
 
 OBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
-      BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT)
+      BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT)
 
-MOD = base_utils.mod  base_strings.mod csv_io.mod  logger.mod base_random.mod \
-      assert.mod errors.mod exception.mod throwable.mod
+MOD = base_utils.mod  base_strings.mod csv_io.mod  logger.mod base_random.mod
 
 DOC = HEDTOOLS.adoc
 
@@ -432,8 +431,6 @@ BASE_LOGGER.$(OBJEXT): BASE_LOGGER.f90
 	$(FC) $(FFLAGS) -c $<
 BASE_RANDOM.$(OBJEXT): BASE_RANDOM.f90 $(THIS_FILE)
 	@$(MAKE) -f $(THIS_FILE) inc
-	$(FC) $(FFLAGS) -c $<
-BASE_ERRORS.$(OBJEXT): BASE_ERRORS.f90
 	$(FC) $(FFLAGS) -c $<
 BASE_STRINGS.$(OBJEXT): BASE_STRINGS.f90
 	$(FC) $(FFLAGS) -c $<
