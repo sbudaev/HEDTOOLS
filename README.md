@@ -19,3 +19,7 @@ HEDTOOLS use modules and pieces from these sources:
 - [ORDERPACK 2.0 by Michel Olagnon](http://www.fortran-2000.com/rank/);
 - [Linear interpolation by David G. Simpson](http://www.davidgsimpson.com/software/linterpol_f90.txt);
 - [Non-intrinsic IEEE modules for gfortran by R. J. Hanson](http://mathalacarte.com/hpcconsult).
+
+# Wiki #
+
+- HEDTOOLS Wiki is [here](https://bitbucket.org/teg_uib/hedtools/wiki/Home).
