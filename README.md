@@ -22,9 +22,8 @@ HEDTOOLS use modules and pieces from these sources:
 
 # License #
 
-The code is covered by the GNU GPL 3.0 license
-
-The text of the license can be obtained [here](https://www.gnu.org/licenses/gpl-3.0.en.html)
+The code is covered by the [GNU GPL 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
+or [GNU LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html) license.
 
 # Wiki #
 
