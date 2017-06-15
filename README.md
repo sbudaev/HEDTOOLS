@@ -20,6 +20,12 @@ HEDTOOLS use modules and pieces from these sources:
 - [Linear interpolation by David G. Simpson](http://www.davidgsimpson.com/software/linterpol_f90.txt);
 - [Non-intrinsic IEEE modules for gfortran by R. J. Hanson](http://mathalacarte.com/hpcconsult).
 
+# License #
+
+The code is covered by the GNU GPL 3.0 license
+
+The text of the license can be obtained [here](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 # Wiki #
 
 - HEDTOOLS Wiki is [here](https://bitbucket.org/teg_uib/hedtools/wiki/Home).
