@@ -1,5 +1,5 @@
-!> Produce a plot of the relationship between the fish size
-!! and its visual range for the predator
+!> Produce a plot of the relationship between the object radius
+!! and its visual range for a visual agent.
 !! make SRC=visrange_plot.f90 OUT=visrange_plot
 !! $Id$
 !-------------------------------------------------------------------------------
