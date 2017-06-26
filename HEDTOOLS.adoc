@@ -1569,6 +1569,15 @@ indexterm:[Subversion,change repository address,relocate]
 
 TortoiseSVN client on Windows has a *Relocate* menu item under *TortoiseSVN*.
 
+*WebDAV access.* It is possible to access the Subversion repository using the
+standard WebDAV protocol (https://) as a virtual folder without installing
+any client software.  WebDAV is supported by most operating systems,
+including Windows and Linux. On Windows, use the "Map network drive"" menu
+to establish connection to the server. On Linux, just place such an address
+in the file manager ("Ctrl L" may be required to go to the address line):
++davs://subversion.uib.no/repos/aha-fortran/+
+indexterm:[Subversion,WebDAV]
+
 
 GUI Tools
 ~~~~~~~~~
