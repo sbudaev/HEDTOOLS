@@ -25,8 +25,8 @@ operating systems.
   cluster, provided no debugging is done here.
 
 Building the plotting tools is based on the **PGPLOT** library
-(see http://www.astro.caltech.edu/~tjp/pgplot/). But it is easy to
-reimplement them for different toolbox (e.g. PlPlot or distlin). PGPLOT can
-often be found in the standard Linux repositories (e.g. Ubuntu). For Windows,
-PGPLOT is a part of the GrWin library
-(see http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/).
+(see [http://www.astro.caltech.edu/~tjp/pgplot/](http://www.astro.caltech.edu/~tjp/pgplot/)).
+But it is easy to reimplement them for different toolbox (e.g. PlPlot or
+distlin). PGPLOT can often be found in the standard Linux repositories
+(e.g. Ubuntu). For Windows, PGPLOT is a part of the GrWin library
+(see [http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/](http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/)).
