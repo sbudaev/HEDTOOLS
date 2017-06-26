@@ -1023,11 +1023,13 @@ make docs
 Version control: Subversion (SVN)
 --------------------------------
 
-AHA Repository: https://svn.uib.no/aha-fortran[https://svn.uib.no/aha-fortran]
+AHA Repository:
+https://subversion.uib.no/repos/aha-fortran/[https://subversion.uib.no/repos/aha-fortran/]
+
 indexterm:[AHA repository]
 
-AHA Tools stable version (trunk): https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/
-[https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/]
+AHA Tools stable version (trunk):
+https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/[https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/]
 
 Overview
 ~~~~~~~~
@@ -1122,11 +1124,11 @@ First time setup of the working copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 IMPORTANT: AHA Tools in _trunk_ (stable version) can be found here:
-           +https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/+;
+           +https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/+;
            Development versions are here:
-           +https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS/+.
+           +https://subversion.uib.no/repos/aha-fortran/branches/budaev/HEDTOOLS/+.
            So standard checkout (the _stable_ version) is like this: +
-           +svn checkout https://svn.uib.no/aha-fortran/trunk/HEDTOOLS/+
+           +svn checkout https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/+
 indexterm:[AHA repository]
 
 Command line tool
@@ -1147,7 +1149,7 @@ First time setup of the working copy of the model (working directory):
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn --username u01 checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+svn --username u01 checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18
 --------------------------------------------------------------------------------
 
 image:doc/img/img_doc_svn_first.png[width=400,align="left"]
@@ -1156,7 +1158,7 @@ next, just this should work:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+svn checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18
 --------------------------------------------------------------------------------
 
 This will get the +HED18+ into the directory +HED18+ within the current working
@@ -1164,9 +1166,9 @@ directory. If we use +HEDTOOLS+, it should also be placed here:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HED18
+svn checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18
 ...
-svn checkout https://svn.uib.no/aha-fortran/branches/budaev/HEDTOOLS
+svn checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HEDTOOLS
 --------------------------------------------------------------------------------
 
 So, we now get +HED18+ and +HEDTOOLS+ in our working directory.
@@ -1317,7 +1319,7 @@ indexterm:[Subversion,branch,move branch]
 [source,bash]
 --------------------------------------------------------------------------------
 # Making a new directory for old code -- use the mkdir command
-svn mkdir https://svn.uib.no/aha-fortran/old_archived
+svn mkdir https://subversion.uib.no/repos/aha-fortran/old_archived
 --------------------------------------------------------------------------------
 indexterm:[Subversion,mkdir]
 
@@ -1326,12 +1328,12 @@ It is also easy to move or copy parts of the repository across the repository:
 [source,bash]
 --------------------------------------------------------------------------------
 # Move a model branch to the archive folder -- use mv (move) command
-svn mv https://svn.uib.no/aha-fortran/trunk/model_20151013 \
-      https://svn.uib.no/aha-fortran/old_archived/model_20151013
+svn mv https://subversion.uib.no/repos/aha-fortran/trunk/model_20151013 \
+      https://subversion.uib.no/repos/aha-fortran/old_archived/model_20151013
 ....
 # Copy a file to another branch -- use cp (copy) command
-svn cp https://svn.uib.no/aha-fortran/trunk/hormones/Hormones.f90 \
-      https://svn.uib.no/aha-fortran/branches/camilla/hormones/Hormones.f90
+svn cp https://subversion.uib.no/repos/aha-fortran/trunk/hormones/Hormones.f90 \
+  https://subversion.uib.no/repos/aha-fortran/branches/camilla/hormones/Hormones.f90
 --------------------------------------------------------------------------------
 
 Do not forget to update the local working copy after deleting/moving/copying
@@ -1360,8 +1362,8 @@ main line.
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn copy https://svn.uib.no/aha-fortran/branches/budaev/HED18 \
-    https://svn.uib.no/aha-fortran/branches/natasha/HED18 \
+svn copy https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18 \
+    https://subversion.uib.no/repos/aha-fortran/branches/natasha/HED18 \
     -m "Creating private branch."
 --------------------------------------------------------------------------------
 indexterm:[Subversion,branch]
@@ -1502,12 +1504,12 @@ $ svn merge --record-only -c 991 ^/trunk/HEDTOOLS/
 Other features
 ~~~~~~~~~~~~~~
 
-Subversion has a very useful feature: you can set various properties (+svn
-propset+). For example, one can set tags on files or directories. A very
-interesting feature is that  +svn:keyword+ properties can be incorporated into
-the source files under SVN control. For example, you can include specific
-tags into the Fortran (or any other managed) source code so that they are
-updated automatically.
+*Keywords.* Subversion has a very useful feature: you can set various
+properties (+svn propset+). For example, one can set tags on files or
+directories. A very interesting feature is that  +svn:keyword+ properties
+can be incorporated into the source files under SVN control. For example,
+you can include specific tags into the Fortran (or any other managed) source
+code so that they are updated automatically.
 indexterm:[Subversion,propset]
 indexterm:[Subversion,properties]
 indexterm:[Subversion,keywords]
@@ -1555,6 +1557,17 @@ Check out full documentation in the SVN manual about +propset+ and
 +svn:keyword+.
 
 IMPORTANT: Subversion keywords are case sensitive, so +$ID+ or +$id+ won't work.
+
+*Change Subversion main repository address.* If the main svn repository address
+is changed for some reason, +svn relocate+ command is useful:
+indexterm:[Subversion,change repository address,relocate]
+
+[source, bash]
+--------------------------------------------------------------------------------
+ svn relocate --username user_name https://subversion.uib.no/repos/aha-fortran/
+--------------------------------------------------------------------------------
+
+TortoiseSVN client on Windows has a *Relocate* menu item under *TortoiseSVN*.
 
 
 GUI Tools
@@ -5576,10 +5589,10 @@ for building both on the command line and from the IDE.
 
 IMPORTANT: A Code::Blocks project template for the AHA Model is available
     in the +^/trunk/scripts+ folder on the Subversion repository:
-    https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp[Project.cbp].
+    https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp[Project.cbp].
     This file should be copied to the project folder. the svn command for
     this is: +
-    +svn export https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp+
+    +svn export https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp+
 
 Manual builds of HEDTOOLS
 -------------------------
@@ -5893,7 +5906,7 @@ indexterm:[svn, Subversion, AHA Workshop]
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn --username user_name checkout https://svn.uib.no/aha-fortran/_your_svn_path
+svn --username user_name checkout https://subversion.uib.no/repos/aha-fortran/_your_svn_path
 --------------------------------------------------------------------------------
 
 It will also ask your *svn password* on the first run, use option to save it.
@@ -5916,7 +5929,7 @@ copy containing the code, open Terminal and issue:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn export https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp
+svn export https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp
 --------------------------------------------------------------------------------
 
 IMPORTANT: Configuring the project template file is only necessary if the
@@ -5928,7 +5941,7 @@ IMPORTANT: Configuring the project template file is only necessary if the
 The same using the file manager: go to the working directory
 containing the model code, right-click and select *SVN* then
 *Export*, and then put the Code:Blocks *Project* file path
-(https://svn.uib.no/aha-fortran/trunk/scripts/Project.cbp).
+(https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp).
 
 Then you can open this project file from the Code:Blocks IDE. The first thing
 to do here is (1) delete the fake Fortran file +some_file.f90+ from the
