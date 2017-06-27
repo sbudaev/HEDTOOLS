@@ -4,10 +4,9 @@ The directory `tools` contains plotting tools. They are used to produce
 various output data-based plots in the *DEBUG* mode of the model. Such
 plotting tools are implemented as wholly separate binary executable programs.
 
-- There is **no graphics output** in the model code itself. This makes the
-  model code itself independent on any third-party plotting or graphical tools.
-  The model code should not depend on any non-essential (e.g. graphics)
-  components of libraries!
+- There is **no graphics output** in the model code. This makes the model
+  code itself independent on any non-essential third-party plotting or
+  graphical tools.
 
 Thus, the model code has maximum portability. This is a crucial requirement
 since the model code should build without issues on various platforms and
