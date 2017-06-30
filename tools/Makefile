@@ -71,10 +71,9 @@ DOXYPATH = $(shell grep ^OUTPUT_DIRECTORY Doxyfile | cut -d '=' -f 2)
 #          depends on procedures from BASE_CSV_IO.
 
 HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
-           BASE_RANDOM.f90 BASE_ERRORS.f90
+           BASE_RANDOM.f90
 
-HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod  logger.mod \
-           base_random.mod assert.mod errors.mod exception.mod throwable.mod
+HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod logger.mod base_random.mod
 
 # Path to HEDTOOLS and IEEE non-intrinsic libs
 HEDTOOLSDIR =  ../../HEDTOOLS
@@ -216,7 +215,7 @@ endif
 #          depends on procedures from BASE_CSV_IO.
 
 HTOOLOBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
-           BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT) BASE_ERRORS.$(OBJEXT)
+           BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT)
 
 #*******************************************************************************
 # Generate the list of modules used in the source.
@@ -549,8 +548,6 @@ BASE_LOGGER.$(OBJEXT): BASE_LOGGER.f90
 	$(FC) $(FFLAGS) -c $<
 BASE_RANDOM.$(OBJEXT): BASE_RANDOM.f90 $(THIS_FILE)
 	@$(MAKE) -f $(THIS_FILE) inc
-	$(FC) $(FFLAGS) -c $<
-BASE_ERRORS.$(OBJEXT): BASE_ERRORS.f90
 	$(FC) $(FFLAGS) -c $<
 BASE_STRINGS.$(OBJEXT): BASE_STRINGS.f90
 	$(FC) $(FFLAGS) -c $<
