@@ -4,41 +4,13 @@ Sergey Budaev <sergey.budaev@uib.no>
 $Id$
 
 ////////////////////////////////////////////////////////////////////////////////
-Note: asciidoc document, Generate pdf book with
-a2x -fpdf BASE_UTILS.adoc
-manual on asciidoc is available at: http://asciidoc.org/userguide.html
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-***************************************************************************
-Notes: (within the comment block ///// , so won't render in the final document)
-
-Revisions:
-18.06.2016 11:52:10 r858 - moved all images to from HEDTOOLS root to doc/img
-
-IMAGES:: set maximum width for images (whole page width) 510
-
----
-
-We need a name for the toolbox of the modules, does the
-Bergen Evolutiuonary Agents Simulation Toolbox (BEAST) seem okay?
-others:
-    Bergen Evolutiuonary Agents Simulation Toolbox in Fortran (BEAST-F or
-    F-BEAST or AHA-BEAST)
-    Bergen Evolutiuonary Agents Simulation Toolbox in OO Fortran (BEAST-OOF)
-    Fortran Evolutiuonary Agents Simulation Toolbox (FEAST) or FOO-BEAST?
-
-Workflow: do this doc in private branch. Reintegrate back to trunk when PDF is
-          issued.
-
-These are the top priorities for the modelling tools:
-
-1. make coding (writing, maintaining, modifying, reusing and understanding
-   code) simple -- OO + modular design + standard modules for data output.
-2. make understanding the model code easier -- modular design + extensive and
-   detailed documentation within both the code and as a separate html/pdf/epub
-   bundle.
-***************************************************************************
+Notes:
+    * Note: asciidoc document, Generate pdf book with
+      a2x -fpdf BASE_UTILS.adoc
+    * manual on asciidoc is available at: http://asciidoc.org/userguide.html
+      (within the comment block ///// , so won't render in the final document)
+    * IMAGES:: set maximum width for images (whole page width) 510
+    * PDF svn path is ** updated MANUALLY **
 ////////////////////////////////////////////////////////////////////////////////
 
 :description: Modelling tools/coding style for the new AHA! environment.
@@ -72,17 +44,6 @@ works.
 
 _Document date: {docdate}._ The document is generated with the
 http://asciidoc.org/[AsciiDoc] markup processor.
-
-////////////////////////////////////////////////////////////////////////////////
-Note: SVN tags need property setup:
-svn propset svn:keywords "Id Date Revision HeadURL LastChangedDate" BASE_UTILS.adoc
-svn commit BASE_UTILS.adoc -m 'set keywords for svn tags""
-////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////
-NOTE: PDF svn path is ****** updated MANUALLY ******
-////////////////////////////////////////////////////////////////////////////////
 
 Latest PDF version: +
 http://158.37.63.57/doc/HEDTOOLS.pdf
