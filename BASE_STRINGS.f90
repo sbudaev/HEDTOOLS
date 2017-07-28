@@ -85,6 +85,8 @@ character(len=*) :: str,delims
 character(len=len_trim(str)) :: strsav
 character(len=*),dimension(:) :: args
 
+integer(ki4) :: nargs, i, k, lenstr, na
+
 strsav=str
 call compact(str)
 na=size(args)
@@ -116,6 +118,8 @@ subroutine compact(str)
 character(len=*):: str
 character(len=1):: ch
 character(len=len_trim(str)):: outstr
+
+integer(ki4) :: i, k, ich, isp, lenstr
 
 str=adjustl(str)
 lenstr=len_trim(str)
@@ -159,6 +163,8 @@ character(len=*):: str
 character(len=1):: ch
 character(len=len_trim(str))::outstr
 
+integer(ki4) :: i, k, ich, lenstr
+
 str=adjustl(str)
 lenstr=len_trim(str)
 outstr=' '
@@ -190,6 +196,8 @@ character(len=*)::str
 real(kr8)::rnum
 integer :: ios
 
+integer(ki4) :: ipos, ilen
+
 ilen=len_trim(str)
 ipos=scan(str,'Ee')
 if(.not.is_digit(str(ilen:ilen)) .and. ipos/=0) then
@@ -209,6 +217,8 @@ subroutine value_sr(str,rnum,ios)
 character(len=*)::str
 real(kr4) :: rnum
 real(kr8) :: rnumd
+
+integer(ki4) :: ios
 
 call value_dr(str,rnumd,ios)
 if( abs(rnumd) > huge(rnum) ) then
@@ -230,6 +240,8 @@ character(len=*)::str
 integer(ki8) :: inum
 real(kr8) :: rnum
 
+integer(ki4) :: ios
+
 call value_dr(str,rnum,ios)
 if(abs(rnum)>huge(inum)) then
   ios=15
@@ -248,6 +260,8 @@ subroutine value_si(str,inum,ios)
 character(len=*)::str
 integer(ki4) :: inum
 real(kr8) :: rnum
+
+integer(ki4) :: ios
 
 call value_dr(str,rnum,ios)
 if(abs(rnum)>huge(inum)) then
@@ -268,6 +282,8 @@ subroutine shiftstr(str,n)
 ! are replaced by spaces.
 
 character(len=*):: str
+
+integer(ki4) :: n, nabs, lenstr
 
 lenstr=len(str)
 nabs=iabs(n)
@@ -293,6 +309,8 @@ subroutine insertstr(str,strins,loc)
 character(len=*):: str,strins
 character(len=len(str))::tempstr
 
+integer(ki4) :: loc, lenstrins
+
 lenstrins=len_trim(strins)
 tempstr=str(loc:)
 call shiftstr(tempstr,lenstrins)
@@ -311,6 +329,8 @@ subroutine delsubstr(str,substr)
 ! not considered part of 'substr'.
 
 character(len=*):: str,substr
+
+integer(ki4) :: ipos, lensubstr
 
 lensubstr=len_trim(substr)
 ipos=index(str,substr)
@@ -332,6 +352,8 @@ subroutine delall(str,substr)
 ! shifts characters left to fill holes.
 
 character(len=*):: str,substr
+
+integer(ki4) :: ipos, lensubstr
 
 lensubstr=len_trim(substr)
 do
@@ -355,6 +377,8 @@ function uppercase(str) result(ucstr)
 
 character (len=*):: str
 character (len=len_trim(str)):: ucstr
+
+integer(ki4) :: i, iqc, iav, iquote, ioffset, ilen
 
 ilen=len_trim(str)
 ioffset=iachar('A')-iachar('a')
@@ -391,6 +415,8 @@ function lowercase(str) result(lcstr)
 character (len=*):: str
 character (len=len_trim(str)):: lcstr
 
+integer(ki4) :: iqc, iav, i, iquote, ioffset, ilen
+
 ilen=len_trim(str)
 ioffset=iachar('A')-iachar('a')
 iquote=0
@@ -426,6 +452,8 @@ subroutine readline(nunitr,line,ios)
 
 character (len=*):: line
 
+integer(ki4) :: nunitr, ios, ipos
+
 do
   read(nunitr,'(a)', iostat=ios) line      ! read input line
   if(ios /= 0) return
@@ -448,6 +476,8 @@ subroutine match(str,ipos,imatch)
 
 character(len=*) :: str
 character :: delim1,delim2,ch
+
+integer(ki4) :: i, isum, inc, istart, iend, idelim2, lenstr, imatch, ipos
 
 lenstr=len_trim(str)
 delim1=str(ipos:ipos)
@@ -574,6 +604,8 @@ subroutine trimzero(str)
 character(len=*) :: str
 character :: ch
 character(len=10) :: exp
+
+integer(ki4) :: i, lstr, ipos
 
 ipos=scan(str,'eE')
 if(ipos>0) then
@@ -717,6 +749,8 @@ character,optional :: sep
 logical :: pres
 character :: ch,cha
 
+integer(ki4) :: i, k, ipos, iposa, ibsl, lenstr
+
 pres=present(sep)
 str=adjustl(str)
 call compact(str)
@@ -778,6 +812,8 @@ subroutine removebksl(str)
 character(len=*):: str
 character(len=1):: ch
 character(len=len_trim(str))::outstr
+
+integer(ki4) :: i, k, ibsl, lenstr
 
 str=adjustl(str)
 lenstr=len_trim(str)
