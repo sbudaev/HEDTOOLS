@@ -1266,9 +1266,6 @@ subroutine RAND_ARRAY_4_R4(random_array, A, B)
 real, dimension(:,:,:,:) :: random_array
 real, optional, intent(in) :: A, B
 
-! local variables
-integer :: i, j, k, l
-
 if (present(A) .and. present(B)) then
   call random_number(random_array)
   random_array = A + random_array * (B - A)
