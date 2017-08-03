@@ -103,9 +103,13 @@ It is also available from the http://www.cygwin.com/[Cygwin system] and other
 GNU core utils <<GNUCORE_GET, distros for Windows>>.
 
 IMPORTANT: Two GNU core utilities are *mandatory* to use the GNU make system:
-           https://en.wikipedia.org/wiki/Grep[grep] and
-           https://en.wikipedia.org/wiki/Expr[expr]. They can be installed
-           from any of the <<GNUCORE_GET, GNU distros for Windows>>.
+           https://en.wikipedia.org/wiki/Grep[grep],
+           https://en.wikipedia.org/wiki/Expr[expr].
+           https://en.wikipedia.org/wiki/Cut_(Unix)[cut],
+           https://en.wikipedia.org/wiki/Sed[sed] and
+           https://en.wikipedia.org/wiki/AWK[awk]
+           They can be installed from any of the
+           <<GNUCORE_GET, GNU distros for Windows>>.
 
 The official site of GNU make with the code, manuals etc. is here:
 https://www.gnu.org/software/make/. An almost complete GNU distribution for
