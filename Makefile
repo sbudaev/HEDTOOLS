@@ -26,6 +26,15 @@ TOOLS_LIST := htintrpl htscatter hthist
 # Path to binary tools, normally subdirectory
 TOOLS_PATH = tools/
 
+#===============================================================================
+# Accessory settings for the build environment
+
+# The native file delete command on the Windows platform is 'del' or 'erase'.
+# However, if Cygwin is used, this native file removal command may not call
+# with a "command not found" error. In such a case, use the Unix 'rm' tool
+# provided by Cygwin.
+WINRM := rm -fr
+
 #*******************************************************************************
 # Determine what is the build platform, Windows / non-Windows
 # Use uname -- but it may not be installed on Windows. Probably the method
@@ -34,6 +43,7 @@ TOOLS_PATH = tools/
 # We use PLATFORM only for outputting the OS in zipfile and other things that
 # are unimportant if uname is absent on the system (Windows), for real
 # OS/platform check better use a safer mechanism based on ComSpec (below).
+# PLATFORM is still used for zip file name generation.
 PLATFORM = $(shell uname)
 #IS_WINDOWS = $(shell uname | grep -ci windows)
 
@@ -47,15 +57,16 @@ ifdef ComSpec
 	IS_WINDOWS=1
 	WHICH_CMD=where
 	NULLDEV=":NULL"
-	RM ?= del
-	MV ?= move
+	PLATFORM = windows
+	RM := $(WINRM)
+	MV := move
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
 	WHICH_CMD=which
 	NULLDEV="/dev/null"
-	RM ?= rm -f
-	MV ?= mv -f
+	RM := rm -f
+	MV := mv -f
 endif
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
