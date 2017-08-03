@@ -91,8 +91,7 @@ K := $(foreach exec,$(REQUIRED_EXECS),\
 SRC = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90  \
       BASE_RANDOM.f90
 
-OBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
-      BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT)
+OBJ = $(addsuffix .$(OBJEXT), $(basename $(SRC)))
 
 MOD = base_utils.mod  base_strings.mod csv_io.mod  logger.mod base_random.mod
 
@@ -180,7 +179,7 @@ endif
 ifdef DEBUG
 	GF_FFLAGS = -O0 -g -ffpe-trap=zero,invalid,overflow,underflow $(GF_RCHECKS)
 	IF_FFLAGS = -O0 -g -debug all -fpe0 -traceback $(IF_RCHECKS)
-	IF_FFLAGS_WINDOWS = /c /Zi /Od /debug:full /fpe:0 /nopdbfile
+	IF_FFLAGS_WINDOWS = /c /Zi /Od /debug:full /fpe:0 /traceback
 	#$(IF_RCHECKS_WINDOWS)
 	SF_FFLAGS = -O0 -g -ftrap=%all $(SF_RCHECKS)
 endif
@@ -354,7 +353,7 @@ doc: $(DOCFIL).$(DOCFMT)
 # Clean workspace completely - distribution state
 distclean: neat
 	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
-	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND)
+	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb
 	$(MAKE) -C $(TOOLS_PATH) distclean
 
 # We don't clean .mod files as they are necessary for building with .so
@@ -362,7 +361,7 @@ clean: neat
 	-$(RM) *.o *.obj
 
 neat:
-	-$(RM) $(TMPFILES) *conflict*  .syncthing*
+	-$(RM) $(TMPFILES) *conflict*  .syncthing* *.orig
 
 #-------------------------------------------------------------------------------
 .PHONY: help
