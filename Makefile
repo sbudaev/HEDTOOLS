@@ -44,9 +44,11 @@ WINRM := rm -fr
 # are unimportant if uname is absent on the system (Windows), for real
 # OS/platform check better use a safer mechanism based on ComSpec (below).
 # PLATFORM is still used for zip file name generation.
-PLATFORM = $(shell uname)
-#IS_WINDOWS = $(shell uname | grep -ci windows)
-
+#   PLATFORM = $(shell uname)
+#   IS_WINDOWS = $(shell uname | grep -ci windows)
+# The hardware type is determined by uname on Unix and from standard
+# environment variable %PROCESSOR_ARCHITECTURE% on Windows.
+#
 # A safer way to check platform if uname is not available, ComSpec on Windows
 # Note that ComSpec is (may be?) case-sensitive, check with env.exe;
 #      also we set the platform-specific null device NULLDEV for redirecting
@@ -57,7 +59,7 @@ ifdef ComSpec
 	IS_WINDOWS=1
 	WHICH_CMD=where
 	NULLDEV=":NULL"
-	PLATFORM = windows
+	PLATFORM = windows_$(PROCESSOR_ARCHITECTURE)
 	RM := $(WINRM)
 	MV := move
 else
@@ -65,6 +67,7 @@ else
 	IS_WINDOWS=0
 	WHICH_CMD=which
 	NULLDEV="/dev/null"
+	PLATFORM = $(shell uname -s)_$(shell uname -p)
 	RM := rm -f
 	MV := mv -f
 endif
