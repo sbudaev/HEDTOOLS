@@ -104,7 +104,7 @@ GNU core utils <<GNUCORE_GET, distros for Windows>>.
 
 IMPORTANT: Two GNU core utilities are *mandatory* to use the GNU make system:
            https://en.wikipedia.org/wiki/Grep[grep],
-           https://en.wikipedia.org/wiki/Expr[expr].
+           https://en.wikipedia.org/wiki/Expr[expr],
            https://en.wikipedia.org/wiki/Cut_(Unix)[cut],
            https://en.wikipedia.org/wiki/Sed[sed] and
            https://en.wikipedia.org/wiki/AWK[awk]
