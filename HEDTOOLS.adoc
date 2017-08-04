@@ -4907,6 +4907,13 @@ Building and running the model
 * Run the current model: +make run+ (on the fimm HPC cluster, this will
   automatically start a new batch job)
 
+IMPORTANT: On some Linux systems, running the AHA Model compiled with the Intel
+           Fortran compiler crashes with "stack overflow"" or "segmentation
+           fault". To fix it issue this command: +ulimit -s unlimited+ on the
+           terminal. The same error on Windows is corrected by increasing stack
+           size with the /F100000000 ifort compiler option (this is normally
+           already fixed in the Makefile).
+
 Cleanup
 ^^^^^^^
 
