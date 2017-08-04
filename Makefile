@@ -48,6 +48,7 @@ WINRM := rm -fr
 #   IS_WINDOWS = $(shell uname | grep -ci windows)
 # The hardware type is determined by uname on Unix and from standard
 # environment variable %PROCESSOR_ARCHITECTURE% on Windows.
+# See https://blogs.msdn.microsoft.com/david.wang/2006/03/27/howto-detect-process-bitness/
 #
 # A safer way to check platform if uname is not available, ComSpec on Windows
 # Note that ComSpec is (may be?) case-sensitive, check with env.exe;
