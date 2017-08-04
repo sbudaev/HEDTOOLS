@@ -33,7 +33,9 @@ provided in the AHA Model and the AHA Model
 [README](http://158.37.63.57/doxydoc/md_README.html) for details.
 
 The `Makefile` that is found in the HEDTOOLS directory is used to build it as
-a static library. Here is how:
+a static library. Normally, the build system produces a zip archive with a
+"distribution" of the static library and headers ready to use in other
+projects. Here are the main build commands:
 
 - Build the static library with the default compiler and options: `make`;
 - Build the static library using specific compiler, e.g. Intel
