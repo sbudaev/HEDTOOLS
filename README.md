@@ -45,7 +45,7 @@ projects. Here are the main build commands:
 - Short help on the build commands: `make help`.
 
 For more details about using HEDTOOLS as a static library see
-[AHA Modelling Tools Manual]http://158.37.63.57/doc/ar01s14.html#BUILD_HEDTOOLS_STATLIB .
+[AHA Modelling Tools Manual](http://158.37.63.57/doc/ar01s14.html#BUILD_HEDTOOLS_STATLIB).
 
 # Wiki #
 
