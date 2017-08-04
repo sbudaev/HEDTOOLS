@@ -35,7 +35,7 @@ TOOLS_PATH = tools/
 # provided by Cygwin.
 WINRM := rm -fr
 
-#*******************************************************************************
+#===============================================================================
 # Determine what is the build platform, Windows / non-Windows
 # Use uname -- but it may not be installed on Windows. Probably the method
 # based on ComSpec is safer. Note that the -c switch on grep suppresses normal
@@ -43,14 +43,22 @@ WINRM := rm -fr
 # We use PLATFORM only for outputting the OS in zipfile and other things that
 # are unimportant if uname is absent on the system (Windows), for real
 # OS/platform check better use a safer mechanism based on ComSpec (below).
-# PLATFORM is still used for zip file name generation.
+# PLATFORM is still used for zip file name generation on Unix.
 #   PLATFORM = $(shell uname)
 #   IS_WINDOWS = $(shell uname | grep -ci windows)
 # The hardware type is determined by uname on Unix and from standard
 # environment variable %PROCESSOR_ARCHITECTURE% on Windows.
+# Ideally should check WOW64 compatibility layer too, but on amd64 we won't
+# like to build 32 bit executable.
+#     IF PROCESSOR_ARCHITECTURE == amd64 OR
+#        PROCESSOR_ARCHITEW6432 == amd64 THEN
+#        // Windows is 64bit
+#     ELSE
+#        // Windows is 32bit
+#     END IF
 # See https://blogs.msdn.microsoft.com/david.wang/2006/03/27/howto-detect-process-bitness/
 #
-# A safer way to check platform if uname is not available, ComSpec on Windows
+# A safer way to check platform not dependent on 'uname' is ComSpec on Windows.
 # Note that ComSpec is (may be?) case-sensitive, check with env.exe;
 #      also we set the platform-specific null device NULLDEV for redirecting
 #      unneeded outputs (e.g. REQUIRED_EXECS below generates huge full PATH
@@ -98,7 +106,7 @@ K := $(foreach exec,$(REQUIRED_EXECS),\
 	$(if $(shell $(WHICH_CMD) $(exec) 2>$(NULLDEV)),check executables,\
 	$(warning ************ No $(exec) available in PATH ************)))
 
-#*******************************************************************************
+#===============================================================================
 # Main building blocks, define source and object files to include.
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
 #          depends on procedures from BASE_STRINGS.
@@ -319,7 +327,7 @@ ifeq ($(FC),$(SF_FC))
 	AUTOGEN_CODE_RANDOM=$(AUTOGEN_CODE_SF)
 endif
 
-#*******************************************************************************
+#===============================================================================
 
 all: static
 
