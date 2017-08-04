@@ -2212,7 +2212,7 @@ produces >> 0.10 0.20 0.30 0.40 0.50 0.60<<
 It is possible to use array slices and array constructors with implicit do:
 
 indexterm:[implied do]
-indexterm:[implied cycle]
+indexterm:[implied loop]
 indexterm:[array slice]
 indexterm:[array constructor]
 
@@ -2727,7 +2727,7 @@ if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
 ........
 ........
 ! 6. Now we can write records containing actual data values, we do this
-!    in two do-cycles
+!    in two do-loops
 CYCLE_OVER_RECORDS: do l=1, Cdip
   ! 7. Prepare an empty string for the current CSV record
   record_csv=""
@@ -3130,7 +3130,7 @@ call CSV_RECORD_APPEND(record_csv,(/(RARR(i), i=1,6)/))
 --------------------------------------------------------------------------------
 
 indexterm:[implied do]
-indexterm:[implied cycle]
+indexterm:[implied loop]
 indexterm:[array constructor]
 
 Append an array using new-style array constructor (square brackets) with
@@ -5657,13 +5657,13 @@ program test_library
 
   call CSV_MATRIX_WRITE(A, "file_matrix_a.csv",& ! Save the matrix to CSV file
         [("VAR_" // TOSTR(i,COLS),i=1,COLS)])    ! Column names are generated
-                                                 ! in this implicit-cycle array
+                                                 ! in this implicit-loop array
 
   call RAND_ARRAY(B,10,100)      ! Generate a random integer matrix with range
 
   call CSV_MATRIX_WRITE(B, "file_matrix_b.csv",& ! Save the matrix to CSV file
         [("VAR_" // TOSTR(i,COLS),i=1,COLS)])    ! Column names are generated
-                                                 ! in this implicit-cycle array
+                                                 ! in this implicit-loop array
 end program test_library
 --------------------------------------------------------------------------------
 
