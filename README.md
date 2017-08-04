@@ -25,6 +25,25 @@ HEDTOOLS use modules and pieces from these sources:
 The code is covered by the [GNU GPL 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
 or [GNU LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html) license.
 
+# Building HEDTOOLS as a static library #
+
+Normally HEDTOOLS are used in a particular modelling project as source code.
+Consult the [Makefile](http://158.37.63.57/doxydoc/Makefile.html) that is
+provided in the AHA Model and the AHA Model
+[README](http://158.37.63.57/doxydoc/md_README.html) for details.
+
+The `Makefile` that is found in the HEDTOOLS directory is used to build it as
+a static library. Here is how:
+
+- Build the static library with the default compiler and options: `make`;
+- Build the static library using specific compiler, e.g. Intel
+  Fortran (ifort): `make FC=ifort`;
+- Build plotting tools: `make tools`;
+- Clean all temporary files and the library that is built: `make distclean`.
+
+For more details about using HEDTOOLS as a static library see
+[AHA Modelling Tools Manual]http://158.37.63.57/doc/ar01s14.html#BUILD_HEDTOOLS_STATLIB .
+
 # Wiki #
 
 - HEDTOOLS Wiki is [here](https://bitbucket.org/teg_uib/hedtools/wiki/Home).
