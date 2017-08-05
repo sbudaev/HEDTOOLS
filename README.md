@@ -27,10 +27,11 @@ or [GNU LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html) license.
 
 # Building HEDTOOLS as a static library #
 
-Normally HEDTOOLS are used in a particular modelling project as source code.
-Consult the [Makefile](http://158.37.63.57/doxydoc/Makefile.html) that is
-provided in the AHA Model and the AHA Model
-[README](http://158.37.63.57/doxydoc/md_README.html) for details.
+Normally HEDTOOLS are intended for use in a particular modelling project as
+source code. Consult the [Makefile](http://158.37.63.57/doxydoc/Makefile.html)
+that is provided in the AHA Model and the AHA Model
+[README](http://158.37.63.57/doxydoc/md_README.html) for details. A template
+Makefile is included in the `template` subdirectory.
 
 The `Makefile` that is found in the HEDTOOLS directory is used to build it as
 a static library. Normally, the build system produces a zip archive with a
