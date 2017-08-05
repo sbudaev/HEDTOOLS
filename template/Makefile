@@ -1,14 +1,70 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
 # $Id$
-# $HeadURL$
-#-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>
 #-------------------------------------------------------------------------------
+##//! @file Makefile GNU Make build configuration.
+##//! @brief Makefile to build the model executable from the source code.
+##//! @details This is a standard GNU Make "Makefile" to build the model from
+##//!          the sources. It also automatically generates some platform and
+##//!          compiler specific include files for the `BASE_RANDOM` and the
+##//!          IEEE math modules. See @ref intro_main "Working with the model"
+##//!          section and the @ref README.md for details.
+##//!
+##//! ### Dependencies ###
+##//! In addition to the GNU Make, this Makefile also depends on the
+##//! `grep`, `cut`, `sed` and `awk` utilities that are installed on any
+##//! Unix/Linux system, but usually absent on Windows. For Windows
+##//! they can be obtained from several locations on the web, e.g.
+##//! Cygwin or GnuWin32. See http://158.37.63.57/doc/ar01s01.html for
+##//! more information.
+##//!
+##//! ### Main adjustable parameters ###
+##//! @param FC sets the default compiler type from the above. Normally GNU
+##//!        gfortran.
+##//! @param HOST_HPC_ROOT is the hostname to run the model executable in the
+##//!        HPC batch mode. If the hostname the Makefile is called in is this
+##//!        system, `make run` starts a new batch task. Otherwise, the model
+##//!        executable is just started normally.
+##//! @param SRC is the name of the main source code (can be several files).
+##//! @param DRV is the source code of the model "driver", that is the main
+##//!        Fortran program that produces the executable. It should be very
+##//!        very small. The "driver" is a separate file from the AHA Model
+##//!        modules.
+##//! @param OUT is the executable file name that is actually run, on the
+##//!        Windows platform must have the `.exe` suffix. By default, the
+##//!        executable name is set to `MODEL.exe` for maximum portability.
+##//! @param DOXYCFG the Doxygen documentation system configuration file name.
+##//! @param DOXYPATH defines the Doxygen output directory where the
+##//!        documentation is generated. This could be set manually or parsed
+##//!        automatically using the `grep` command. Note that the output
+##//!        directory is set in the `Doxyfile` as:
+##//!        `OUTPUT_DIRECTORY = ./model_docs`.
+##//! @param HEDTOOLS is the list of HEDTOOLS Fortran source files that are
+##//!        used in the AHA Model. Note that `BASE_STRINGS` in the list must
+##//!        go before `BASE_CSV_IO` because `BASE_CSV_IO` depends on
+##//!        procedures from `BASE_STRINGS`.
+##//! @param HEDTOOLSDIR defines the path to the HEDTOOLS source code.
+##//! @param IEEEPATH defines the path to the IEEE non-intrinsic math modules
+##//!        (part of HEDTOOLS).
+##//! @param WINRM defines the command that is used to delete files and
+##//!        directories on the Windows platform; can be set either `del` or
+##//!        `rm`.
+##//! @note  The native file delete command on the Windows platform is 'del' or
+##//!        'erase'. However, if Cygwin is used, this native file removal
+##//!        command may not call with a "command not found" error. In such a
+##//!        case, use the Unix 'rm' tool provided by Cygwin.
+##//!
+##//! The source code of the @ref Makefile contains many other parameters and
+##//! is well documented throughout.
+##//! @cond
+#  Doxygen note: block marked with cond .. endcond is excluded from Doxygen
+#                processing. Therefore, everything below to the end of the
+#                Makefile is not parsed. Makefile is not normally supported
+#                by Doxygen.
 
-# WARNING: This file is adapted for building graphic tools and is different
-#          than that in the template folder.
+#===============================================================================
 
 # Supported Fortran compiler types
 GF_FC = gfortran
@@ -37,49 +93,55 @@ GRWIN_ROOT = C:/GrWin/MinGW_gfortran_x6
 # Root of the host name to run in HPC cluster / batch mode, not directly
 HOST_HPC_ROOT=fimm
 
-#*******************************************************************************
+#===============================================================================
 # Main building blocks, define the main program source, executable name (-o)
 # and possible module (.mod) names.
 
 # These names should be set for particular project,
 # Most probably they should be edited manually for each specific project
 # SRC is the name of the main source code (can be several files). Note that
-#   Intel fortran doesn't like f95 file extension, use f90
-# OUT is the executable file
+#     Intel fortran doesn't like f95 file extension, use f90
+# DRV is the source code of the model "driver", that is the main Fortran
+#     program that produces the executable. It should be very very small.
+#     The "driver" is a separate file from the modules.
+# OUT is the executable file, on the Windows platform has the .exe suffix.
 
 SRC = HEDG2_04.f90
 
+DRV = HEDG2_DRV.f90
+
 OUT = MODEL.exe
 
-# MOD_SRC is the modules generated by the main program, must be set manually.
-# MOD_SRC is not used for anything very important, only in cleaning temporary
-# files, so can be set to .mod files remaining after make clean/distclean
-
-MOD_SRC = mod_ga.mod
-
-# Doxygen configuration file within the same directory
+# Doxygen configuration file within the same directory.
 DOXYCFG = Doxyfile
 
-# Doxygen output directory, can be grepped from Configuration file
+# Doxygen output directory, can be grepped from Configuration file.
 # OUTPUT_DIRECTORY       = ./model_docs
 # DOXYPATH = model_docs
 DOXYPATH = $(shell grep ^OUTPUT_DIRECTORY Doxyfile | cut -d '=' -f 2)
 
-#*******************************************************************************
+#===============================================================================
 # HEDTOOLS sources and module files:
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_CSV_IO.
+#          depends on procedures from BASE_STRINGS.
 
 HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
            BASE_RANDOM.f90
 
-HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod logger.mod base_random.mod
-
-# Path to HEDTOOLS and IEEE non-intrinsic libs
-HEDTOOLSDIR =  ../../HEDTOOLS
+# Path to HEDTOOLS and IEEE non-intrinsic libs (part of HEDTOOLS).
+HEDTOOLSDIR = ../HEDTOOLS
 IEEEPATH = $(HEDTOOLSDIR)/IEEE
 
-#*******************************************************************************
+#===============================================================================
+# Accessory settings for the build environment
+
+# The native file delete command on the Windows platform is 'del' or 'erase'.
+# However, if Cygwin is used, this native file removal command may not call
+# with a "command not found" error. In such a case, use the Unix 'rm' tool
+# provided by Cygwin.
+WINRM := rm -fr
+
+#===============================================================================
 # Define compiler options
 
 # **** Options for GNU Fortran
@@ -96,11 +158,21 @@ GC_FFLAGS = -O3
 # **** Options for Intel Fortran
 IF_STATIC = -static
 IF_TRAPS = -fpe3
-IF_RCHECKS = -warn -check bounds,pointers,format,uninit
+IF_RCHECKS = -gen-interfaces -warn -check bounds,pointers,format,uninit
 IF_FFLAGS = -sox -parallel -O3 -ipo
-# for Intel Fortran, options are somewhat different on Windows platform
-# e.g. they start with slash and Q
-IF_FFLAGS_WINDOWS = /Qsox /fast /Qparallel
+# For Intel Fortran, options are somewhat different on Windows platform.
+# Note: Windows stack size is insufficient for the large number of concurrent
+#       threads and huge arrays used in the model. Therefore, stack overflow
+#       error is issued (ifort 17) with the default build options. Stack size
+#       available for the program is controlled by the /Fn option (n is in
+#       bytes). Setting a huge value resolves the stack overflow issue on the
+#       Windows platform. This can sometimes occur on the Linux and Mac OS X
+#       platforms too. To fix it on Linux, issue this command:
+#           ulimit -s unlimited
+#       Increasing stack size on Mac OS X is described here:
+#       https://developer.apple.com/library/content/qa/qa1419/_index.html.
+IF_FFLAGS_WINDOWS = /Qsox /fast /fpe:0 /Qparallel /gen-interfaces /warn \
+                    /F100000000
 
 #IF_FFLAGS = -sox -fast -parallel $(IF_STATIC) $(IF_TRAPS)
 # -fpe3 no traps; -fpe0 all traps
@@ -111,9 +183,9 @@ IF_FFLAGS_WINDOWS = /Qsox /fast /Qparallel
 SF_STATIC = -Bstatic -dn
 SF_TRAPS = -ftrap=%none
 SF_RCHECKS = -C
-# SF_FFLAGS = -O1 -depend=yes
+SF_FFLAGS = -O1 -depend=yes
 # NOTE: optimisations exceeding -O1 might not work with all CSV_IO routines
-SF_FFLAGS = -fast -autopar -depend=yes
+# SF_FFLAGS = -fast -autopar -depend=yes
 # -fast = O5
 # -ftrap=common is a macro for -ftrap=invalid,overflow,division.
 # -ftrap=%all, %none, common
@@ -122,9 +194,13 @@ SF_FFLAGS = -fast -autopar -depend=yes
 
 # DEBUG turns off all optimisations and keeps debug symbols.
 ifdef DEBUG
-	GF_FFLAGS = -O0 -g -ffpe-trap=zero,invalid,overflow,underflow $(GF_RCHECKS)
-	IF_FFLAGS = -O0 -g -fpe0 $(IF_RCHECKS)
+	GF_FFLAGS = -O0 -g -ffpe-trap=zero,invalid,overflow,underflow \
+							-Warray-temporaries $(GF_RCHECKS)
+	IF_FFLAGS = -O0 -g -debug all -fpe0 -traceback $(IF_RCHECKS)
 	SF_FFLAGS = -O0 -g -ftrap=common
+	IF_FFLAGS_WINDOWS = /Qsox /fpe:0 /debug:all /traceback /gen-interfaces \
+											/check /warn /F100000000
+	RUNFLAG = DEBUG
 endif
 
 # PROFILE adds profiling options (-pg on GNU). Then running the program provides
@@ -158,7 +234,7 @@ ifeq ($(FC),$(SF_FC))
 	RCHECKS = $(SF_RCHECKS)
 endif
 
-#*******************************************************************************
+#===============================================================================
 # Determine what is the build platform, Windows / non-Windows
 
 # Use uname -- but it may not be installed on Windows. Probably the method
@@ -176,15 +252,15 @@ ifdef ComSpec
 	NULLDEV=":NULL"
 	GF_FFLAGS += -L$(GRWIN_ROOT)/lib -Wl,--subsystem,console -mwindows
 	GRAPHLIB += -lGrWin
-	RM ?= del
-	MV ?= move
+	RM := $(WINRM)
+	MV := move
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
 	WHICH_CMD=which
 	NULLDEV="/dev/null"
-	RM ?= rm -fr
-	MV ?= mv -f
+	RM := rm -fr
+	MV := mv -f
 endif
 
 # Check if certain required executables exist and are callable in path. This is
@@ -202,47 +278,59 @@ K := $(foreach exec,$(REQUIRED_EXECS),\
 # concatenating two things into Windowsifort.
 ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
 	OBJEXT=obj
-	OBJ = $(basename $(SRC)).$(OBJEXT)
+	OBJ = $(addsuffix .$(OBJEXT), $(basename $(SRC)))
 	IF_FFLAGS:=$(IF_FFLAGS_WINDOWS)
 else
 	OBJEXT=o
-	OBJ = $(basename $(SRC)).$(OBJEXT)
+	OBJ = $(addsuffix .$(OBJEXT), $(basename $(SRC)))
 endif
 
-#*******************************************************************************
+#===============================================================================
 # HEDTOOLS object files:
 # Warning: BASE_STRINGS must go before BASE_CSV_IO because BASE_CSV_IO now
-#          depends on procedures from BASE_CSV_IO.
+#          depends on procedures from BASE_STRINGS. This should be set by
+#          correct ordering of components in the HEDTOOLS variable.
 
-HTOOLOBJ = BASE_UTILS.$(OBJEXT) BASE_STRINGS.$(OBJEXT) BASE_CSV_IO.$(OBJEXT) \
-           BASE_LOGGER.$(OBJEXT) BASE_RANDOM.$(OBJEXT)
+HTOOLOBJ = $(addsuffix .$(OBJEXT), $(basename $(HEDTOOLS)))
 
-#*******************************************************************************
+#===============================================================================
 # Generate the list of modules used in the source.
-# TODO: check which modules are really used in the source and compile only them
+# First, get the list of module calls from the 'use' statements within the
+# source code
+# NOTE: Make turns $$ into $ in awk call, otherwise it goes empty.
+#       The sort GNU make function produces a sorted list deleting duplicates.
+MOD_LIST = $(sort $(shell grep -i "^ *use " $(SRC) | sed -e 's/,//g' | awk '{printf(" %s ",$$2) }'))
 
-# NOTE: Make turns $$ into $ in awk call, otherwise it goes empty
-#MOD_LIST=$(shell grep -i "^ *use " $(SRC) | sed -e 's/,//g' | awk '{printf(" %s ",$2) }' )
-MOD_LIST=$(shell grep -i "^ *use " $(SRC) | sed -e 's/,//g' | awk '{printf(" %s ",$$2) }' )
+# Second, produce the final list of all .mod files that are to be generated.
+# MOD_ALL is a list of Fortran modules generated by the main program as well
+# as HEDTOOLS. So far MOD_ALL is not used for anything very important, only in
+# cleaning temporary files, so can be set to .mod files remaining after make
+# clean/distclean. Modules can be included into prerequisites?
+# NOTE: The code automatically generating the list of modules uses the MOD_LIST
+#       variable that gets the list of modules by applying Unix 'grep' to the
+#       source code files; extracts basename (just in case) and adds the
+#       '.mod' suffix to each file.
+MOD_ALL = $(addsuffix .mod, $(basename $(call lowercase, $(MOD_LIST))))
 
-#*******************************************************************************
-# Autogenerated include file setting compiler/platform specific code for PRNG
+#===============================================================================
+# Auto-generated include file setting compiler/platform specific code for PRNG
 # The module BASE_RANDOM includes some non-portable header code that
-# depends on the conmpiler type. It is autogenerated here. The Fortran Module
+# depends on the compiler type. It is auto-generated here. The Fortran Module
 # code contains INCLUDE statement. The appropriate include file is then
-# autogenerated during the build process.
+# auto-generated during the build process.
 # The strategy of the build is two-step:
 #    (1) Provide comment macro for the include file as well as the code adapted
 #        for the specific compiler type and platform
 #    (2) Select macro from the above list specific for the
 #        compiler type
 #    (3) build the BASE_RANDOM.o, the first statement is the include
-#        autogeneration macro, then follow the compile instructions.
+#        auto-generation macro, then follow the compile instructions.
 
 #  Header file setting compiler/platform specific code for PRNG module
 AUTOGEN_HEADER_RAND = $(HEDTOOLSDIR)/BASE_RANDOM.inc
 
-# Autogenerated include files, note that the first two lines do doxygen comments
+# Auto-generated include files, note that the first two lines do doxygen
+# comments.
 define AUTOGEN_COMMENT_RANDOM
 	$(shell echo "!> @file $(AUTOGEN_HEADER_RAND)"                               > $(AUTOGEN_HEADER_RAND))
 	$(shell echo "!! Autogenerated header for module RANDOM built with $(FC)"   >> $(AUTOGEN_HEADER_RAND))
@@ -298,7 +386,7 @@ ifeq ($(FC),$(SF_FC))
 	AUTOGEN_CODE_RANDOM=$(AUTOGEN_CODE_SF)
 endif
 
-#*******************************************************************************
+#===============================================================================
 # Determine compiler versions, we may need GCC version > 5 to use
 # non-intrinsic IEEE math modules for gfortran < 5, GCC > 5 fully
 # supports intrinsic IEEE math.
@@ -365,6 +453,13 @@ endef
 
 #-------------------------------------------------------------------------------
 
+# Function to convert UPPERCASE to lowercase by Eric Melski, taken from
+# https://stackoverflow.com/questions/664601/in-gnu-make-how-do-i-convert-a-variable-to-lower-case
+# It looks a little clunky, but it gets the job done...
+lowercase = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
+
+#-------------------------------------------------------------------------------
+
 # Determine this makefile's path. Be sure to place this BEFORE `include`s
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
@@ -395,7 +490,6 @@ docs: $(DOXYCFG)
 #   This mitght be different on different systems, depending on the
 #   installation options for Intel Parallel Studio and the Windows platform
 #   type (e.g. 32 vs. 64 bit)
-.PHONY: help
 help:
 	@echo ""
 	@echo ------------------------------------------------------------------------
@@ -465,49 +559,56 @@ else
 	@$(MAKE) -f $(THIS_FILE) run_local
 endif
 
-# Note -- this is local start/run on all supported systems
+# Note -- this is local start/run on all supported systems.
+# If the DEBUG flag was set when starting make, the executable also
+# starts in the DEBUG mode (command line DEBUG flag).
 run_local: $(OUT) $(SRC)
 	$(info ********************************************************************)
 	$(info *** Executing model $(OUT) now)
 	$(info ********************************************************************)
 ifeq ($(IS_WINDOWS),1)
-	$(OUT)
+	$(OUT) $(RUNFLAG)
 else
-	./$(OUT)
+	./$(OUT) $(RUNFLAG)
 endif
 
 # Main build the executable
 exec: $(OUT)
 
-tools: $(HTOOLOBJ)
+# Build object files only without the final executable
+objects: $(OBJ) $(HTOOLOBJ)
 
 # Produce include file for PRNG module
 inc: $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE)
+
+# Compile the HEDTOOLS modelling tools
+tools: $(HTOOLOBJ)
 
 # Compile the HEDTOOLS modelling tools
 headtools: $(HTOOLOBJ)
 
 # Cleanup data files, quotes needed on Windows if file starts from blank
 cleandata:
-	-$(RM) -f -r HED*.txt ?HED*.txt HED18*.log behaviour gene*
-	-$(RM) -f -r *.csv
+	-$(RM) HED*.txt ?HED*.txt HED18*.log behaviour gene*
+	-$(RM) debug*  *.csv *.ps *.png *.svg
 ifeq ($(IS_WINDOWS),1)
-	-$(RM) -f -r "?HED*.txt" "HED*.txt"
+	-$(RM) "?HED*.txt" "HED*.txt"
 endif
 
 # Return to default state
-distclean: clean
-	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(HTOOLMOD) \
-					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
+distclean: clean cleandata
+	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(MOD_ALL) \
+					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.pdb
 	-$(RM) $(DOXYPATH)
 
-# Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
+# Clean obj etc for new build of the model, but we don't clean HEDTOOLS and
+# any .mod files.
 clean: neat
-	-$(RM) $(OBJ) $(OUT) $(MOD_SRC) *.csv
+	-$(RM) $(OBJ) $(OUT) *.csv *.ps *.png
 
 # Cean temporary files and conflict that remain from syncthing synchronisation.
 neat:
-	-$(RM) $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.*
+	-$(RM) $(TMPFILES) *conflict* .syncthing* ~syncthing* fort.* *.tmp *.orig
 
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -516,9 +617,9 @@ neat:
 $(OUT): $(OBJ) $(HTOOLOBJ)
 	@$(MAKE) -f $(THIS_FILE) inc
 ifeq ($(COMPILE_NONINTRINSIC_IEEE),YES)
-	$(FC) $(FFLAGS) -o $(OUT) $^ $(IEEEOBJ) $(GRAPHLIB)
+	$(FC) $(FFLAGS) -o $(OUT) $(DRV) $^ $(IEEEOBJ) $(GRAPHLIB)
 else
-	$(FC) $(FFLAGS) -o $(OUT) $^ $(GRAPHLIB)
+	$(FC) $(FFLAGS) -o $(OUT) $(DRV) $^ $(GRAPHLIB)
 endif
 
 $(OBJ): $(SRC) $(HTOOLOBJ)
@@ -539,17 +640,10 @@ $(AUTOGEN_HEADER_RAND): $(BASE_RANDOM.f90) $(THIS_FILE)
 	@echo Generated include: $(AUTOGEN_HEADER_RAND) for $(FC)
 
 # compile HEDTOOLS modules. Note that the extension (.o or .obj)
-# is set via $(OBJEXT). .obj is used on Intel Fortran on Windows
-BASE_UTILS.$(OBJEXT): BASE_UTILS.f90
-	$(FC) $(FFLAGS) -c $<
-BASE_CSV_IO.$(OBJEXT): BASE_CSV_IO.f90
-	$(FC) $(FFLAGS) -c $<
-BASE_LOGGER.$(OBJEXT): BASE_LOGGER.f90
-	$(FC) $(FFLAGS) -c $<
-BASE_RANDOM.$(OBJEXT): BASE_RANDOM.f90 $(THIS_FILE)
-	@$(MAKE) -f $(THIS_FILE) inc
-	$(FC) $(FFLAGS) -c $<
-BASE_STRINGS.$(OBJEXT): BASE_STRINGS.f90
+# is set via $(OBJEXT). .obj is used on Intel Fortran on Windows.
+# Also note that generic pattern rules are used here, with the
+# include files as additional prerequisites.
+%.$(OBJEXT) : %.f90 $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE)
 	$(FC) $(FFLAGS) -c $<
 
 #-------------------------------------------------------------------------------
@@ -597,3 +691,5 @@ IEEE_EXCEPTIONS.$(OBJEXT): IEEE_EXCEPTIONS.f90
 	$(FC) -c -fno-range-check $(FFLAGS) $<
 IEEE_ARITHMETIC.$(OBJEXT): IEEE_ARITHMETIC.f90
 	$(FC) -c -fno-range-check $(FFLAGS) $<
+
+##//! @endcond
