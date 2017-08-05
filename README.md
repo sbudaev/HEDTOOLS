@@ -47,6 +47,9 @@ projects. Here are the main build commands:
 For more details about using HEDTOOLS as a static library see
 [AHA Modelling Tools Manual](http://158.37.63.57/doc/ar01s14.html#BUILD_HEDTOOLS_STATLIB).
 
+Recent pre-built versions of the static library for Intel Fortran on Windows 64
+are available [here](http://158.37.63.57/#HEDTOOLS_BIN_GET).
+
 # Wiki #
 
 - HEDTOOLS Wiki is [here](https://bitbucket.org/teg_uib/hedtools/wiki/Home).
