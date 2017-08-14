@@ -946,7 +946,6 @@ function CSV_FILE_LINES_COUNT (csv_file_name, numeric_only, csv_file_status) &
   logical :: csv_file_status_here
 
   ! Local variables
-  integer :: ierror
   integer :: input_status
   integer :: input_unit
   !character (len=2) :: line   ! We only need to count rows here
@@ -4095,7 +4094,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 
   ! Local variables, operations with the data array.
   real, dimension(:,:), allocatable :: matrix
-  integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
+  integer :: i, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
   integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
   integer, parameter :: MIN_FIELD = 1      ! Minimum length of a data field.
@@ -4299,7 +4298,7 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
 
   ! Local variables, operations with the data array.
   real (kind=8), dimension(:,:), allocatable :: matrix
-  integer :: i, lines_infile, iline, icase, jfield, line_data_buff_length
+  integer :: i, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
   integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
   integer, parameter :: MIN_FIELD = 1      ! Minimum length of a data field.
