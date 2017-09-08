@@ -3845,7 +3845,7 @@ subroutine population_save_data_all_agents_csv(this, output_data_file,      &
       call LOG_MSG( LTAG_ERROR // "Opening output CSV file FAILED: " //     &
                     output_data_file // ", in " // PROCNAME )
       call LOG_MSG( LTAG_ERROR // "Data file " // output_data_file //       &
-                    "is not written in " // PROCNAME )
+                    " is not written in " // PROCNAME )
       return
   end if
 
