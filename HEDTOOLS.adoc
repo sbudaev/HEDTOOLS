@@ -3755,6 +3755,177 @@ indexterm:[allocatable string,portability,compiler limitation]
 indexterm:[compiler,GNU,gfortran]
 indexterm:[compiler,limitation]
 
+Extended example
+~~~~~~~~~~~~~~~~
+
+Below is an extended example subroutine showing how to save diverse data to a
+CSV file. The example data variables come from an object oriented code,
+although the whole procedure does not use object orientation.
+
+indexterm:[CSV_IO, example code]
+
+[source]
+--------------------------------------------------------------------------------
+!> Save data for all agents within the population into a csv file.
+subroutine population_save_data_all_agents_csv(this, output_data_file,      &
+                                                    save_header, is_logging)
+  use CSV_IO
+  class(POPULATION), intent(in) :: this
+  !> @param[in] output_data_file is the name of the CSV output file.
+  character(len=*), intent(in) :: output_data_file
+  !> @param[in] save_header turn ON/OFF of the descriptive file header.
+  !!            Header is saved into the first row of the CSV output file
+  !!            If not present, default is FALSE.
+  logical, optional, intent(in) :: save_header
+  !> @param[in] is_logging turn ON/OFF writing the file name and data into
+  !!            the logger. If not present, default is TRUE.
+  logical, optional, intent(in) :: is_logging
+
+  ! Local copies of optionals.
+  logical :: logging_enabled
+
+  ! Counter
+  integer :: ind
+
+  !> ### Implementation notes ###
+  !> #### Local variables for CSV backend ####
+  !> - `N_COLUMNS` is the total number of columns in the spreadsheet data
+  !!   file: it is equal to the number of variables that are saved for each
+  !!   agent.
+  integer, parameter :: N_COLUMNS = 21 ! equal to the number of columns
+  !> - `handle_csv` is the CSV file handle object defining the file name,
+  !!   Fortran unit and error descriptor, see HEDTOOLS manual for details.
+  type(CSV_FILE) :: handle_csv
+  !> - `csv_record_tmp` is the temporary character string that keeps the
+  !!   whole record of the file, i.e. the whole row of the spreadsheet table.
+  character(len=:), allocatable :: csv_record_tmp
+  !> - `COLUMNS` is a parameter array that keeps all column headers; its
+  !!   size is equal to the total number of variables (columns) in the data
+  !!   spreadsheet file, which ic defined by the `N_COLUMNS` parameter here.
+  !! .
+  character(len=LABEL_LENGTH), dimension(N_COLUMNS),                        &
+    parameter :: COLUMNS =  [ "ID_NUM   ", "PERS_NAME", "ALIVE    ",        &
+                              "SEX_MALE ", "BODY_LEN ", "CTRL_RND ",        &
+                              "BODY_MASS", "ENERGY   ", "STOMACH  ",        &
+                              "MAXSTOMCP", "SMR      ", "HORM_GROW",        &
+                              "HORM_THYR", "HORM_ADRE", "HORM_CORT",        &
+                              "HORM_TEST", "HORM_ESTR", "N_REPROD ",        &
+                              "N_OFFSPNG", "AGE      ", "FITNESS  "   ]
+
+  ! PROCNAME is the procedure name for logging and debugging
+  character(len=*), parameter ::                                            &
+                          PROCNAME = "(population_save_data_all_agents_csv)"
+
+  if (present(is_logging)) then
+    logging_enabled = is_logging
+  else
+    logging_enabled = .TRUE.
+  end if
+
+  if (logging_enabled)                                                      &
+    call LOG_MSG (LTAG_INFO // "Saving all individuals in population # " // &
+            TOSTR(this%pop_number) // "(name '" // trim(this%pop_name) //   &
+            "'), " //                                                       &
+            "generation # " // TOSTR(Global_Generation_Number_Current) //   &
+            ", time step " // TOSTR(Global_Time_Step_Model_Current) //      &
+            " to file :" // output_data_file )
+
+  !> #### Save data in CSV file ####
+  !> - Define the file name \%name component of the CSV file handle. This
+  !!   file handle object is now used as the sole file identifier.
+  handle_csv%name = output_data_file
+  !> - Open the output file defined by the `handle_csv` handle object for
+  !!   writing.
+  call CSV_OPEN_WRITE( handle_csv )
+
+  !> - Possible error status of the latest file operation is obtained by the
+  !!   \%status component of the file handle. Check if there were any errors
+  !!   opening the file and report in the logger with the error tag.
+  if ( .not. handle_csv%status ) then
+      call LOG_MSG( LTAG_ERROR // "Opening output CSV file FAILED: " //     &
+                    output_data_file // ", in " // PROCNAME )
+      call LOG_MSG( LTAG_ERROR // "Data file " // output_data_file //       &
+                    "is not written in " // PROCNAME )
+      return
+  end if
+
+  !> - If the `save_header` flag is set to TRUE, save the CSV file header.
+  if (present(save_header)) then
+    if (save_header) call                                                   &
+              CSV_HEADER_WRITE( "Population: " // this%pop_name, handle_csv )
+  end if
+
+  !> - Prepare the character string variable `csv_record_tmp` that keeps the
+  !!   whole record (row) of data in the output CSV data file. The length of
+  !!   this string should be enough to fit all the record data, otherwise
+  !!   the record is truncated.
+  csv_record_tmp = repeat(" ", N_COLUMNS * len(COLUMNS(1)) )
+
+  !> - Produce the first record containing the column headers (variable
+  !!   names). Note that `CSV_RECORD_APPEND()` accepts both arrays and scalar
+  !!   values for appending. Also, write the first record physically to
+  !!   the file.
+  call CSV_RECORD_APPEND( csv_record_tmp, COLUMNS )
+  call CSV_RECORD_WRITE ( csv_record_tmp, handle_csv )
+
+  !> - The actual data are written to the CSV file in a loop over all the
+  !!   individual members of the population. One record (row) of the data
+  !!   file then represents a single individual.
+  do ind = 1, size(this%individual)
+    !>   - the `csv_record_tmp` character string variable is produced such
+    !!     that it can fit the whole record;
+    csv_record_tmp = repeat(" ",                                            &
+                      max( CSV_GUESS_RECORD_LENGTH(N_COLUMNS+1,0.0_SRP),    &
+                           len(this%individual(ind)%genome_label) ) )
+
+    !>   - the actual data for the individual is appended to the current
+    !!     record one by one. Note that logical values are converted to
+    !!     integers using commondata::conv_l2r() function.
+    associate ( AGENT => this%individual(ind) )
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%person_number        ) ! 1
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%genome_label         ) ! 2
+      call CSV_RECORD_APPEND(csv_record_tmp,conv_l2r(AGENT%alive)      ) ! 3*
+      call CSV_RECORD_APPEND(csv_record_tmp,conv_l2r(AGENT%sex_is_male)) ! 4*
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%body_length          ) ! 5
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%control_unselected   ) ! 6
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%body_mass            ) ! 7
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%energy_current       ) ! 8
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%stomach_content_mass ) ! 9
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%maxstomcap           ) ! 10
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%smr                  ) ! 11
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%growhorm_level       ) ! 12
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%thyroid_level        ) ! 13
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%adrenaline_level     ) ! 14
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%cortisol_level       ) ! 15
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%testosterone_level   ) ! 16
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%estrogen_level       ) ! 17
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%n_reproductions      ) ! 18
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%n_offspring          ) ! 19
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%age                  ) ! 20
+      call CSV_RECORD_APPEND(csv_record_tmp,AGENT%fitness              ) ! 21
+    end associate
+
+    !>   - after all data are appended to the record, this record is
+    !!     physically written to the disk using `CSV_RECORD_WRITE()`.
+    !!   .
+    call CSV_RECORD_WRITE( csv_record_tmp, handle_csv )
+
+  end do
+
+  !> - When all the records are saved, the CSV file is closed
+  !!   with `CSV_CLOSE()`.
+  call CSV_CLOSE( handle_csv )
+
+  !> - This is finally sent to the logger (if `logging_enabled` is TRUE).
+  !! .
+  if (logging_enabled)                                                      &
+    call LOG_MSG (LTAG_INFO // "Individual data saved, population size " // &
+            TOSTR(this%population_size) //                                  &
+            ", number of columns " // TOSTR(N_COLUMNS) )
+
+end subroutine population_save_data_all_agents_csv
+--------------------------------------------------------------------------------
+
 
 Procedures to manipulate the filesystem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
