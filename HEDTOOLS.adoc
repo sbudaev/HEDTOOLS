@@ -2766,6 +2766,10 @@ call CSV_MATRIX_WRITE(d_matrix, "some_file.csv", fstat_csv)
 if (.not. fstat_csv) goto 1000
 --------------------------------------------------------------------------------
 
+An extended example code sthat illustrates how to write diverse data to a
+single CSV file is found in the <<TO_CSV_IO_FULLEXAMPLE, Extended example>>
+section.
+
 Subroutine: CSV_OPEN_WRITE
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_OPEN_WRITE]
@@ -3761,6 +3765,8 @@ Extended example
 Below is an extended example subroutine showing how to save diverse data to a
 CSV file. The example data variables come from an object oriented code,
 although the whole procedure does not use object orientation.
+
+[[TO_CSV_IO_FULLEXAMPLE]]
 
 indexterm:[CSV_IO, example code]
 
