@@ -2023,24 +2023,31 @@ image:doc/img/aha_modules.svg[width=480,align="left"]
 
 [[AHA_MOD_REF]]
 
-** Module COMMONDATA -- Setting common parameters for the model.
+** Module http://158.37.63.57/doxydoc/classcommondata.html[COMMONDATA] Setting
+   common parameters for the model.
 
-** Module THE_GENOME -- Implementation of the genome objects, gene, alleles,
-        chromosomes.
+** Module http://158.37.63.57/doxydoc/classthe__genome.html[THE_GENOME]
+   Implementation of the genome objects, gene, alleles, chromosomes.
 
-** Module THE_HORMONES -- Architecture of the hormones and their functions.
+** Module http://158.37.63.57/doxydoc/classthe__hormones.html[THE_HORMONES]
+   Architecture of the hormones and their functions.
 
-** Module THE_NEUROBIO -- Implements neurobiological architectures based on
-        sigmoid function, decision making and GOS.
+** Module http://158.37.63.57/doxydoc/classthe__neurobio.html[THE_NEUROBIO]
+   Implements neurobiological architectures based on sigmoid function,
+   decision making and GOS.
 
-** Module THE_INDIVIDUAL -- Implements the individual agent in the final form
-        and the individual-based model functions.
+** Module http://158.37.63.57/doxydoc/classthe__individual.html[THE_INDIVIDUAL]
+   Implements the individual agent in the final form and the individual-based
+   model functions.
 
-** Module THE_POPULATION -- Implements the population(s) of agents.
+** Module http://158.37.63.57/doxydoc/classthe__population.html[THE_POPULATION]
+   Implements the population(s) of agents.
 
-** Module THE_ENVIRONMENT -- Implements the environment and its variation.
+** Module http://158.37.63.57/doxydoc/classthe__environment.html[THE_ENVIRONMENT]
+   Implements the environment and its variation.
 
-** Module THE_EVOLUTION -- Implements the genetic algorithm.
+** Module http://158.37.63.57/doxydoc/classthe__evolution.html[THE_EVOLUTION]
+   Implements the genetic algorithm.
 
 IMPORTANT: Solaris Studio Fortran compiler f95 v. 12.4 does not support all
            object-oriented features (most probably the type-bound functions
