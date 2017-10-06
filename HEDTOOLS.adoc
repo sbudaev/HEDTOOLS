@@ -1977,8 +1977,6 @@ call LOG_DBG("Initialisation of generation one completed, took " //           &
                 "s since global procedure start.")
 --------------------------------------------------------------------------------
 
-TODO -- more text later
-
 ////////////////////////////////////////////////////////////////////////////////
 BELOW START ACTUAL DESCRIPTION OF THE AHA PROGRAMMING FRAMEWORK
 ////////////////////////////////////////////////////////////////////////////////
