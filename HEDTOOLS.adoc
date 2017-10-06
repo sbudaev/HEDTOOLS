@@ -1735,7 +1735,7 @@ interface name (`distance`) rather than the "actual" procedure name
 --------------------------------------------------------------------------------
 type(SPATIAL_POINT) :: point_a, point_b
 ...
-distance_between_points = point_a%distance( point_b )
+distance_between_points = point_a%distance( point_b ) ! use public interface
 --------------------------------------------------------------------------------
 
 An **extension** object can be declared, that will use all the properties and
