@@ -1738,9 +1738,10 @@ type(SPATIAL_POINT) :: point_a, point_b
 distance_between_points = point_a%distance( point_b ) ! use public interface
 --------------------------------------------------------------------------------
 
-An **extension** object can be declared, that will use all the properties and
-type-bound procedures of the base object and add its own additional ones. This
-allows creating complex inheritance hierarchies across objects.
+An **extension** object can be declared, using the +extends+ keyword, that
+will use all the properties and type-bound procedures of the base object
+and add its own additional ones. This allows creating complex inheritance
+hierarchies across objects.
 
 [source]
 --------------------------------------------------------------------------------
