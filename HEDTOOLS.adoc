@@ -1978,6 +1978,21 @@ call LOG_DBG("Initialisation of generation one completed, took " //           &
                 "s since global procedure start.")
 --------------------------------------------------------------------------------
 
+More information
+~~~~~~~~~~~~~~~~
+
+Below are some books that should be referred for more information on
+object-oriented programming in modern Fortran.
+
+- Adams, J. C., et al., (2009). The Fortran 2003 Handbook. Springer.
+- Akin, E. (2003). Object-Oriented Programming via Fortran 90/95. Cambridge
+  University Press.
+- Brainerd, W. S. (2015). Guide to Fortran 2008 Programming. Springer.
+- Chapman, S. J. (2007). Fortran 95/2003 for Scientists and Engineers.
+  McGraw-Hill.
+- Clerman, N. S., & Spector, W. (2012). Modern Fortran: Style and
+  usage. Cambridge University Press.
+
 ////////////////////////////////////////////////////////////////////////////////
 BELOW START ACTUAL DESCRIPTION OF THE AHA PROGRAMMING FRAMEWORK
 ////////////////////////////////////////////////////////////////////////////////
