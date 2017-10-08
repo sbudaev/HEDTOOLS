@@ -1805,10 +1805,32 @@ module SPATIAL_OBJECTS
 end module SPATIAL_OBJECTS
 --------------------------------------------------------------------------------
 
-It is the most convenient and natural to define a single object or closely
-related objects within the same <<MODULES_INTRO, Fortran module>>.
+An object or several related objects (derived types) together with their
+type-bound procedures are defined within the same
+<<MODULES_INTRO, Fortran module>>.
 
 indexterm:[module]
+
+Class diagram
+~~~~~~~~~~~~~
+
+Relationships between different objects (classes) can be represented
+graphically in a class diagram. Here, a class (derived type) is represented by
+a box with a title that gives its name. The relationships are then depicted by
+several types of lines and arrows that connect these boxes.
+
+indexterm:[class diagram]
+
+The simplest and most widespread symbols in a class diagram are presented below.
+
+image:doc/img/read_nf_symb.svg[width=250,align="left"]
+
+** *inheritance* shows which class is the base class and which is its
+    extension;
+** *aggregation* indicates that several objects are "assembled" to create a
+    more complex composite object;
+** *composition* is a strong form of "aggregation" that points to a
+    "part _versus_ whole" relationship."
 
 Arrays of objects
 ~~~~~~~~~~~~~~~~~
