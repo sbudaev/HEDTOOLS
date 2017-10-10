@@ -5419,6 +5419,7 @@ by calling the *Command Prompt* from the menu:
 indexterm:[Intel Fortran on Windows]
 indexterm:[Intel Parallel Studio]
 indexterm:[Makefile, Intel Fortran on Windows]
+indexterm:[Intel Fortran, command line]
 
 image:doc/img/img_doc_intel_win_menu.png[height=280,align="left"]
 
@@ -5486,6 +5487,11 @@ image:doc/img/img_doc_intel_win_conemu2.png[height=265,align="left"]
 Then, all the Intel build environment commands will be run automatically
 every time the <<CONSOLE_GET, ConEmu>> terminal is started (or the task is
 started), so you would not need to runt it manually.
+
+indexterm:[Intel Fortran, command line]
+
+More information on the command line interface with the Intel Fortran Compiler
+see http://158.37.63.57/intel/hh_goto.htm#GUID-24AAD29E-A809-4F6E-B553-C9D591FEC2A0.html[Using the Command Line].
 
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
@@ -5991,6 +5997,7 @@ the model and link the tools in from the library. Then, no manual edits may
 be required. Refer to the +Readme.txt+ file that is produced with the static
 library. When using the Intel Fortran compiler on Windows, make sure the command
 prompt environment is <<VISUAL_STUDIO_CMDBLD, correstly set up>>.
+
 indexterm:[static library]
 
 [source,bash]
