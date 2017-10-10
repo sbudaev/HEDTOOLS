@@ -1740,8 +1740,12 @@ distance_between_points = point_a%distance( point_b ) ! use public interface
 
 An **extension** object can be declared, using the +extends+ keyword, that
 will use all the properties and type-bound procedures of the base object
-and add its own additional ones. This allows creating complex inheritance
-hierarchies across objects.
+and add its own additional ones. All the data attributes (+x+, +y+, +depth+)
+of the base class +SPATIAL_POINT+ are now defined (inherited) also for the new
+derived type +SPATIAL_MOVING+. Additionally, the new type can define new
+properties ans add new type-bound procedures.
+
+This allows creating complex inheritance hierarchies across objects.
 
 [source]
 --------------------------------------------------------------------------------
@@ -1758,8 +1762,34 @@ type, public, extends(SPATIAL_POINT) :: SPATIAL_MOVING
 end type SPATIAL_MOVING
 --------------------------------------------------------------------------------
 
-Thus, the structure of the module that defines an inheritance hierarchy of
-objects and their type-bound functions is like this:
+It is also possible to *redefine* the type-bound procedures for the new derived
+type. For example, a subroutine +init+ can be defined for the base type
++SPATIAL_POINT+ that sets the default +x+, +y+ and +depth+. A different
+type-bound procedure with the same public interface +init+ defined for the
++SPATIAL_MOVING+ extended type can then set the default +x+, +y+ and +depth+
+and, in addition, a default move. When such +init+ procedure is called, the
+result of the computation is based on the exact nature of the object on which
+the procedure is executed. This is called procedure overloading.
+
+indexterm:[type-bound procedures, overloading]
+
+[source]
+--------------------------------------------------------------------------------
+call instance_object%init()
+--------------------------------------------------------------------------------
+
+** If the +instance_object+ is +SPATIAL_POINT+, the +init+ procedure defined
+   for +SPATIAL_POINT+ is executed on the object;
+** if the +instance_object+ is +SPATIAL_MOVING+, the +init+ procedure defined
+   for +SPATIAL_MOVING+ is executed.
+
+Module structure
+~~~~~~~~~~~~~~~~
+
+The structure of a module that defines an inheritance hierarchy of objects and
+their type-bound functions is like this. The module skeleton below implements
+also two +init+ procedures such that +spatial_moving_init+ overloads the
++spatial_init+.
 
 [source]
 --------------------------------------------------------------------------------
@@ -1770,6 +1800,7 @@ module SPATIAL_OBJECTS
     character(len=LABEL_LENGTH) :: label
     ....
     contains
+    procedure, public :: init => spatial_init
     procedure, public :: distance => spatial_distance_3d
     ....
   end type SPATIAL_POINT
@@ -1781,6 +1812,7 @@ module SPATIAL_OBJECTS
     ...
     contains
       ....
+      procedure, public :: init => spatial_moving_init
       procedure, public :: go_up => spatial_moving_go_up
       procedure, public :: go_down => spatial_moving_go_down
       ....
@@ -1799,9 +1831,21 @@ module SPATIAL_OBJECTS
                                  [other%x, other%y, other%depth] )
 
     end function spatial_distance_3d
-    ....
+
+    subroutine spatial_init(this)
+      class(SPATIAL_POINT), intent(inout) :: this
+      ....
+    end subroutine spatial_init
+
+    subroutine spatial_moving_init(this)
+      class(SPATIAL_MOVING), intent(inout) :: this
+      ....
+    end subroutine spatial_init
+
     ! Any other procedures
-    ......
+
+    ..........
+
 end module SPATIAL_OBJECTS
 --------------------------------------------------------------------------------
 
