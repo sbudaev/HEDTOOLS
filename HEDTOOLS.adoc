@@ -1769,8 +1769,8 @@ type-bound procedure with the same public interface +init+ defined for the
 +SPATIAL_MOVING+ extended type can then set the default +x+, +y+ and +depth+
 and, in addition, a default move. When such +init+ procedure is called, the
 result of the computation is based on the exact nature of the object on which
-the procedure is executed. This is called procedure overloading for polymorphic
-objects.
+the procedure is executed. This is called procedure overloading for a
+polymorphic object.
 
 indexterm:[type-bound procedures, overloading]
 
