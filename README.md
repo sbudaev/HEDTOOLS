@@ -7,7 +7,7 @@ execution logging. There are also a few computational tools. Even though
 HEDTOOLS modules are primarily designed to be used in the AHA Model, they
 are designed such that they can be used in many different simulation projects.
 
- - [The AHA! Project Development Pages](http://158.37.63.57)
+ - [The AHA! Project Development Pages](http://ahamodel.uib.no)
 
 # Credits #
 
@@ -28,9 +28,9 @@ or [GNU LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html) license.
 # Building HEDTOOLS as a static library #
 
 Normally HEDTOOLS are intended for use in a particular modelling project as
-source code. Consult the [Makefile](http://158.37.63.57/doxydoc/Makefile.html)
+source code. Consult the [Makefile](http://ahamodel.uib.no/doxydoc/Makefile.html)
 that is provided in the AHA Model and the AHA Model
-[README](http://158.37.63.57/doxydoc/md_README.html) for details. A template
+[README](http://ahamodel.uib.no/doxydoc/md_README.html) for details. A template
 Makefile is included in the `template` subdirectory.
 
 The `Makefile` that is found in the HEDTOOLS directory is used to build it as
@@ -46,10 +46,10 @@ projects. Here are the main build commands:
 - Short help on the build commands: `make help`.
 
 For more details about using HEDTOOLS as a static library see
-[AHA Modelling Tools Manual](http://158.37.63.57/doc/ar01s14.html#BUILD_HEDTOOLS_STATLIB).
+[AHA Modelling Tools Manual](http://ahamodel.uib.no/doc/ar01s14.html#BUILD_HEDTOOLS_STATLIB).
 
 Recent pre-built versions of the static library for Intel Fortran on Windows 64
-are available [here](http://158.37.63.57/#HEDTOOLS_BIN_GET).
+are available [here](http://ahamodel.uib.no/#HEDTOOLS_BIN_GET).
 
 # Wiki #
 
