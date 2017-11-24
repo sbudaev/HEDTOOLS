@@ -46,7 +46,7 @@ _Document date: {docdate}._ The document is generated with the
 http://asciidoc.org/[AsciiDoc] markup processor.
 
 Latest PDF version: +
-http://158.37.63.57/doc/HEDTOOLS.pdf
+http://ahamodel.uib.no/doc/HEDTOOLS.pdf
 
 ////////////////////////////////////////////////////////////////////////////////
 SVN: $LastChangedDate$
@@ -2106,30 +2106,30 @@ image:doc/img/aha_modules.svg[width=480,align="left"]
 
 [[AHA_MOD_REF]]
 
-** Module http://158.37.63.57/doxydoc/classcommondata.html[COMMONDATA] Setting
+** Module http://ahamodel.uib.no/doxydoc/classcommondata.html[COMMONDATA] Setting
    common parameters for the model.
 
-** Module http://158.37.63.57/doxydoc/classthe__genome.html[THE_GENOME]
+** Module http://ahamodel.uib.no/doxydoc/classthe__genome.html[THE_GENOME]
    Implementation of the genome objects, gene, alleles, chromosomes.
 
-** Module http://158.37.63.57/doxydoc/classthe__hormones.html[THE_HORMONES]
+** Module http://ahamodel.uib.no/doxydoc/classthe__hormones.html[THE_HORMONES]
    Architecture of the hormones and their functions.
 
-** Module http://158.37.63.57/doxydoc/classthe__neurobio.html[THE_NEUROBIO]
+** Module http://ahamodel.uib.no/doxydoc/classthe__neurobio.html[THE_NEUROBIO]
    Implements neurobiological architectures based on sigmoid function,
    decision making and GOS.
 
-** Module http://158.37.63.57/doxydoc/classthe__individual.html[THE_INDIVIDUAL]
+** Module http://ahamodel.uib.no/doxydoc/classthe__individual.html[THE_INDIVIDUAL]
    Implements the individual agent in the final form and the individual-based
    model functions.
 
-** Module http://158.37.63.57/doxydoc/classthe__population.html[THE_POPULATION]
+** Module http://ahamodel.uib.no/doxydoc/classthe__population.html[THE_POPULATION]
    Implements the population(s) of agents.
 
-** Module http://158.37.63.57/doxydoc/classthe__environment.html[THE_ENVIRONMENT]
+** Module http://ahamodel.uib.no/doxydoc/classthe__environment.html[THE_ENVIRONMENT]
    Implements the environment and its variation.
 
-** Module http://158.37.63.57/doxydoc/classthe__evolution.html[THE_EVOLUTION]
+** Module http://ahamodel.uib.no/doxydoc/classthe__evolution.html[THE_EVOLUTION]
    Implements the genetic algorithm.
 
 IMPORTANT: Solaris Studio Fortran compiler f95 v. 12.4 does not support all
@@ -5491,7 +5491,7 @@ started), so you would not need to runt it manually.
 indexterm:[Intel Fortran, command line]
 
 More information on the command line interface with the Intel Fortran Compiler
-see http://158.37.63.57/intel/hh_goto.htm#GUID-24AAD29E-A809-4F6E-B553-C9D591FEC2A0.html[Using the Command Line].
+see http://ahamodel.uib.no/intel/hh_goto.htm#GUID-24AAD29E-A809-4F6E-B553-C9D591FEC2A0.html[Using the Command Line].
 
 Tweaking Makefile
 ~~~~~~~~~~~~~~~~~
