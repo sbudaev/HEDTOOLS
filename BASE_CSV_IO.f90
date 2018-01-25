@@ -4407,6 +4407,10 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
     end if
 
     do jfield=1, line_data_nflds
+      if ( trim(line_data_substrings(jfield))=="" )  then
+        matrix_row(jfield) = missing_code_here
+        cycle
+      end if
       if (IS_NUMERIC(line_data_substrings(jfield))) then
         call VALUE( trim(line_data_substrings(jfield)), matrix_row(jfield),   &
                     error_iflag)
