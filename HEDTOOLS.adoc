@@ -3753,7 +3753,7 @@ data file. It has a single mandatory input parameter: the name of the file.
 The other optional parameters are: (1) output file read logical status
 (if TRUE then the file was successfully read); (2) input logical flag to
 include truncated records (default FALSE); (3) input real type missing code
-for substituting data in truncated records.
+for substituting data in truncated and empty records.
 
 Input parameters:
 
@@ -3764,8 +3764,8 @@ logical           :: csv_file_status            ! Logical read success status.
 logical           :: include_incomplete_records ! Flag to include truncated
                                                 !  rows,  default FALSE.
 real              :: missing_code               ! Code that substitutes data in
-                                                !  truncated records, if unset
-                                                !  = -9999.0
+                                                !  truncated or empty records,
+                                                !  if unset = -9999.0
 --------------------------------------------------------------------------------
 
 Function value: an allocatable 2-dimensional real array.
