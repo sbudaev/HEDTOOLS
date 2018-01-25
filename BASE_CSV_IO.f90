@@ -4199,7 +4199,6 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
     end if
 
     do jfield=1, line_data_nflds
-      print *, ">>", trim(line_data_substrings(jfield)), ":"
       if ( trim(line_data_substrings(jfield))=="" )  then
         matrix_row(jfield) = missing_code_here
         cycle
