@@ -4696,7 +4696,7 @@ Repeat the doc file included with the module
 _This module containing some useful string manipulation functions is borrowed
 from http://www.gbenthien.net/strings/index.html. The description below is
 just repeating the official doc file included with the module. Note that there
-are a couple of utils (+READLINE+, +WRITEQ+) in this module that work with
+are a couple of utils (+GETFLINE+, +WRITEQ+) in this module that work with
 files. These use the standard Fortran unit to refer for the file and unlike
 the other modules here are not adjusted (yet) to use the file handle object
 (+csv_file+)._
@@ -4866,17 +4866,20 @@ This function returns a string that is like the string +str+ with all
 characters that are not between a pair of quotes (+" "+ or +' '+) converted
 to lowercase.
 
-Subroutine: READLINE
+Subroutine: GETFLINE
 ~~~~~~~~~~~~~~~~~~~~
 
-+SUBROUTINE READLINE(nunitr, line, ios)+
-indexterm:[READLINE]
++SUBROUTINE GETFLINE(nunitr, line, ios)+
+indexterm:[GETFLINE]
 
 This routine reads a line from unit +nunitr+, ignoring blank lines and deleting
 comments beginning with an exclamation point(!). The line is placed in the
 string +line+. The argument +ios+ is an error flag. If +ios+ is not equal to
 zero, then there has been an error in the read operation. A negative value
 for +ios+ denotes an end of file.
+
+IMPORTANT: There is a more powerful function +READLINE+ in
+           <<TO_CSV_IO, CSV_IO>>.
 
 Subroutine: MATCH
 ~~~~~~~~~~~~~~~~~

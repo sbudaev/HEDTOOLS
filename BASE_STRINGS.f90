@@ -445,10 +445,14 @@ end function lowercase
 
 !**********************************************************************
 
-subroutine readline(nunitr,line,ios)
+subroutine getfline(nunitr,line,ios)
 
 ! Reads line from unit=nunitr, ignoring blank lines
 ! and deleting comments beginning with an exclamation point(!)
+! NOTE: This subroutine was named readline originally, but there
+!       is another function readline in CSV_IO, so the name is
+!       changed to avoid name conflicts, requiring
+!       use  CSV_IO, READLINE_LN => READLINE
 
 character (len=*):: line
 
@@ -465,7 +469,7 @@ do
 end do
 return
 
-end subroutine readline
+end subroutine getfline
 
 !**********************************************************************
 
