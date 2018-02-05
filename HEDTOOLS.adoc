@@ -5819,10 +5819,10 @@ IMPORTANT: Never mix static library produced with GNU fortran into Intel
            of Intel Parallel Studio Fortran--the library and the project
            code must be built using the same compiler.
 
-First, build the HEDTOOLS modelling tools as a static library using the make system
-with +FC=ifort+, this is the default +make+ target. Do not forget to make sure
-the Intel Parallel Studio *Command Prompt Environment* has been correctly
-<<VISUAL_STUDIO_CMDBLD, prepared>> prior to the build process.
+First, build the HEDTOOLS modelling tools as a static library using the make
+system with +FC=ifort+, this is the default +make+ target. Do not forget to
+make sure the Intel Parallel Studio *Command Prompt Environment* has been
+correctly <<VISUAL_STUDIO_CMDBLD, prepared>> prior to the build process.
 
 [source,bash]
 --------------------------------------------------------------------------------
@@ -5840,6 +5840,31 @@ IMPORTANT: The +Makefile+ producing the library requires two command line GNU
            <<CONSOLE_GET, other distributions>>. If these utilities are not
            available, the static library is still produced although the handy
            *zip* file distribution is not generated.
+
+IMPORTANT: Binary pre-built HEDTOOLS library ready to be
+           included into other projects is available at the
+           http://ahamodel.uib.no/pages/tools.html[DOWNLOADS] section. This
+           distribution is built with the Intel Fortran ifort version used
+           currently at http://bio.uib.no/te/[TEG]. The compiler version
+           used to build the HEDTOOLS library *should agree* with the version
+           used for the project. To check the version call +ifort+ program
+           without parameters in the Windows terminal (command prompt window).
+
+Include HEDTOOLS into Microsoft Visual Studio project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Once the HEDTOOLS library distribution is available, either custom built as
+above or downloaded from the http://ahamodel.uib.no/pages/tools.html[pre-built]
+distribution site, it can be included into a Microsoft Studio project.
+
+IMPORTANT: Make sure the project is built for the 64 bit platform
+           (**x64**) if the HEDTOOLS library is built as **x64**. They
+           should always be the same!  Set the correct target platform
+           in the project **Properties**.  The pre-built distributions at
+           http://ahamodel.uib.no/pages/tools.html[DOWNLOADS] are 64 bit.
+           Note that the error message issued by the compiler if the target
+           platform does not match is not intuitive ("modules built for a
+           different compiler version").
 
 First, copy +.mod+ files to the current Visual Studio Project folder
 containing the source code +.f90+ files. The library itself should be
@@ -5865,26 +5890,62 @@ set maximum width for images (whole page width) 510
 ////////////////////////////////////////////////////////////////////////////////
 
 Now the code should build successfully (calling the modelling tools code from
-the library) as normal (e.g. *Build -> Build Solution*). There may be problem
-with the *LIBCMTD.lib* library in the *Debug* solution (I have not encountered
-the same issue in the *Release* solution though):
+the library) as normal (e.g. *Build -> Build Solution*).
+
+Link error: LNK2005
+^^^^^^^^^^^^^^^^^^^
+
+There may be a **LNK2005** problem with the *LIBCMTD.lib* library in the
+*Debug* solution (I have not encountered the same issue in the *Release*
+solution though):
 
 indexterm:[Intel Parallel Studio, LIBCMTD.lib]
 indexterm:[Microsoft Visual Studio, LIBCMTD.lib]
+indexterm:[Microsoft Visual Studio, Error, LNK2005]
 
 image:doc/img/img_doc_ms_studio_fail.png[width=510,align="left"]
 
 If there is such a problem, go to *Properties -> Linker -> Input* and insert
-the problem library +LIBCMTD.lib+ to the *Ignore Specific Library* field:
+the problem library +libcmtd.lib+ to the *Ignore Specific Library* field:
 
 image:doc/img/img_doc_ms_studio_ignore.png[width=510,align="left"]
+
+indexterm:[Intel Parallel Studio, LIBIFCOREMDD.dll]
+indexterm:[Microsoft Visual Studio, LIBIFCOREMDD.dll]
+indexterm:[Microsoft Visual Studio, Error, LNK2005]
+
+It is also possible that the Microsoft linker issues another **LNK2005**
+error, related to double definition of symbols in libifcoremdd.dll. In such
+a case, *libifcoremdd.lib* should be placed into the ignore list as above:
+*Properties -> Linker -> Input* then *Ignore Specific Library*.
+
+image:doc/img/img_doc_ms_studio_ignore2.png[width=510,align="left"]
+
+The **LNK2005** problems could potential occur with the following libraries
+(both single- and multi-threaded versions are included):
+
+* +libifcore.lib+
+* +libifcoremt.lib+
+* +libifcoremt.lib+
+* +libifcorertd.lib (libifcorertd.dll)+
+* +libifcoremd.lib (libifcoremd.dll)+
+* +libcmtd.lib+
+* +libcmt.lib+
+* +libcmtd.lib+
+* +msvcrt.lib (msvcrt.dll)+
+* +msvcrt.lib (msvcrt.dll)+
+* +msvcrt.lib (msvcrt.dll)+
+
+The solution, in either case, is to include the respective *.lib* file into
+the ignore list as above.
 
 From now, it should (hopefully) build without further issues. The modelling
 tools are now automatically inserted by the compiler into the executable
 code from the static library provided as if the subroutines and functions
 were intrinsic.
 
-*Using the static library tools for command line building*
+Using the static library tools for command line building
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Finally, if you like to build code with the static library from the command
 prompt rather than Visual Studio IDE, it is also easy:
