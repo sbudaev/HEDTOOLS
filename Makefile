@@ -101,9 +101,9 @@ endif
 # Check if certain required executables exist and are callable in path. This is
 # important on the Windows platform because such GNU command line utilities as
 # uname and zip are not installed by default.
-REQUIRED_EXECS = uname zip a2x ifort f95 gfortran
+REQUIRED_EXECS = svn xcxcx uname zip a2x ifort f95 gfortran
 K := $(foreach exec,$(REQUIRED_EXECS),\
-	$(if $(shell $(WHICH_CMD) $(exec) 2>$(NULLDEV)),check executables,\
+	$(if $(shell $(WHICH_CMD) $(exec) ),check executables,\
 	$(warning ************ No $(exec) available in PATH ************)))
 
 #===============================================================================
