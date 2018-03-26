@@ -376,7 +376,7 @@ doc: $(DOCFIL).$(DOCFMT)
 # Clean workspace completely - distribution state
 distclean: neat
 	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
-	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb
+	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb :NULL
 	$(MAKE) -C $(TOOLS_PATH) distclean
 
 # We don't clean .mod files as they are necessary for building with .so
