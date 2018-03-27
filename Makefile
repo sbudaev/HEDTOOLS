@@ -104,7 +104,7 @@ endif
 REQUIRED_EXECS = svn uname zip a2x ifort f95 gfortran cut
 K := $(foreach exec,$(REQUIRED_EXECS),\
 	$(if $(shell $(WHICH_CMD) $(exec) ),check executables,\
-	$(warning ************ No $(exec) available in PATH ************)))
+	$(warning ************ $(exec) unavailable in PATH ************)))
 
 #===============================================================================
 # Main building blocks, define source and object files to include.
