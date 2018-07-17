@@ -989,12 +989,12 @@ Version control: Subversion (SVN)
 --------------------------------
 
 AHA Repository:
-https://subversion.uib.no/repos/aha-fortran/[https://subversion.uib.no/repos/aha-fortran/]
+https://tegsvn.uib.no/svn/tegsvn/[https://tegsvn.uib.no/svn/tegsvn/]
 
 indexterm:[AHA repository]
 
 AHA Tools stable version (trunk):
-https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/[https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/]
+https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/[https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/]
 
 Overview
 ~~~~~~~~
@@ -1089,11 +1089,11 @@ First time setup of the working copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 IMPORTANT: AHA Tools in _trunk_ (stable version) can be found here:
-           +https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/+;
+           +https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/+;
            Development versions are here:
-           +https://subversion.uib.no/repos/aha-fortran/branches/budaev/HEDTOOLS/+.
+           +https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/+.
            So standard checkout (the _stable_ version) is like this: +
-           +svn checkout https://subversion.uib.no/repos/aha-fortran/trunk/HEDTOOLS/+
+           +svn checkout https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/+
 indexterm:[AHA repository]
 
 Command line tool
@@ -1114,7 +1114,7 @@ First time setup of the working copy of the model (working directory):
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn --username u01 checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18
+svn --username u01 checkout https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HED18
 --------------------------------------------------------------------------------
 
 image:doc/img/img_doc_svn_first.png[width=400,align="left"]
@@ -1123,7 +1123,7 @@ next, just this should work:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18
+svn checkout https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HED18
 --------------------------------------------------------------------------------
 
 This will get the +HED18+ into the directory +HED18+ within the current working
@@ -1131,9 +1131,9 @@ directory. If we use +HEDTOOLS+, it should also be placed here:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18
+svn checkout https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HED18
 ...
-svn checkout https://subversion.uib.no/repos/aha-fortran/branches/budaev/HEDTOOLS
+svn checkout https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS
 --------------------------------------------------------------------------------
 
 So, we now get +HED18+ and +HEDTOOLS+ in our working directory.
@@ -1284,7 +1284,7 @@ indexterm:[Subversion,branch,move branch]
 [source,bash]
 --------------------------------------------------------------------------------
 # Making a new directory for old code -- use the mkdir command
-svn mkdir https://subversion.uib.no/repos/aha-fortran/old_archived
+svn mkdir https://tegsvn.uib.no/svn/tegsvn/old_archived
 --------------------------------------------------------------------------------
 indexterm:[Subversion,mkdir]
 
@@ -1293,12 +1293,12 @@ It is also easy to move or copy parts of the repository across the repository:
 [source,bash]
 --------------------------------------------------------------------------------
 # Move a model branch to the archive folder -- use mv (move) command
-svn mv https://subversion.uib.no/repos/aha-fortran/trunk/model_20151013 \
-      https://subversion.uib.no/repos/aha-fortran/old_archived/model_20151013
+svn mv https://tegsvn.uib.no/svn/tegsvn/trunk/model_20151013 \
+      https://tegsvn.uib.no/svn/tegsvn/old_archived/model_20151013
 ....
 # Copy a file to another branch -- use cp (copy) command
-svn cp https://subversion.uib.no/repos/aha-fortran/trunk/hormones/Hormones.f90 \
-  https://subversion.uib.no/repos/aha-fortran/branches/camilla/hormones/Hormones.f90
+svn cp https://tegsvn.uib.no/svn/tegsvn/trunk/hormones/Hormones.f90 \
+  https://tegsvn.uib.no/svn/tegsvn/branches/camilla/hormones/Hormones.f90
 --------------------------------------------------------------------------------
 
 Do not forget to update the local working copy after deleting/moving/copying
@@ -1327,8 +1327,8 @@ main line.
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn copy https://subversion.uib.no/repos/aha-fortran/branches/budaev/HED18 \
-    https://subversion.uib.no/repos/aha-fortran/branches/natasha/HED18 \
+svn copy https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HED18 \
+    https://tegsvn.uib.no/svn/tegsvn/branches/natasha/HED18 \
     -m "Creating private branch."
 --------------------------------------------------------------------------------
 indexterm:[Subversion,branch]
@@ -1529,7 +1529,7 @@ indexterm:[Subversion,change repository address,relocate]
 
 [source, bash]
 --------------------------------------------------------------------------------
- svn relocate --username user_name https://subversion.uib.no/repos/aha-fortran/
+ svn relocate --username user_name https://tegsvn.uib.no/svn/tegsvn/
 --------------------------------------------------------------------------------
 
 TortoiseSVN client on Windows has a *Relocate* menu item under *TortoiseSVN*.
@@ -1540,7 +1540,7 @@ any client software.  WebDAV is supported by most operating systems,
 including Windows and Linux. On Windows, use the "Map network drive"" menu
 to establish connection to the server. On Linux, just place such an address
 in the file manager ("Ctrl L" may be required to go to the address line):
-+davs://subversion.uib.no/repos/aha-fortran/+
++davs://tegsvn.uib.no/svn/tegsvn/+
 indexterm:[Subversion,WebDAV]
 
 
@@ -6018,10 +6018,10 @@ for building both on the command line and from the IDE.
 
 IMPORTANT: A Code::Blocks project template for the AHA Model is available
     in the +^/trunk/scripts+ folder on the Subversion repository:
-    https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp[Project.cbp].
+    https://tegsvn.uib.no/svn/tegsvn/trunk/scripts/Project.cbp[Project.cbp].
     This file should be copied to the project folder. the svn command for
     this is: +
-    +svn export https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp+
+    +svn export https://tegsvn.uib.no/svn/tegsvn/trunk/scripts/Project.cbp+
 
 Manual builds of HEDTOOLS
 -------------------------
@@ -6336,7 +6336,7 @@ indexterm:[svn, Subversion, AHA Workshop]
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn --username user_name checkout https://subversion.uib.no/repos/aha-fortran/_your_svn_path
+svn --username user_name checkout https://tegsvn.uib.no/svn/tegsvn/_your_svn_path
 --------------------------------------------------------------------------------
 
 It will also ask your *svn password* on the first run, use option to save it.
@@ -6359,7 +6359,7 @@ copy containing the code, open Terminal and issue:
 
 [source,bash]
 --------------------------------------------------------------------------------
-svn export https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp
+svn export https://tegsvn.uib.no/svn/tegsvn/trunk/scripts/Project.cbp
 --------------------------------------------------------------------------------
 
 IMPORTANT: Configuring the project template file is only necessary if the
@@ -6371,7 +6371,7 @@ IMPORTANT: Configuring the project template file is only necessary if the
 The same using the file manager: go to the working directory
 containing the model code, right-click and select *SVN* then
 *Export*, and then put the Code:Blocks *Project* file path
-(https://subversion.uib.no/repos/aha-fortran/trunk/scripts/Project.cbp).
+(https://tegsvn.uib.no/svn/tegsvn/trunk/scripts/Project.cbp).
 
 Then you can open this project file from the Code:Blocks IDE. The first thing
 to do here is (1) delete the fake Fortran file +some_file.f90+ from the
