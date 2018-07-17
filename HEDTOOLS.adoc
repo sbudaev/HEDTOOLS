@@ -993,8 +993,8 @@ https://tegsvn.uib.no/svn/tegsvn/[https://tegsvn.uib.no/svn/tegsvn/]
 
 indexterm:[AHA repository]
 
-AHA Tools stable version (trunk):
-https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/[https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/]
+AHA Tools stable version (v1.1):
+https://tegsvn.uib.no/svn/tegsvn/tags/HEDTOOLS/1.1/[https://tegsvn.uib.no/svn/tegsvn/tags/HEDTOOLS/1.1]
 
 Overview
 ~~~~~~~~
@@ -1088,12 +1088,12 @@ The +HEDTOOLS+ folder itself has the following structure
 First time setup of the working copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-IMPORTANT: AHA Tools in _trunk_ (stable version) can be found here:
-           +https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/+;
+IMPORTANT: AHA Tools in (release 1.1) can be found here:
+           +https://tegsvn.uib.no/svn/tegsvn/tags/HEDTOOLS/1.1+;
            Development versions are here:
            +https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/+.
            So standard checkout (the _stable_ version) is like this: +
-           +svn checkout https://tegsvn.uib.no/svn/tegsvn/trunk/HEDTOOLS/+
+           +svn co https://tegsvn.uib.no/svn/tegsvn/tags/HEDTOOLS/1.1 HEDTOOLS+
 indexterm:[AHA repository]
 
 Command line tool
