@@ -5915,9 +5915,18 @@ indexterm:[Microsoft Visual Studio, LIBIFCOREMDD.dll]
 indexterm:[Microsoft Visual Studio, Error, LNK2005]
 
 It is also possible that the Microsoft linker issues another **LNK2005**
-error, related to double definition of symbols in libifcoremdd.dll. In such
-a case, *libifcoremdd.lib* should be placed into the ignore list as above:
-*Properties -> Linker -> Input* then *Ignore Specific Library*.
+error, related to double definition of symbols in libifcoremdd.dll.
+
+In such a case, go to *Properties -> Fortran -> Libraries* and select non-DLL
+*Runtime Library,* e.g. *Debug Multithreaded* instead of
+*Debug Multithreaded DLL*:
+
+image:doc/img/img_doc_ms_studio_ignore3.png[width=510,align="left"]
+
+image:doc/img/img_doc_ms_studio_ignore4.png[width=510,align="left"]
+
+If this does not help, try placing *libifcoremdd.lib* into the ignore list as
+above: *Properties -> Linker -> Input* then *Ignore Specific Library*.
 
 image:doc/img/img_doc_ms_studio_ignore2.png[width=510,align="left"]
 
