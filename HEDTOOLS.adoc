@@ -1506,10 +1506,13 @@ Subversion also integrates with numerous other tools,
 e.g. there is an SVN plugin for the <<GEANY_GET, Geany>> editor
 (http://plugins.geany.org/geanyvc.html[GeanyVC]), plugins for the
 https://tortoisesvn.net/visualstudio.html[Microsoft Visual Studio IDE] etc.
+
+For example, https://ankhsvn.open.collab.net/[AnkhSVN] is a nice free tool
+integrating Subversion into Microsoft Visual Studio.
+
 Do not forget that version control systems are not only for just program code
 but any text-based files. So writing papers in LaTeX benefits from a built-in
-Subversion support in the http://www.texstudio.org/[TexStudio]. There is
-even integration for http://magnetsvn.com[Microsoft Office] although non-free.
+Subversion support in the http://www.texstudio.org/[TexStudio].
 
 
 Object-oriented programming and modelling
