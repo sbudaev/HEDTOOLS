@@ -5923,6 +5923,8 @@ In such a case, go to *Properties -> Fortran -> Libraries* and select non-DLL
 
 image:doc/img/img_doc_ms_studio_ignore3.png[width=510,align="left"]
 
+and *Multithreaded* instead of *Multithreaded DLL*:
+
 image:doc/img/img_doc_ms_studio_ignore4.png[width=510,align="left"]
 
 If this does not help, try placing *libifcoremdd.lib* into the ignore list as
