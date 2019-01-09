@@ -1000,17 +1000,19 @@ Main terms
 ~~~~~~~~~~
 
 - *Working copy:* the local file system directory that keeps the files
-  synced with the Subversion server (_your copy_).
+  synced with the Subversion server: _your local copy_ of the code.
   indexterm:[working copy]
 
 - *Checkout:* download the files from the Subversion server _initially,_ this
-  sets up all the necessary data within the chosen *working copy*. Checkout is
-  done _only once_.
+  sets up all the necessary data and configuration within the chosen
+  *working copy*. Checkout is done _only once_.
   indexterm:[checkout]
 
 - *Update:* get the files with the latest changes from the Subversion server
   to the local file system directory (_load_). Files that you have changed
-  locally are kept intact. To cancel all local changes use *revert*.
+  locally and not yet committed to the server are kept intact, so your
+  changes are never silently overwritten. To cancel all local changes
+  use *revert*.
   indexterm:[update]
 
 - *Commit:* _save_ the local changes to the files in your working copy to the
