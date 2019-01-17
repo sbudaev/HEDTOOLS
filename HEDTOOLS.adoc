@@ -1108,6 +1108,13 @@ The +HEDTOOLS+ folder itself has the following structure
                       #   HPC cluster batch scripts
 --------------------------------------------------------------------------------
 
+Nonetheless, Subversion does not impose any limitations on the structure of
+directories and folders. The main advantages of Subversion over other version
+control systems is its simplicity and safety. One needs to know only a few
+commands (which can be called via graphical user interfaces) and it is
+virtually impossible to damage the data and code once it has gone to the
+server.
+
 First time setup of the working copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
