@@ -5827,27 +5827,17 @@ the library) as normal (e.g. *Build -> Build Solution*).
 Link error: LNK2005
 ^^^^^^^^^^^^^^^^^^^
 
-There may be a **LNK2005** problem with the *LIBCMTD.lib* library in the
-*Debug* solution (I have not encountered the same issue in the *Release*
-solution though):
+There may be a **LNK2005** problem with the *LIBCMTD.lib* library:
 
 indexterm:[Intel Parallel Studio, LIBCMTD.lib]
 indexterm:[Microsoft Visual Studio, LIBCMTD.lib]
 indexterm:[Microsoft Visual Studio, Error, LNK2005]
+indexterm:[Microsoft Visual Studio, Runtime Library]
 
 image:doc/img/img_doc_ms_studio_fail.png[width=510,align="left"]
 
-If there is such a problem, go to *Properties -> Linker -> Input* and insert
-the problem library +libcmtd.lib+ to the *Ignore Specific Library* field:
-
-image:doc/img/img_doc_ms_studio_ignore.png[width=510,align="left"]
-
-indexterm:[Intel Parallel Studio, LIBIFCOREMDD.dll]
-indexterm:[Microsoft Visual Studio, LIBIFCOREMDD.dll]
-indexterm:[Microsoft Visual Studio, Error, LNK2005]
-
 It is also possible that the Microsoft linker issues another **LNK2005**
-error, related to double definition of symbols in libifcoremdd.dll.
+error, related to double definition of symbols in *libifcoremdd.dll*.
 
 In such a case, go to *Properties -> Fortran -> Libraries* and select non-DLL
 *Runtime Library,* e.g. *Debug Multithreaded* instead of
@@ -5859,7 +5849,20 @@ and *Multithreaded* instead of *Multithreaded DLL*:
 
 image:doc/img/img_doc_ms_studio_ignore4.png[width=510,align="left"]
 
-If this does not help, try placing *libifcoremdd.lib* into the ignore list as
+This must solve the issue by forcing **linking with the static runtime
+library.**
+
+If, however, linking with DLL is necessary for any reason, or the **LNK2005**
+problem persists, go to *Properties -> Linker -> Input* and insert
+the problem library +libcmtd.lib+ to the *Ignore Specific Library* field:
+
+image:doc/img/img_doc_ms_studio_ignore.png[width=510,align="left"]
+
+indexterm:[Intel Parallel Studio, LIBIFCOREMDD.dll]
+indexterm:[Microsoft Visual Studio, LIBIFCOREMDD.dll]
+indexterm:[Microsoft Visual Studio, Error, LNK2005]
+
+It might also help placing *libifcoremdd.lib* into the ignore list as
 above: *Properties -> Linker -> Input* then *Ignore Specific Library*.
 
 image:doc/img/img_doc_ms_studio_ignore2.png[width=510,align="left"]
@@ -5879,8 +5882,8 @@ The **LNK2005** problems could potential occur with the following libraries
 * +msvcrt.lib (msvcrt.dll)+
 * +msvcrt.lib (msvcrt.dll)+
 
-The solution, in either case, is to include the respective *.lib* file into
-the ignore list as above.
+*The main solution is to use non-DLL runtime library.* Otherwise, it might be
+worth to include the respective *.lib* file into the ignore list as above.
 
 From now, it should (hopefully) build without further issues. The modelling
 tools are now automatically inserted by the compiler into the executable
