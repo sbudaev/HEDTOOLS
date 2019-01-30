@@ -88,7 +88,7 @@ module LOGGER
   !
   ! NOTE:: The unit MAX_UNIT is used to write log file, it should not overlap
   ! with (e.g. as a rule be larger than) the MAX_UNIT defined in CSV_IO
-  integer, public, parameter :: MAX_UNIT = 299
+  integer, parameter, private :: MAX_UNIT = 255
 
   ! Module name for the DEBUG LOGGER: every function/sub must also have
   ! the PROCNAME parameter referring to its name. This is done for the Debug
@@ -97,8 +97,11 @@ module LOGGER
   !   procedure name PROCNAME
   character (len=*), private, parameter :: MODNAME = "LOGGER"
 
-  ! Logical unit associated with the log file, we use MAX_UNIT from CSV_IO
-  integer :: log_fileunit = MAX_UNIT                ! to avoid collisions
+  ! Logical unit associated with the log file, must never overlap with
+  ! MAX_UNIT from CSV_IO or any othe files. Fixed unit proved to be safer
+  ! in complex object oriented code. Notably, Intel Fortran loses true unit
+  ! presumably as a result of compiler optimization, fixed unit seems okay.
+  integer, parameter, public :: LOG_FILEUNIT = 299
   ! Logical unit associated with the standard output
   integer :: log_stdout = OUTPUT_UNIT
   ! Logical set to false if the user wants to inactivate
@@ -176,12 +179,12 @@ contains
     if ( logger_initialized ) then
        call log_error ( "Logger is allready initialized in log_startup." )
     else
-       log_fileunit = log_get_freeunit()
+       !LOG_FILEUNIT = log_get_freeunit()  ! now fixed
        if ( append_real ) then
-          open (log_fileunit, FILE= log_file , ACTION='WRITE', STATUS='UNKNOWN', &
+          open (LOG_FILEUNIT, FILE= log_file , ACTION='WRITE', STATUS='UNKNOWN', &
                POSITION ='APPEND')
        else
-          open (log_fileunit, FILE= log_file , ACTION='WRITE', STATUS='UNKNOWN')
+          open (LOG_FILEUNIT, FILE= log_file , ACTION='WRITE', STATUS='UNKNOWN')
        endif
        logger_initialized = .true.
     endif
@@ -193,7 +196,7 @@ contains
   !     None
   !
   subroutine log_shutdown ()
-    close ( log_fileunit )
+    close ( LOG_FILEUNIT )
     logger_initialized = .false.
   end subroutine log_shutdown
   !
@@ -247,9 +250,9 @@ contains
     endif
     if (activate_file) then
        if ( log_timestamp ) then
-          call log_write ( log_fileunit, trim(stamp) // ' ' // msg )
+          call log_write ( LOG_FILEUNIT, trim(stamp) // ' ' // msg )
        else
-          call log_write ( log_fileunit, msg )
+          call log_write ( LOG_FILEUNIT, msg )
        endif
     endif
   end subroutine log_msg
@@ -439,7 +442,8 @@ contains
     character ( len = 500 ) :: message
     select case ( option )
     case ( "logfileunit" )
-       log_fileunit = value
+       !LOG_FILEUNIT = value ! now fixed
+       call log_error( "Logger uses fixed unit that cannot be changed" )
     case default
        write (message,"(A,A,A,I5,A)") "Unknown option ", option, &
             " for value ", value, " in log_configure_integer"
@@ -526,7 +530,7 @@ contains
     character ( len = 500 ) :: message
     select case ( option )
     case ( "logfileunit" )
-       value = log_fileunit
+       value = LOG_FILEUNIT
     case default
        write (message,"(A,I5,A)") "Unknown option ", option, &
             " in log_cget_integer"
@@ -654,7 +658,7 @@ contains
   !
   function log_get_unit () result ( logger_unit )
     integer :: logger_unit
-    logger_unit = log_fileunit
+    logger_unit = LOG_FILEUNIT
   end function log_get_unit
 
 end module LOGGER
