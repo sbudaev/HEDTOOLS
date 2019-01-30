@@ -1180,7 +1180,7 @@ end function CSV_RECORD_SIZE
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_I4 (record, avalue)
+pure subroutine CSV_RECORD_APPEND_I4 (record, avalue)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_I4
 ! PURPOSE: appends an Integer kind 4 (I4) to a CSV record.
@@ -1248,7 +1248,7 @@ end subroutine CSV_RECORD_APPEND_I4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_R4 (record, avalue)
+pure subroutine CSV_RECORD_APPEND_R4 (record, avalue)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_R4
 ! PURPOSE: appends a Real kind 4 (R4) to a CSV record.
@@ -1324,7 +1324,7 @@ end subroutine CSV_RECORD_APPEND_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_R8 (record, avalue)
+pure subroutine CSV_RECORD_APPEND_R8 (record, avalue)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_R8
 ! PURPOSE: appends a Double precision Real kind 8 (R8) to a CSV record.
@@ -1400,7 +1400,7 @@ end subroutine CSV_RECORD_APPEND_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_S (record, avalue)
+pure subroutine CSV_RECORD_APPEND_S (record, avalue)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_R8
 ! PURPOSE: appends a string to a CSV record.
@@ -1471,7 +1471,7 @@ end subroutine CSV_RECORD_APPEND_S
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_ARRAY_I4 (record, array)
+pure subroutine CSV_RECORD_APPEND_ARRAY_I4 (record, array)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_ARRAY_I4
 ! PURPOSE: appends an array of integers to a CSV record.
@@ -1512,7 +1512,7 @@ end subroutine CSV_RECORD_APPEND_ARRAY_I4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_ARRAY_R4 (record, array)
+pure subroutine CSV_RECORD_APPEND_ARRAY_R4 (record, array)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_ARRAY_R4
 ! PURPOSE: appends an array of integers to a CSV record.
@@ -1553,7 +1553,7 @@ end subroutine CSV_RECORD_APPEND_ARRAY_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_ARRAY_R8 (record, array)
+pure subroutine CSV_RECORD_APPEND_ARRAY_R8 (record, array)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_ARRAY_R8
 ! PURPOSE: appends an array of integers to a CSV record.
@@ -1594,7 +1594,7 @@ end subroutine CSV_RECORD_APPEND_ARRAY_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
+pure subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_ARRAY_S
 ! PURPOSE: appends an array of integers to a CSV record.
@@ -1635,7 +1635,7 @@ end subroutine CSV_RECORD_APPEND_ARRAY_S
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_LST_I4 (record, &
+pure subroutine CSV_RECORD_APPEND_LST_I4 (record, &
                                       s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
                                      s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
                                      s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
@@ -1889,7 +1889,7 @@ end subroutine CSV_RECORD_APPEND_LST_I4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_LST_R4 (record, &
+pure subroutine CSV_RECORD_APPEND_LST_R4 (record, &
                                       s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
                                      s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
                                      s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
@@ -2143,7 +2143,7 @@ end subroutine CSV_RECORD_APPEND_LST_R4
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_LST_R8 (record, &
+pure subroutine CSV_RECORD_APPEND_LST_R8 (record, &
                                       s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
                                      s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
                                      s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
@@ -2397,7 +2397,7 @@ end subroutine CSV_RECORD_APPEND_LST_R8
 
 !-------------------------------------------------------------------------------
 
-subroutine CSV_RECORD_APPEND_LST_S (record, &
+pure subroutine CSV_RECORD_APPEND_LST_S (record, &
                                       s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
                                      s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
                                      s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
@@ -3734,7 +3734,7 @@ end subroutine CSV_COLNAMES
 ! Private objects follow:
 !-------------------------------------------------------------------------------
 
-function I4_WIDTH (i) result (i4width)
+elemental function I4_WIDTH (i) result (i4width)
 !*******************************************************************************
 ! I4_WIDTH
 ! PURPOSE: returns the "width" of an I4, the number of characters necessary
@@ -3770,7 +3770,7 @@ function I4_WIDTH (i) result (i4width)
   integer :: i4width
 
   ! Calling parameters
-  integer :: i
+  integer, intent(in) :: i
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "I4_WIDTH"
@@ -3789,7 +3789,7 @@ end function I4_WIDTH
 
 !-------------------------------------------------------------------------------
 
-function I4_LOG_10 (i) result(i4log10)
+elemental function I4_LOG_10 (i) result(i4log10)
 !*******************************************************************************
 ! I4_LOG_10
 ! PURPOSE: returns the integer part of the logarithm base 10 of the absolute
@@ -3824,7 +3824,7 @@ function I4_LOG_10 (i) result(i4log10)
   integer :: i4log10
 
   ! Calling parameters
-  integer :: i
+  integer, intent(in) :: i
 
   ! Local variables
   integer :: i_abs
@@ -3851,7 +3851,7 @@ end function I4_LOG_10
 
 !-------------------------------------------------------------------------------
 
-function STR_ITOA(i, formatstr) result (ToStrA)  ! PRIVATE HERE, from UTILS
+pure function STR_ITOA(i, formatstr) result (ToStrA)  ! PRIVATE HERE, from UTILS
 !*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.
 ! CALL PARAMETERS: single integer value
@@ -3897,10 +3897,10 @@ end function STR_ITOA
 
 !-------------------------------------------------------------------------------
 
-function STR_ITOA_LZ(i, maxi) result (ToStrA)  ! PRIVATE HERE, from UTILS
+pure function STR_ITOA_LZ(i, maxi) result (ToStrA)  ! PRIVATE HERE, from UTILS
 !*******************************************************************************
 ! STR_ITOA_LZ
-! PURPOSE: Convert integer to a string type including leading zeros.
+! PURPOSE: Convert integer to a string type including padding zeros.
 !          Useful for generating file and variable names and other strings
 !          that contain a numerical part with fixed width.
 ! CALL PARAMETERS: integer
@@ -3938,7 +3938,7 @@ end function STR_ITOA_LZ
 
 !-------------------------------------------------------------------------------
 
-function CLEANUP(instring) result (cleaned)  ! PRIVATE HERE, from UTILS
+pure function CLEANUP(instring) result (cleaned)  ! PRIVATE HERE, from UTILS
 !*******************************************************************************
 ! PURPOSE: Removes spaces, tabs, and control characters in string
 ! CALL PARAMETERS: Character string
