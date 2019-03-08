@@ -28,7 +28,7 @@ integer, parameter :: kc4 = kr4                      ! single precision complex
 integer, parameter :: kc8 = kr8                      ! double precision complex
 
 
-
+private :: kr4,kr8,ki4,ki8,kc4,kc8
 private :: value_dr,value_sr,value_di,value_si
 private :: write_dr,write_sr,write_di,write_si
 private :: writeq_dr,writeq_sr,writeq_di,writeq_si

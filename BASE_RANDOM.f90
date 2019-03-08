@@ -23,8 +23,8 @@ module BASE_RANDOM
 
 implicit none
 
-! Double precision kind def.
-integer, parameter :: dp=8
+! Double precision kind=8 def.
+integer, parameter, private :: dp = selected_real_kind(15,  307)
 
 ! Module name for the DEBUG LOGGER: every function/sub must also have
 ! the PROCNAME parameter referring to its name. This is done for the Debug
@@ -1665,7 +1665,7 @@ function RAND_RENORMALISED_R8I(A, B) result(s_val)
   real(kind=dp):: s_val
   integer :: A, B
 
-  s_val = real(A,8)+RAND_VAL_R8()*(real(B,8)-real(A,8))
+  s_val = real(A,DP)+RAND_VAL_R8()*(real(B,DP)-real(A,DP))
 
 end function RAND_RENORMALISED_R8I
 

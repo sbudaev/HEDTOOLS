@@ -9,6 +9,10 @@ module BASE_UTILS
 
 implicit none
 
+! Definition of the double (kind=8) and quadruple (kind=16) precision
+integer, parameter, private :: DP = selected_real_kind(15,  307)
+integer, parameter, private :: QP = selected_real_kind(33, 4931)
+
 ! Module name for the DEBUG LOGGER: every function/sub must also have
 ! the PROCNAME parameter referring to its name. This is done for the Debug
 ! Logger module. Each module must also have a DEBUG Logger subroutine, that
@@ -396,7 +400,7 @@ pure function STR_R8TOA(r,formatstr) result (ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  real (kind=8), intent(in) :: r
+  real (kind=DP), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
@@ -458,7 +462,7 @@ pure function STR_R16TOA(r,formatstr) result (ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  real (kind=16), intent(in) :: r
+  real (kind=QP), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
@@ -672,7 +676,7 @@ pure function STR_ARRAY_R8TOA (r,formatstr) result(ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  real (kind=8), dimension(:), intent(in) :: r
+  real (kind=DP), dimension(:), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
@@ -720,7 +724,7 @@ pure function STR_ARRAY_R16TOA (r,formatstr) result(ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  real (kind=16), dimension(:), intent(in) :: r
+  real (kind=QP), dimension(:), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
@@ -1542,10 +1546,10 @@ pure subroutine MRGRNK_R8 (xdont, irngt)
 !   out of the standard loop, and use dedicated coding.
 ! __________________________________________________________
 ! __________________________________________________________
-      real (kind=8), dimension (:), intent (in) :: xdont
+      real (kind=DP), dimension (:), intent (in) :: xdont
       integer, dimension (:), intent (out) :: irngt
 ! __________________________________________________________
-      real (kind=8) :: xvala, xvalb
+      real (kind=DP) :: xvala, xvalb
 !
       integer, dimension (size(irngt)) :: jwrkt
       integer :: lmtna, lmtnc, irng1, irng2
@@ -2531,11 +2535,11 @@ pure subroutine RNKPAR_R8 (xdont, irngt, nord)
 !  michel olagnon - feb. 2000
 ! __________________________________________________________
 ! __________________________________________________________
-      real (kind=8), dimension (:), intent (in) :: xdont
+      real (kind=DP), dimension (:), intent (in) :: xdont
       integer, dimension (:), intent (out) :: irngt
       integer, intent (in) :: nord
 ! __________________________________________________________
-      real (kind=8) :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
+      real (kind=DP) :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
 !
       integer, dimension (size(xdont)) :: ilowt, ihigt
       integer :: ndon, jhig, jlow, ihig, iwrk, iwrk1, iwrk2, iwrk3
@@ -3698,12 +3702,12 @@ function LINTERPOL_R8 (xx, yy, x, ierr) result (y)
 !*******************************************************************************
    implicit none
 
-   real(kind=8), dimension(:), intent(in) :: xx ! Indep. variable array.
-   real(kind=8), dimension(:), intent(in) :: yy ! Dep. variable array.
-   real(kind=8), intent(in) :: x             ! Interpolate at x
+   real(kind=DP), dimension(:), intent(in) :: xx ! Indep. variable array.
+   real(kind=DP), dimension(:), intent(in) :: yy ! Dep. variable array.
+   real(kind=DP), intent(in) :: x             ! Interpolate at x
    integer, intent(out) :: ierr              ! Returned error code.
 
-   real(kind=8) :: y                         ! Interpolated value y(x).
+   real(kind=DP) :: y                         ! Interpolated value y(x).
 
    integer :: nn                             ! dimension of xx and yy arrays
 
@@ -3868,12 +3872,12 @@ pure function LINTERPOL_R8_PURE (xx, yy, x) result (y)
 !*******************************************************************************
    implicit none
 
-   real(kind=8), dimension(:), intent(in) :: xx ! Indep. variable array.
-   real(kind=8), dimension(:), intent(in) :: yy ! Dep. variable array.
-   real(kind=8), intent(in) :: x             ! Interpolate at x
+   real(kind=DP), dimension(:), intent(in) :: xx ! Indep. variable array.
+   real(kind=DP), dimension(:), intent(in) :: yy ! Dep. variable array.
+   real(kind=DP), intent(in) :: x             ! Interpolate at x
    !integer, optional, intent(out) :: ierr    ! Returned error code.
 
-   real(kind=8) :: y                         ! Interpolated value y(x).
+   real(kind=DP) :: y                         ! Interpolated value y(x).
 
    integer :: nn                             ! dimension of xx and yy arrays
 
@@ -3996,16 +4000,16 @@ pure subroutine INTERP_LAGRANGE_R8 ( t_data, p_data, t_interp, p_interp )
 
   implicit none
 
-  real ( kind = 8 ), intent(in) :: p_data(:,:)
-  real ( kind = 8 ), intent(out) :: p_interp(:,:)
-  real ( kind = 8 ), intent(in) :: t_data(:)
-  real ( kind = 8 ), intent(in) :: t_interp(:)
+  real ( kind = DP ), intent(in) :: p_data(:,:)
+  real ( kind = DP ), intent(out) :: p_interp(:,:)
+  real ( kind = DP ), intent(in) :: t_data(:)
+  real ( kind = DP ), intent(in) :: t_interp(:)
 
   integer :: interp_num
   integer :: data_num
   integer :: m
 
-  real ( kind = 8 ) l_interp( size(p_data, 2),size(p_interp, 2) )
+  real ( kind = DP ) l_interp( size(p_data, 2),size(p_interp, 2) )
 
   interp_num = size(p_interp, 2)
   data_num = size(p_data, 2)
@@ -4097,8 +4101,8 @@ pure subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_cod
 
   integer interp
   integer left
-  real ( kind = 8 ), intent(in) :: p_data(:,:)
-  real ( kind = 8 ), intent(out) ::  p_interp(:,:)
+  real ( kind = DP ), intent(in) :: p_data(:,:)
+  real ( kind = DP ), intent(out) ::  p_interp(:,:)
   logical, optional, intent(out) :: error_code  !> Error code if not increasing.
 
   integer :: interp_num
@@ -4106,9 +4110,9 @@ pure subroutine INTERP_LINEAR_R8 ( t_data, p_data, t_interp, p_interp, error_cod
   integer :: m
 
   integer right
-  real ( kind = 8 ) t
-  real ( kind = 8 ), intent(in) :: t_data(:)
-  real ( kind = 8 ), intent(in) :: t_interp(:)
+  real ( kind = DP ) t
+  real ( kind = DP ), intent(in) :: t_data(:)
+  real ( kind = DP ), intent(in) :: t_interp(:)
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
@@ -4216,9 +4220,9 @@ pure subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_in
 
   integer i
   integer j
-  real ( kind = 8 ), intent(out) :: l_interp(data_num,interp_num)
-  real ( kind = 8 ), intent(in) :: t_data(data_num)
-  real ( kind = 8 ), intent(in) :: t_interp(interp_num)
+  real ( kind = DP ), intent(out) :: l_interp(data_num,interp_num)
+  real ( kind = DP ), intent(in) :: t_data(data_num)
+  real ( kind = DP ), intent(in) :: t_interp(interp_num)
 !
 !  Evaluate the polynomial.
 !
@@ -4297,7 +4301,7 @@ pure function R8VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 
   integer i
   logical is_increasing
-  real ( kind = 8 ), intent(in) :: x(n)
+  real ( kind = DP ), intent(in) :: x(n)
 
   do i = 1, n - 1
     if ( x(i+1) <= x(i) ) then
@@ -4366,8 +4370,8 @@ pure subroutine R8VEC_BRACKET ( n, x, xval, left, right )
   integer i
   integer, intent(out) :: left
   integer, intent(out) :: right
-  real ( kind = 8 ), intent(in) :: x(n)
-  real ( kind = 8 ), intent(in) :: xval
+  real ( kind = DP ), intent(in) :: x(n)
+  real ( kind = DP ), intent(in) :: xval
 
   do i = 2, n - 1
 
@@ -4943,14 +4947,14 @@ pure function LAGR_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-  real(kind=8), dimension(:), intent(in) :: xx
-  real(kind=8), dimension(:), intent(in) :: yy            ! (1,:)
-  real(kind=8), dimension(:), intent(in) :: xi
+  real(kind=DP), dimension(:), intent(in) :: xx
+  real(kind=DP), dimension(:), intent(in) :: yy            ! (1,:)
+  real(kind=DP), dimension(:), intent(in) :: xi
 
-  real(kind=8), dimension(size(xi)) :: vector_output      ! (1,:)
+  real(kind=DP), dimension(size(xi)) :: vector_output      ! (1,:)
 
-  real(kind=8), dimension(1,size(yy)) :: yy_here
-  real(kind=8), dimension(1,size(xi)) :: vector_output_here
+  real(kind=DP), dimension(1,size(yy)) :: yy_here
+  real(kind=DP), dimension(1,size(xi)) :: vector_output_here
 
   yy_here(1,:) = yy(:)
 
@@ -4977,14 +4981,14 @@ pure function LIN_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-  real(kind=8), dimension(:), intent(in) :: xx
-  real(kind=8), dimension(:), intent(in) :: yy            ! (1,:)
-  real(kind=8), dimension(:), intent(in) :: xi
+  real(kind=DP), dimension(:), intent(in) :: xx
+  real(kind=DP), dimension(:), intent(in) :: yy            ! (1,:)
+  real(kind=DP), dimension(:), intent(in) :: xi
 
-  real(kind=8), dimension(size(xi)) :: vector_output      ! (1,:)
+  real(kind=DP), dimension(size(xi)) :: vector_output      ! (1,:)
 
-  real(kind=8), dimension(1,size(yy)) :: yy_here
-  real(kind=8), dimension(1,size(xi)) :: vector_output_here
+  real(kind=DP), dimension(1,size(yy)) :: yy_here
+  real(kind=DP), dimension(1,size(xi)) :: vector_output_here
 
   yy_here(1,:) = yy(:)
 
@@ -5148,17 +5152,17 @@ pure function DDINT_R8 (xi, yi, xx, n_points) result (ddint_out)
 
   implicit none
 
-  real (kind=8) :: ddint_out
-  real (kind=8), intent(in) :: xx
+  real (kind=DP) :: ddint_out
+  real (kind=DP), intent(in) :: xx
 
   integer, intent(in), optional :: n_points
-  real (kind=8), intent(in) :: xi(:), yi(:)
+  real (kind=DP), intent(in) :: xi(:), yi(:)
 
   integer :: ni, n
-  real (kind=8), allocatable, dimension(:,:) :: d
-  real (kind=8), allocatable, dimension(:)   :: x
+  real (kind=DP), allocatable, dimension(:,:) :: d
+  real (kind=DP), allocatable, dimension(:)   :: x
   integer :: i, j, k, ix
-  real (kind=8) :: c, pn
+  real (kind=DP) :: c, pn
 
   ni = min(size(xi),size(yi)) ! Check conformant xi and yi.
 
@@ -5284,16 +5288,16 @@ function LINSPACE_R8 (x_min, x_max_n, n) result (value_out)
 !          linspace(1., 10., 10)
 !*******************************************************************************
 
-  real(kind=8) :: x_min, x_max_n
+  real(kind=DP) :: x_min, x_max_n
   integer :: n
   integer:: i
 
-  real(kind=8), allocatable, dimension(:) :: value_out
+  real(kind=DP), allocatable, dimension(:) :: value_out
 
   allocate ( value_out(n) )
 
   do i = 1, n
-    value_out(i) = x_min + (((x_max_n-x_min)*(real(i-1, kind=8)))/(real(n-1, kind=8)))
+    value_out(i) = x_min + (((x_max_n-x_min)*(real(i-1, kind=DP)))/(real(n-1, kind=DP)))
   end do
 
 end function LINSPACE_R8
