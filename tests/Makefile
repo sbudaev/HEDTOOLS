@@ -71,7 +71,7 @@ HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
 HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod logger.mod base_random.mod
 
 # Path to HEDTOOLS and IEEE non-intrinsic libs
-HEDTOOLSDIR =  ../HEDTOOLS
+HEDTOOLSDIR =  ../
 IEEEPATH = $(HEDTOOLSDIR)/IEEE
 
 #===============================================================================

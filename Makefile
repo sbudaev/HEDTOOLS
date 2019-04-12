@@ -26,6 +26,9 @@ TOOLS_LIST := htintrpl htscatter hthist
 # Path to binary tools, normally subdirectory
 TOOLS_PATH = tools/
 
+# Path to tests
+TESTS_PATH = tests/
+
 #===============================================================================
 # Accessory settings for the build environment
 
@@ -333,7 +336,6 @@ all: static
 
 lib: $(LIB)
 
-
 # Make the binary and plotting tools in the tools directory.
 .PHONY: tools
 
@@ -341,6 +343,10 @@ tools:
 	for tool in $(basename $(TOOLS_LIST)); do \
 		$(MAKE) -C $(TOOLS_PATH) SRC=$$tool.f90 OUT=$$tool.exe; \
 	done
+
+.PHONY: tests
+tests:
+	$(MAKE) -C $(TESTS_PATH) tests
 
 # Specific compiler targets: intel, GNU, Oracle/Sun
 
@@ -379,6 +385,7 @@ distclean: neat
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb *.zip \
 	       ?NULL
 	$(MAKE) -C $(TOOLS_PATH) distclean
+	$(MAKE) -C $(TESTS_PATH) distclean
 
 # We don't clean .mod files as they are necessary for building with .so
 clean: neat
