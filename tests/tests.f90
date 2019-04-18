@@ -19,14 +19,15 @@ end module m_tests
 
 program tests_hedtools
 use m_tests
-use CSV_IO
 
  call test_CSV_IO()
+ call test_STRINGS()
  print *, "Tests completed"
 
 contains
 
 subroutine test_CSV_IO
+  use CSV_IO
 
   integer :: unum
   logical :: fstat
@@ -67,5 +68,31 @@ subroutine test_CSV_IO
   if ( any(DATA_OUT /= DATA_IN) ) call fail_test("DATA IN /= OUT")
 
 end subroutine test_CSV_IO
+
+subroutine test_STRINGS
+  use BASE_STRINGS
+
+  character(len=255) :: test_str_01
+  character(len=24), dimension(10) :: substrings
+  character(len=*), dimension(5), parameter ::  checksubstring = [ "This  ", &
+                                                                   "is    ", &
+                                                                   "a     ", &
+                                                                   "test  ", &
+                                                                   "string" ]
+  integer :: n_parts
+  character(len=*), parameter :: TESTNAME="test_STRINGS"
+
+  print *, "Test: ", TESTNAME
+
+  test_str_01 = "This is a test string"
+
+  ! Test PARSE()
+  call PARSE(test_str_01, " ,:", substrings, n_parts)
+  if ( .not. n_parts == 5 ) call fail_test("Wrong N of substrings in PARSE")
+  if ( any( substrings(1:5)/=checksubstring(1:5) ) )                          &
+                            call fail_test( "Error in PARSE strings" )
+
+end subroutine test_STRINGS
+
 
 end program tests_hedtools
