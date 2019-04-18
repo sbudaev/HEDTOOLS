@@ -79,7 +79,8 @@ subroutine test_STRINGS
                                                                    "a     ", &
                                                                    "test  ", &
                                                                    "string" ]
-  integer :: n_parts
+  integer :: n_parts, inumber, ierr
+  real :: rnumber
   character(len=*), parameter :: TESTNAME="test_STRINGS"
 
   print *, "Test: ", TESTNAME
@@ -89,8 +90,68 @@ subroutine test_STRINGS
   ! Test PARSE()
   call PARSE(test_str_01, " ,:", substrings, n_parts)
   if ( .not. n_parts == 5 ) call fail_test("Wrong N of substrings in PARSE")
+  ! Note: any called without trimming, might result mismatch due to spaces with
+  !       some compiler
   if ( any( substrings(1:5)/=checksubstring(1:5) ) )                          &
                             call fail_test( "Error in PARSE strings" )
+
+  ! Test COMPACT()
+  test_str_01 = "Test   string     with      wide gaps"
+  call COMPACT(test_str_01)
+  if ( .not. trim(test_str_01) == "Test string with wide gaps" )              &
+                            call fail_test("Error in COMPACT")
+
+  ! Test REMOVESP()
+  test_str_01 = "Test   string     with      wide gaps"
+  call REMOVESP(test_str_01)
+  if ( .not. trim(test_str_01) == "Teststringwithwidegaps" )                  &
+                            call fail_test("Error in REMOVESP")
+
+  ! Test VALUE()
+  test_str_01 = "001"
+  call VALUE(test_str_01, inumber, ierr)
+  if ( .not. (inumber==1 .and. ierr==0) )                                     &
+                            call fail_test("Error in VALUE with integer")
+
+  test_str_01 = "1000"
+  call VALUE(test_str_01, inumber, ierr)
+  if ( .not. (inumber==1000 .and. ierr==0) )                                  &
+                            call fail_test("Error in VALUE with integer")
+
+  test_str_01 = "-1000"
+  call VALUE(test_str_01, inumber, ierr)
+  if ( .not. (inumber==-1000 .and. ierr==0) )                                 &
+                            call fail_test("Error in VALUE with integer")
+
+  test_str_01 = "2.345"
+  call VALUE(test_str_01, rnumber, ierr)
+  if ( .not. (rnumber==2.345 .and. ierr==0) )                                 &
+                            call fail_test("Error in VALUE with real")
+
+  test_str_01 = "-1000.123"
+  call VALUE(test_str_01, rnumber, ierr)
+  if ( .not. (rnumber==-1000.123 .and. ierr==0) )                             &
+                            call fail_test("Error in VALUE with real")
+
+  test_str_01 = "ERROR_VALUE_2.345"
+  call VALUE(test_str_01, rnumber, ierr)
+  if ( ierr==0 ) call fail_test("Error in VALUE with error reporting")
+
+  ! Test SHIFTSTR()
+  test_str_01 = "Test string"
+  call SHIFTSTR(test_str_01, 4)  ! 1234-----------
+  if ( .not. trim(test_str_01) == "    Test string" )                         &
+                            call fail_test("Error in SHIFTSTR")
+
+  ! Test INSERTSTR()
+  test_str_01 = "Test string"
+  call INSERTSTR(test_str_01, " a small", 5)
+  !                               '12345+++++++-------'
+  if ( .not. trim(test_str_01) == "Test a small string" )                     &
+                            call fail_test("Error in INSERTSTR")
+
+
+
 
 end subroutine test_STRINGS
 
