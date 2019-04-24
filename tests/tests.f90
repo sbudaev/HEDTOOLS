@@ -186,7 +186,7 @@ subroutine test_STRINGS
   if ( .not. trim(LOWERCASE("Some TeXt")) == "some text" )                    &
                             call fail_test("Error in LOWERCASE inline")
 
-  ! Test MACH(), only the first substring is deleted
+  ! Test MATCH(), only the first substring is deleted
   !              1234567890123-5-789012345678-0-23456789012345678901234
   test_str_01 = "Test a string {a small string} brackets close at 15-30"
   call MATCH(test_str_01, 15, imatch)
