@@ -20,9 +20,10 @@ end module m_tests
 program tests_hedtools
 use m_tests
 
+ print *, "*** Tests started ***"
  call test_CSV_IO()
  call test_STRINGS()
- print *, "Tests completed"
+ print *, "*** Tests completed ***"
 
 contains
 
@@ -72,7 +73,7 @@ end subroutine test_CSV_IO
 subroutine test_STRINGS
   use BASE_STRINGS
 
-  character(len=255) :: test_str_01
+  character(len=255) :: test_str_01, test_str_02
   character(len=24), dimension(10) :: substrings
   character(len=*), dimension(5), parameter ::  checksubstring = [ "This  ", &
                                                                    "is    ", &
@@ -81,14 +82,14 @@ subroutine test_STRINGS
                                                                    "string" ]
   integer :: n_parts, inumber, ierr
   real :: rnumber
-  character(len=*), parameter :: TESTNAME="test_STRINGS"
+  character(len=*), parameter :: TESTNAME="test_STRINGS", DELIMS=",:;"
   integer :: ipos, imatch
+  character :: char
 
   print *, "Test: ", TESTNAME
 
-  test_str_01 = "This is a test string"
-
   ! Test PARSE()
+  test_str_01 = "This is a test string"
   call PARSE(test_str_01, " ,:", substrings, n_parts)
   if ( .not. n_parts == 5 ) call fail_test("Wrong N of substrings in PARSE")
   ! Note: any called without trimming, might result mismatch due to spaces with
@@ -203,8 +204,65 @@ subroutine test_STRINGS
   call MATCH(test_str_01, 15, imatch)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH []")
 
+  ! Test TRIMZERO
+  test_str_01 = "0.00400"
+  call TRIMZERO(test_str_01)
+  if ( .not. trim(test_str_01) == "0.004" ) call fail_test("Error in TRIMZERO")
+
+  test_str_01 = "10.0400"
+  call TRIMZERO(test_str_01)
+  if ( .not. trim(test_str_01) == "10.04" ) call fail_test("Error in TRIMZERO")
+
+  test_str_01 = "20.30000"
+  call TRIMZERO(test_str_01)
+  if ( .not. trim(test_str_01) == "20.3" ) call fail_test("Error in TRIMZERO")
+
+  ! Test IS_LETTER, Note that UTF character set is not supported
+  if ( .not. IS_LETTER("A") .eqv. .TRUE. ) call fail_test("Error in IS_LETTER")
+  if ( .not. IS_LETTER("z") .eqv. .TRUE. ) call fail_test("Error in IS_LETTER")
+  if ( .not. IS_LETTER("1") .eqv. .FALSE. ) call fail_test("Error in IS_LETTER")
+
+  ! Test IS_DIGIT, Note that UTF character set is not supported
+  if ( .not. IS_DIGIT("1") .eqv. .TRUE. ) call fail_test("Error in IS_DIGIT")
+  if ( .not. IS_DIGIT("9") .eqv. .TRUE. ) call fail_test("Error in IS_DIGIT")
+  if ( .not. IS_DIGIT("A") .eqv. .FALSE. ) call fail_test("Error in IS_DIGIT")
 
 
+  ! Test SPLIT(), only the first substring is deleted
+  test_str_01 = "First part, of a string, that is long"
+  call SPLIT(test_str_01, ",", test_str_02, char)
+  if ( .not. ( trim(test_str_01) == "of a string, that is long" .and.         &
+               trim(test_str_02) == "First part" .and. char == "," )  )       &
+                            call fail_test("Error in SPLIT")
+
+  test_str_01 = "word1 word2 word3"
+  call SPLIT(test_str_01, " ,:", test_str_02, char)
+  if ( .not. ( trim(test_str_01) == "word2 word3" .and.                       &
+               trim(test_str_02) == "word1" .and. char == " " )  )            &
+                            call fail_test("Error in SPLIT")
+
+  test_str_01 = "part1 part2 part3"
+  call SPLIT(test_str_01, " ,:", test_str_02)
+  if ( .not. ( trim(test_str_01) == "part2 part3" .and.                       &
+               trim(test_str_02) == "part1" )  )                              &
+                            call fail_test("Error in SPLIT")
+
+  ! Test REMOVEBKSL
+  test_str_01 = "pt1_\_pt2"
+  call REMOVEBKSL(test_str_01)
+  if ( .not. test_str_01 == "pt1__pt2" ) call fail_test("Error in REMOVEBKSL")
+
+  ! Test IS_NUMERIC
+  if ( .not. IS_NUMERIC("1.2", .TRUE.) .eqv. .TRUE. )                         &
+                            call fail_test("Error in IS_NUMERIC")
+  if ( .not. IS_NUMERIC(" 1.2", .TRUE.) .eqv. .TRUE. )                        &
+                            call fail_test("Error in IS_NUMERIC")
+  if ( .not. IS_NUMERIC(" 1.2", .FALSE.) .eqv. .FALSE. )                      &
+                            call fail_test("Error in IS_NUMERIC")
+  if ( .not. IS_NUMERIC("DD", .FALSE.) .eqv. .FALSE. )                        &
+                            call fail_test("Error in IS_NUMERIC")
+  if ( .not. IS_NUMERIC("  ", .TRUE.) .eqv. .FALSE. )                         &
+                            call fail_test("Error in IS_NUMERIC")
 
 end subroutine test_STRINGS
 
