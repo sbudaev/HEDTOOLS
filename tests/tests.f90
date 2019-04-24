@@ -82,6 +82,7 @@ subroutine test_STRINGS
   integer :: n_parts, inumber, ierr
   real :: rnumber
   character(len=*), parameter :: TESTNAME="test_STRINGS"
+  integer :: ipos, imatch
 
   print *, "Test: ", TESTNAME
 
@@ -149,6 +150,58 @@ subroutine test_STRINGS
   !                               '12345+++++++-------'
   if ( .not. trim(test_str_01) == "Test a small string" )                     &
                             call fail_test("Error in INSERTSTR")
+
+  ! Test DELSUBSTR()
+  test_str_01 = "Test a small string"
+  call DELSUBSTR(test_str_01, " a small")
+  if ( .not. trim(test_str_01) == "Test string" )                             &
+                            call fail_test("Error in DELSUBSTR")
+
+  ! Test DELSUBSTR(), only the first substring is deleted
+  test_str_01 = "Test a small string, which is a small string"
+  call DELSUBSTR(test_str_01, " a small")
+  if ( .not. trim(test_str_01) == "Test string, which is a small string" )    &
+                            call fail_test("Error in DELSUBSTR, repeated")
+
+  ! Test DELALL(), only the first substring is deleted
+  test_str_01 = "Test a small string, which is a small string zero"
+  call DELALL(test_str_01, " a small")
+  if ( .not. trim(test_str_01) == "Test string, which is string zero" )       &
+                            call fail_test("Error in DELALL")
+
+  ! Test UPPERCASE()
+  test_str_01 = "Test a small string"
+  if ( .not. trim(UPPERCASE(test_str_01)) == "TEST A SMALL STRING" )          &
+                            call fail_test("Error in UPPERCASE")
+
+  if ( .not. trim(UPPERCASE("some text")) == "SOME TEXT" )                    &
+                            call fail_test("Error in UPPERCASE inline")
+
+  ! Test LOWERCASE()
+  test_str_01 = "Test a Small striNg"
+  if ( .not. trim(LOWERCASE(test_str_01)) == "test a small string" )          &
+                            call fail_test("Error in LOWERCASE")
+
+  if ( .not. trim(LOWERCASE("Some TeXt")) == "some text" )                    &
+                            call fail_test("Error in LOWERCASE inline")
+
+  ! Test MACH(), only the first substring is deleted
+  !              1234567890123-5-789012345678-0-23456789012345678901234
+  test_str_01 = "Test a string {a small string} brackets close at 15-30"
+  call MATCH(test_str_01, 15, imatch)
+  if ( .not. imatch == 30 ) call fail_test("Error in MATCH {}")
+
+  test_str_01 = "Test a string <a small string> brackets close at 15-30"
+  call MATCH(test_str_01, 15, imatch)
+  if ( .not. imatch == 30 ) call fail_test("Error in MATCH <>")
+
+  test_str_01 = "Test a string (a small string) brackets close at 15-30"
+  call MATCH(test_str_01, 15, imatch)
+  if ( .not. imatch == 30 ) call fail_test("Error in MATCH ()")
+
+  test_str_01 = "Test a string [a small string] brackets close at 15-30"
+  call MATCH(test_str_01, 15, imatch)
+  if ( .not. imatch == 30 ) call fail_test("Error in MATCH []")
 
 
 
