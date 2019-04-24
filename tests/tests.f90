@@ -204,6 +204,9 @@ subroutine test_STRINGS
   call MATCH(test_str_01, 15, imatch)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH []")
 
+  call MATCH("Test a string [a small string] with square brackets", 15, imatch)
+  if ( .not. imatch == 30 ) call fail_test("Error in MATCH [] inline")
+
   ! Test TRIMZERO
   test_str_01 = "0.00400"
   call TRIMZERO(test_str_01)
