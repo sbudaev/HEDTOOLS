@@ -10,8 +10,13 @@ module BASE_UTILS
 implicit none
 
 ! Definition of the double (kind=8) and quadruple (kind=16) precision
+integer, parameter, private :: SP = selected_real_kind(6,   37)
 integer, parameter, private :: DP = selected_real_kind(15,  307)
 integer, parameter, private :: QP = selected_real_kind(33, 4931)
+
+! Qsort was inserted separately, so here are its own constants.
+integer, parameter, private :: R4 = SP
+integer, parameter, private :: R8 = DP
 
 ! Module name for the DEBUG LOGGER: every function/sub must also have
 ! the PROCNAME parameter referring to its name. This is done for the Debug
@@ -166,6 +171,22 @@ interface LINSPACE               ! Equally spaced linear array procedures.
 end interface LINSPACE
 
 
+interface ZEROFUN                ! Find zero of an arbitrary function
+
+  module procedure zeroin_r4
+  module procedure zeroin_r8
+
+end interface ZEROFUN
+
+
+interface ARRAY_QSORT            ! Quick sort module
+
+  module procedure qsort_r4
+  module procedure qsort_r8
+  module procedure qsort_i
+
+end interface ARRAY_QSORT
+
 !-------------------------------------------------------------------------------
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
@@ -178,6 +199,8 @@ private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
                     ! has the same name as in the model proto
 
 private :: R8VEC_ASCENDS_STRICTLY, LIN_INTERPOL_VECTOR_R8
+
+private :: qsort_r4, partition_r4, qsort_r8, partition_r8, qsort_i, partition_i
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
@@ -338,7 +361,7 @@ pure function STR_RTOA(r,formatstr) result (ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  real, intent(in) :: r
+  real(kind=SP), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
@@ -628,7 +651,7 @@ pure function STR_ARRAY_RTOA (r,formatstr) result(ToStrA)
   character(len=:), allocatable :: ToStrA
 
   ! Calling parameters
-  real, dimension(:), intent(in) :: r
+  real(kind=SP), dimension(:), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
 
   ! Local variables
@@ -1332,10 +1355,10 @@ pure subroutine MRGRNK_R4 (xdont, irngt)
 !   out of the standard loop, and use dedicated coding.
 ! __________________________________________________________
 ! _________________________________________________________
-      real, dimension (:), intent (in) :: xdont
+      real(kind=SP), dimension (:), intent (in) :: xdont
       integer, dimension (:), intent (out) :: irngt
 ! __________________________________________________________
-      real :: xvala, xvalb
+      real(kind=SP) :: xvala, xvalb
 !
       integer, dimension (size(irngt)) :: jwrkt
       integer :: lmtna, lmtnc, irng1, irng2
@@ -2002,11 +2025,11 @@ pure subroutine RNKPAR_R4 (xdont, irngt, nord)
 !  Michel Olagnon - Feb. 2000
 ! __________________________________________________________
 ! _________________________________________________________
-      real, dimension (:), intent (in) :: xdont
+      real(kind=SP), dimension (:), intent (in) :: xdont
       integer, dimension (:), intent (out) :: irngt
       integer, intent (in) :: nord
 ! __________________________________________________________
-      real    :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
+      real(kind=SP)    :: xpiv, xpiv0, xwrk, xwrk1, xmin, xmax
 !
       integer, dimension (size(xdont)) :: ilowt, ihigt
       integer :: ndon, jhig, jlow, ihig, iwrk, iwrk1, iwrk2, iwrk3
@@ -2088,14 +2111,14 @@ pure subroutine RNKPAR_R4 (xdont, irngt, nord)
       ideb = jdeb + 1
       jlow = ideb
       jhig = 3
-      xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+      xpiv = xdont (ilowt(ideb)) + real(2*nord,SP)/real(ndon+nord,SP) * &
                                    (xdont(ihigt(3))-xdont(ilowt(ideb)))
       if (xpiv >= xdont(ihigt(1))) then
-         xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+         xpiv = xdont (ilowt(ideb)) + real(2*nord,SP)/real(ndon+nord,SP) * &
                                       (xdont(ihigt(2))-xdont(ilowt(ideb)))
          if (xpiv >= xdont(ihigt(1))) &
-             xpiv = xdont (ilowt(ideb)) + real (2*nord) / real (ndon+nord) * &
-                                          (xdont(ihigt(1))-xdont(ilowt(ideb)))
+             xpiv = xdont (ilowt(ideb))+real(2*nord,SP)/real (ndon+nord,SP) * &
+                                        (xdont(ihigt(1))-xdont(ilowt(ideb)))
       end if
       xpiv0 = xpiv
 !
@@ -2302,7 +2325,7 @@ pure subroutine RNKPAR_R4 (xdont, irngt, nord)
                iwrk1 = ihigt (1)
                jlow = jlow + 1
                ilowt (jlow) = iwrk1
-               xpiv = xdont (iwrk1) + real (nwrk) / real (nord+nwrk) * &
+               xpiv = xdont (iwrk1) + real (nwrk,SP) / real (nord+nwrk,SP) * &
                                       (xdont(ihigt(ifin))-xdont(iwrk1))
 !
 !  one takes values <= pivot to ilowt
@@ -2418,11 +2441,11 @@ pure subroutine RNKPAR_R4 (xdont, irngt, nord)
             end if
             if (ifin <= 3) exit
 !
-            xpiv = xdont (ilowt(1)) + real(nord)/real(jlow+nord) * &
+            xpiv = xdont (ilowt(1)) + real(nord,SP)/real(jlow+nord,SP) * &
                                       (xdont(ilowt(ifin))-xdont(ilowt(1)))
             if (jdeb > 0) then
                if (xpiv <= xpiv0) &
-                   xpiv = xpiv0 + real(2*nord-jdeb)/real (jlow+nord) * &
+                   xpiv = xpiv0 + real(2*nord-jdeb,SP)/real (jlow+nord,SP) * &
                                   (xdont(ilowt(ifin))-xpiv0)
             else
                ideb = 1
@@ -2621,14 +2644,14 @@ pure subroutine RNKPAR_R8 (xdont, irngt, nord)
       ideb = jdeb + 1
       jlow = ideb
       jhig = 3
-      xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+      xpiv = xdont (ilowt(ideb)) + real(2*nord,DP)/real(ndon+nord,DP) * &
                                    (xdont(ihigt(3))-xdont(ilowt(ideb)))
       if (xpiv >= xdont(ihigt(1))) then
-         xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+         xpiv = xdont (ilowt(ideb)) + real(2*nord,DP)/real(ndon+nord,DP) * &
                                       (xdont(ihigt(2))-xdont(ilowt(ideb)))
          if (xpiv >= xdont(ihigt(1))) &
-             xpiv = xdont (ilowt(ideb)) + real (2*nord) / real (ndon+nord) * &
-                                          (xdont(ihigt(1))-xdont(ilowt(ideb)))
+             xpiv = xdont (ilowt(ideb))+real(2*nord,DP)/real(ndon+nord,DP) * &
+                                        (xdont(ihigt(1))-xdont(ilowt(ideb)))
       end if
       xpiv0 = xpiv
 !
@@ -2835,7 +2858,7 @@ pure subroutine RNKPAR_R8 (xdont, irngt, nord)
                iwrk1 = ihigt (1)
                jlow = jlow + 1
                ilowt (jlow) = iwrk1
-               xpiv = xdont (iwrk1) + real (nwrk) / real (nord+nwrk) * &
+               xpiv = xdont (iwrk1) + real (nwrk,DP) / real (nord+nwrk,DP) * &
                                       (xdont(ihigt(ifin))-xdont(iwrk1))
 !
 !  one takes values <= pivot to ilowt
@@ -2951,11 +2974,11 @@ pure subroutine RNKPAR_R8 (xdont, irngt, nord)
             end if
             if (ifin <= 3) exit
 !
-            xpiv = xdont (ilowt(1)) + real(nord)/real(jlow+nord) * &
+            xpiv = xdont (ilowt(1)) + real(nord,DP)/real(jlow+nord,DP) * &
                                       (xdont(ilowt(ifin))-xdont(ilowt(1)))
             if (jdeb > 0) then
                if (xpiv <= xpiv0) &
-                   xpiv = xpiv0 + real(2*nord-jdeb)/real (jlow+nord) * &
+                   xpiv = xpiv0 + real(2*nord-jdeb,DP)/real (jlow+nord,DP) * &
                                   (xdont(ilowt(ifin))-xpiv0)
             else
                ideb = 1
@@ -3154,14 +3177,14 @@ pure subroutine RNKPAR_I (xdont, irngt, nord)
       ideb = jdeb + 1
       jlow = ideb
       jhig = 3
-      xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+      xpiv = xdont (ilowt(ideb)) + real(2*nord,SP)/real(ndon+nord,SP) * &
                                    (xdont(ihigt(3))-xdont(ilowt(ideb)))
       if (xpiv >= xdont(ihigt(1))) then
-         xpiv = xdont (ilowt(ideb)) + real(2*nord)/real(ndon+nord) * &
+         xpiv = xdont (ilowt(ideb)) + real(2*nord,SP)/real(ndon+nord,SP) * &
                                       (xdont(ihigt(2))-xdont(ilowt(ideb)))
          if (xpiv >= xdont(ihigt(1))) &
-             xpiv = xdont (ilowt(ideb)) + real (2*nord) / real (ndon+nord) * &
-                                          (xdont(ihigt(1))-xdont(ilowt(ideb)))
+             xpiv = xdont (ilowt(ideb))+real(2*nord,SP)/real(ndon+nord,SP) * &
+                                        (xdont(ihigt(1))-xdont(ilowt(ideb)))
       end if
       xpiv0 = xpiv
 !
@@ -3368,7 +3391,7 @@ pure subroutine RNKPAR_I (xdont, irngt, nord)
                iwrk1 = ihigt (1)
                jlow = jlow + 1
                ilowt (jlow) = iwrk1
-               xpiv = xdont (iwrk1) + real (nwrk) / real (nord+nwrk) * &
+               xpiv = xdont (iwrk1) + real (nwrk,SP) / real (nord+nwrk,SP) * &
                                       (xdont(ihigt(ifin))-xdont(iwrk1))
 !
 !  one takes values <= pivot to ilowt
@@ -3484,11 +3507,11 @@ pure subroutine RNKPAR_I (xdont, irngt, nord)
             end if
             if (ifin <= 3) exit
 !
-            xpiv = xdont (ilowt(1)) + real(nord)/real(jlow+nord) * &
+            xpiv = xdont (ilowt(1)) + real(nord,SP)/real(jlow+nord,SP) * &
                                       (xdont(ilowt(ifin))-xdont(ilowt(1)))
             if (jdeb > 0) then
                if (xpiv <= xpiv0) &
-                   xpiv = xpiv0 + real(2*nord-jdeb)/real (jlow+nord) * &
+                   xpiv = xpiv0 + real(2*nord-jdeb,SP)/real (jlow+nord,SP) * &
                                   (xdont(ilowt(ifin))-xpiv0)
             else
                ideb = 1
@@ -3618,11 +3641,11 @@ function LINTERPOL_R4 (xx, yy, x, ierr) result (y)
 !*******************************************************************************
    implicit none
 
-   real, dimension(:), intent(in) :: xx, yy  ! Indep. and dep. variable arrays.
-   real, intent(in) :: x                     ! Interpolate at x
+   real(kind=SP), dimension(:), intent(in) :: xx, yy  ! Indep. and dep. arrays.
+   real(kind=SP), intent(in) :: x                     ! Interpolate at x
    integer, intent(out) :: ierr              ! Returned error code.
 
-   real :: y                                 ! Interpolated value y(x).
+   real(kind=SP) :: y                        ! Interpolated value y(x).
 
    integer :: nn                             ! dimension of xx and yy arrays
 
@@ -3788,11 +3811,11 @@ pure function LINTERPOL_R4_PURE (xx, yy, x) result (y)
 !*******************************************************************************
    implicit none
 
-   real, dimension(:), intent(in) :: xx, yy  ! Indep. and dep. variable arrays.
-   real, intent(in) :: x                     ! Interpolate at x
+   real(kind=SP), dimension(:), intent(in) :: xx, yy  ! Indep. and dep. arrays.
+   real(kind=SP), intent(in) :: x                     ! Interpolate at x
    !integer, optional, intent(out) :: ierr    ! Returned error code.
 
-   real :: y                                 ! Interpolated value y(x).
+   real(kind=SP) :: y                        ! Interpolated value y(x).
 
    integer :: nn                             ! dimension of xx and yy arrays
 
@@ -4226,7 +4249,7 @@ pure subroutine LAGRANGE_VALUE_R8 ( data_num, t_data, interp_num, t_interp, l_in
 !
 !  Evaluate the polynomial.
 !
-  l_interp(1:data_num,1:interp_num) = 1.0D+00
+  l_interp(1:data_num,1:interp_num) = 1.0E+00_DP
 
   do i = 1, data_num
 
@@ -4463,16 +4486,16 @@ pure subroutine INTERP_LAGRANGE_R4 ( t_data, p_data, t_interp, p_interp )
 
   implicit none
 
-  real, intent(in) :: p_data(:,:)
-  real, intent(out) :: p_interp(:,:)
-  real, intent(in) :: t_data(:)
-  real, intent(in) :: t_interp(:)
+  real(kind=SP), intent(in) :: p_data(:,:)
+  real(kind=SP), intent(out) :: p_interp(:,:)
+  real(kind=SP), intent(in) :: t_data(:)
+  real(kind=SP), intent(in) :: t_interp(:)
 
   integer :: interp_num
   integer :: data_num
   integer :: m
 
-  real :: l_interp( size(p_data, 2),size(p_interp, 2) )
+  real(kind=SP) :: l_interp( size(p_data, 2),size(p_interp, 2) )
 
   interp_num = size(p_interp, 2)
   data_num = size(p_data, 2)
@@ -4564,8 +4587,8 @@ pure subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_cod
 
   integer :: interp
   integer :: left
-  real, intent(in) :: p_data(:,:)
-  real, intent(out) ::  p_interp(:,:)
+  real(kind=SP), intent(in) :: p_data(:,:)
+  real(kind=SP), intent(out) ::  p_interp(:,:)
   logical, optional, intent(out) :: error_code !> Error code if not increasing.
 
   integer :: interp_num
@@ -4573,9 +4596,9 @@ pure subroutine INTERP_LINEAR_R4 ( t_data, p_data, t_interp, p_interp, error_cod
   integer :: m
 
   integer right
-  real :: t
-  real, intent(in) :: t_data(:)
-  real, intent(in) :: t_interp(:)
+  real(kind=SP) :: t
+  real(kind=SP), intent(in) :: t_data(:)
+  real(kind=SP), intent(in) :: t_interp(:)
 
   m = size(p_data, 1)
   interp_num = size(p_interp, 2)
@@ -4683,13 +4706,13 @@ pure subroutine LAGRANGE_VALUE_R4 ( data_num, t_data, interp_num, t_interp, l_in
 
   integer :: i
   integer :: j
-  real, intent(out) :: l_interp(data_num,interp_num)
-  real, intent(in) :: t_data(data_num)
-  real, intent(in) :: t_interp(interp_num)
+  real(kind=SP), intent(out) :: l_interp(data_num,interp_num)
+  real(kind=SP), intent(in) :: t_data(data_num)
+  real(kind=SP), intent(in) :: t_interp(interp_num)
 !
 !  Evaluate the polynomial.
 !
-  l_interp(1:data_num,1:interp_num) = 1.0D+00
+  l_interp(1:data_num,1:interp_num) = 1.0E+00_SP
 
   do i = 1, data_num
 
@@ -4765,7 +4788,7 @@ pure function R4VEC_ASCENDS_STRICTLY ( n, x ) result (is_increasing)
 
   integer :: i
   logical :: is_increasing
-  real, intent(in) :: x(n)
+  real(kind=SP), intent(in) :: x(n)
 
   do i = 1, n - 1
     if ( x(i+1) <= x(i) ) then
@@ -4834,8 +4857,8 @@ pure subroutine R4VEC_BRACKET ( n, x, xval, left, right )
   integer i
   integer, intent(out) :: left
   integer, intent(out) :: right
-  real, intent(in) :: x(n)
-  real, intent(in) :: xval
+  real(kind=SP), intent(in) :: x(n)
+  real(kind=SP), intent(in) :: xval
 
   do i = 2, n - 1
 
@@ -4875,14 +4898,14 @@ pure function LAGR_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-  real, dimension(:), intent(in) :: xx
-  real, dimension(:), intent(in) :: yy            ! (1,:)
-  real, dimension(:), intent(in) :: xi
+  real(kind=SP), dimension(:), intent(in) :: xx
+  real(kind=SP), dimension(:), intent(in) :: yy            ! (1,:)
+  real(kind=SP), dimension(:), intent(in) :: xi
 
-  real, dimension(size(xi)) :: vector_output      ! (1,:)
+  real(kind=SP), dimension(size(xi)) :: vector_output      ! (1,:)
 
-  real, dimension(1,size(yy)) :: yy_here
-  real, dimension(1,size(xi)) :: vector_output_here
+  real(kind=SP), dimension(1,size(yy)) :: yy_here
+  real(kind=SP), dimension(1,size(xi)) :: vector_output_here
 
   yy_here(1,:) = yy(:)
 
@@ -4909,14 +4932,14 @@ pure function LIN_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !
 !*******************************************************************************
 
-  real, dimension(:), intent(in) :: xx
-  real, dimension(:), intent(in) :: yy            ! (1,:)
-  real, dimension(:), intent(in) :: xi
+  real(kind=SP), dimension(:), intent(in) :: xx
+  real(kind=SP), dimension(:), intent(in) :: yy            ! (1,:)
+  real(kind=SP), dimension(:), intent(in) :: xi
 
-  real, dimension(size(xi)) :: vector_output      ! (1,:)
+  real(kind=SP), dimension(size(xi)) :: vector_output      ! (1,:)
 
-  real, dimension(1,size(yy)) :: yy_here
-  real, dimension(1,size(xi)) :: vector_output_here
+  real(kind=SP), dimension(1,size(yy)) :: yy_here
+  real(kind=SP), dimension(1,size(xi)) :: vector_output_here
 
   yy_here(1,:) = yy(:)
 
@@ -5024,17 +5047,17 @@ pure function DDINT_R4 (xi, yi, xx, n_points) result (ddint_out)
 
   implicit none
 
-  real :: ddint_out
-  real, intent(in) :: xx
+  real(kind=SP) :: ddint_out
+  real(kind=SP), intent(in) :: xx
 
   integer, intent(in), optional :: n_points
-  real, intent(in) :: xi(:), yi(:)
+  real(kind=SP), intent(in) :: xi(:), yi(:)
 
   integer :: ni, n
-  real, allocatable, dimension(:,:) :: d
-  real, allocatable, dimension(:)   :: x
+  real(kind=SP), allocatable, dimension(:,:) :: d
+  real(kind=SP), allocatable, dimension(:)   :: x
   integer :: i, j, k, ix
-  real :: c, pn
+  real(kind=SP) :: c, pn
 
   ni = min(size(xi),size(yi)) ! Check conformant xi and yi.
 
@@ -5112,7 +5135,7 @@ pure function DDINT_R4 (xi, yi, xx, n_points) result (ddint_out)
   ! divided difference interpolation
   Pn = d(1,1)
   do i=1,n-1
-    c = 1.0
+    c = 1.0_SP
     do j=1,i
       c = c*(xx - x(j))
     end do
@@ -5240,7 +5263,7 @@ pure function DDINT_R8 (xi, yi, xx, n_points) result (ddint_out)
   ! divided difference interpolation
   Pn = d(1,1)
   do i=1,n-1
-    c = 1.0
+    c = 1.0_DP
     do j=1,i
       c = c*(xx - x(j))
     end do
@@ -5264,16 +5287,16 @@ function LINSPACE_R4 (x_min, x_max_n, n) result (value_out)
 !          linspace(1., 10., 10)
 !*******************************************************************************
 
-  real :: x_min, x_max_n
+  real(kind=SP) :: x_min, x_max_n
   integer :: n
   integer:: i
 
-  real, allocatable, dimension(:) :: value_out
+  real(kind=SP), allocatable, dimension(:) :: value_out
 
   allocate ( value_out(n) )
 
   do i = 1, n
-    value_out(i) = x_min+(((x_max_n-x_min)*(real(i-1)))/(real(n-1)))
+    value_out(i) = x_min+(((x_max_n-x_min)*(real(i-1,SP)))/(real(n-1,SP)))
   end do
 
 end function LINSPACE_R4
@@ -5297,10 +5320,455 @@ function LINSPACE_R8 (x_min, x_max_n, n) result (value_out)
   allocate ( value_out(n) )
 
   do i = 1, n
-    value_out(i) = x_min + (((x_max_n-x_min)*(real(i-1, kind=DP)))/(real(n-1, kind=DP)))
+    value_out(i) = x_min + (((x_max_n-x_min)*(real(i-1,DP)))/(real(n-1, DP)))
   end do
 
 end function LINSPACE_R8
 
+!-------------------------------------------------------------------------------
+
+!-----------------------------------------------------------------------------
+!> This function calculates a zero of a function f(x) in the interval
+!! (ax,bx).
+!! - Brent, R.P., (1973). Algorithms for Minimization Without
+!!   Derivatives, Prentice-Hall, Inc.
+!! - Brent, R.P. (1971). An algorithm with guaranteed convergence for
+!!   finding a zero of a function, Computer J.  14, 422–425.
+!! .
+!! Author: Richard Brent, https://maths-people.anu.edu.au/~brent/
+!! Source: http://www.netlib.org/go/
+!! With some minor changes by Sergey Budaev.
+!> @param[in] ax left endpoint of initial interval
+!> @param[in] bx right endpoint of initial interval
+!> @param[in] f  function subprogram which evaluates f(x) for any x in
+!!            the interval (ax,bx).
+!> @param[in] tol desired length of the interval of uncertainty of the
+!!            final result (.ge.0.)
+!! @returns   Abscissa approximating a zero of f(x) in the
+!!            interval (ax,bx). Note that this function returns
+!!            commondata::missing if f(ax) and f(bx) do not have
+!!            different signs (so there is no function zero within the
+!!            range).
+real(SP) function zeroin_r4(ax,bx,f,tol)
+
+    real(SP), intent(in) :: ax,bx,tol
+    real(SP) :: f
+  !
+  !      a zero of the function  f(x)  is computed in the interval ax,bx .
+  !
+  !  input..
+  !
+  !  ax     left endpoint of initial interval
+  !  bx     right endpoint of initial interval
+  !  f      function subprogram which evaluates f(x) for any x in
+  !         the interval  ax,bx
+  !  tol    desired length of the interval of uncertainty of the
+  !         final result (.ge.0.)
+  !
+  !  output..
+  !
+  !  zeroin abscissa approximating a zero of  f  in the interval ax,bx
+  !
+  !      it is assumed  that   f(ax)   and   f(bx)   have  opposite  signs
+  !  this is checked, and an error message is printed if this is not
+  !  satisfied.   zeroin  returns a zero  x  in the given interval
+  !  ax,bx  to within a tolerance  4*macheps*abs(x)+tol, where macheps  is
+  !  the  relative machine precision defined as the smallest representable
+  !  number such that  1.+macheps .gt. 1.
+  !      this function subprogram is a slightly  modified  translation  of
+  !  the algol 60 procedure  zero  given in  Richard Brent, Algorithms for
+  !  Minimization Without Derivatives, Prentice-Hall, Inc. (1973).
+  !
+    real(SP) ::  a,b,c,d,e,eps,fa,fb,fc,tol1,xm,p,q,r,s
+    real(SP), parameter :: INVALID=-9999.0_SP
+    eps = epsilon(1.0_SP)
+    tol1 = eps+1.0_SP
+
+    a=ax
+    b=bx
+    fa=f(a)
+    fb=f(b)
+  !     check that f(ax) and f(bx) have different signs
+    if (fa .eq.0.0_SP .or. fb .eq. 0.0_SP) go to 20
+    if (fa * (fb/abs(fb)) .le. 0.0_SP) go to 20
+  !        write(6,2500)
+  !2500    format(1x,'f(ax) and f(bx) do not have different signs, aborting')
+       zeroin_r4 = INVALID
+       return
+ 20 c=a
+    fc=fa
+    d=b-a
+    e=d
+ 30 if (abs(fc).ge.abs(fb)) go to 40
+    a=b
+    b=c
+    c=a
+    fa=fb
+    fb=fc
+    fc=fa
+ 40 tol1=2.0_SP*eps*abs(b)+0.5_SP*tol
+    xm = 0.5_SP*(c-b)
+    if ((abs(xm).le.tol1).or.(fb.eq.0.0_SP)) go to 150
+  !
+  ! see if a bisection is forced
+  !
+    if ((abs(e).ge.tol1).and.(abs(fa).gt.abs(fb))) go to 50
+    d=xm
+    e=d
+    go to 110
+ 50 s=fb/fa
+    if (a.ne.c) go to 60
+  !
+  ! linear interpolation
+  !
+    p=2.0_SP*xm*s
+    q=1.0_SP-s
+    go to 70
+  !
+  ! inverse quadratic interpolation
+  !
+ 60 q=fa/fc
+    r=fb/fc
+    p=s*(2.0_SP*xm*q*(q-r)-(b-a)*(r-1.0_SP))
+    q=(q-1.0_SP)*(r-1.0_SP)*(s-1.0_SP)
+ 70 if (p.le.0.0_SP) go to 80
+    q=-q
+    go to 90
+ 80 p=-p
+ 90 s=e
+    e=d
+    if (((2.0_SP*p).ge.(3.0_SP*xm*q-abs(tol1*q))) .or.                &
+        (p.ge. abs(0.5d0*s*q))) go to 100
+    d=p/q
+    go to 110
+100 d=xm
+    e=d
+110 a=b
+    fa=fb
+    if (abs(d).le.tol1) go to 120
+    b=b+d
+    go to 140
+120 if (xm.le.0.0_SP) go to 130
+    b=b+tol1
+    go to 140
+130 b=b-tol1
+140 fb=f(b)
+    if ((fb*(fc/abs(fc))).gt.0.0_SP) go to 20
+    go to 30
+150 zeroin_r4=b
+    return
+end function zeroin_r4
+
+!-----------------------------------------------------------------------------
+!> This function calculates a zero of a function f(x) in the interval
+!! (ax,bx).
+!! - Brent, R.P., (1973). Algorithms for Minimization Without
+!!   Derivatives, Prentice-Hall, Inc.
+!! - Brent, R.P. (1971). An algorithm with guaranteed convergence for
+!!   finding a zero of a function, Computer J.  14, 422–425.
+!! .
+!! Author: Richard Brent, https://maths-people.anu.edu.au/~brent/
+!! Source: http://www.netlib.org/go/
+!! With some minor changes by Sergey Budaev.
+!> @param[in] ax left endpoint of initial interval
+!> @param[in] bx right endpoint of initial interval
+!> @param[in] f  function subprogram which evaluates f(x) for any x in
+!!            the interval (ax,bx).
+!> @param[in] tol desired length of the interval of uncertainty of the
+!!            final result (.ge.0.)
+!! @returns   Abscissa approximating a zero of f(x) in the
+!!            interval (ax,bx). Note that this function returns
+!!            commondata::missing if f(ax) and f(bx) do not have
+!!            different signs (so there is no function zero within the
+!!            range).
+real(DP) function zeroin_r8(ax,bx,f,tol)
+
+    real(DP), intent(in) :: ax,bx,tol
+    real(DP) :: f
+  !
+  !      a zero of the function  f(x)  is computed in the interval ax,bx .
+  !
+  !  input..
+  !
+  !  ax     left endpoint of initial interval
+  !  bx     right endpoint of initial interval
+  !  f      function subprogram which evaluates f(x) for any x in
+  !         the interval  ax,bx
+  !  tol    desired length of the interval of uncertainty of the
+  !         final result (.ge.0.)
+  !
+  !  output..
+  !
+  !  zeroin abscissa approximating a zero of  f  in the interval ax,bx
+  !
+  !      it is assumed  that   f(ax)   and   f(bx)   have  opposite  signs
+  !  this is checked, and an error message is printed if this is not
+  !  satisfied.   zeroin  returns a zero  x  in the given interval
+  !  ax,bx  to within a tolerance  4*macheps*abs(x)+tol, where macheps  is
+  !  the  relative machine precision defined as the smallest representable
+  !  number such that  1.+macheps .gt. 1.
+  !      this function subprogram is a slightly  modified  translation  of
+  !  the algol 60 procedure  zero  given in  Richard Brent, Algorithms for
+  !  Minimization Without Derivatives, Prentice-Hall, Inc. (1973).
+  !
+    real(DP) ::  a,b,c,d,e,eps,fa,fb,fc,tol1,xm,p,q,r,s
+    real(DP), parameter :: INVALID=-9999.0_DP
+    eps = epsilon(1.0_DP)
+    tol1 = eps+1.0_DP
+
+    a=ax
+    b=bx
+    fa=f(a)
+    fb=f(b)
+  !     check that f(ax) and f(bx) have different signs
+    if (fa .eq.0.0_DP .or. fb .eq. 0.0_DP) go to 20
+    if (fa * (fb/abs(fb)) .le. 0.0_DP) go to 20
+  !        write(6,2500)
+  !2500    format(1x,'f(ax) and f(bx) do not have different signs, aborting')
+       zeroin_r8 = INVALID
+       return
+ 20 c=a
+    fc=fa
+    d=b-a
+    e=d
+ 30 if (abs(fc).ge.abs(fb)) go to 40
+    a=b
+    b=c
+    c=a
+    fa=fb
+    fb=fc
+    fc=fa
+ 40 tol1=2.0_DP*eps*abs(b)+0.5_DP*tol
+    xm = 0.5_DP*(c-b)
+    if ((abs(xm).le.tol1).or.(fb.eq.0.0_DP)) go to 150
+  !
+  ! see if a bisection is forced
+  !
+    if ((abs(e).ge.tol1).and.(abs(fa).gt.abs(fb))) go to 50
+    d=xm
+    e=d
+    go to 110
+ 50 s=fb/fa
+    if (a.ne.c) go to 60
+  !
+  ! linear interpolation
+  !
+    p=2.0_DP*xm*s
+    q=1.0_DP-s
+    go to 70
+  !
+  ! inverse quadratic interpolation
+  !
+ 60 q=fa/fc
+    r=fb/fc
+    p=s*(2.0_DP*xm*q*(q-r)-(b-a)*(r-1.0_DP))
+    q=(q-1.0_DP)*(r-1.0_DP)*(s-1.0_DP)
+ 70 if (p.le.0.0_DP) go to 80
+    q=-q
+    go to 90
+ 80 p=-p
+ 90 s=e
+    e=d
+    if (((2.0_DP*p).ge.(3.0_DP*xm*q-abs(tol1*q))) .or.                &
+        (p.ge. abs(0.5d0*s*q))) go to 100
+    d=p/q
+    go to 110
+100 d=xm
+    e=d
+110 a=b
+    fa=fb
+    if (abs(d).le.tol1) go to 120
+    b=b+d
+    go to 140
+120 if (xm.le.0.0_DP) go to 130
+    b=b+tol1
+    go to 140
+130 b=b-tol1
+140 fb=f(b)
+    if ((fb*(fc/abs(fc))).gt.0.0_DP) go to 20
+    go to 30
+150 zeroin_r8=b
+    return
+end function zeroin_r8
+
+!-----------------------------------------------------------------------------
+!> Sorts a real (kind 4) array in ascending order (`is_reverse` is absent or
+!! `.FALSE.` ) or descending order (`is_reverse` is .TRUE. ).
+recursive subroutine qsort_r4(A, is_reverse)
+  !> Input array
+  real(R4), intent(inout), dimension(:) :: A
+  !> Logical flag for reverse (descending) sorting.
+  logical, optional, intent(in) :: is_reverse
+  integer :: iq
+
+  if(size(A) > 1) then
+     call partition_r4(A, iq)
+     call qsort_r4(A(:iq-1))
+     call qsort_r4(A(iq:))
+  endif
+
+  ! Check if reverse sorted array is requested
+  if (present(is_reverse)) then
+    if (is_reverse) A = A( size(A):1:-1 )
+  end if
+
+end subroutine qsort_r4
+
+subroutine partition_r4(A, marker)
+  real(R4), intent(in out), dimension(:) :: A
+  integer, intent(out) :: marker
+  integer :: i, j
+  real(R4) :: temp
+  real(R4) :: x      ! pivot point
+  x = A(1)
+  i= 0
+  j= size(A) + 1
+
+  do
+     j = j-1
+     do
+        if (A(j) <= x) exit
+        j = j-1
+     end do
+     i = i+1
+     do
+        if (A(i) >= x) exit
+        i = i+1
+     end do
+     if (i < j) then
+        ! exchange A(i) and A(j)
+        temp = A(i)
+        A(i) = A(j)
+        A(j) = temp
+     elseif (i == j) then
+        marker = i+1
+        return
+     else
+        marker = i
+        return
+     endif
+  end do
+
+end subroutine partition_r4
+
+!-------------------------------------------------------------------------------
+!> Sorts a real (kind 8) array in ascending order (`is_reverse` is absent or
+!! `.FALSE.` ) or descending order (`is_reverse` is .TRUE. ).
+recursive subroutine qsort_r8(A, is_reverse)
+  !> Input array
+  real(R8), intent(in out), dimension(:) :: A
+  !> Logical flag for reverse (descending) sorting.
+  logical, optional, intent(in) :: is_reverse
+  integer :: iq
+
+  if(size(A) > 1) then
+     call partition_r8(A, iq)
+     call qsort_r8(A(:iq-1))
+     call qsort_r8(A(iq:))
+  endif
+
+  ! Check if reverse sorted array is requested
+  if (present(is_reverse)) then
+    if (is_reverse) A = A( size(A):1:-1 )
+  end if
+
+end subroutine qsort_r8
+
+subroutine partition_r8(A, marker)
+  real(R8), intent(in out), dimension(:) :: A
+  integer, intent(out) :: marker
+  integer :: i, j
+  real(R8) :: temp
+  real(R8) :: x      ! pivot point
+  x = A(1)
+  i= 0
+  j= size(A) + 1
+
+  do
+     j = j-1
+     do
+        if (A(j) <= x) exit
+        j = j-1
+     end do
+     i = i+1
+     do
+        if (A(i) >= x) exit
+        i = i+1
+     end do
+     if (i < j) then
+        ! exchange A(i) and A(j)
+        temp = A(i)
+        A(i) = A(j)
+        A(j) = temp
+     elseif (i == j) then
+        marker = i+1
+        return
+     else
+        marker = i
+        return
+     endif
+  end do
+
+end subroutine partition_r8
+
+!-------------------------------------------------------------------------------
+!> Sorts an integer array in ascending order (`is_reverse` is absent or
+!! `.FALSE.` ) or descending order (`is_reverse` is .TRUE. ).
+recursive subroutine qsort_i(A, is_reverse)
+  !> Input array
+  integer, intent(in out), dimension(:) :: A
+  !> Logical flag for reverse (descending) sorting.
+  logical, optional, intent(in) :: is_reverse
+  integer :: iq
+
+  if(size(A) > 1) then
+     call partition_i(A, iq)
+     call qsort_i(A(:iq-1))
+     call qsort_i(A(iq:))
+  endif
+
+  ! Check if reverse sorted array is requested
+  if (present(is_reverse)) then
+    if (is_reverse) A = A( size(A):1:-1 )
+  end if
+
+end subroutine qsort_i
+
+subroutine partition_i(A, marker)
+  integer, intent(in out), dimension(:) :: A
+  integer, intent(out) :: marker
+  integer :: i, j
+  integer :: temp
+  integer :: x      ! pivot point
+  x = A(1)
+  i= 0
+  j= size(A) + 1
+
+  do
+     j = j-1
+     do
+        if (A(j) <= x) exit
+        j = j-1
+     end do
+     i = i+1
+     do
+        if (A(i) >= x) exit
+        i = i+1
+     end do
+     if (i < j) then
+        ! exchange A(i) and A(j)
+        temp = A(i)
+        A(i) = A(j)
+        A(j) = temp
+     elseif (i == j) then
+        marker = i+1
+        return
+     else
+        marker = i
+        return
+     endif
+  end do
+
+end subroutine partition_i
 
 end module BASE_UTILS

@@ -1,4 +1,10 @@
 module m_tests
+
+! Definition of the double (kind=8) and quadruple (kind=16) precision
+integer, parameter, public :: SP = selected_real_kind(6,   37)
+integer, parameter, public :: DP = selected_real_kind(15,  307)
+integer, parameter, public :: QP = selected_real_kind(33, 4931)
+
 contains
   !> This is called whenever test fails. In this case, the test program
   !! terminates with the exit code 255.
@@ -17,12 +23,104 @@ end module m_tests
 
 !===============================================================================
 
+! Functions for testing FUNCZERO. Note that they are external to the test
+! program tests_hedtools to meet Oracle f95 and perhaps older compilers
+! that require function passing as an argument to be module procedure or
+! explicit interface.
+function zf_linear_r4(x) result (y)
+  use m_tests
+  real(SP), intent(in) :: x
+  real(SP) :: y
+  y = x + 1
+end function zf_linear_r4
+
+function zf_linear_r8(x) result (y)
+  use m_tests
+  real(DP), intent(in) :: x
+  real(DP) :: y
+  y = x + 1
+end function zf_linear_r8
+
+function zf_qubic_r4(x) result (y)
+  use m_tests
+  real(SP), intent(in) :: x
+  real(SP) :: y
+  y = x ** 3 - 2.0
+end function zf_qubic_r4
+
+function zf_qubic_r8(x) result (y)
+  use m_tests
+  real(DP), intent(in) :: x
+  real(DP) :: y
+  y = x ** 3 - 2.0
+end function zf_qubic_r8
+
+function zf_wave0_r4(x) result (y)
+  use m_tests
+  real(SP), intent(in) :: x
+  real(SP) :: y
+  y = sin(x) * 4.0
+end function zf_wave0_r4
+
+function zf_wave0_r8(x) result (y)
+  use m_tests
+  real(DP), intent(in) :: x
+  real(DP) :: y
+  y = sin(x) * 4.0
+end function zf_wave0_r8
+
+!===============================================================================
+
 program tests_hedtools
 use m_tests
+
+  ! Oracle f95 requires function to be EXTERNAL, a module procedure
+  ! or declared in an  interface block to be an argument.
+  interface
+
+    function zf_linear_r4(x) result (y)
+      use m_tests
+      real(SP), intent(in) :: x
+      real(SP) :: y
+    end function zf_linear_r4
+
+    function zf_linear_r8(x) result (y)
+      use m_tests
+      real(DP), intent(in) :: x
+      real(DP) :: y
+    end function zf_linear_r8
+
+    function zf_qubic_r4(x) result (y)
+      use m_tests
+      real(SP), intent(in) :: x
+      real(SP) :: y
+    end function zf_qubic_r4
+
+    function zf_qubic_r8(x) result (y)
+      use m_tests
+      real(DP), intent(in) :: x
+      real(DP) :: y
+    end function zf_qubic_r8
+
+    function zf_wave0_r4(x) result (y)
+      use m_tests
+      real(SP), intent(in) :: x
+      real(SP) :: y
+    end function zf_wave0_r4
+
+    function zf_wave0_r8(x) result (y)
+      use m_tests
+      real(DP), intent(in) :: x
+      real(DP) :: y
+    end function zf_wave0_r8
+
+  end interface
 
  print *, "*** Tests started ***"
  call test_CSV_IO()
  call test_STRINGS()
+ call test_BASE_UTILS_zerofun()
+ call test_BASE_UTILS_qsort()
  print *, "*** Tests completed ***"
 
 contains
@@ -33,7 +131,7 @@ subroutine test_CSV_IO
   integer :: unum
   logical :: fstat
   integer, parameter :: ROWS=100, COLS=20
-  real, dimension(ROWS,COLS) :: DATA_OUT, DATA_IN
+  real(SP), dimension(ROWS,COLS) :: DATA_OUT, DATA_IN
   character(len=*), parameter :: TESTNAME="test_CSV_IO"
 
   print *, "Test: ", TESTNAME
@@ -81,7 +179,7 @@ subroutine test_STRINGS
                                                                    "test  ", &
                                                                    "string" ]
   integer :: n_parts, inumber, ierr
-  real :: rnumber
+  real(SP) :: rnumber
   character(len=*), parameter :: TESTNAME="test_STRINGS", DELIMS=",:;"
   integer :: ipos, imatch
   character :: char
@@ -268,6 +366,85 @@ subroutine test_STRINGS
                             call fail_test("Error in IS_NUMERIC")
 
 end subroutine test_STRINGS
+
+subroutine test_BASE_UTILS_zerofun()
+  use BASE_UTILS
+
+  real(SP) :: Y, A, B, Y0
+  real(DP) :: DY, DA, DB, DY0
+
+  real(SP), parameter :: eps_f = 1.0e-12_SP
+  real(DP), parameter :: deps_f = 1.0e-22_DP
+
+  real(SP), parameter :: INVALID = -9999.0_SP
+  real(DP), parameter :: DINVALID = -9999.0_DP
+
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_zerofun"
+
+  print *, "Test: ", TESTNAME
+
+  A = 1.0_SP; B = 2.0_SP; Y0=INVALID ! No zero of f(x)=X+1  within [1,2]
+  Y = ZEROFUN(A, B, zf_linear_r4, eps_f)
+  if (.not. Y == Y0 ) call fail_test("Error in FUNCZERO 01")
+
+  A = -2.0_SP; B =  1.0_SP; Y0 = -1.0_SP
+  Y = ZEROFUN(A, B, zf_linear_r4, eps_f)
+  if (.not. Y == Y0 ) call fail_test("Error in FUNCZERO 02")
+
+  A = -2.0_SP; B =  2.0_SP; Y0 = 2.0_SP**(1.0_SP/3.0_SP)
+  Y = ZEROFUN(A, B, zf_qubic_r4, eps_f)
+  if (.not. abs(Y - Y0) < eps_f ) call fail_test("Error in FUNCZERO 03")
+
+  A = -2.0_SP; B =  3.0_SP; Y0 = 0.0_SP
+  Y = ZEROFUN(A, B, zf_wave0_r4, eps_f)
+  if (.not. abs(Y - Y0) < eps_f ) call fail_test("Error in FUNCZERO 04")
+
+  DA = 1.0_DP; DB = 2.0_DP; DY0=DINVALID ! No zero of f(x)=X+1  within [1,2]
+  DY = ZEROFUN(DA, DB, zf_linear_r8, deps_f)
+  if (.not. DY == DY0 ) call fail_test("Error in FUNCZERO 01/DB")
+
+  DA = -2.0_DP; DB =  2.0_DP; DY0 = 2.0_DP**(1.0_DP/3.0_DP)
+  DY = ZEROFUN(DA, DB, zf_qubic_r8, deps_f)
+  if (.not. abs(DY - DY0) < deps_f ) call fail_test("Error in FUNCZERO 03")
+
+  DA = -2.0_DP; DB =  3.0_DP; DY0 = 0.0_DP
+  DY = ZEROFUN(DA, DB, zf_wave0_r8, deps_f)
+  if (.not. abs(DY - DY0) < deps_f ) call fail_test("Error in FUNCZERO 04/DB")
+
+end subroutine test_BASE_UTILS_zerofun
+
+subroutine test_BASE_UTILS_qsort
+
+use BASE_UTILS
+
+  integer, dimension(10) :: intarray = [1,4,6,1,0,0,8,3,4,5]
+  integer, dimension(10) :: truesort = [0,0,1,1,3,4,4,5,6,8]
+  integer, dimension(10) :: truersor = [8,6,5,4,4,3,1,1,0,0]
+
+  real(SP), dimension(10) :: realarray = [1._SP,4.0_SP,6.0_SP,1.0_SP,0.0_SP,0.0_SP,8.0_SP,3.0_SP,4.0_SP,5.0_SP]
+  real(SP), dimension(10) :: rtruesort = [0._SP,0.0_SP,1.0_SP,1.0_SP,3.0_SP,4.0_SP,4.0_SP,5.0_SP,6.0_SP,8.0_SP]
+  real(SP), dimension(10) :: truerrsor = [8._SP,6.0_SP,5.0_SP,4.0_SP,4.0_SP,3.0_SP,1.0_SP,1.0_SP,0.0_SP,0.0_SP]
+
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_qsort"
+  print *, "Test: ", TESTNAME
+
+  call ARRAY_QSORT(intarray)
+  if ( any(intarray /= truesort) )                                            &
+      call fail_test("QSORT failed: integer array")
+
+  call ARRAY_QSORT(intarray, .TRUE.)
+  if ( any(intarray /= truersor) )                                            &
+      call fail_test("QSORT failed: reverse integer array")
+
+  call ARRAY_QSORT(realarray)
+  if ( any(realarray /= rtruesort) )                                          &
+      call fail_test("QSORT failed: real SP array")
+
+  call ARRAY_QSORT(realarray, .TRUE.)
+  if ( any(realarray /= truerrsor) )                                          &
+      call fail_test("QSORT failed: reverse real SP array")
+
+end subroutine test_BASE_UTILS_qsort
 
 
 end program tests_hedtools

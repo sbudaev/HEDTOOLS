@@ -346,7 +346,7 @@ tools:
 
 .PHONY: tests
 tests:
-	$(MAKE) -C $(TESTS_PATH) tests
+	$(MAKE) DEBUG=1 -C $(TESTS_PATH) tests
 
 # Specific compiler targets: intel, GNU, Oracle/Sun
 

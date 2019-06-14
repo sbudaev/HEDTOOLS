@@ -23,8 +23,10 @@ module BASE_RANDOM
 
 implicit none
 
-! Double precision kind=8 def.
+! Precision constants
+integer, parameter, private :: R4 = selected_real_kind(6,   37)
 integer, parameter, private :: dp = selected_real_kind(15,  307)
+integer, parameter, private :: QP = selected_real_kind(33, 4931)
 
 ! Module name for the DEBUG LOGGER: every function/sub must also have
 ! the PROCNAME parameter referring to its name. This is done for the Debug
@@ -373,7 +375,7 @@ function RAND_VAL_R4() result (randreal)
 !        algorithm. This random_number is just used in this function.
 
   implicit none
-  real :: randreal
+  real(kind=R4) :: randreal
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "RAND_R4"
@@ -489,20 +491,21 @@ function RNORM_VAL_R4() result(fn_val)
 !  CODE SOURCE: http://www.netlib.org/ (random.f90)
 !*******************************************************************************
 
-REAL :: fn_val
+real(kind=R4) :: fn_val
 
 !     Local variables
-REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
-            r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
+real(kind=R4) :: s = 0.449871_R4, t = -0.386595_R4, a = 0.19600_R4,           &
+                 b = 0.25472_R4, r1 = 0.27597_R4, r2 = 0.27846_R4,            &
+                 u, v, x, y, q
 
-REAL     :: half = 0.5 ! moved here from header of the original module
+real(kind=R4) :: half = 0.5_R4 ! moved here from header of the original module
 
 !     Generate P = (u,v) uniform in rectangle enclosing acceptance region
 
 DO
   CALL random_number(u)
   CALL random_number(v)
-  v = 1.7156 * (v - half)
+  v = 1.7156_R4 * (v - half)
 
 !     Evaluate the quadratic form
   x = u - s
@@ -514,7 +517,7 @@ DO
 !     Reject P if outside outer ellipse
   IF (q > r2) CYCLE
 !     Reject P if outside acceptance region
-  IF (v**2 < -4.0*LOG(u)*u**2) EXIT
+  IF (v**2 < -4.0_R4*LOG(u)*u**2) EXIT
 END DO
 
 !     Return ratio of P's coordinates as the normal deviate
@@ -544,13 +547,13 @@ function RNORM_VAL_R8() result(fn_val)
 ! CODE SOURCE: http://www.netlib.org/ (random.f90)
 !*******************************************************************************
 
-REAL(kind=dp) :: fn_val
+real(kind=dp) :: fn_val
 
 !     Local variables
-REAL(kind=dp) :: s=0.449871_dp, t=-0.386595_dp, a=0.19600_dp, b=0.25472_dp,    &
+real(kind=dp) :: s=0.449871_dp, t=-0.386595_dp, a=0.19600_dp, b=0.25472_dp,   &
                  r1=0.27597_dp, r2=0.27846_dp, u, v, x, y, q
 
-REAL(kind=dp) :: half = 0.5 ! moved here from header of the original module
+real(kind=dp) :: half = 0.5_dp ! moved here from header of the original module
 
 !     Generate P = (u,v) uniform in rectangle enclosing acceptance region
 
@@ -587,7 +590,7 @@ subroutine RNORM_ARRAY_1_R4(random_array)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:) :: random_array
+real(kind=R4), dimension(:) :: random_array
 
 ! local variables
 integer :: i
@@ -607,7 +610,7 @@ subroutine RNORM_ARRAY_2_R4(random_array)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:) :: random_array
+real(kind=R4), dimension(:,:) :: random_array
 
 ! local variables
 integer :: i, j
@@ -629,7 +632,7 @@ subroutine RNORM_ARRAY_3_R4(random_array)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:) :: random_array
+real(kind=R4), dimension(:,:,:) :: random_array
 
 ! local variables
 integer :: i, j, k
@@ -653,7 +656,7 @@ subroutine RNORM_ARRAY_4_R4(random_array)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:) :: random_array
+real(kind=R4), dimension(:,:,:,:) :: random_array
 
 ! local variables
 integer :: i, j, k, l
@@ -679,7 +682,7 @@ subroutine RNORM_ARRAY_5_R4(random_array)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:,:) :: random_array
+real(kind=R4), dimension(:,:,:,:,:) :: random_array
 
 ! local variables
 integer :: i, j, k, l, m
@@ -707,7 +710,7 @@ subroutine RNORM_ARRAY_6_R4(random_array)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:,:,:) :: random_array
+real(kind=R4), dimension(:,:,:,:,:,:) :: random_array
 
 ! local variables
 integer :: i, j, k, l, m, n
@@ -887,8 +890,8 @@ subroutine RNORM_RENORM_ARRAY_1_R4(random_array, mean, variance)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:) :: random_array
-real, intent(in) :: mean, variance
+real(kind=R4), dimension(:) :: random_array
+real(kind=R4), intent(in) :: mean, variance
 
 ! local variables
 integer :: i
@@ -909,8 +912,8 @@ subroutine RNORM_RENORM_ARRAY_2_R4(random_array, mean, variance)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:) :: random_array
-real, intent(in) :: mean, variance
+real(kind=R4), dimension(:,:) :: random_array
+real(kind=R4), intent(in) :: mean, variance
 
 ! local variables
 integer :: i, j
@@ -932,8 +935,8 @@ subroutine RNORM_RENORM_ARRAY_3_R4(random_array, mean, variance)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:) :: random_array
-real, intent(in) :: mean, variance
+real(kind=R4), dimension(:,:,:) :: random_array
+real(kind=R4), intent(in) :: mean, variance
 
 ! local variables
 integer :: i, j, k
@@ -957,8 +960,8 @@ subroutine RNORM_RENORM_ARRAY_4_R4(random_array, mean, variance)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:) :: random_array
-real, intent(in) :: mean, variance
+real(kind=R4), dimension(:,:,:,:) :: random_array
+real(kind=R4), intent(in) :: mean, variance
 
 ! local variables
 integer :: i, j, k, l
@@ -984,8 +987,8 @@ subroutine RNORM_RENORM_ARRAY_5_R4(random_array, mean, variance)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:,:) :: random_array
-real, intent(in) :: mean, variance
+real(kind=R4), dimension(:,:,:,:,:) :: random_array
+real(kind=R4), intent(in) :: mean, variance
 
 ! local variables
 integer :: i, j, k, l, m
@@ -1013,8 +1016,8 @@ subroutine RNORM_RENORM_ARRAY_6_R4(random_array, mean, variance)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:,:,:) :: random_array
-real, intent(in) :: mean, variance
+real(kind=R4), dimension(:,:,:,:,:,:) :: random_array
+real(kind=R4), intent(in) :: mean, variance
 
 ! local variables
 integer :: i, j, k, l, m, n
@@ -1200,8 +1203,8 @@ subroutine RAND_ARRAY_1_R4(random_array, A, B)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:) :: random_array
-real, optional, intent(in) :: A, B
+real(kind=R4), dimension(:) :: random_array
+real(kind=R4), optional, intent(in) :: A, B
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1221,8 +1224,8 @@ subroutine RAND_ARRAY_2_R4(random_array, A, B)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:) :: random_array
-real, optional, intent(in) :: A, B
+real(kind=R4), dimension(:,:) :: random_array
+real(kind=R4), optional, intent(in) :: A, B
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1242,8 +1245,8 @@ subroutine RAND_ARRAY_3_R4(random_array, A, B)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:) :: random_array
-real, optional, intent(in) :: A, B
+real(kind=R4), dimension(:,:,:) :: random_array
+real(kind=R4), optional, intent(in) :: A, B
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1263,8 +1266,8 @@ subroutine RAND_ARRAY_4_R4(random_array, A, B)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:) :: random_array
-real, optional, intent(in) :: A, B
+real(kind=R4), dimension(:,:,:,:) :: random_array
+real(kind=R4), optional, intent(in) :: A, B
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1284,8 +1287,8 @@ subroutine RAND_ARRAY_5_R4(random_array, A, B)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:,:) :: random_array
-real, optional, intent(in) :: A, B
+real(kind=R4), dimension(:,:,:,:,:) :: random_array
+real(kind=R4), optional, intent(in) :: A, B
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1305,8 +1308,8 @@ subroutine RAND_ARRAY_6_R4(random_array, A, B)
 !*******************************************************************************
 
 ! parameters
-real, dimension(:,:,:,:,:,:) :: random_array
-real, optional, intent(in) :: A, B
+real(kind=R4), dimension(:,:,:,:,:,:) :: random_array
+real(kind=R4), optional, intent(in) :: A, B
 
 if (present(A) .and. present(B)) then
   call random_number(random_array)
@@ -1615,8 +1618,8 @@ function RAND_RENORMALISED_R4(A, B) result(s_val)
 !*******************************************************************************
 
   implicit none
-  real:: s_val
-  real:: A, B
+  real(kind=R4):: s_val
+  real(kind=R4):: A, B
 
   s_val = A+RAND_VAL_R4()*(B-A)
 
@@ -1630,10 +1633,10 @@ function RAND_RENORMALISED_R4I(A, B) result(s_val)
 !*******************************************************************************
 
   implicit none
-  real:: s_val
+  real(kind=R4):: s_val
   integer:: A, B
 
-  s_val = real(A)+RAND_VAL_R4()*(real(B)-real(A))
+  s_val = real(A,R4)+RAND_VAL_R4()*(real(B,R4)-real(A,R4))
 
 end function RAND_RENORMALISED_R4I
 
@@ -1687,11 +1690,11 @@ function RNORM_RENORMALISED_R4(mean, variance) result (fn_val)
 !*******************************************************************************
 
   implicit none
-  real :: fn_val
-  real, intent(in) :: mean, variance
+  real(kind=R4) :: fn_val
+  real(kind=R4), intent(in) :: mean, variance
 
   ! local variables
-  real :: A, B
+  real(kind=R4) :: A, B
 
   A = sqrt(variance)
   B = mean
@@ -1722,7 +1725,7 @@ function RNORM_RENORMALISED_R8(mean, variance) result (fn_val)
   real(kind=dp), intent(in) :: mean, variance
 
   ! local variables
-  real :: A, B
+  real(kind=dp) :: A, B
 
   A = sqrt(variance)
   B = mean
@@ -1746,7 +1749,7 @@ function PERMUTE_RANDOM(N) result (p)
   integer, dimension(N) :: p
 
   integer :: j, k
-  real :: u
+  real(kind=R4) :: u
 
   p = 0
 

@@ -42,10 +42,12 @@ use BASE_STRINGS, only : VALUE, PARSE, SPLIT, COMPACT, IS_NUMERIC, DELALL
 
 implicit none
 
-! Public constants
-
-! Definition of the double precision (kind=8)
+! Precision constants
+integer, parameter, private :: R4 = selected_real_kind(6,   37)
 integer, parameter, private :: R8 = selected_real_kind(15,  307)
+integer, parameter, private :: QP = selected_real_kind(33, 4931)
+
+! Public constants
 
 ! Maximum unit number (in old Fortran units range 1..99)
 integer, public, parameter :: MAX_UNIT=255
@@ -1290,7 +1292,7 @@ pure subroutine CSV_RECORD_APPEND_R4 (record, avalue)
 
   ! Calling parameters
   character (len=*), intent(inout) :: record
-  real, intent(in) :: avalue          ! was r4
+  real(kind=R4), intent(in) :: avalue
 
   ! Local variables
   character (len=5) :: fmat
@@ -1312,10 +1314,10 @@ pure subroutine CSV_RECORD_APPEND_R4 (record, avalue)
     record(i:i) = ','
   end if
 
-  if ( avalue == 0.0E+00 ) then
+  if ( avalue == 0.0E+00_R4 ) then
     i = i + 1
     record(i:i) = '0'
-  else if ( avalue == real(int(avalue)) ) then
+  else if ( avalue == real(int(avalue),R4) ) then
     i4 = int(avalue)
     i4_len = I4_WIDTH(i4)
     write(fmat, '(a,i2,a)') '(i', i4_len, ')'
@@ -1366,7 +1368,7 @@ pure subroutine CSV_RECORD_APPEND_R8 (record, avalue)
 
   ! Calling parameters
   character (len=*), intent(inout) :: record
-  real (kind=R8), intent(in) :: avalue ! was r8
+  real (kind=R8), intent(in) :: avalue
 
   ! Local variables
   character (len=5) :: fmat
@@ -1388,7 +1390,7 @@ pure subroutine CSV_RECORD_APPEND_R8 (record, avalue)
     record(i:i) = ','
   end if
 
-  if ( avalue == 0.0D+00 ) then
+  if ( avalue == 0.0E+00_R8 ) then
     i = i + 1
     record(i:i) = '0'
   else if ( avalue == real(int(avalue), kind=R8) ) then
@@ -1532,7 +1534,7 @@ pure subroutine CSV_RECORD_APPEND_ARRAY_R4 (record, array)
 
   ! Calling parameters
   character (len=*), intent(inout) :: record
-  real, dimension(:), intent(in) :: array
+  real(kind=R4), dimension(:), intent(in) :: array
 
   ! Local variables
   integer :: i, LBndi, Ubndi
@@ -1929,108 +1931,108 @@ pure subroutine CSV_RECORD_APPEND_LST_R4 (record, &
   ! Calling parameters, first record itself, then 100 list items
   character (len=*), intent(inout) :: record
 
-  real, intent(in) :: s1  ! The first two strings in the list are
-  real, intent(in) :: s2  ! mandatory to make it unique in the
+  real(kind=R4), intent(in) :: s1  ! The first two strings in the list are
+  real(kind=R4), intent(in) :: s2  ! mandatory to make it unique in the
                                        ! generic interface block
 
-  real, optional, intent(in) :: s3
-  real, optional, intent(in) :: s4
-  real, optional, intent(in) :: s5
-  real, optional, intent(in) :: s6
-  real, optional, intent(in) :: s7
-  real, optional, intent(in) :: s8
-  real, optional, intent(in) :: s9
-  real, optional, intent(in) :: s10
-  real, optional, intent(in) :: s11
-  real, optional, intent(in) :: s12
-  real, optional, intent(in) :: s13
-  real, optional, intent(in) :: s14
-  real, optional, intent(in) :: s15
-  real, optional, intent(in) :: s16
-  real, optional, intent(in) :: s17
-  real, optional, intent(in) :: s18
-  real, optional, intent(in) :: s19
-  real, optional, intent(in) :: s20
-  real, optional, intent(in) :: s21
-  real, optional, intent(in) :: s22
-  real, optional, intent(in) :: s23
-  real, optional, intent(in) :: s24
-  real, optional, intent(in) :: s25
-  real, optional, intent(in) :: s26
-  real, optional, intent(in) :: s27
-  real, optional, intent(in) :: s28
-  real, optional, intent(in) :: s29
-  real, optional, intent(in) :: s30
-  real, optional, intent(in) :: s31
-  real, optional, intent(in) :: s32
-  real, optional, intent(in) :: s33
-  real, optional, intent(in) :: s34
-  real, optional, intent(in) :: s35
-  real, optional, intent(in) :: s36
-  real, optional, intent(in) :: s37
-  real, optional, intent(in) :: s38
-  real, optional, intent(in) :: s39
-  real, optional, intent(in) :: s40
-  real, optional, intent(in) :: s41
-  real, optional, intent(in) :: s42
-  real, optional, intent(in) :: s43
-  real, optional, intent(in) :: s44
-  real, optional, intent(in) :: s45
-  real, optional, intent(in) :: s46
-  real, optional, intent(in) :: s47
-  real, optional, intent(in) :: s48
-  real, optional, intent(in) :: s49
-  real, optional, intent(in) :: s50
-  real, optional, intent(in) :: s51
-  real, optional, intent(in) :: s52
-  real, optional, intent(in) :: s53
-  real, optional, intent(in) :: s54
-  real, optional, intent(in) :: s55
-  real, optional, intent(in) :: s56
-  real, optional, intent(in) :: s57
-  real, optional, intent(in) :: s58
-  real, optional, intent(in) :: s59
-  real, optional, intent(in) :: s60
-  real, optional, intent(in) :: s61
-  real, optional, intent(in) :: s62
-  real, optional, intent(in) :: s63
-  real, optional, intent(in) :: s64
-  real, optional, intent(in) :: s65
-  real, optional, intent(in) :: s66
-  real, optional, intent(in) :: s67
-  real, optional, intent(in) :: s68
-  real, optional, intent(in) :: s69
-  real, optional, intent(in) :: s70
-  real, optional, intent(in) :: s71
-  real, optional, intent(in) :: s72
-  real, optional, intent(in) :: s73
-  real, optional, intent(in) :: s74
-  real, optional, intent(in) :: s75
-  real, optional, intent(in) :: s76
-  real, optional, intent(in) :: s77
-  real, optional, intent(in) :: s78
-  real, optional, intent(in) :: s79
-  real, optional, intent(in) :: s80
-  real, optional, intent(in) :: s81
-  real, optional, intent(in) :: s82
-  real, optional, intent(in) :: s83
-  real, optional, intent(in) :: s84
-  real, optional, intent(in) :: s85
-  real, optional, intent(in) :: s86
-  real, optional, intent(in) :: s87
-  real, optional, intent(in) :: s88
-  real, optional, intent(in) :: s89
-  real, optional, intent(in) :: s90
-  real, optional, intent(in) :: s91
-  real, optional, intent(in) :: s92
-  real, optional, intent(in) :: s93
-  real, optional, intent(in) :: s94
-  real, optional, intent(in) :: s95
-  real, optional, intent(in) :: s96
-  real, optional, intent(in) :: s97
-  real, optional, intent(in) :: s98
-  real, optional, intent(in) :: s99
-  real, optional, intent(in) :: s100
+  real(kind=R4), optional, intent(in) :: s3
+  real(kind=R4), optional, intent(in) :: s4
+  real(kind=R4), optional, intent(in) :: s5
+  real(kind=R4), optional, intent(in) :: s6
+  real(kind=R4), optional, intent(in) :: s7
+  real(kind=R4), optional, intent(in) :: s8
+  real(kind=R4), optional, intent(in) :: s9
+  real(kind=R4), optional, intent(in) :: s10
+  real(kind=R4), optional, intent(in) :: s11
+  real(kind=R4), optional, intent(in) :: s12
+  real(kind=R4), optional, intent(in) :: s13
+  real(kind=R4), optional, intent(in) :: s14
+  real(kind=R4), optional, intent(in) :: s15
+  real(kind=R4), optional, intent(in) :: s16
+  real(kind=R4), optional, intent(in) :: s17
+  real(kind=R4), optional, intent(in) :: s18
+  real(kind=R4), optional, intent(in) :: s19
+  real(kind=R4), optional, intent(in) :: s20
+  real(kind=R4), optional, intent(in) :: s21
+  real(kind=R4), optional, intent(in) :: s22
+  real(kind=R4), optional, intent(in) :: s23
+  real(kind=R4), optional, intent(in) :: s24
+  real(kind=R4), optional, intent(in) :: s25
+  real(kind=R4), optional, intent(in) :: s26
+  real(kind=R4), optional, intent(in) :: s27
+  real(kind=R4), optional, intent(in) :: s28
+  real(kind=R4), optional, intent(in) :: s29
+  real(kind=R4), optional, intent(in) :: s30
+  real(kind=R4), optional, intent(in) :: s31
+  real(kind=R4), optional, intent(in) :: s32
+  real(kind=R4), optional, intent(in) :: s33
+  real(kind=R4), optional, intent(in) :: s34
+  real(kind=R4), optional, intent(in) :: s35
+  real(kind=R4), optional, intent(in) :: s36
+  real(kind=R4), optional, intent(in) :: s37
+  real(kind=R4), optional, intent(in) :: s38
+  real(kind=R4), optional, intent(in) :: s39
+  real(kind=R4), optional, intent(in) :: s40
+  real(kind=R4), optional, intent(in) :: s41
+  real(kind=R4), optional, intent(in) :: s42
+  real(kind=R4), optional, intent(in) :: s43
+  real(kind=R4), optional, intent(in) :: s44
+  real(kind=R4), optional, intent(in) :: s45
+  real(kind=R4), optional, intent(in) :: s46
+  real(kind=R4), optional, intent(in) :: s47
+  real(kind=R4), optional, intent(in) :: s48
+  real(kind=R4), optional, intent(in) :: s49
+  real(kind=R4), optional, intent(in) :: s50
+  real(kind=R4), optional, intent(in) :: s51
+  real(kind=R4), optional, intent(in) :: s52
+  real(kind=R4), optional, intent(in) :: s53
+  real(kind=R4), optional, intent(in) :: s54
+  real(kind=R4), optional, intent(in) :: s55
+  real(kind=R4), optional, intent(in) :: s56
+  real(kind=R4), optional, intent(in) :: s57
+  real(kind=R4), optional, intent(in) :: s58
+  real(kind=R4), optional, intent(in) :: s59
+  real(kind=R4), optional, intent(in) :: s60
+  real(kind=R4), optional, intent(in) :: s61
+  real(kind=R4), optional, intent(in) :: s62
+  real(kind=R4), optional, intent(in) :: s63
+  real(kind=R4), optional, intent(in) :: s64
+  real(kind=R4), optional, intent(in) :: s65
+  real(kind=R4), optional, intent(in) :: s66
+  real(kind=R4), optional, intent(in) :: s67
+  real(kind=R4), optional, intent(in) :: s68
+  real(kind=R4), optional, intent(in) :: s69
+  real(kind=R4), optional, intent(in) :: s70
+  real(kind=R4), optional, intent(in) :: s71
+  real(kind=R4), optional, intent(in) :: s72
+  real(kind=R4), optional, intent(in) :: s73
+  real(kind=R4), optional, intent(in) :: s74
+  real(kind=R4), optional, intent(in) :: s75
+  real(kind=R4), optional, intent(in) :: s76
+  real(kind=R4), optional, intent(in) :: s77
+  real(kind=R4), optional, intent(in) :: s78
+  real(kind=R4), optional, intent(in) :: s79
+  real(kind=R4), optional, intent(in) :: s80
+  real(kind=R4), optional, intent(in) :: s81
+  real(kind=R4), optional, intent(in) :: s82
+  real(kind=R4), optional, intent(in) :: s83
+  real(kind=R4), optional, intent(in) :: s84
+  real(kind=R4), optional, intent(in) :: s85
+  real(kind=R4), optional, intent(in) :: s86
+  real(kind=R4), optional, intent(in) :: s87
+  real(kind=R4), optional, intent(in) :: s88
+  real(kind=R4), optional, intent(in) :: s89
+  real(kind=R4), optional, intent(in) :: s90
+  real(kind=R4), optional, intent(in) :: s91
+  real(kind=R4), optional, intent(in) :: s92
+  real(kind=R4), optional, intent(in) :: s93
+  real(kind=R4), optional, intent(in) :: s94
+  real(kind=R4), optional, intent(in) :: s95
+  real(kind=R4), optional, intent(in) :: s96
+  real(kind=R4), optional, intent(in) :: s97
+  real(kind=R4), optional, intent(in) :: s98
+  real(kind=R4), optional, intent(in) :: s99
+  real(kind=R4), optional, intent(in) :: s100
 
   ! Local variables, copies of optionals
   character (len=len(record)) :: record_here
@@ -2796,7 +2798,7 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, colnames, csv_file_status
   implicit none
 
   ! Calling parameters
-  real, dimension(:,:), intent(in) :: matrix
+  real(kind=R4), dimension(:,:), intent(in) :: matrix
   character (len=*), intent(in) :: csv_file_name
   character (len=*), dimension(:), optional, intent(in) :: colnames
   logical, optional, intent(out) :: csv_file_status
@@ -3250,7 +3252,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
   implicit none
 
   ! Calling parameters
-  real, dimension(:), intent(in) :: array        ! was matrix
+  real(kind=R4), dimension(:), intent(in) :: array        ! was matrix
   character (len=*), intent(in) :: csv_file_name
   logical, optional, intent(in) :: vertical
   logical, optional, intent(out) :: csv_file_status
@@ -3635,7 +3637,7 @@ function CSV_GUESS_RECORD_LEN_R4 (n_values, max_target_value) &
 
   ! Calling parameters
   integer :: n_values
-  real :: max_target_value
+  real(kind=R4) :: max_target_value
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "CSV_GUESS_RECORD_LEN_R4"
@@ -4086,18 +4088,18 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
 !*******************************************************************************
 
   ! Calling parameters
-  real, dimension(:,:), allocatable :: matrix_out
+  real(kind=R4), dimension(:,:), allocatable :: matrix_out
   character (len=*), intent(in) :: csv_file_name     ! File name to read.
   logical, optional, intent(out) :: csv_file_status  ! Read success status.
-  logical, optional, intent(in) :: include_incomplete_records ! Include truncated.
-  real, optional, intent(in) :: missing_code         ! Substitutes in truncated.
+  logical, optional, intent(in) :: include_incomplete_records ! Incl. truncated.
+  real(kind=R4), optional, intent(in) :: missing_code ! Subst. in truncated.
 
   ! Local variables, operations with files
   integer :: file_unit, error_iflag
   logical :: file_status
 
   ! Local variables, operations with the data array.
-  real, dimension(:,:), allocatable :: matrix
+  real(kind=R4), dimension(:,:), allocatable :: matrix
   integer :: i, iline, icase, jfield, line_data_buff_length
   character(len=:), allocatable :: line_data_buff
   integer, parameter :: LEN_CSV_FIELD = 64 ! Single field within record.
@@ -4105,11 +4107,11 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
   character(len=LEN_CSV_FIELD), dimension(:), allocatable  ::                 &
                                                           line_data_substrings
   integer :: line_data_nflds
-  real, allocatable, dimension(:) :: matrix_row
+  real(kind=R4), allocatable, dimension(:) :: matrix_row
   logical :: include_incomplete
-  real ::missing_code_here
+  real(kind=R4) ::missing_code_here
   logical, allocatable, dimension(:) :: include_vector
-  real, parameter :: MISSING = -9999.0
+  real(kind=R4), parameter :: MISSING = -9999.0_R4
   logical :: not_a_data_row
   integer ::nvars
   integer ::ncases
@@ -4317,7 +4319,7 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
   logical :: include_incomplete
   real (kind=R8) ::missing_code_here
   logical, allocatable, dimension(:) :: include_vector
-  real (kind=R8), parameter :: MISSING = -9999.0
+  real (kind=R8), parameter :: MISSING = -9999.0_R8
   logical :: not_a_data_row
   integer ::nvars
   integer ::ncases

@@ -2694,6 +2694,100 @@ program TESTRANKS
 end program TESTRANKS
 --------------------------------------------------------------------------------
 
+
+Subroutines: ARRAY_QSORT
+~~~~~~~~~~~~~~~~~~~~~~~~
+indexterm:[ARRAY_QSORT]
+indexterm:[array, vector, sort, quick sort]
+
+*ARRAY_QSORT* sorts a one-dimensional array (vector), in an increasing
+(default) or decreasing order. The array can be *integer* or *real* type.
+
+[source]
+--------------------------------------------------------------------------------
+integer [real], intent(inout), dimension(:) :: A ! Input array to be sorted
+logical, optional, intent(in) :: is_reverse      ! Optional flag requesting
+                                                 !   decreasing sort
+--------------------------------------------------------------------------------
+
+*Example*
+
+[source]
+--------------------------------------------------------------------------------
+integer, dimension(10) :: intarray = [1,4,6,1,0,0,8,3,4,5]
+...
+call ARRAY_QSORT(intarray)          ! [0,0,1,1,3,4,4,5,6,8]
+...
+call ARRAY_QSORT(intarray, .TRUE.)  ! [8,6,5,4,4,3,1,1,0,0]
+--------------------------------------------------------------------------------
+
+
+Function: ZEROFUN
+~~~~~~~~~~~~~~~~~
+indexterm:[ZEROFUN]
+
+*ZEROFUN* calculates a zero of an arbitrary function +F(X)+ (that is passed as
+an argument) in specific interval (from +AX+ to +BX+).
+
+[source]
+--------------------------------------------------------------------------------
+real, intent(in) :: AX    ! Lower limit of the search interval
+real, intent(in) :: BX    ! Upper limit of the search interval
+real             :: F     ! A function that is searched. This must be
+                          ! implemented as a Fortran function
+real, intent(in) :: TOL   ! Numerical tolerance
+--------------------------------------------------------------------------------
+
+The real arguments can be "single" (kind 4) or "double" (kind 8) precision.
+
+The function that is passed as an argument should be a module procedure or
++external+ declared in an interface block.
+
+For more details see:
+
+** Brent, R.P., (1973). Algorithms for mnimization without derivatives,
+   Prentice-Hall, Inc.
+** Brent, R.P. (1971). An algorithm with guaranteed convergence for
+   finding a zero of a function, Computer J. 14, 422–425.
+
+*Example*
+
+[source]
+--------------------------------------------------------------------------------
+! Find zero value of f(x) = X**3 - 2 at the interval (-2,2)
+A = -2.0_SP;
+B =  2.0_SP;
+Y = ZEROFUN(A, B, cubic, eps_f)
+
+...
+
+function cubic(x) result (y)
+  use m_tests
+  real(SP), intent(in) :: x
+  real(SP) :: y
+  y = x ** 3 - 2.0
+end function zf_qubic_r4
+--------------------------------------------------------------------------------
+
+*Example*
+
+[source]
+--------------------------------------------------------------------------------
+! Call of ZEROFUN
+depth_out = ZEROFUN( depth_range_min_loc,                                  &
+                     depth_range_max_loc,                                  &
+                     visibility_loc_diff,                                  &
+                     TOLERANCE_HIGH_DEF_SRP )
+...
+
+  ! This function is passed as an argument into ZEROFUN
+  real(SRP) function visibility_loc_diff(depth)
+    !> @param[in] depth the depth of the spatial object.
+    real(SRP), intent(in) :: depth
+    visibility_loc_diff = visibility_loc(depth) - target_range
+  end function visibility_loc_diff
+--------------------------------------------------------------------------------
+
 Subroutine: RANDOM_SEED_INIT_SIMPLE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[RANDOM_SEED_INIT_SIMPLE]
