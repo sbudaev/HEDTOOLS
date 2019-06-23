@@ -1,7 +1,11 @@
 AHA! Fortran Modelling Tools Manual
 ===================================
 Sergey Budaev <sergey.budaev@uib.no>
-// Note: asciidoc supports Id: svn tags, asciidoctor does not support them
+////////////////////////////////////////////////////////////////////////////////
+Note: asciidoc supports Id: svn tags, asciidoctor does not support them
+      but asciidoctor supports arbitrary revision number or date line
+////////////////////////////////////////////////////////////////////////////////
+//Revision 8465 (2019-06-23)
 $Id$
 :toc:
 :description: Modelling tools and coding style for AHA Model environment.
@@ -2643,6 +2647,8 @@ call ARRAY_INDEX(X, index_array)
 print *, X(index_array)
 --------------------------------------------------------------------------------
 
+indexterm:[sort, array, vector]
+
 *ARRAY_RANK* calculates the ranking order scores for the original vector
 using the integer sorting index vector that is calculated by +ARRAY_INDEX+.
 indexterm:[ARRAY_RANK]
@@ -2710,6 +2716,7 @@ Subroutines: ARRAY_QSORT
 ~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[ARRAY_QSORT]
 indexterm:[array, vector, sort, quick sort]
+indexterm:[sort, array, vector]
 
 *ARRAY_QSORT* sorts a one-dimensional array (vector), in an increasing
 (default) or decreasing order. The array can be *integer* or *real* type.
