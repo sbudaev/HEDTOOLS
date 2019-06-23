@@ -58,7 +58,7 @@ Colophon
 --------
 
 The AHA Model development is supported by the University of Bergen and the
-Research Council of Norway grant No. FRIMEDBIO 239834.
+Research Council of Norway grant FRIMEDBIO 239834.
 
 AHA Model is also a partner project of the
 https://digitallifenorway.org/gb/[Digital Life Norway].
