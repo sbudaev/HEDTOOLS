@@ -1,7 +1,15 @@
-AHA! Modelling Tools Manual
-===========================
+AHA! Fortran Modelling Tools Manual
+===================================
 Sergey Budaev <sergey.budaev@uib.no>
+// Note: asciidoc supports Id: svn tags, asciidoctor does not support them
 $Id$
+:toc:
+:description: Modelling tools and coding style for AHA Model environment.
+:lang: en
+:icons: font
+:source-highlighter: pygments
+:language: fortran
+:doctype: book
 
 ////////////////////////////////////////////////////////////////////////////////
 Notes:
@@ -13,12 +21,19 @@ Notes:
     * PDF svn path is ** updated MANUALLY **
 ////////////////////////////////////////////////////////////////////////////////
 
-:description: Modelling tools/coding style for the new AHA! environment.
-
-:language: fortran
-
 Abstract
 --------
+
+*AHA* is a large scale simulation model under development at the
+http://bio.uib.no/te/[Theoretical Ecology Group, University of Bergen],
+that implements a general decision-making architecture in evolutionary
+agents. Each agent is programmed as a whole virtual organism including the
+genome, rudimentary physiology, the hormonal system, a cognitive architecture
+and behavioural repertoire. They "live" in a stochastic spatially explicit
+virtual environment with physical gradients, predators and prey. The primary
+aim of the whole modelling machinery is to understand the evolution of
+decision making mechanisms, personality, emotion and behavioural plasticity
+within a realistic ecological framework.
 
 *HEDTOOLS* is a set of modelling utilities and tools (implemented as portable
 Fortran modules, not object-oriented) that have general applicability and
@@ -30,27 +45,23 @@ are designed such that they can be used in many different simulation projects.
 This document describes HEDTOOLS and outlines the software requirements and
 general coding style for the AHA model.
 
-Modern Fortran can be considered as an almost ideal language for agent-based
-modelling. It is high-level (e.g. it allows to work with whole arrays and
-slices) and partly object-oriented. It also contains many similar constructions
-with Matab, so the later can be used for rapid prototyping. Nonetheless, it
-is compiled and strictly typed which makes coding big and complex projects
-safer. Compilers are easily available, including free GNU gfortran. Recent
-compilers generate highly efficient and extremely fast machine code. Modern
-Fortran includes some built-in parallel calculation instructions, and libraries
-and tools for high performance parallel computations are readily available. As
-such, Fortran is one of the favourite languages for computation-intensive
-works.
+* The AHA Model web site is https://ahamodel.uib.no[https://ahamodel.uib.no]
 
-_Document date: {docdate}._ The document is generated with the
-http://asciidoc.org/[AsciiDoc] markup processor.
+Document date: {docdate}. Latest PDF version:
+https://ahamodel.uib.no/doc/HEDTOOLS.pdf
 
-Latest PDF version: +
-http://ahamodel.uib.no/doc/HEDTOOLS.pdf
+_The document is generated with the http://asciidoc.org/[AsciiDoc] markup
+processor._
 
-////////////////////////////////////////////////////////////////////////////////
-SVN: $LastChangedDate$
-////////////////////////////////////////////////////////////////////////////////
+[colophon]
+Colophon
+--------
+
+The AHA Model development is supported by the University of Bergen and the
+Research Council of Norway grant No. FRIMEDBIO 239834.
+
+AHA Model is also a partner project of the
+https://digitallifenorway.org/gb/[Digital Life Norway].
 
 :numbered:
 
