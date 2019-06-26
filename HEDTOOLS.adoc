@@ -255,6 +255,146 @@ GENERAL INTRO ON PROGRAMMING STYLE, INCLUDING OBJECT-ORIENTED FORTRAN FEATURES.
 Coding style: General guidelines and tips
 -----------------------------------------
 
+General design
+~~~~~~~~~~~~~~
+
+indexterm:[Fortran Best Practices]
+indexterm:[program, design, general design]
+indexterm:[programming workflow]
+
+Simulation modelling differs from normal business and scientific programming.
+Development of a normal computer program is usually cumulative and incremental.
+The same code base is developed, updated, changed, maintained etc. The program
+as a whole remains basically the same. For example common office software
+like Microsoft Office or LibreOffice has been under constant cumulative
+development for decades.
+
+A single program with a specific code base is developed during a long
+life cycle. The same program is intended to be distributed over many users
+(clients) and runs numerous times. The computer program itself is the main
+aim and the result (outcome).
+
+It is not a problem to design the program around the single
+"main program" that is enclosed within +program ... end program+ statements
+with addition of various subroutines, functions and external modules.
+
+[source]
+--------------------------------------------------------------------------------
+program monumental_program
+...
+! main code goes here...
+...
+contains ! internal procedures
+
+  subroutine component()
+  ...
+  end subroutine component
+
+  function math()
+  ...
+  end function math
+
+end program monumental_program
+
+! external procedures
+
+subroutine ext_component()
+...
+end subroutine ext_component
+
+function ext_math()
+...
+end function ext_math
+--------------------------------------------------------------------------------
+
+Modelling software, however, is very different. The program code is not
+the main aim and outcome of the work, but just a tool to understand some
+natural phenomena. In a sense, modelling code is quite ephemeral and changes
+frequently to model different things. The final program does not live for a
+long time but scrapped after a few runs (e.g. a series of computational
+experiments) and then significantly modified or just scrapped.
+
+This requires programming techniques that would facilitate developing the
+computer program from reusable components. In a sense, building a new model
+should be like building short-lived toys from Lego bricks.
+
+In spite of short life cycle, modelling code should be always archived to
+ensure accountability and reproducibility. This means that any specific version
+of the model (even whan "scrapped") should be always easily available for
+further work (running, rerunning, experimentation, modification to branch a
+new model etc).
+
+The following design principles enable such a dynamic workflow:
+
+** *Modularity* -- the program should be composed of many small "atomic"
+    components, each doing a single thing rather than a big monolythic pieces.
+
+indexterm:[modularity]
+indexterm:[component-based design]
+
+** *Headless design* -- there should be no or a very minimal main program, all
+    the code should go to the modules (subroutines and functions). Ideally, the
+    main program must look like this:
+
+indexterm:[headless design]
+
+[source]
+---------------------------------------------------------------------------
+program model
+  use module_1
+  use module_2
+  ...
+  use module_x
+
+  call do_model() ! the only one instruction to do all the work
+end program
+---------------------------------------------------------------------------
+
+** *Reusability* -- each of the small pieces should be easily reused in a
+    different programming project or model. Global parameters or
+    variables(e.g. common block or module constants) should be kept to a
+    minimum or avoided. Logically similar and consistent sets of procedures
+    and functions must be collected into coherent programming units (modules)
+    that can be easily plugged-in to a new project (e.g. by +use module_x+).
+
+indexterm:[reusability]
+
+** *Documentation* -- The code and especially interfaces (parameters passed to
+    the subroutines and functions) must be thoroughly documented. Documentation
+    must always be consistent with the code. If the logic of the algorithm
+    is changed, this must be reflected in the text description. The code is
+    the work of science rather than just "coding" for the machine and must be
+    primarily directed to be read by human beings.
+
+indexterm:[documentation]
+indexterm:[documenting code]
+
+** *Tests* -- The reusable modular code should include specific procedures
+    for testing itself. For example a specialised set of subroutines for
+    checking the calculations against predefined "true" results. This would
+    ensure that changing something in the code does not break other pieces.
+    Testing code should be checked and updated with the algorithm change.
+
+indexterm:[testing]
+
+One important emergent effect of such a programming workflow is that a
+_framework of reusable components_ is created automatically without much
+special dedicated effort (but creating a programming framework/library
+is otherwise a costly task!). It is also very easy to test all individual
+components (e.g.  via a separate main testing program). Thus, writing code
+for a specific model saves lots of effort for subsequent modelling work.
+
+indexterm:[modularity]
+indexterm:[programming framework]
+
+In contrast, writing monolythic code, especially in the "main program," leads
+to large extra work: every model is developed almost fully from scratch,
+resulting in huge waste of time and effort. Monolythic code is also more
+difficult to understand and test, it is prone to errors that are difficult
+to find and fix.
+
+indexterm:[monolythic code]
+
 Code formatting rules
 ~~~~~~~~~~~~~~~~~~~~~
 
