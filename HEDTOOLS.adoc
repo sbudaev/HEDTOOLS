@@ -328,6 +328,8 @@ The following design principles enable such a dynamic workflow:
 
 ** *Modularity* -- the program should be composed of many small "atomic"
     components, each doing a single thing rather than a big monolythic pieces.
+    One subroutine or function should do only one thing, their size should
+    usually fit on a single or at least two text editor (IDE) screens.
 
 indexterm:[modularity]
 indexterm:[component-based design]
