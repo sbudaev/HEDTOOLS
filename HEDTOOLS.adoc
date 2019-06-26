@@ -1226,9 +1226,9 @@ svn commit model1.f90 -m "Added general neural response function for neural bund
 svn commit model1.f90 -m "Fixed gamma2gene function, Gaussian perception error"
 --------------------------------------------------------------------------------
 
-A typical SVN repository organisation usually includes a *trunk* directory for
-the main development line and many *branches* for different purposes created by
-different developers. For example, the current AHA repo has this structure:
+A typical SVN repository organisation usually includes many *branches*
+for different purposes created by different developers. For example, the
+current TEG svn repo has this structure:
 
 ////////////////////////////////////////////////////////////////////////////////
 Command to produce directory tree in ascii, no utf pseudographics
@@ -1237,19 +1237,47 @@ tree --prune --charset ascii -dxL 2
 
 [source,bash]
 --------------------------------------------------------------------------------
-|-- branches          # Branches are the private workspace for users
+|-- branches                  # Private development branches
 |   |-- budaev
-|   |-- christian
-|   |-- judy
-|   `-- ryan
-|
-|-- old_archived      # Some old code
-|
-`-- trunk             # Place for the main, "production-ready" model codes
-    |-- DOC           # Docs that do not change but handy, e.g. Fortran Handbook
-    |-- HEDTOOLS      # Stable version of the modelling tools
-    |-- hormonemodel  # One of the models, "production-ready"
-    `-- scripts       # Templates of scripts and makefiles for reuse
+|   |-- gabby
+|   |-- henrik
+|   `-- judy
+|-- hormones_v2               # The hormone models and other models (below)
+|   |-- branches_camilla
+|   |-- branches_jacqueline
+|   |-- stochastic_trunk
+|   |-- stochastic_trunk_mortality
+|   |-- stochastic_trunk_mortality (a & b)
+|   |-- stochastic_trunk_mortality (a & b) - TEST
+|   |-- tests
+|   `-- trunk
+|-- mesopelagic_latitude
+|   |-- branches
+|   |-- mesopelagic_barrier
+|   |-- mesopelagic_lifehistory
+|   `-- trunk
+|-- nansen_seaice
+|   `-- trunk
+|-- pacificherring
+|   |-- branches
+|   `-- trunk
+|-- sexevolution
+|   `-- testingsexevolutionfortran
+|-- tags                      # General-purpose modelling components (versions)
+|   |-- AHA_R
+|   |-- BINARY_IO
+|   |-- CSV_IO
+|   |-- HEDTOOLS
+|   |-- LINEARFIT
+|   |-- QSORT
+|   |-- UPTAKEMM
+|   `-- VISRANGE
+`-- trunk                     # Accessory components (e.g. web server config)
+    |-- AHAWEB
+    |-- BOOKS
+    |-- DOCS
+    |-- scripts
+    `-- SVNSERVER
 --------------------------------------------------------------------------------
 indexterm:[Subversion,trunk]
 indexterm:[Subversion,branch]
