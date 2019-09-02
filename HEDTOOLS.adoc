@@ -4426,6 +4426,26 @@ Deletes a file or a directory from the filesystem.
 call FS_REMOVE("delete_me", i)
 --------------------------------------------------------------------------------
 
+Subroutine FS_CHDIR
+^^^^^^^^^^^^^^^^^^^^
+indexterm:[FS_CHDIR, change directory, folder, cd, chdir]
+
+Changes the current directory to a different one.
+
+[source]
+--------------------------------------------------------------------------------
+character(*), parameter :: output_folder = 'output'
+
+....
+
+call FS_CHDIR( output_folder )
+--------------------------------------------------------------------------------
+
+Note: Note that `call system("cd " // output_folder )` would not work because
+      `cd` affects only the separate subshell created by `system()` command
+      and does not pass to the calling Fortran program.
+
+
 Module: BASE_RANDOM
 ------------------
 
