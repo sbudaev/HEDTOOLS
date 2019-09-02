@@ -4684,5 +4684,54 @@ use ISO_C_BINDING
 
 end subroutine FS_REMOVE
 
+!-------------------------------------------------------------------------------
+
+subroutine FS_CHDIR(dir_to, iostat)
+!===============================================================================
+! FS_CHDIR
+! PURPOSE: Changes the current working directory using a POSIX standard C
+!          call via the Fortran interface.
+!
+! See C file system interface docs (GNU C):
+!https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
+!
+! CALL PARAMETERS:
+!    Character existing directory name.
+!    Optional iostat integer parameter reports the success, however, Fortran
+!          may not support POSIX bindings, so the output may have no use
+!          (have to check!). Works on gfortran, ifort, f95 (Oracle)
+!             0 = success (directory created);
+!            -1 = there was an error.
+!
+! Note: using `call system("cd some_dir") may not work because it changes
+!       the directory to some_dir only to the subshell that is called by the
+!       `system()` subroutine.
+!
+! Author: Sergey Budaev
+!===============================================================================
+
+use ISO_C_BINDING
+
+  character(len=*), intent(in) :: dir_to
+  integer, optional, intent(out) :: iostat
+
+  integer :: cret
+
+  interface
+    function chdir(topath) bind(c,name="chdir")
+      use iso_c_binding
+      integer(c_int) :: chdir
+      character(kind=c_char,len=1) :: topath(*)
+    end function chdir
+  end interface
+
+  ! Call C through interface/binding. Requires F2003 to work.
+  cret = chdir ( dir_to // char(0) )
+
+  ! This return parameter might not actually work on all systems.
+  if (present(iostat)) iostat = cret
+
+end subroutine FS_CHDIR
+
 
 end module CSV_IO
