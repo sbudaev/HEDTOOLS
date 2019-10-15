@@ -442,8 +442,8 @@ $(DIB): $(SRC)
 	zip $(ZIPFILE) $(MOD) $(DIB) $(AUTOGEN_README_FILE)
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
-	a2x -f$(DOCFMT) $(DOC)
-	mv $(DOCFIL).$(DOCFMT) $(DOCDIR)
+	a2x --destination-dir=$(DOCDIR) -f$(DOCFMT) $(DOC)
+	-$(MV) $(DOCFIL).$(DOCFMT) $(DOCDIR)
 
 #-------------------------------------------------------------------------------
 
