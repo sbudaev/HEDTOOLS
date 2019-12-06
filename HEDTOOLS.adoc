@@ -3965,6 +3965,67 @@ numeric array to a single string, NOT array of strings. Do we need
 implementing such a conversion function?
 ////////////////////////////////////////////////////////////////////////////////
 
+Using an array of derived type containing arrays
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+indexterm:[arrays,reshape]
+indexterm:[implied do]
+indexterm:[implied loop]
+indexterm:[derived type]
+indexterm:[array,two dimensional]
+
+The +CSV_IO+ procedures do not directly work with derived types, only with
+simple arrays. Therefore, an interesting case is when one needs to save an
+array of a derived type, with a data component also being an array.
+
+For example,
+
+[source]
+--------------------------------------------------------------------------------
+! Declare the derived type `struct_def`
+type :: struct_def
+  real, dimension(TYPE_MAX) :: array_comp
+end type struct_def
+
+! Declare an array of the objects of the type `struct_def`
+type(struct_def), dimension(N_OBJECTS) :: objects_array
+--------------------------------------------------------------------------------
+
+In this example, +objects_array(:)%array_comp(:)+ is essentially a two
+dimensional matrix. But CSV module cannot work with derived type intrinsically.
+One needs to convert the derived type into a simple array.
+
+The easiest way to do this is to define a temporary data array +tmp_data+ that
+keeps data from the +objects_array(:)%array_comp(:)+ data structure. Then,
+just save the +tmp_data+ with +CSV_MATRIX_WRITE+.
+
+[source]
+--------------------------------------------------------------------------------
+! Convert the derived type components into a 2-D temporary array
+do i = 1, N_OBJECTS
+ do j=1, TYPE_MAX
+   tmp_data(i,j) = objects_array(i)%array_comp(j)
+ end do
+end do
+
+! Write the temporary array to the CSV output file.
+call CSV_MATRIX_WRITE( tmp_data, "data_file.csv" )
+--------------------------------------------------------------------------------
+
+Alternatively, conversion from the derived type arrays to simple array can be
+done inline through a combination of intrinsic +reshape+ and implied loops:
+
+[source]
+--------------------------------------------------------------------------------
+! The derived type can be converted to the array inline by combination of
+! reshape with two implied loops. This is a short version of the code.
+call CSV_MATRIX_WRITE(                                                      &
+    reshape( [( [( objects_array(i)%array_comp(j), i=1,N_OBJECTS )],        &
+                                                        j=1, TYPE_MAX  )],  &
+             [N_OBJECTS,TYPE_MAX] ),                                        &
+    "data_file.csv"  )
+--------------------------------------------------------------------------------
+
 Function: CSV_MATRIX_READ
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 indexterm:[CSV_MATRIX_READ]
