@@ -466,7 +466,7 @@ $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
 $(AUTOGEN_HEADER_RAND): $(BASE_RANDOM.f90) $(THIS_FILE)
 	$(AUTOGEN_COMMENT_RANDOM)
 	$(AUTOGEN_CODE_RANDOM)
-	@echo Generated include: $(AUTOGEN_HEADER_RAND) for $(FC)
+	@echo Generated include: $(AUTOGEN_HEADER_RAND) for $(FC) using $(ECHO)
 
 # compile modules
 BASE_UTILS.$(OBJEXT): BASE_UTILS.f90
