@@ -74,7 +74,7 @@ WINRM := rm -fr
 #          (e.g. include file) is auto-generated in such a way.
 #          One way to ensure identical behaviour on all platforms is to use
 #          a third-party echo.exe program from Cygwin, GnuWin32 of Linux
-#          subsystem on Windows 10.
+#          Subsystem on Windows 10 (WSL).
 #        - Windows 10 does not seem to use third-party `echo.exe` (e.g. from
 #          GNUwin32 or Linux subsystem if simple echo is referred under shell.
 #          This requires redefining ECHO to refer to a specific `exe`
@@ -84,19 +84,23 @@ ifdef ComSpec
 	IS_WINDOWS=1
 	WHICH_CMD=where
 	NULLDEV=":NULL"
-	PLATFORM = windows_$(PROCESSOR_ARCHITECTURE)
 	RM := $(WINRM)
 	MV := move
 	ECHO := "$(shell $(WHICH_CMD) echo.exe)"
+	UNAME := uname
+	ASCDOC := a2x
+	PLATFORM = windows_$(PROCESSOR_ARCHITECTURE)
 else
 	PLATFORM_TYPE=Unix
 	IS_WINDOWS=0
 	WHICH_CMD=which
 	NULLDEV="/dev/null"
-	PLATFORM = $(shell uname -s)_$(shell uname -p)
 	RM := rm -f
 	MV := mv -f
 	ECHO := echo
+	UNAME := uname
+	ASCDOC := a2x
+	PLATFORM = $(shell $(UNAME) -s)_$(shell $(UNAME) -p)
 endif
 
 # Check if we build on Windows platform with Intel Compiler. It is specific in
@@ -119,7 +123,7 @@ endif
 # Check if certain required executables exist and are callable in path. This is
 # important on the Windows platform because such GNU command line utilities as
 # uname and zip are not installed by default.
-REQUIRED_EXECS = svn uname zip a2x ifort f95 gfortran cut
+REQUIRED_EXECS = svn $(UNAME) zip $(ASCDOC) ifort f95 gfortran
 K := $(foreach exec,$(REQUIRED_EXECS),\
 	$(if $(shell $(WHICH_CMD) $(exec) ),check executables,\
 	$(warning ************ $(exec) unavailable in PATH ************)))
@@ -233,7 +237,7 @@ DOCFMT = pdf
 DOCDIR = doc/
 
 # Determine current SVN version of the code
-SVN_VER = $(shell svn info | grep Revision: | cut -d " " -f 2)
+SVN_VER = $(shell svn info --show-item last-changed-revision)
 #-------------------------------------------------------------------------------
 
 # Determine this makefile's path. Be sure to place this BEFORE `include`s
@@ -457,7 +461,7 @@ $(DIB): $(SRC)
 	zip $(ZIPFILE) $(MOD) $(DIB) $(AUTOGEN_README_FILE)
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
-	a2x --destination-dir=$(DOCDIR) -f$(DOCFMT) $(DOC)
+	$(ASCDOC) --destination-dir=$(DOCDIR) -f$(DOCFMT) $(DOC)
 	-$(MV) $(DOCFIL).$(DOCFMT) $(DOCDIR)
 
 #-------------------------------------------------------------------------------
