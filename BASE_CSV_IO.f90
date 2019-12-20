@@ -47,6 +47,14 @@ integer, parameter, private :: R4 = selected_real_kind(6,   37)
 integer, parameter, private :: R8 = selected_real_kind(15,  307)
 integer, parameter, private :: QP = selected_real_kind(33, 4931)
 
+! Integer kinds (from STRINGS)
+integer, parameter, private :: ki4=selected_int_kind(9)     ! single integer
+integer, parameter, private :: ki8=selected_int_kind(18)    ! double integer
+
+!Complex kinds (from STRINGS)
+integer, parameter, private :: kc4 = R4                     ! single complex
+integer, parameter, private :: kc8 = R8                     ! double complex
+
 ! Public constants
 
 ! Maximum unit number (in old Fortran units range 1..99)
@@ -113,16 +121,19 @@ end type csv_file
 interface CSV_RECORD_APPEND
 
   module procedure CSV_RECORD_APPEND_I4
+  module procedure CSV_RECORD_APPEND_I8
   module procedure CSV_RECORD_APPEND_R4
   module procedure CSV_RECORD_APPEND_R8
   module procedure CSV_RECORD_APPEND_S
 
   module procedure CSV_RECORD_APPEND_ARRAY_I4
+  module procedure CSV_RECORD_APPEND_ARRAY_I8
   module procedure CSV_RECORD_APPEND_ARRAY_R4
   module procedure CSV_RECORD_APPEND_ARRAY_R8
   module procedure CSV_RECORD_APPEND_ARRAY_S
 
   module procedure CSV_RECORD_APPEND_LST_I4
+  module procedure CSV_RECORD_APPEND_LST_I8
   module procedure CSV_RECORD_APPEND_LST_R4
   module procedure CSV_RECORD_APPEND_LST_R8
   module procedure CSV_RECORD_APPEND_LST_S
@@ -215,7 +226,7 @@ end interface CSV_MATRIX_READ
 
 ! They are identical in CSV_IO and BASE_UTILS. Private here to avoid possible
 ! name conflicts, do we need them outside?
-private ::  I4_WIDTH, I4_LOG_10, STR_ITOA_LZ, STR_ITOA, CLEANUP
+private ::  I4_WIDTH, I8_WIDTH, I4_LOG_10, I8_LOG_10, STR_ITOA_LZ, STR_ITOA, CLEANUP
 
 ! This wrapper DEBUG LOG is used only for debugging this module. It may
 ! not or may use the module LOGGER, if not, (normally)  it can be used as a
@@ -1254,6 +1265,74 @@ end subroutine CSV_RECORD_APPEND_I4
 
 !-------------------------------------------------------------------------------
 
+pure subroutine CSV_RECORD_APPEND_I8 (record, avalue)
+!*******************************************************************************
+! CSV_RECORD_APPEND_I8
+! PURPOSE: appends an Integer kind 8 (I8) to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Integer to be appended
+! USES: I4_WIDTH from the same module
+!
+! NOTES:
+!   The record parameter does not accept allocatable strings, only standard
+!   fixed length strings (e.g. character (len=255) :: RECORD_CSV). But there is
+!   a little trick to use allocatable strings:
+!
+!   (1) declare allocatable strings
+!         character (len=:), allocatable :: RECORD_CSV
+!   (2) allocate/ initialise an empty string of the necessary size for the
+!       first record using intrinsic function repeat:
+!         RECORD_CSV=repeat(" ", 255) or assess and set the maximum size
+!       of array record in advance using
+!         size_of_array * (n_characters_per_number + 1), may use len(TOSTR())
+!         from BASE_UTILS module to get the number of characters per field.
+!         RECORD_CSV=repeat( " ", max_size_record )
+!       see CSV_MATRIX_WRITE_ as a model for calculating max_size_record;
+!   (3) append numbers to this initially long empty string (NOT zero-length
+!       allocatable string "":
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(1) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(2) )
+!         call CSV_RECORD_APPEND( RECORD_CSV, numbers(3) )
+!
+! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+! Modified by Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(inout) :: record
+  integer(ki8), intent(in) :: avalue
+
+  ! Local variables
+  character (len=5) :: fmat
+  integer(ki8) :: i
+  integer(ki8) :: i4_len
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "CSV_RECORD_APPEND_I8"
+
+  !-----------------------------------------------------------------------------
+
+  ! TODO: Check unallocated/uninitialised records
+  !if (len_trim(record)==0) record=""   ! uninitialised/unalloc record to blanks
+
+  i = len_trim (record)                 ! Locate last used location in RECORD
+
+  if ( 0 < i ) then                           ! Append comma
+    i = i + 1
+    record(i:i) = ','
+  end if
+
+  i4_len = I8_WIDTH (avalue)                      ! Determine "width" of I4
+  write (fmat, '(a,i2,a)') '(i', i4_len, ')'      ! Create format for I4
+  write (record(i+1:i+i4_len), fmat) avalue       ! Write I4 to RECORD
+
+end subroutine CSV_RECORD_APPEND_I8
+
+!-------------------------------------------------------------------------------
+
 pure subroutine CSV_RECORD_APPEND_R4 (record, avalue)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_R4
@@ -1515,6 +1594,47 @@ pure subroutine CSV_RECORD_APPEND_ARRAY_I4 (record, array)
   record = record_here
 
 end subroutine CSV_RECORD_APPEND_ARRAY_I4
+
+!-------------------------------------------------------------------------------
+
+pure subroutine CSV_RECORD_APPEND_ARRAY_I8 (record, array)
+!*******************************************************************************
+! CSV_RECORD_APPEND_ARRAY_I4
+! PURPOSE: appends an array of integers to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Integer array to be appended
+! NOTE: Whole array is appended, without specifying upper and lower
+!    boundaries, use slices if necessary
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters
+  character (len=*), intent(inout) :: record
+  integer(ki8), dimension(:), intent(in) :: array
+
+  ! Local variables
+  integer(ki8) :: i, LBndi, Ubndi
+
+  ! Local variables, copies of optionals
+  character (len=len(record)) :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  LBndi=lbound(array, 1)   ! Determining bounds for out array
+  UBndi=ubound(array, 1)
+
+  record_here = record
+
+  do i=LBndi, UBndi
+    call CSV_RECORD_APPEND_I8(record_here,array(i))
+  end do
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_ARRAY_I8
 
 !-------------------------------------------------------------------------------
 
@@ -1892,6 +2012,260 @@ pure subroutine CSV_RECORD_APPEND_LST_I4 (record, &
   record = record_here
 
 end subroutine CSV_RECORD_APPEND_LST_I4
+
+!-------------------------------------------------------------------------------
+
+pure subroutine CSV_RECORD_APPEND_LST_I8 (record, &
+                                      s1, s2, s3, s4, s5, s6, s7, s8, s9,s10,&
+                                     s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,&
+                                     s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,&
+                                     s31,s32,s33,s34,s35,s36,s37,s38,s39,s40,&
+                                     s41,s42,s43,s44,s45,s46,s47,s48,s49,s50,&
+                                     s51,s52,s53,s54,s55,s56,s57,s58,s59,s60,&
+                                     s61,s62,s63,s64,s65,s66,s67,s68,s69,s70,&
+                                     s71,s72,s73,s74,s75,s76,s77,s78,s79,s80,&
+                                     s81,s82,s83,s84,s85,s86,s87,s88,s89,s90,&
+                                     s91,s92,s93,s94,s95,s96,s97,s98,s99,s100 )
+!*******************************************************************************
+! CSV_RECORD_APPEND_LST_I8
+! PURPOSE: appends a list of strings to a CSV record.
+! CALL PARAMETERS:
+!    Character RECORD, the CSV record.
+!    Optional list of integers to be appended, at least two values
+!
+! NOTES:
+!   This is a rudimentary implementation making use of optional parameters,
+!   with maximum 100. It should be enough for most cases where the purpose
+!   of this subroutine is to construct header line with variable names
+!   in a single call instead of multiple CSV_RECORD_APPEND calls. Should be
+!   rewritten to use detived types and pointers for arbitrary list size.
+!   But for now (in this version) the main aim is implementation and
+!   debugging simplicity. May be worth appending more strings... Is 200 enough?
+!
+! TODO: Make also the same function, in addition to sub with generic interface
+! Author: Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Calling parameters, first record itself, then 100 list items
+  character (len=*), intent(inout) :: record
+
+  integer(ki8), intent(in) :: s1  ! The first two strings in the list are
+  integer(ki8), intent(in) :: s2  ! mandatory to make it unique in the
+                                       ! generic interface block
+
+  integer(ki8), optional, intent(in) :: s3
+  integer(ki8), optional, intent(in) :: s4
+  integer(ki8), optional, intent(in) :: s5
+  integer(ki8), optional, intent(in) :: s6
+  integer(ki8), optional, intent(in) :: s7
+  integer(ki8), optional, intent(in) :: s8
+  integer(ki8), optional, intent(in) :: s9
+  integer(ki8), optional, intent(in) :: s10
+  integer(ki8), optional, intent(in) :: s11
+  integer(ki8), optional, intent(in) :: s12
+  integer(ki8), optional, intent(in) :: s13
+  integer(ki8), optional, intent(in) :: s14
+  integer(ki8), optional, intent(in) :: s15
+  integer(ki8), optional, intent(in) :: s16
+  integer(ki8), optional, intent(in) :: s17
+  integer(ki8), optional, intent(in) :: s18
+  integer(ki8), optional, intent(in) :: s19
+  integer(ki8), optional, intent(in) :: s20
+  integer(ki8), optional, intent(in) :: s21
+  integer(ki8), optional, intent(in) :: s22
+  integer(ki8), optional, intent(in) :: s23
+  integer(ki8), optional, intent(in) :: s24
+  integer(ki8), optional, intent(in) :: s25
+  integer(ki8), optional, intent(in) :: s26
+  integer(ki8), optional, intent(in) :: s27
+  integer(ki8), optional, intent(in) :: s28
+  integer(ki8), optional, intent(in) :: s29
+  integer(ki8), optional, intent(in) :: s30
+  integer(ki8), optional, intent(in) :: s31
+  integer(ki8), optional, intent(in) :: s32
+  integer(ki8), optional, intent(in) :: s33
+  integer(ki8), optional, intent(in) :: s34
+  integer(ki8), optional, intent(in) :: s35
+  integer(ki8), optional, intent(in) :: s36
+  integer(ki8), optional, intent(in) :: s37
+  integer(ki8), optional, intent(in) :: s38
+  integer(ki8), optional, intent(in) :: s39
+  integer(ki8), optional, intent(in) :: s40
+  integer(ki8), optional, intent(in) :: s41
+  integer(ki8), optional, intent(in) :: s42
+  integer(ki8), optional, intent(in) :: s43
+  integer(ki8), optional, intent(in) :: s44
+  integer(ki8), optional, intent(in) :: s45
+  integer(ki8), optional, intent(in) :: s46
+  integer(ki8), optional, intent(in) :: s47
+  integer(ki8), optional, intent(in) :: s48
+  integer(ki8), optional, intent(in) :: s49
+  integer(ki8), optional, intent(in) :: s50
+  integer(ki8), optional, intent(in) :: s51
+  integer(ki8), optional, intent(in) :: s52
+  integer(ki8), optional, intent(in) :: s53
+  integer(ki8), optional, intent(in) :: s54
+  integer(ki8), optional, intent(in) :: s55
+  integer(ki8), optional, intent(in) :: s56
+  integer(ki8), optional, intent(in) :: s57
+  integer(ki8), optional, intent(in) :: s58
+  integer(ki8), optional, intent(in) :: s59
+  integer(ki8), optional, intent(in) :: s60
+  integer(ki8), optional, intent(in) :: s61
+  integer(ki8), optional, intent(in) :: s62
+  integer(ki8), optional, intent(in) :: s63
+  integer(ki8), optional, intent(in) :: s64
+  integer(ki8), optional, intent(in) :: s65
+  integer(ki8), optional, intent(in) :: s66
+  integer(ki8), optional, intent(in) :: s67
+  integer(ki8), optional, intent(in) :: s68
+  integer(ki8), optional, intent(in) :: s69
+  integer(ki8), optional, intent(in) :: s70
+  integer(ki8), optional, intent(in) :: s71
+  integer(ki8), optional, intent(in) :: s72
+  integer(ki8), optional, intent(in) :: s73
+  integer(ki8), optional, intent(in) :: s74
+  integer(ki8), optional, intent(in) :: s75
+  integer(ki8), optional, intent(in) :: s76
+  integer(ki8), optional, intent(in) :: s77
+  integer(ki8), optional, intent(in) :: s78
+  integer(ki8), optional, intent(in) :: s79
+  integer(ki8), optional, intent(in) :: s80
+  integer(ki8), optional, intent(in) :: s81
+  integer(ki8), optional, intent(in) :: s82
+  integer(ki8), optional, intent(in) :: s83
+  integer(ki8), optional, intent(in) :: s84
+  integer(ki8), optional, intent(in) :: s85
+  integer(ki8), optional, intent(in) :: s86
+  integer(ki8), optional, intent(in) :: s87
+  integer(ki8), optional, intent(in) :: s88
+  integer(ki8), optional, intent(in) :: s89
+  integer(ki8), optional, intent(in) :: s90
+  integer(ki8), optional, intent(in) :: s91
+  integer(ki8), optional, intent(in) :: s92
+  integer(ki8), optional, intent(in) :: s93
+  integer(ki8), optional, intent(in) :: s94
+  integer(ki8), optional, intent(in) :: s95
+  integer(ki8), optional, intent(in) :: s96
+  integer(ki8), optional, intent(in) :: s97
+  integer(ki8), optional, intent(in) :: s98
+  integer(ki8), optional, intent(in) :: s99
+  integer(ki8), optional, intent(in) :: s100
+
+  ! Local variables, copies of optionals
+  character (len=len(record)) :: record_here
+
+  !-----------------------------------------------------------------------------
+
+  record_here = record
+
+  call CSV_RECORD_APPEND_I8(record_here,   s1)
+  call CSV_RECORD_APPEND_I8(record_here,   s2)
+
+  if (present(s3))  call CSV_RECORD_APPEND_I8(record_here,  s3)
+  if (present(s4))  call CSV_RECORD_APPEND_I8(record_here,  s4)
+  if (present(s5))  call CSV_RECORD_APPEND_I8(record_here,  s5)
+  if (present(s6))  call CSV_RECORD_APPEND_I8(record_here,  s6)
+  if (present(s7))  call CSV_RECORD_APPEND_I8(record_here,  s7)
+  if (present(s8))  call CSV_RECORD_APPEND_I8(record_here,  s8)
+  if (present(s9))  call CSV_RECORD_APPEND_I8(record_here,  s9)
+  if (present(s10)) call CSV_RECORD_APPEND_I8(record_here, s10)
+  if (present(s11)) call CSV_RECORD_APPEND_I8(record_here, s11)
+  if (present(s12)) call CSV_RECORD_APPEND_I8(record_here, s12)
+  if (present(s13)) call CSV_RECORD_APPEND_I8(record_here, s13)
+  if (present(s14)) call CSV_RECORD_APPEND_I8(record_here, s14)
+  if (present(s15)) call CSV_RECORD_APPEND_I8(record_here, s15)
+  if (present(s16)) call CSV_RECORD_APPEND_I8(record_here, s16)
+  if (present(s17)) call CSV_RECORD_APPEND_I8(record_here, s17)
+  if (present(s18)) call CSV_RECORD_APPEND_I8(record_here, s18)
+  if (present(s19)) call CSV_RECORD_APPEND_I8(record_here, s19)
+  if (present(s20)) call CSV_RECORD_APPEND_I8(record_here, s20)
+  if (present(s21)) call CSV_RECORD_APPEND_I8(record_here, s21)
+  if (present(s22)) call CSV_RECORD_APPEND_I8(record_here, s22)
+  if (present(s23)) call CSV_RECORD_APPEND_I8(record_here, s23)
+  if (present(s24)) call CSV_RECORD_APPEND_I8(record_here, s24)
+  if (present(s25)) call CSV_RECORD_APPEND_I8(record_here, s25)
+  if (present(s26)) call CSV_RECORD_APPEND_I8(record_here, s26)
+  if (present(s27)) call CSV_RECORD_APPEND_I8(record_here, s27)
+  if (present(s28)) call CSV_RECORD_APPEND_I8(record_here, s28)
+  if (present(s29)) call CSV_RECORD_APPEND_I8(record_here, s29)
+  if (present(s30)) call CSV_RECORD_APPEND_I8(record_here, s30)
+  if (present(s31)) call CSV_RECORD_APPEND_I8(record_here, s31)
+  if (present(s32)) call CSV_RECORD_APPEND_I8(record_here, s32)
+  if (present(s33)) call CSV_RECORD_APPEND_I8(record_here, s33)
+  if (present(s34)) call CSV_RECORD_APPEND_I8(record_here, s34)
+  if (present(s35)) call CSV_RECORD_APPEND_I8(record_here, s35)
+  if (present(s36)) call CSV_RECORD_APPEND_I8(record_here, s36)
+  if (present(s37)) call CSV_RECORD_APPEND_I8(record_here, s37)
+  if (present(s38)) call CSV_RECORD_APPEND_I8(record_here, s38)
+  if (present(s39)) call CSV_RECORD_APPEND_I8(record_here, s39)
+  if (present(s40)) call CSV_RECORD_APPEND_I8(record_here, s40)
+  if (present(s41)) call CSV_RECORD_APPEND_I8(record_here, s41)
+  if (present(s42)) call CSV_RECORD_APPEND_I8(record_here, s42)
+  if (present(s43)) call CSV_RECORD_APPEND_I8(record_here, s43)
+  if (present(s44)) call CSV_RECORD_APPEND_I8(record_here, s44)
+  if (present(s45)) call CSV_RECORD_APPEND_I8(record_here, s45)
+  if (present(s46)) call CSV_RECORD_APPEND_I8(record_here, s46)
+  if (present(s47)) call CSV_RECORD_APPEND_I8(record_here, s47)
+  if (present(s48)) call CSV_RECORD_APPEND_I8(record_here, s48)
+  if (present(s49)) call CSV_RECORD_APPEND_I8(record_here, s49)
+  if (present(s50)) call CSV_RECORD_APPEND_I8(record_here, s50)
+  if (present(s51)) call CSV_RECORD_APPEND_I8(record_here, s51)
+  if (present(s52)) call CSV_RECORD_APPEND_I8(record_here, s52)
+  if (present(s53)) call CSV_RECORD_APPEND_I8(record_here, s53)
+  if (present(s54)) call CSV_RECORD_APPEND_I8(record_here, s54)
+  if (present(s55)) call CSV_RECORD_APPEND_I8(record_here, s55)
+  if (present(s56)) call CSV_RECORD_APPEND_I8(record_here, s56)
+  if (present(s57)) call CSV_RECORD_APPEND_I8(record_here, s57)
+  if (present(s58)) call CSV_RECORD_APPEND_I8(record_here, s58)
+  if (present(s59)) call CSV_RECORD_APPEND_I8(record_here, s59)
+  if (present(s60)) call CSV_RECORD_APPEND_I8(record_here, s60)
+  if (present(s61)) call CSV_RECORD_APPEND_I8(record_here, s61)
+  if (present(s62)) call CSV_RECORD_APPEND_I8(record_here, s62)
+  if (present(s63)) call CSV_RECORD_APPEND_I8(record_here, s63)
+  if (present(s64)) call CSV_RECORD_APPEND_I8(record_here, s64)
+  if (present(s65)) call CSV_RECORD_APPEND_I8(record_here, s65)
+  if (present(s66)) call CSV_RECORD_APPEND_I8(record_here, s66)
+  if (present(s67)) call CSV_RECORD_APPEND_I8(record_here, s67)
+  if (present(s68)) call CSV_RECORD_APPEND_I8(record_here, s68)
+  if (present(s69)) call CSV_RECORD_APPEND_I8(record_here, s69)
+  if (present(s70)) call CSV_RECORD_APPEND_I8(record_here, s70)
+  if (present(s71)) call CSV_RECORD_APPEND_I8(record_here, s71)
+  if (present(s72)) call CSV_RECORD_APPEND_I8(record_here, s72)
+  if (present(s73)) call CSV_RECORD_APPEND_I8(record_here, s73)
+  if (present(s74)) call CSV_RECORD_APPEND_I8(record_here, s74)
+  if (present(s75)) call CSV_RECORD_APPEND_I8(record_here, s75)
+  if (present(s76)) call CSV_RECORD_APPEND_I8(record_here, s76)
+  if (present(s77)) call CSV_RECORD_APPEND_I8(record_here, s77)
+  if (present(s78)) call CSV_RECORD_APPEND_I8(record_here, s78)
+  if (present(s79)) call CSV_RECORD_APPEND_I8(record_here, s79)
+  if (present(s80)) call CSV_RECORD_APPEND_I8(record_here, s80)
+  if (present(s81)) call CSV_RECORD_APPEND_I8(record_here, s81)
+  if (present(s82)) call CSV_RECORD_APPEND_I8(record_here, s82)
+  if (present(s83)) call CSV_RECORD_APPEND_I8(record_here, s83)
+  if (present(s84)) call CSV_RECORD_APPEND_I8(record_here, s84)
+  if (present(s85)) call CSV_RECORD_APPEND_I8(record_here, s85)
+  if (present(s86)) call CSV_RECORD_APPEND_I8(record_here, s86)
+  if (present(s87)) call CSV_RECORD_APPEND_I8(record_here, s87)
+  if (present(s88)) call CSV_RECORD_APPEND_I8(record_here, s88)
+  if (present(s89)) call CSV_RECORD_APPEND_I8(record_here, s89)
+  if (present(s90)) call CSV_RECORD_APPEND_I8(record_here, s90)
+  if (present(s91)) call CSV_RECORD_APPEND_I8(record_here, s91)
+  if (present(s92)) call CSV_RECORD_APPEND_I8(record_here, s92)
+  if (present(s93)) call CSV_RECORD_APPEND_I8(record_here, s93)
+  if (present(s94)) call CSV_RECORD_APPEND_I8(record_here, s94)
+  if (present(s95)) call CSV_RECORD_APPEND_I8(record_here, s95)
+  if (present(s96)) call CSV_RECORD_APPEND_I8(record_here, s96)
+  if (present(s97)) call CSV_RECORD_APPEND_I8(record_here, s97)
+  if (present(s98)) call CSV_RECORD_APPEND_I8(record_here, s98)
+  if (present(s99)) call CSV_RECORD_APPEND_I8(record_here, s99)
+  if (present(s100)) call CSV_RECORD_APPEND_I8(record_here,s100)
+
+  record = record_here
+
+end subroutine CSV_RECORD_APPEND_LST_I8
 
 !-------------------------------------------------------------------------------
 
@@ -3795,6 +4169,61 @@ end function I4_WIDTH
 
 !-------------------------------------------------------------------------------
 
+elemental function I8_WIDTH (i) result (i4width)
+!*******************************************************************************
+! I8_WIDTH
+! PURPOSE: returns the "width" of an I4, the number of characters necessary
+!   to represent the integer in base 10, including a negative sign if necessary.
+! CALL PARAMETERS:
+!    Integer value
+! USES: I4_LOG_10 from the same module
+! NOTE:
+!    The width of an integer is the number of characters necessary to print it.
+!    The width of an integer can be useful when setting the appropriate output
+!    format for a vector or array of values.
+!    An I4 is an integer value.
+! EXAMPLE:
+!        I  I8_WIDTH
+!    -----  -------
+!    -1234    5
+!     -123    4
+!      -12    3
+!       -1    2
+!        0    1
+!        1    1
+!       12    2
+!      123    3
+!     1234    4
+!    12345    5
+! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+! Modified by Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  integer(ki8) :: i4width
+
+  ! Calling parameters
+  integer(ki8), intent(in) :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "I8_WIDTH"
+
+  !-----------------------------------------------------------------------------
+
+  if ( 0 < i ) then
+    i4width = I8_LOG_10 ( i ) + 1
+  else if ( i == 0 ) then
+    i4width = 1
+  else if ( i < 0 ) then
+    i4width = I8_LOG_10 ( i ) + 2
+  end if
+
+end function I8_WIDTH
+
+!-------------------------------------------------------------------------------
+
 elemental function I4_LOG_10 (i) result(i4log10)
 !*******************************************************************************
 ! I4_LOG_10
@@ -3854,6 +4283,68 @@ elemental function I4_LOG_10 (i) result(i4log10)
   end if
 
 end function I4_LOG_10
+
+!-------------------------------------------------------------------------------
+
+elemental function I8_LOG_10 (i) result(i4log10)
+!*******************************************************************************
+! I8_LOG_10
+! PURPOSE: returns the integer part of the logarithm base 10 of the absolute
+!   value of an integer X.
+! CALL PARAMETERS:
+!   the number whose logarithm base 10
+! EXAMPLE:
+!   I8_LOG_10 (I) + 1 is the number of decimal digits in I. I4 is an integer.
+!        I  I8_LOG_10
+!    -----  --------
+!        0    0
+!        1    0
+!        2    0
+!        9    0
+!       10    1
+!       11    1
+!       99    1
+!      100    2
+!      101    2
+!      999    2
+!     1000    3
+!     1001    3
+!     9999    3
+!    10000    4
+! Author: John Burkardt : This code is distributed under the GNU LGPL license.
+! Modified by Sergey Budaev
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  integer(ki8) :: i4log10
+
+  ! Calling parameters
+  integer(ki8), intent(in) :: i
+
+  ! Local variables
+  integer(ki8) :: i_abs
+  integer(ki8) :: ten_pow
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "I8_LOG_10"
+
+  !-----------------------------------------------------------------------------
+
+  if ( i == 0 ) then
+    i4log10 = 0
+  else
+    i4log10 = 0
+    ten_pow = 10
+    i_abs = abs ( i )
+    do while ( ten_pow <= i_abs )
+      i4log10 = i4log10 + 1
+      ten_pow = ten_pow * 10
+    end do
+  end if
+
+end function I8_LOG_10
 
 !-------------------------------------------------------------------------------
 
