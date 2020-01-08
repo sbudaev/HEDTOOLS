@@ -461,7 +461,7 @@ $(DIB): $(SRC)
 	zip $(ZIPFILE) $(MOD) $(DIB) $(AUTOGEN_README_FILE)
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
-	$(ASCDOC) --destination-dir=$(DOCDIR) -f$(DOCFMT) $(DOC)
+	$(ASCDOC) -f$(DOCFMT) $(DOC)
 	-$(MV) $(DOCFIL).$(DOCFMT) $(DOCDIR)
 
 #-------------------------------------------------------------------------------
