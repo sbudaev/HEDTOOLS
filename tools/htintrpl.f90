@@ -193,13 +193,13 @@ if (n_cmds==1) then
   print *, ""
   print *, "Examples:"
   print *, "* Produce interpolation screen plot with the default non-linear algorithm:"
-  print *, "htintrpl [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]"
+  print *, "  htintrpl [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9]"
   print *, "* Produce interpolation plot with linear algorithm, output to PS vector file:"
-  print *, "htintrpl [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]"
+  print *, "  htintrpl [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]"
   print *, "* Produce interpolation plot with linear algorithm, output to PNG image file:"
-  print *, "htintrpl [1 2 3 4 ] [10, 45, 14, 10] [2.5 1.9] [linear] [file.png]"
+  print *, "  htintrpl [1 2 3 4 ] [10, 45, 14, 10] [2.5 1.9] [linear] [file.png]"
   print *, "* Produce interpolation screen plot with cubic splines algorithm:"
-  print *, "htintrpl [1 2 3 4 5] [10, 45, 14, 2, 1] [2.5 1.9] [splines]"
+  print *, "  htintrpl [1 2 3 4 4.5 5] [10, 45, 14, 2.5, 1 0.5] [2.5 1.9] [splines]"
   print *, ""
   stop
 end if
