@@ -187,6 +187,12 @@ interface ARRAY_QSORT            ! Quick sort module
 
 end interface ARRAY_QSORT
 
+
+interface CSPLINE                ! Cubic spline interpolation
+  module procedure spline_r4
+end interface CSPLINE
+
+
 !-------------------------------------------------------------------------------
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
@@ -201,6 +207,9 @@ private :: LOG_DBG  ! This wrapper DEBUG LOG is used only for this module, it
 private :: R8VEC_ASCENDS_STRICTLY, LIN_INTERPOL_VECTOR_R8
 
 private :: qsort_r4, partition_r4, qsort_r8, partition_r8, qsort_i, partition_i
+
+public  :: CSPLINE
+private :: spline_r4, pchsp_r4, pchdf_r4, pchfe_r4, chfev_r4
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
@@ -5770,5 +5779,1072 @@ subroutine partition_i(A, marker)
   end do
 
 end subroutine partition_i
+
+
+
+
+
+
+
+
+
+
+!SPLINE
+!
+!     subroutine spline to
+!
+!     carry out cubic spline interpolation
+!
+  subroutine spline_r4 (x, y, xx, yy, n, nn)
+!
+      real(kind=SP), intent(in)  :: x(:), y(:), xx(:)
+      real(kind=SP), intent(out) :: yy(:)
+      integer, optional, intent(in) :: n, nn
+
+      integer ic(2), nwk, ierr
+      real(kind=SP) :: d(size(x))
+      real(kind=SP) :: vc(2), wk(2,size(x))
+      logical skip
+      integer, parameter :: incfd = 1
+
+      integer :: nloc, nnloc ! Local copies for optionals
+
+      if (present(n)) then
+        nloc = n
+      else
+        nloc =  size(x)
+      end if
+
+      if (present(nn)) then
+        nnloc = nn
+      else
+        nnloc = size(xx)
+      end if
+
+!     compute splines and interpolate
+
+      nwk = 2*nloc
+      ic(1) = 0
+      ic(2) = 0
+      vc(1) = 0.0
+      vc(2) = 0.0
+      skip = .false.
+      call pchsp_r4(ic, vc, nloc, x, y, d, incfd, wk, nwk, ierr)
+      call pchfe_r4(nloc, x, y, d, incfd, skip, nnloc, xx, yy, ierr)
+
+  end subroutine spline_r4
+
+
+  subroutine pchsp_r4(IC,VC,N,X,F,D,INCFD,WK,NWK,IERR)
+!***BEGIN PROLOGUE  PCHSP
+!***DATE WRITTEN   820503   (YYMMDD)
+!***REVISION DATE  870707   (YYMMDD)
+!***CATEGORY NO.  E1B
+!***KEYWORDS  LIBRARY=SLATEC(PCHIP),
+!             TYPE=SINGLE PRECISION(PCHSP-S DPCHSP-D),
+!             CUBIC HERMITE INTERPOLATION,PIECEWISE CUBIC INTERPOLATION,
+!             SPLINE INTERPOLATION
+!***AUTHOR  FRITSCH, F. N., (LLNL)
+!             MATHEMATICS AND STATISTICS DIVISION
+!             LAWRENCE LIVERMORE NATIONAL LABORATORY
+!             P.O. BOX 808  (L-316)
+!             LIVERMORE, CA  94550
+!             FTS 532-4275, (415) 422-4275
+!***PURPOSE  Set derivatives needed to determine the Hermite represen-
+!            tation of the cubic spline interpolant to given data, with
+!            specified boundary conditions.
+!***DESCRIPTION
+!
+!          PCHSP:   Piecewise Cubic Hermite Spline
+!
+!     Computes the Hermite representation of the cubic spline inter-
+!     polant to the data given in X and F satisfying the boundary
+!     conditions specified by IC and VC.
+!
+!     To facilitate two-dimensional applications, includes an increment
+!     between successive values of the F- and D-arrays.
+!
+!     The resulting piecewise cubic Hermite function may be evaluated
+!     by PCHFE or PCHFD.
+!
+!     NOTE:  This is a modified version of C. de Boor'S cubic spline
+!            routine CUBSPL.
+!
+! ----------------------------------------------------------------------
+!
+!  Calling sequence:
+!
+!        PARAMETER  (INCFD = ...)
+!        INTEGER  IC(2), N, NWK, IERR
+!        REAL  VC(2), X(N), F(INCFD,N), D(INCFD,N), WK(NWK)
+!
+!        CALL  PCHSP (IC, VC, N, X, F, D, INCFD, WK, NWK, IERR)
+!
+!   Parameters:
+!
+!     IC -- (input) integer array of length 2 specifying desired
+!           boundary conditions:
+!           IC(1) = IBEG, desired condition at beginning of data.
+!           IC(2) = IEND, desired condition at end of data.
+!
+!           IBEG = 0  to set D(1) so that the third derivative is con-
+!              tinuous at X(2).  This is the "not a knot" condition
+!              provided by de Boor'S cubic spline routine CUBSPL.
+!              < This is the default boundary condition. >
+!           IBEG = 1  if first derivative at X(1) is given in VC(1).
+!           IBEG = 2  if second derivative at X(1) is given in VC(1).
+!           IBEG = 3  to use the 3-point difference formula for D(1).
+!                     (Reverts to the default b.c. if N.LT.3 .)
+!           IBEG = 4  to use the 4-point difference formula for D(1).
+!                     (Reverts to the default b.c. if N.LT.4 .)
+!          NOTES:
+!           1. An error return is taken if IBEG is out of range.
+!           2. For the "natural" boundary condition, use IBEG=2 and
+!              VC(1)=0.
+!
+!           IEND may take on the same values as IBEG, but applied to
+!           derivative at X(N).  In case IEND = 1 or 2, the value is
+!           given in VC(2).
+!
+!          NOTES:
+!           1. An error return is taken if IEND is out of range.
+!           2. For the "natural" boundary condition, use IEND=2 and
+!              VC(2)=0.
+!
+!     VC -- (input) real array of length 2 specifying desired boundary
+!           values, as indicated above.
+!           VC(1) need be set only if IC(1) = 1 or 2 .
+!           VC(2) need be set only if IC(2) = 1 or 2 .
+!
+!     N -- (input) number of data points.  (Error return if N.LT.2 .)
+!
+!     X -- (input) real array of independent variable values.  The
+!           elements of X must be strictly increasing:
+!                X(I-1) .LT. X(I),  I = 2(1)N.
+!           (Error return if not.)
+!
+!     F -- (input) real array of dependent variable values to be inter-
+!           polated.  F(1+(I-1)*INCFD) is value corresponding to X(I).
+!
+!     D -- (output) real array of derivative values at the data points.
+!           These values will determine the cubic spline interpolant
+!           with the requested boundary conditions.
+!           The value corresponding to X(I) is stored in
+!                D(1+(I-1)*INCFD),  I=1(1)N.
+!           No other entries in D are changed.
+!
+!     INCFD -- (input) increment between successive values in F and D.
+!           This argument is provided primarily for 2-D applications.
+!           (Error return if  INCFD.LT.1 .)
+!
+!     WK -- (scratch) real array of working storage.
+!
+!     NWK -- (input) length of work array.
+!           (Error return if NWK.LT.2*N .)
+!
+!     IERR -- (output) error flag.
+!           Normal return:
+!              IERR = 0  (no errors).
+!           "Recoverable" errors:
+!              IERR = -1  if N.LT.2 .
+!              IERR = -2  if INCFD.LT.1 .
+!              IERR = -3  if the X-array is not strictly increasing.
+!              IERR = -4  if IBEG.LT.0 or IBEG.GT.4 .
+!              IERR = -5  if IEND.LT.0 of IEND.GT.4 .
+!              IERR = -6  if both of the above are true.
+!              IERR = -7  if NWK is too small.
+!               NOTE:  The above errors are checked in the order listed,
+!                   and following arguments have **NOT** been validated.
+!             (The D-array has not been changed in any of these cases.)
+!              IERR = -8  in case of trouble solving the linear system
+!                         for the interior derivative values.
+!             (The D-array may have been changed in this case.)
+!             (             Do **NOT** use it!                )
+!
+!***REFERENCES  CARL DE BOOR, A PRACTICAL GUIDE TO SPLINES, SPRINGER-
+!                 VERLAG (NEW YORK, 1978), PP. 53-59.
+!***ROUTINES CALLED  PCHDF,XERROR
+!***END PROLOGUE  PCHSP
+!
+! ----------------------------------------------------------------------
+!
+!  Change record:
+!     82-08-04   Converted to SLATEC library version.
+!     87-07-07   Minor cosmetic changes to prologue.
+!
+! ----------------------------------------------------------------------
+!
+!  Programming notes:
+!
+!     To produce a double precision version, simply:
+!        a. Change PCHSP to DPCHSP wherever it occurs,
+!        b. Change the real declarations to double precision, and
+!        c. Change the constants ZERO, HALF, ... to double precision.
+!
+!  DECLARE ARGUMENTS.
+!
+      INTEGER, INTENT(IN)  ::  IC(2), N, INCFD, NWK
+      INTEGER, INTENT(OUT) :: IERR
+
+      REAL(kind=SP), INTENT(IN)    :: VC(2), X(N), F(INCFD,N)
+      REAL(kind=SP), INTENT(INOUT) :: WK(2,N)
+      REAL(kind=SP), INTENT(OUT)   :: D(INCFD,N)
+!
+!  DECLARE LOCAL VARIABLES.
+!
+      INTEGER :: IBEG, IEND, INDEX, J, NM1
+      REAL(kind=SP) :: G, HALF, ONE, STEMP(3), THREE, TWO, XTEMP(4), ZERO
+!
+      DATA  ZERO /0./,  HALF /0.5/,  ONE /1./,  TWO /2./,  THREE /3./
+!
+!  VALIDITY-CHECK ARGUMENTS.
+!
+!***FIRST EXECUTABLE STATEMENT  PCHSP
+      IF ( N.LT.2 )  GO TO 5001
+      IF ( INCFD.LT.1 )  GO TO 5002
+      DO 1  J = 2, N
+         IF ( X(J).LE.X(J-1) )  GO TO 5003
+    1 END DO
+!
+      IBEG = IC(1)
+      IEND = IC(2)
+      IERR = 0
+      IF ( (IBEG.LT.0).OR.(IBEG.GT.4) )  IERR = IERR - 1
+      IF ( (IEND.LT.0).OR.(IEND.GT.4) )  IERR = IERR - 2
+      IF ( IERR.LT.0 )  GO TO 5004
+!
+!  FUNCTION DEFINITION IS OK -- GO ON.
+!
+      IF ( NWK .LT. 2*N )  GO TO 5007
+!
+!  COMPUTE FIRST DIFFERENCES OF X SEQUENCE AND STORE IN WK(1,.). ALSO,
+!  COMPUTE FIRST DIVIDED DIFFERENCE OF DATA AND STORE IN WK(2,.).
+      DO 5  J=2,N
+         WK(1,J) = X(J) - X(J-1)
+         WK(2,J) = (F(1,J) - F(1,J-1))/WK(1,J)
+    5 END DO
+!
+!  SET TO DEFAULT BOUNDARY CONDITIONS IF N IS TOO SMALL.
+!
+      IF ( IBEG.GT.N )  IBEG = 0
+      IF ( IEND.GT.N )  IEND = 0
+!
+!  SET UP FOR BOUNDARY CONDITIONS.
+!
+      IF ( (IBEG.EQ.1).OR.(IBEG.EQ.2) )  THEN
+         D(1,1) = VC(1)
+      ELSE IF (IBEG .GT. 2)  THEN
+!        PICK UP FIRST IBEG POINTS, IN REVERSE ORDER.
+         DO 10  J = 1, IBEG
+            INDEX = IBEG-J+1
+!           INDEX RUNS FROM IBEG DOWN TO 1.
+            XTEMP(J) = X(INDEX)
+            IF (J .LT. IBEG)  STEMP(J) = WK(2,INDEX)
+   10    CONTINUE
+!                 --------------------------------
+         D(1,1) = PCHDF_R4 (IBEG, XTEMP, STEMP, IERR)
+!                 --------------------------------
+         IF (IERR .NE. 0)  GO TO 5009
+         IBEG = 1
+      ENDIF
+!
+      IF ( (IEND.EQ.1).OR.(IEND.EQ.2) )  THEN
+         D(1,N) = VC(2)
+      ELSE IF (IEND .GT. 2)  THEN
+!        PICK UP LAST IEND POINTS.
+         DO 15  J = 1, IEND
+            INDEX = N-IEND+J
+!           INDEX RUNS FROM N+1-IEND UP TO N.
+            XTEMP(J) = X(INDEX)
+            IF (J .LT. IEND)  STEMP(J) = WK(2,INDEX+1)
+   15    CONTINUE
+!                 --------------------------------
+         D(1,N) = PCHDF_R4 (IEND, XTEMP, STEMP, IERR)
+!                 --------------------------------
+         IF (IERR .NE. 0)  GO TO 5009
+         IEND = 1
+      ENDIF
+!
+! --------------------( BEGIN CODING FROM CUBSPL )--------------------
+!
+!  **** A TRIDIAGONAL LINEAR SYSTEM FOR THE UNKNOWN SLOPES S(J) OF
+!  F  AT X(J), J=1,...,N, IS GENERATED AND THEN SOLVED BY GAUSS ELIM-
+!  INATION, WITH S(J) ENDING UP IN D(1,J), ALL J.
+!     WK(1,.) AND WK(2,.) ARE USED FOR TEMPORARY STORAGE.
+!
+!  CONSTRUCT FIRST EQUATION FROM FIRST BOUNDARY CONDITION, OF THE FORM
+!             WK(2,1)*S(1) + WK(1,1)*S(2) = D(1,1)
+!
+      IF (IBEG .EQ. 0)  THEN
+         IF (N .EQ. 2)  THEN
+!           NO CONDITION AT LEFT END AND N = 2.
+            WK(2,1) = ONE
+            WK(1,1) = ONE
+            D(1,1) = TWO*WK(2,2)
+         ELSE
+!           NOT-A-KNOT CONDITION AT LEFT END AND N .GT. 2.
+            WK(2,1) = WK(1,3)
+            WK(1,1) = WK(1,2) + WK(1,3)
+            D(1,1) =((WK(1,2) + TWO*WK(1,1))*WK(2,2)*WK(1,3)            &
+     &                        + WK(1,2)**2*WK(2,3)) / WK(1,1)
+         ENDIF
+      ELSE IF (IBEG .EQ. 1)  THEN
+!        SLOPE PRESCRIBED AT LEFT END.
+         WK(2,1) = ONE
+         WK(1,1) = ZERO
+      ELSE
+!        SECOND DERIVATIVE PRESCRIBED AT LEFT END.
+         WK(2,1) = TWO
+         WK(1,1) = ONE
+         D(1,1) = THREE*WK(2,2) - HALF*WK(1,2)*D(1,1)
+      ENDIF
+!
+!  IF THERE ARE INTERIOR KNOTS, GENERATE THE CORRESPONDING EQUATIONS AND
+!  CARRY OUT THE FORWARD PASS OF GAUSS ELIMINATION, AFTER WHICH THE J-TH
+!  EQUATION READS    WK(2,J)*S(J) + WK(1,J)*S(J+1) = D(1,J).
+!
+      NM1 = N-1
+      IF (NM1 .GT. 1)  THEN
+         DO 20 J=2,NM1
+            IF (WK(2,J-1) .EQ. ZERO)  GO TO 5008
+            G = -WK(1,J+1)/WK(2,J-1)
+            D(1,J) = G*D(1,J-1)                                         &
+     &                  + THREE*(WK(1,J)*WK(2,J+1) + WK(1,J+1)*WK(2,J))
+            WK(2,J) = G*WK(1,J-1) + TWO*(WK(1,J) + WK(1,J+1))
+   20    CONTINUE
+      ENDIF
+!
+!  CONSTRUCT LAST EQUATION FROM SECOND BOUNDARY CONDITION, OF THE FORM
+!           (-G*WK(2,N-1))*S(N-1) + WK(2,N)*S(N) = D(1,N)
+!
+!     IF SLOPE IS PRESCRIBED AT RIGHT END, ONE CAN GO DIRECTLY TO BACK-
+!     SUBSTITUTION, SINCE ARRAYS HAPPEN TO BE SET UP JUST RIGHT FOR IT
+!     AT THIS POINT.
+      IF (IEND .EQ. 1)  GO TO 30
+!
+      IF (IEND .EQ. 0)  THEN
+         IF (N.EQ.2 .AND. IBEG.EQ.0)  THEN
+!           NOT-A-KNOT AT RIGHT ENDPOINT AND AT LEFT ENDPOINT AND N = 2.
+            D(1,2) = WK(2,2)
+            GO TO 30
+         ELSE IF ((N.EQ.2) .OR. (N.EQ.3 .AND. IBEG.EQ.0))  THEN
+!           EITHER (N=3 AND NOT-A-KNOT ALSO AT LEFT) OR (N=2 AND *NOT*
+!           NOT-A-KNOT AT LEFT END POINT).
+            D(1,N) = TWO*WK(2,N)
+            WK(2,N) = ONE
+            IF (WK(2,N-1) .EQ. ZERO)  GO TO 5008
+            G = -ONE/WK(2,N-1)
+         ELSE
+!           NOT-A-KNOT AND N .GE. 3, AND EITHER N.GT.3 OR  ALSO NOT-A-
+!           KNOT AT LEFT END POINT.
+            G = WK(1,N-1) + WK(1,N)
+!           DO NOT NEED TO CHECK FOLLOWING DENOMINATORS (X-DIFFERENCES).
+            D(1,N) = ((WK(1,N)+TWO*G)*WK(2,N)*WK(1,N-1)                 &
+     &                  + WK(1,N)**2*(F(1,N-1)-F(1,N-2))/WK(1,N-1))/G
+            IF (WK(2,N-1) .EQ. ZERO)  GO TO 5008
+            G = -G/WK(2,N-1)
+            WK(2,N) = WK(1,N-1)
+         ENDIF
+      ELSE
+!        SECOND DERIVATIVE PRESCRIBED AT RIGHT ENDPOINT.
+         D(1,N) = THREE*WK(2,N) + HALF*WK(1,N)*D(1,N)
+         WK(2,N) = TWO
+         IF (WK(2,N-1) .EQ. ZERO)  GO TO 5008
+         G = -ONE/WK(2,N-1)
+      ENDIF
+!
+!  COMPLETE FORWARD PASS OF GAUSS ELIMINATION.
+!
+      WK(2,N) = G*WK(1,N-1) + WK(2,N)
+      IF (WK(2,N) .EQ. ZERO)   GO TO 5008
+      D(1,N) = (G*D(1,N-1) + D(1,N))/WK(2,N)
+!
+!  CARRY OUT BACK SUBSTITUTION
+!
+   30 CONTINUE
+      DO 40 J=NM1,1,-1
+         IF (WK(2,J) .EQ. ZERO)  GO TO 5008
+         D(1,J) = (D(1,J) - WK(1,J)*D(1,J+1))/WK(2,J)
+   40 END DO
+! --------------------(  END  CODING FROM CUBSPL )--------------------
+!
+!  NORMAL RETURN.
+!
+      RETURN
+!
+!  ERROR RETURNS.
+!
+ 5001 CONTINUE
+!     N.LT.2 RETURN.
+      IERR = -1
+!     CALL XERROR ('PCHSP -- NUMBER OF DATA POINTS LESS THAN TWO'
+!    *           , 44, IERR, 1)
+      write(*,*)'pchsp error: number of data points less than two'
+      RETURN
+!
+ 5002 CONTINUE
+!     INCFD.LT.1 RETURN.
+      IERR = -2
+!     CALL XERROR ('PCHSP -- INCREMENT LESS THAN ONE'
+!    *           , 32, IERR, 1)
+      write(*,*)'pchsp error: increment less than one'
+      RETURN
+!
+ 5003 CONTINUE
+!     X-ARRAY NOT STRICTLY INCREASING.
+      IERR = -3
+!     CALL XERROR ('PCHSP -- X-ARRAY NOT STRICTLY INCREASING'
+!    *           , 40, IERR, 1)
+      write(*,*)'pchsp error: x-array not strictly increasing'
+      RETURN
+!
+ 5004 CONTINUE
+!     IC OUT OF RANGE RETURN.
+      IERR = IERR - 3
+!     CALL XERROR ('PCHSP -- IC OUT OF RANGE'
+!    *           , 24, IERR, 1)
+      write(*,*)'pchsp error: ic out of range'
+      RETURN
+!
+ 5007 CONTINUE
+!     NWK TOO SMALL RETURN.
+      IERR = -7
+!     CALL XERROR ('PCHSP -- WORK ARRAY TOO SMALL'
+!    *           , 29, IERR, 1)
+      write(*,*)'pchsp error: work array too small'
+      RETURN
+!
+ 5008 CONTINUE
+!     SINGULAR SYSTEM.
+!   *** THEORETICALLY, THIS CAN ONLY OCCUR IF SUCCESSIVE X-VALUES   ***
+!   *** ARE EQUAL, WHICH SHOULD ALREADY HAVE BEEN CAUGHT (IERR=-3). ***
+      IERR = -8
+!     CALL XERROR ('PCHSP -- SINGULAR LINEAR SYSTEM'
+!    *           , 31, IERR, 1)
+      write(*,*)'pchsp error: singular linear system'
+      RETURN
+!
+ 5009 CONTINUE
+!     ERROR RETURN FROM PCHDF.
+!   *** THIS CASE SHOULD NEVER OCCUR ***
+      IERR = -9
+!     CALL XERROR ('PCHSP -- ERROR RETURN FROM PCHDF'
+!    *           , 32, IERR, 1)
+      write(*,*)'pchsp error: error return from pchdf'
+      RETURN
+!------------- LAST LINE OF PCHSP FOLLOWS ------------------------------
+  end subroutine pchsp_r4
+
+
+  real(kind=SP) function pchdf_r4 (K, X, S, IERR)
+!***BEGIN PROLOGUE  PCHDF
+!***SUBSIDIARY
+!***PURPOSE  Computes divided differences for PCHCE and PCHSP
+!***LIBRARY   SLATEC (PCHIP)
+!***TYPE      SINGLE PRECISION (PCHDF-S, DPCHDF-D)
+!***AUTHOR  Fritsch, F. N., (LLNL)
+!***DESCRIPTION
+!
+!          PCHDF:   PCHIP Finite Difference Formula
+!
+!     Uses a divided difference formulation to compute a K-point approx-
+!     imation to the derivative at X(K) based on the data in X and S.
+!
+!     Called by  PCHCE  and  PCHSP  to compute 3- and 4-point boundary
+!     derivative approximations.
+!
+! ----------------------------------------------------------------------
+!
+!     On input:
+!        K      is the order of the desired derivative approximation.
+!               K must be at least 3 (error return if not).
+!        X      contains the K values of the independent variable.
+!               X need not be ordered, but the values **MUST** be
+!               distinct.  (Not checked here.)
+!        S      contains the associated slope values:
+!                  S(I) = (F(I+1)-F(I))/(X(I+1)-X(I)), I=1(1)K-1.
+!               (Note that S need only be of length K-1.)
+!
+!     On return:
+!        S      will be destroyed.
+!        IERR   will be set to -1 if K.LT.2 .
+!        PCHDF  will be set to the desired derivative approximation if
+!               IERR=0 or to zero if IERR=-1.
+!
+! ----------------------------------------------------------------------
+!
+!***SEE ALSO  PCHCE, PCHSP
+!***REFERENCES  Carl de Boor, A Practical Guide to Splines, Springer-
+!                 Verlag, New York, 1978, pp. 10-16.
+!***ROUTINES CALLED  XERMSG
+!***REVISION HISTORY  (YYMMDD)
+!   820503  DATE WRITTEN
+!   820805  Converted to SLATEC library version.
+!   870813  Minor cosmetic changes.
+!   890411  Added SAVE statements (Vers. 3.2).
+!   890411  REVISION DATE from Version 3.2
+!   891214  Prologue converted to Version 4.0 format.  (BAB)
+!   900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!   900328  Added TYPE section.  (WRB)
+!   910408  Updated AUTHOR and DATE WRITTEN sections in prologue.  (WRB)
+!   920429  Revised format and order of references.  (WRB,FNF)
+!   930503  Improved purpose.  (FNF)
+!***END PROLOGUE  PCHDF
+!
+!**End
+!
+!  DECLARE ARGUMENTS.
+!
+      INTEGER, INTENT(IN)  :: K
+      INTEGER, INTENT(OUT) :: IERR
+
+      REAL(kind=SP), INTENT(IN)    :: X(K)
+      REAL(kind=SP), INTENT(INOUT) :: S(K)
+!
+!  DECLARE LOCAL VARIABLES.
+!
+      INTEGER  I, J
+      REAL(kind=SP) :: VALUE, ZERO
+      SAVE ZERO
+      DATA  ZERO /0./
+!
+!  CHECK FOR LEGAL VALUE OF K.
+!
+!***FIRST EXECUTABLE STATEMENT  PCHDF
+      IF (K .LT. 3)  GO TO 5001
+!
+!  COMPUTE COEFFICIENTS OF INTERPOLATING POLYNOMIAL.
+!
+      DO 10  J = 2, K-1
+         DO 9  I = 1, K-J
+            S(I) = (S(I+1)-S(I))/(X(I+J)-X(I))
+    9    CONTINUE
+   10 END DO
+!
+!  EVALUATE DERIVATIVE AT X(K).
+!
+      VALUE = S(1)
+      DO 20  I = 2, K-1
+         VALUE = S(I) + VALUE*(X(K)-X(I))
+   20 END DO
+!
+!  NORMAL RETURN.
+!
+      IERR = 0
+      PCHDF_R4 = VALUE
+      RETURN
+!
+!  ERROR RETURN.
+!
+ 5001 CONTINUE
+!     K.LT.3 RETURN.
+      IERR = -1
+!     CALL XERMSG ('SLATEC', 'PCHDF', 'K LESS THAN THREE', IERR, 1)
+      write(*,*)'slatec pchdf error: k less than three'
+      PCHDF_R4 = ZERO
+      RETURN
+!------------- LAST LINE OF PCHDF FOLLOWS ------------------------------
+  end function pchdf_r4
+
+
+  subroutine pchfe_r4(N,X,F,D,INCFD,SKIP,NE,XE,FE,IERR)
+!***BEGIN PROLOGUE  PCHFE
+!***DATE WRITTEN   811020   (YYMMDD)
+!***REVISION DATE  870707   (YYMMDD)
+!***CATEGORY NO.  E3
+!***KEYWORDS  LIBRARY=SLATEC(PCHIP),
+!             TYPE=SINGLE PRECISION(PCHFE-S DPCHFE-D),
+!             CUBIC HERMITE EVALUATION,HERMITE INTERPOLATION,
+!             PIECEWISE CUBIC EVALUATION
+!***AUTHOR  FRITSCH, F. N., (LLNL)
+!             MATHEMATICS AND STATISTICS DIVISION
+!             LAWRENCE LIVERMORE NATIONAL LABORATORY
+!             P.O. BOX 808  (L-316)
+!             LIVERMORE, CA  94550
+!             FTS 532-4275, (415) 422-4275
+!***PURPOSE  Evaluate a piecewise cubic Hermite function at an array of
+!            points.  May be used by itself for Hermite interpolation,
+!            or as an evaluator for PCHIM or PCHIC.
+!***DESCRIPTION
+!
+!          PCHFE:  Piecewise Cubic Hermite Function Evaluator
+!
+!     Evaluates the cubic Hermite function defined by  N, X, F, D  at
+!     the points  XE(J), J=1(1)NE.
+!
+!     To provide compatibility with PCHIM and PCHIC, includes an
+!     increment between successive values of the F- and D-arrays.
+!
+! ----------------------------------------------------------------------
+!
+!  Calling sequence:
+!
+!        PARAMETER  (INCFD = ...)
+!        INTEGER  N, NE, IERR
+!        REAL  X(N), F(INCFD,N), D(INCFD,N), XE(NE), FE(NE)
+!        LOGICAL  SKIP
+!
+!        CALL  PCHFE (N, X, F, D, INCFD, SKIP, NE, XE, FE, IERR)
+!
+!   Parameters:
+!
+!     N -- (input) number of data points.  (Error return if N.LT.2 .)
+!
+!     X -- (input) real array of independent variable values.  The
+!           elements of X must be strictly increasing:
+!                X(I-1) .LT. X(I),  I = 2(1)N.
+!           (Error return if not.)
+!
+!     F -- (input) real array of function values.  F(1+(I-1)*INCFD) is
+!           the value corresponding to X(I).
+!
+!     D -- (input) real array of derivative values.  D(1+(I-1)*INCFD) is
+!           the value corresponding to X(I).
+!
+!     INCFD -- (input) increment between successive values in F and D.
+!           (Error return if  INCFD.LT.1 .)
+!
+!     SKIP -- (input/output) logical variable which should be set to
+!           .TRUE. if the user wishes to skip checks for validity of
+!           preceding parameters, or to .FALSE. otherwise.
+!           This will save time in case these checks have already
+!           been performed (say, in PCHIM or PCHIC).
+!           SKIP will be set to .TRUE. on normal return.
+!
+!     NE -- (input) number of evaluation points.  (Error return if
+!           NE.LT.1 .)
+!
+!     XE -- (input) real array of points at which the function is to be
+!           evaluated.
+!
+!          NOTES:
+!           1. The evaluation will be most efficient if the elements
+!              of XE are increasing relative to X;
+!              that is,   XE(J) .GE. X(I)
+!              implies    XE(K) .GE. X(I),  all K.GE.J .
+!           2. If any of the XE are outside the interval [X(1),X(N)],
+!              values are extrapolated from the nearest extreme cubic,
+!              and a warning error is returned.
+!
+!     FE -- (output) real array of values of the cubic Hermite function
+!           defined by  N, X, F, D  at the points  XE.
+!
+!     IERR -- (output) error flag.
+!           Normal return:
+!              IERR = 0  (no errors).
+!           Warning error:
+!              IERR.GT.0  means that extrapolation was performed at
+!                 IERR points.
+!           "Recoverable" errors:
+!              IERR = -1  if N.LT.2 .
+!              IERR = -2  if INCFD.LT.1 .
+!              IERR = -3  if the X-array is not strictly increasing.
+!              IERR = -4  if NE.LT.1 .
+!             (The FE-array has not been changed in any of these cases.)
+!               NOTE:  The above errors are checked in the order listed,
+!                   and following arguments have **NOT** been validated.
+!
+!***REFERENCES  (NONE)
+!***ROUTINES CALLED  CHFEV,XERROR
+!***END PROLOGUE  PCHFE
+!
+! ----------------------------------------------------------------------
+!
+!  Change record:
+!     82-08-03   Minor cosmetic changes for release 1.
+!     87-07-07   Minor cosmetic changes to prologue.
+!
+! ----------------------------------------------------------------------
+!
+!  Programming notes:
+!
+!     1. To produce a double precision version, simply:
+!        a. Change PCHFE to DPCHFE, and CHFEV to DCHFEV, wherever they
+!           occur,
+!        b. Change the real declaration to double precision,
+!
+!     2. Most of the coding between the call to CHFEV and the end of
+!        the IR-loop could be eliminated if it were permissible to
+!        assume that XE is ordered relative to X.
+!
+!     3. CHFEV does not assume that X1 is less than X2.  thus, it would
+!        be possible to write a version of PCHFE that assumes a strict-
+!        ly decreasing X-array by simply running the IR-loop backwards
+!        (and reversing the order of appropriate tests).
+!
+!     4. The present code has a minor bug, which I have decided is not
+!        worth the effort that would be required to fix it.
+!        If XE contains points in [X(N-1),X(N)], followed by points .LT.
+!        X(N-1), followed by points .GT.X(N), the extrapolation points
+!        will be counted (at least) twice in the total returned in IERR.
+!
+!  DECLARE ARGUMENTS.
+!
+      INTEGER, INTENT(IN)  :: N, INCFD, NE
+      INTEGER, INTENT(OUT) :: IERR
+
+      REAL(kind=SP), INTENT(IN)  :: X(N), F(INCFD,N), D(INCFD,N), XE(NE)
+      REAL(kind=SP), INTENT(OUT) :: FE(NE)
+
+      LOGICAL, INTENT(INOUT) :: SKIP
+!
+!  DECLARE LOCAL VARIABLES.
+!
+      INTEGER  I, IERC, IR, J, JFIRST, NEXT(2), NJ
+!
+!  VALIDITY-CHECK ARGUMENTS.
+!
+!***FIRST EXECUTABLE STATEMENT  PCHFE
+      IF (SKIP)  GO TO 5
+!
+      IF ( N.LT.2 )  GO TO 5001
+      IF ( INCFD.LT.1 )  GO TO 5002
+      DO 1  I = 2, N
+         IF ( X(I).LE.X(I-1) )  GO TO 5003
+    1 END DO
+!
+!  FUNCTION DEFINITION IS OK, GO ON.
+!
+    5 CONTINUE
+      IF ( NE.LT.1 )  GO TO 5004
+      IERR = 0
+      SKIP = .TRUE.
+!
+!  LOOP OVER INTERVALS.        (   INTERVAL INDEX IS  IL = IR-1  . )
+!                              ( INTERVAL IS X(IL).LE.X.LT.X(IR) . )
+      JFIRST = 1
+      IR = 2
+   10 CONTINUE
+!
+!     SKIP OUT OF LOOP IF HAVE PROCESSED ALL EVALUATION POINTS.
+!
+         IF (JFIRST .GT. NE)  GO TO 5000
+!
+!     LOCATE ALL POINTS IN INTERVAL.
+!
+         DO 20  J = JFIRST, NE
+            IF (XE(J) .GE. X(IR))  GO TO 30
+   20    CONTINUE
+         J = NE + 1
+         GO TO 40
+!
+!     HAVE LOCATED FIRST POINT BEYOND INTERVAL.
+!
+   30    CONTINUE
+         IF (IR .EQ. N)  J = NE + 1
+!
+   40    CONTINUE
+         NJ = J - JFIRST
+!
+!     SKIP EVALUATION IF NO POINTS IN INTERVAL.
+!
+         IF (NJ .EQ. 0)  GO TO 50
+!
+!     EVALUATE CUBIC AT XE(I),  I = JFIRST (1) J-1 .
+!
+!       ----------------------------------------------------------------
+        CALL CHFEV_R4 (X(IR-1),X(IR), F(1,IR-1),F(1,IR), D(1,IR-1),D(1,IR),&
+     &                 NJ, XE(JFIRST), FE(JFIRST), NEXT, IERC)
+!       ----------------------------------------------------------------
+         IF (IERC .LT. 0)  GO TO 5005
+!
+         IF (NEXT(2) .EQ. 0)  GO TO 42
+!        IF (NEXT(2) .GT. 0)  THEN
+!           IN THE CURRENT SET OF XE-POINTS, THERE ARE NEXT(2) TO THE
+!           RIGHT OF X(IR).
+!
+            IF (IR .LT. N)  GO TO 41
+!           IF (IR .EQ. N)  THEN
+!              THESE ARE ACTUALLY EXTRAPOLATION POINTS.
+               IERR = IERR + NEXT(2)
+               GO TO 42
+   41       CONTINUE
+!           ELSE
+!              WE SHOULD NEVER HAVE GOTTEN HERE.
+               GO TO 5005
+!           ENDIF
+!        ENDIF
+   42    CONTINUE
+!
+         IF (NEXT(1) .EQ. 0)  GO TO 49
+!        IF (NEXT(1) .GT. 0)  THEN
+!           IN THE CURRENT SET OF XE-POINTS, THERE ARE NEXT(1) TO THE
+!           LEFT OF X(IR-1).
+!
+            IF (IR .GT. 2)  GO TO 43
+!           IF (IR .EQ. 2)  THEN
+!              THESE ARE ACTUALLY EXTRAPOLATION POINTS.
+               IERR = IERR + NEXT(1)
+               GO TO 49
+   43       CONTINUE
+!           ELSE
+!              XE IS NOT ORDERED RELATIVE TO X, SO MUST ADJUST
+!              EVALUATION INTERVAL.
+!
+!              FIRST, LOCATE FIRST POINT TO LEFT OF X(IR-1).
+               DO 44  I = JFIRST, J-1
+                  IF (XE(I) .LT. X(IR-1))  GO TO 45
+   44          CONTINUE
+!              NOTE-- CANNOT DROP THROUGH HERE UNLESS THERE IS AN ERROR
+!                     IN CHFEV.
+               GO TO 5005
+!
+   45          CONTINUE
+!              RESET J.  (THIS WILL BE THE NEW JFIRST.)
+               J = I
+!
+!              NOW FIND OUT HOW FAR TO BACK UP IN THE X-ARRAY.
+               DO 46  I = 1, IR-1
+                  IF (XE(J) .LT. X(I)) GO TO 47
+   46          CONTINUE
+!              NB-- CAN NEVER DROP THROUGH HERE, SINCE XE(J).LT.X(IR-1).
+!
+   47          CONTINUE
+!              AT THIS POINT, EITHER  XE(J) .LT. X(1)
+!                 OR      X(I-1) .LE. XE(J) .LT. X(I) .
+!              RESET IR, RECOGNIZING THAT IT WILL BE INCREMENTED BEFORE
+!              CYCLING.
+               IR = MAX0(1, I-1)
+!           ENDIF
+!        ENDIF
+   49    CONTINUE
+!
+         JFIRST = J
+!
+!     END OF IR-LOOP.
+!
+   50 CONTINUE
+      IR = IR + 1
+      IF (IR .LE. N)  GO TO 10
+!
+!  NORMAL RETURN.
+!
+ 5000 CONTINUE
+      RETURN
+!
+!  ERROR RETURNS.
+!
+ 5001 CONTINUE
+!     N.LT.2 RETURN.
+      IERR = -1
+!     CALL XERROR ('PCHFE -- NUMBER OF DATA POINTS LESS THAN TWO'
+!    *           , 44, IERR, 1)
+      write(*,*)'pchfe error: number of data points less than two'
+      RETURN
+!
+ 5002 CONTINUE
+!     INCFD.LT.1 RETURN.
+      IERR = -2
+!     CALL XERROR ('PCHFE -- INCREMENT LESS THAN ONE'
+!    *           , 32, IERR, 1)
+      write(*,*)'pchfe error: increment less than one'
+      RETURN
+!
+ 5003 CONTINUE
+!     X-ARRAY NOT STRICTLY INCREASING.
+      IERR = -3
+!     CALL XERROR ('PCHFE -- X-ARRAY NOT STRICTLY INCREASING'
+!    *           , 40, IERR, 1)
+      write(*,*)'pchfe error: x-array not strictly increasing'
+      RETURN
+!
+ 5004 CONTINUE
+!     NE.LT.1 RETURN.
+      IERR = -4
+!     CALL XERROR ('PCHFE -- NUMBER OF EVALUATION POINTS LESS THAN ONE'
+!    *           , 50, IERR, 1)
+      write(*,*)'pchfe error: number of evaluation points less than one'
+      RETURN
+!
+ 5005 CONTINUE
+!     ERROR RETURN FROM CHFEV.
+!   *** THIS CASE SHOULD NEVER OCCUR ***
+      IERR = -5
+!     CALL XERROR ('PCHFE -- ERROR RETURN FROM CHFEV -- FATAL'
+!    *           , 41, IERR, 2)
+      write(*,*)'pchfe error: error return form chfev -- fatal'
+      RETURN
+!------------- LAST LINE OF PCHFE FOLLOWS ------------------------------
+  end subroutine pchfe_r4
+
+
+  subroutine chfev_r4(X1,X2,F1,F2,D1,D2,NE,XE,FE,NEXT,IERR)
+!***BEGIN PROLOGUE  CHFEV
+!***DATE WRITTEN   811019   (YYMMDD)
+!***REVISION DATE  870707   (YYMMDD)
+!***CATEGORY NO.  E3,H1
+!***KEYWORDS  LIBRARY=SLATEC(PCHIP),
+!             TYPE=SINGLE PRECISION(CHFEV-S DCHFEV-D),
+!             CUBIC HERMITE EVALUATION,CUBIC POLYNOMIAL EVALUATION
+!***AUTHOR  FRITSCH, F. N., (LLNL)
+!             MATHEMATICS AND STATISTICS DIVISION
+!             LAWRENCE LIVERMORE NATIONAL LABORATORY
+!             P.O. BOX 808  (L-316)
+!             LIVERMORE, CA  94550
+!             FTS 532-4275, (415) 422-4275
+!***PURPOSE  Evaluate a cubic polynomial given in Hermite form at an
+!            array of points.  While designed for use by PCHFE, it may
+!            be useful directly as an evaluator for a piecewise cubic
+!            Hermite function in applications, such as graphing, where
+!            the interval is known in advance.
+!***DESCRIPTION
+!
+!          CHFEV:  Cubic Hermite Function EValuator
+!
+!     Evaluates the cubic polynomial determined by function values
+!     F1,F2 and derivatives D1,D2 on interval (X1,X2) at the points
+!     XE(J), J=1(1)NE.
+!
+! ----------------------------------------------------------------------
+!
+!  Calling sequence:
+!
+!        INTEGER  NE, NEXT(2), IERR
+!        REAL  X1, X2, F1, F2, D1, D2, XE(NE), FE(NE)
+!
+!        CALL  CHFEV (X1,X2, F1,F2, D1,D2, NE, XE, FE, NEXT, IERR)
+!
+!   Parameters:
+!
+!     X1,X2 -- (input) endpoints of interval of definition of cubic.
+!           (Error return if  X1.EQ.X2 .)
+!
+!     F1,F2 -- (input) values of function at X1 and X2, respectively.
+!
+!     D1,D2 -- (input) values of derivative at X1 and X2, respectively.
+!
+!     NE -- (input) number of evaluation points.  (Error return if
+!           NE.LT.1 .)
+!
+!     XE -- (input) real array of points at which the function is to be
+!           evaluated.  If any of the XE are outside the interval
+!           [X1,X2], a warning error is returned in NEXT.
+!
+!     FE -- (output) real array of values of the cubic function defined
+!           by  X1,X2, F1,F2, D1,D2  at the points  XE.
+!
+!     NEXT -- (output) integer array indicating number of extrapolation
+!           points:
+!            NEXT(1) = number of evaluation points to left of interval.
+!            NEXT(2) = number of evaluation points to right of interval.
+!
+!     IERR -- (output) error flag.
+!           Normal return:
+!              IERR = 0  (no errors).
+!           "Recoverable" errors:
+!              IERR = -1  if NE.LT.1 .
+!              IERR = -2  if X1.EQ.X2 .
+!                (The FE-array has not been changed in either case.)
+!
+!***REFERENCES  (NONE)
+!***ROUTINES CALLED  XERROR
+!***END PROLOGUE  CHFEV
+!
+! ----------------------------------------------------------------------
+!
+!  Change record:
+!     82-08-03   Minor cosmetic changes for release 1.
+!
+! ----------------------------------------------------------------------
+!
+!  Programming notes:
+!
+!     To produce a double precision version, simply:
+!        a. Change CHFEV to DCHFEV wherever it occurs,
+!        b. Change the real declaration to double precision,
+!        c. Change the constant ZERO to double precision, and
+!        d. Change the names of the Fortran functions:  AMAX1, AMIN1.
+!
+!  DECLARE ARGUMENTS.
+!
+      INTEGER, INTENT(IN)  :: NE
+      INTEGER, INTENT(OUT) :: NEXT(2), IERR
+
+      REAL(kind=SP), INTENT(IN)  :: X1, X2, F1, F2, D1, D2, XE(NE)
+      REAL(kind=SP), INTENT(OUT) :: FE(NE)
+!
+!  DECLARE LOCAL VARIABLES.
+!
+      INTEGER  I
+      REAL(kind=SP) :: C2, C3, DEL1, DEL2, DELTA, H, X, XMI, XMA, ZERO
+      DATA  ZERO /0./
+!
+!  VALIDITY-CHECK ARGUMENTS.
+!
+!***FIRST EXECUTABLE STATEMENT  CHFEV
+      IF (NE .LT. 1)  GO TO 5001
+      H = X2 - X1
+      IF (H .EQ. ZERO)  GO TO 5002
+!
+!  INITIALIZE.
+!
+      IERR = 0
+      NEXT(1) = 0
+      NEXT(2) = 0
+      XMI = AMIN1(ZERO, H)
+      XMA = AMAX1(ZERO, H)
+!
+!  COMPUTE CUBIC COEFFICIENTS (EXPANDED ABOUT X1).
+!
+      DELTA = (F2 - F1)/H
+      DEL1 = (D1 - DELTA)/H
+      DEL2 = (D2 - DELTA)/H
+!                                           (DELTA IS NO LONGER NEEDED.)
+      C2 = -(DEL1+DEL1 + DEL2)
+      C3 = (DEL1 + DEL2)/H
+!                               (H, DEL1 AND DEL2 ARE NO LONGER NEEDED.)
+!
+!  EVALUATION LOOP.
+!
+      DO 500  I = 1, NE
+         X = XE(I) - X1
+         FE(I) = F1 + X*(D1 + X*(C2 + X*C3))
+!          COUNT EXTRAPOLATION POINTS.
+         IF ( X.LT.XMI )  NEXT(1) = NEXT(1) + 1
+         IF ( X.GT.XMA )  NEXT(2) = NEXT(2) + 1
+!        (NOTE REDUNDANCY--IF EITHER CONDITION IS TRUE, OTHER IS FALSE.)
+  500 END DO
+!
+!  NORMAL RETURN.
+!
+      RETURN
+!
+!  ERROR RETURNS.
+!
+ 5001 CONTINUE
+!     NE.LT.1 RETURN.
+      IERR = -1
+!     CALL XERROR ('CHFEV -- NUMBER OF EVALUATION POINTS LESS THAN ONE'
+!    *           , 50, IERR, 1)
+      write(*,*)'chfev error: number of evaluation points less than one'
+      RETURN
+!
+ 5002 CONTINUE
+!     X1.EQ.X2 RETURN.
+      IERR = -2
+!     CALL XERROR ('CHFEV -- INTERVAL ENDPOINTS EQUAL'
+!    *           , 33, IERR, 1)
+      write(*,*)'chfev error: interval endpoints equal'
+      RETURN
+!------------- LAST LINE OF CHFEV FOLLOWS ------------------------------
+  end subroutine chfev_r4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 end module BASE_UTILS
