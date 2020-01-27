@@ -121,6 +121,7 @@ use m_tests
  call test_STRINGS()
  call test_BASE_UTILS_zerofun()
  call test_BASE_UTILS_qsort()
+ call test_BASE_UTILS_cspline()
  print *, "*** Tests completed ***"
 
 contains
@@ -445,6 +446,29 @@ use BASE_UTILS
       call fail_test("QSORT failed: reverse real SP array")
 
 end subroutine test_BASE_UTILS_qsort
+
+subroutine test_BASE_UTILS_cspline
+
+use BASE_UTILS
+
+  real(SP), dimension(*), parameter :: data_x = [1.0,  2.0,  5.0,  9.0]
+  real(SP), dimension(*), parameter :: data_y = [5.5, 14.5, 25.0, 12.0]
+  real(SP), dimension(*), parameter :: interp_x = [1.0, 4.0, 7.0, 9.0]
+
+  real(SP), dimension( size(interp_x) ) :: interp_y
+
+  real(SP), dimension(*), parameter :: interp_y_check =                       &
+                            [ 5.50000000, 23.9419632, 21.3303566, 12.0000000 ]
+
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_cspline"
+  print *, "Test: ", TESTNAME
+
+  call CSPLINE( data_x, data_y, interp_x, interp_y)
+  if ( any(interp_y /= interp_y_check) )                                      &
+                                    call fail_test("CSPLINE Failed: kind SP")
+
+end subroutine test_BASE_UTILS_cspline
+
 
 
 end program tests_hedtools
