@@ -121,7 +121,8 @@ use m_tests
  call test_STRINGS()
  call test_BASE_UTILS_zerofun()
  call test_BASE_UTILS_qsort()
- call test_BASE_UTILS_cspline()
+ call test_BASE_UTILS_cspline_SP()
+ call test_BASE_UTILS_cspline_DP()
  print *, "*** Tests completed ***"
 
 contains
@@ -447,27 +448,51 @@ use BASE_UTILS
 
 end subroutine test_BASE_UTILS_qsort
 
-subroutine test_BASE_UTILS_cspline
+subroutine test_BASE_UTILS_cspline_SP
 
 use BASE_UTILS
 
-  real(SP), dimension(*), parameter :: data_x = [1.0,  2.0,  5.0,  9.0]
-  real(SP), dimension(*), parameter :: data_y = [5.5, 14.5, 25.0, 12.0]
-  real(SP), dimension(*), parameter :: interp_x = [1.0, 4.0, 7.0, 9.0]
+  real(SP), dimension(*), parameter :: data_x =   [1.0,  2.0,  5.0,  9.0]
+  real(SP), dimension(*), parameter :: data_y =   [5.5, 14.5, 25.0, 12.0]
+  real(SP), dimension(*), parameter :: interp_x = [1.0,  4.0,  7.0,  9.0]
 
   real(SP), dimension( size(interp_x) ) :: interp_y
 
   real(SP), dimension(*), parameter :: interp_y_check =                       &
                             [ 5.50000000, 23.9419632, 21.3303566, 12.0000000 ]
 
-  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_cspline"
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_cspline_SP"
   print *, "Test: ", TESTNAME
 
   call CSPLINE( data_x, data_y, interp_x, interp_y)
   if ( any(interp_y /= interp_y_check) )                                      &
                                     call fail_test("CSPLINE Failed: kind SP")
 
-end subroutine test_BASE_UTILS_cspline
+end subroutine test_BASE_UTILS_cspline_SP
+
+subroutine test_BASE_UTILS_cspline_DP
+
+use BASE_UTILS
+
+  real(DP), dimension(*), parameter :: data_x =   [1.0_DP,  2.0_DP,  5.0_DP,  9.0_DP]
+  real(DP), dimension(*), parameter :: data_y =   [5.5_DP, 14.5_DP, 25.0_DP, 12.0_DP]
+  real(DP), dimension(*), parameter :: interp_x = [1.0_DP,  4.0_DP,  7.0_DP,  9.0_DP]
+
+  real(DP), dimension( size(interp_x) ) :: interp_y
+
+  real(DP), dimension(*), parameter :: interp_y_check =                       &
+                              [ 5.5000000000000000_DP, 23.941964285714285_DP, &
+                                21.330357142857146_DP, 12.000000000000000_DP ]
+
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_cspline_DP"
+  print *, "Test: ", TESTNAME
+
+  call CSPLINE( data_x, data_y, interp_x, interp_y)
+  if ( any(interp_y /= interp_y_check) )                                      &
+                                    call fail_test("CSPLINE Failed: kind DP")
+
+end subroutine test_BASE_UTILS_cspline_DP
+
 
 
 
