@@ -194,6 +194,13 @@ interface CSPLINE                ! Cubic spline interpolation
 end interface CSPLINE
 
 
+interface CSPLINE_VECTOR         ! Generic interface to cubic spline
+                                 ! interpolation vector-based wrapper.
+   module procedure CSPLINE_INTERPOL_VECTOR_R4
+   module procedure CSPLINE_INTERPOL_VECTOR_R8
+
+end interface CSPLINE_VECTOR
+
 !-------------------------------------------------------------------------------
 
 private :: I4_WIDTH, I4_LOG_10  ! They are identical in CSV_IO and BASE_UTILS.
@@ -7879,6 +7886,68 @@ end subroutine partition_i
 
 
 
+
+!-------------------------------------------------------------------------------
+
+impure function CSPLINE_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+!*******************************************************************************
+! LAGR_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (default
+!      real type version).
+!
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate  to interpolate.
+!
+! NOTE: Unlike LINTERPOL this function results in extrapolation if the
+!         independent variable X values are beyond the XX range.
+!
+! W A R N I N G:
+! Lagrange interpolation is susceptible to Runge's phenomenon, and changing
+! the interpolation points requires recalculating the entire interpolant.
+!
+!*******************************************************************************
+
+  real(kind=SP), dimension(:), intent(in) :: xx
+  real(kind=SP), dimension(:), intent(in) :: yy
+  real(kind=SP), dimension(:), intent(in) :: xi
+
+  real(kind=SP), dimension(size(xi)) :: vector_output
+
+  call CSPLINE ( xx, yy, xi, vector_output )
+
+end function CSPLINE_INTERPOL_VECTOR_R4
+
+!-------------------------------------------------------------------------------
+
+impure function CSPLINE_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
+!*******************************************************************************
+! LAGR_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (default
+!      real type version).
+!
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate  to interpolate.
+!
+! NOTE: Unlike LINTERPOL this function results in extrapolation if the
+!         independent variable X values are beyond the XX range.
+!
+! W A R N I N G:
+! Lagrange interpolation is susceptible to Runge's phenomenon, and changing
+! the interpolation points requires recalculating the entire interpolant.
+!
+!*******************************************************************************
+
+  real(kind=DP), dimension(:), intent(in) :: xx
+  real(kind=DP), dimension(:), intent(in) :: yy
+  real(kind=DP), dimension(:), intent(in) :: xi
+
+  real(kind=DP), dimension(size(xi)) :: vector_output
+
+  call CSPLINE ( xx, yy, xi, vector_output )
+
+end function CSPLINE_INTERPOL_VECTOR_R8
 
 
 
