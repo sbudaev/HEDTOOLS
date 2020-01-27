@@ -126,6 +126,7 @@ character(len=:), allocatable :: pg_default_name, output_dev, output_save
 integer, parameter :: ALG_DDPI = 1  ! Nonlinear, divided difference.
 integer, parameter :: ALG_LIN  = 2  ! Linear.
 integer, parameter :: ALG_LAG  = 3  ! Lagrange, array-based.
+integer, parameter :: ALG_CSPL = 4  ! Cubic splines, array-based.
 
 ! Exit codes.
 integer, parameter :: EXIT_CODE_CLEAN = 0
@@ -186,8 +187,9 @@ if (n_cmds==1) then
   print *, "Input: Two arrays for the interpolation grid X, Y, they must be of the same"
   print *, "     size, the third array containing the interpolation data."
   print *, "     There may be also two other parameters: algorithm (linear, nonlinear,"
-  print *, "     lagrange) and output file name. Defaults are nonlinear DDPINTERPOL"
-  print *, "     algorithm. Each of the parameters must be enclosed in square brackets."
+  print *, "     lagrange,ddp,splines) and output file name. Defaults are nonlinear "
+  print *, "     DDPINTERPOL algorithm. Each of the parameters must be enclosed in "
+  print *, "     square brackets."
   print *, ""
   print *, "Examples:"
   print *, "* Produce interpolation screen plot with the default non-linear algorithm:"
@@ -196,6 +198,8 @@ if (n_cmds==1) then
   print *, "htintrpl [1 2 3 4 ] [10., 45., 14., 10.] [2.5 1.9] [linear] [file.ps]"
   print *, "* Produce interpolation plot with linear algorithm, output to PNG image file:"
   print *, "htintrpl [1 2 3 4 ] [10, 45, 14, 10] [2.5 1.9] [linear] [file.png]"
+  print *, "* Produce interpolation screen plot with cubic splines algorithm:"
+  print *, "htintrpl [1 2 3 4 5] [10, 45, 14, 2, 1] [2.5 1.9] [splines]"
   print *, ""
   stop
 end if
@@ -250,6 +254,8 @@ do i=2, n_cmds
           int_alg = ALG_LIN
         case ("LAGRANGE", "lagrange")
           int_alg = ALG_LAG
+        case ("SPLINES", "splines","CUBIC_SPLINES", "cubic_splines")
+          int_alg = ALG_CSPL
         case default
           output_dev=output_save
           output_file=trim(command_str(i))
@@ -324,6 +330,9 @@ end do
 ! Lagrange is array based
 if (int_alg==ALG_LAG) ploty = LAGR_INTERPOL_VECTOR( xx, yy, plotx )
 
+! Cubic spline is array based
+if (int_alg==ALG_CSPL) ploty = CSPLINE_VECTOR( xx, yy, plotx )
+
 if (IS_DEBUG) print *, "Plot data X:", plotx
 if (IS_DEBUG) print *, "Plot data Y:", ploty
 
@@ -331,6 +340,9 @@ if (IS_DEBUG) print *, "Plot data Y:", ploty
 if (int_alg==ALG_LAG) then
   ! Lagrange is array-based.
   yy_interpolate = LAGR_INTERPOL_VECTOR( xx, yy, xx_interpolate )
+else if (int_alg==ALG_CSPL) then
+  ! Cubic spline is array-based.
+  yy_interpolate = CSPLINE_VECTOR( xx, yy, xx_interpolate )
 else
   ! Those below are scalar-based.
   do i=1, size(xx_interpolate)
