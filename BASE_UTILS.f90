@@ -5790,21 +5790,21 @@ end subroutine partition_i
 
 
 
-
-
-
-
-
-
-
-!SPLINE
+!-------------------------------------------------------------------------------
+! CSPLINE: Cubic spline interpolation subroutine.
 !
-!     subroutine spline to
+! Author: Javier Bernal
+! Modified and repackaged by Sergey Budaev
+! Original F77 source: from https://math.nist.gov/~JBernal/JBernal_Sft.html
 !
-!     carry out cubic spline interpolation
-!
+! Cubic spline interpolation under the "not a knot" condition. Results from
+! this procedure appear to be exactly the same as those obtained with the
+! matlab spline function. Program is based on original code in Slatec package
+! obtained from Guide to Available Mathematical Software (GAMS) web site at
+! the National Institute of Standards and Technology.
+
   subroutine spline_r4 (x, y, xx, yy, n, nn)
-!
+
       real(kind=SP), intent(in)  :: x(:), y(:), xx(:)
       real(kind=SP), intent(out) :: yy(:)
       integer, optional, intent(in) :: n, nn
@@ -6837,20 +6837,21 @@ end subroutine partition_i
 !------------- LAST LINE OF CHFEV FOLLOWS ------------------------------
   end subroutine chfev_r4
 
-
-
-
-
-
-
-!SPLINE
+!-------------------------------------------------------------------------------
+! CSPLINE: Cubic spline interpolation subroutine.
 !
-!     subroutine spline to
+! Author: Javier Bernal
+! Modified and repackaged by Sergey Budaev
+! Original F77 source: from https://math.nist.gov/~JBernal/JBernal_Sft.html
 !
-!     carry out cubic spline interpolation
-!
+! Cubic spline interpolation under the "not a knot" condition. Results from
+! this procedure appear to be exactly the same as those obtained with the
+! matlab spline function. Program is based on original code in Slatec package
+! obtained from Guide to Available Mathematical Software (GAMS) web site at
+! the National Institute of Standards and Technology.
+
   subroutine spline_r8 (x, y, xx, yy, n, nn)
-!
+
       real(kind=DP), intent(in)  :: x(:), y(:), xx(:)
       real(kind=DP), intent(out) :: yy(:)
       integer, optional, intent(in) :: n, nn
@@ -7889,22 +7890,15 @@ end subroutine partition_i
 
 !-------------------------------------------------------------------------------
 
-impure function CSPLINE_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+function CSPLINE_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
-! LAGR_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
-!      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (default
+! CSPLINE_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      CSPLINE, cubic spline  interpolation subroutine (default
 !      real type version).
 !
 ! CALL PARAMETERS: a vector for independent variable, vector for the
 !         dependent variable, vector of the independent values X to
 !         interpolate  to interpolate.
-!
-! NOTE: Unlike LINTERPOL this function results in extrapolation if the
-!         independent variable X values are beyond the XX range.
-!
-! W A R N I N G:
-! Lagrange interpolation is susceptible to Runge's phenomenon, and changing
-! the interpolation points requires recalculating the entire interpolant.
 !
 !*******************************************************************************
 
@@ -7920,22 +7914,15 @@ end function CSPLINE_INTERPOL_VECTOR_R4
 
 !-------------------------------------------------------------------------------
 
-impure function CSPLINE_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
+function CSPLINE_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
-! LAGR_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
-!      INTERP_LAGRANGE, Lagrange polynominal interpolation subroutine (default
+! CSPLINE_INTERPOL_VECTOR_R8: A vector (one-dimensional) wrapper to the
+!      CSPLINE, cubic spline  interpolation subroutine (default
 !      real type version).
 !
 ! CALL PARAMETERS: a vector for independent variable, vector for the
 !         dependent variable, vector of the independent values X to
 !         interpolate  to interpolate.
-!
-! NOTE: Unlike LINTERPOL this function results in extrapolation if the
-!         independent variable X values are beyond the XX range.
-!
-! W A R N I N G:
-! Lagrange interpolation is susceptible to Runge's phenomenon, and changing
-! the interpolation points requires recalculating the entire interpolant.
 !
 !*******************************************************************************
 
