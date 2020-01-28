@@ -6431,16 +6431,38 @@ Plotting tools
 
 indexterm:[plotting, PGPLOT]
 indexterm:[plotting, GrWin]
+indexterm:[plotting, DISLIN]
+indexterm:[plotting, graphics]
+indexterm:[plotting, plotting]
 
 There are a few plotting tools in the +HEDTOOLS/tools+ directory. They are
 non-essential and implemented separately from the main HEDTOOLS code, although
 do use HEDTOOLS code procedures. This is done to keep the dependencies to the
 absolute minimum.
 
+IMPORTANT: As from r9339, plotting tools migrated from *PGPLOT* to *DISLIN* due
+           to better *DISLIN* support on Microsoft Windows and the change of
+           the licensing policy of GrWin library (license key needed, free
+           use license key is now time limited). Both *PGPLOT* and *DISLIN*
+           versions of the tools are now supplied in two separate directories:
+           `gtools.pgplot` and `gtools.dislin`.
+
+DISLIN
+~~~~~~
+
+The *DISLIN* is a powerful cross-platform graphics library that can be called
+from Fortran, C/C++ and other programming languages. For more information refer
+the web page: https://www.mps.mpg.de/dislin[https://www.mps.mpg.de/dislin].
+
+DISLIN is developed in the Max Planck Institute for Solar System Research.
+
+PGPLOT
+~~~~~~
+
 Currently they make use the http://www.astro.caltech.edu/~tjp/pgplot/[PGPLOT]
 Fortran plotting library, but the plotting part is quite small and simple, so
 they can be easily recoded to use a different toolbox for plotting (e.g. PlPlot
-or distlin). PGPLOT is chosen because it is very small, simple to use and
+or DISTLIN). PGPLOT is chosen because it is very small, simple to use and
 can be built for Linux (and various Unix clones) and Windows.  PGPLOT in
 included in the standard Ubuntu Linux repositories. For Windows, PGPLOT is
 a part of the http://spdg1.sci.shizuoka.ac.jp/grwinlib/english/[GrWin library].
@@ -6451,6 +6473,9 @@ the executables. They should be called from the main model code using the
 standard intrinsic Fortran procedures to run the system (shell) commands:
 +execute_command_line+ or (older +system+).
 
+Build
+~~~~~
+
 To build the plotting tools using the default parameters issue this command in
 the main +HEDTOOLS+ directory:
 
@@ -6459,17 +6484,8 @@ the main +HEDTOOLS+ directory:
 make tools
 --------------------------------------------------------------------------------
 
-On the Microsoft Windows platform, depending on the directory location of the
-GrWin library (it is different on 32 and 64 bit versions of Windows), one may
-need to change the +GRWIN_ROOT+ value in the tools own +Makefile+ that is
-located in +HEDTOOLS/tools+:
-
-[source, bash]
---------------------------------------------------------------------------------
-# Root directory of the GrWin installation on Windows.
-# NOTE: can differ in 32 and 64 bit distributions!
-GRWIN_ROOT = C:/GrWin/MinGW_gfortra
---------------------------------------------------------------------------------
+Calling plotting utils from Fortran code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here is an example of calling the scatterplot utility using a wrapper
 (+call_external+) to the intrinsic +execute_command_line+ subroutine.
@@ -6519,6 +6535,18 @@ htscatter data_file_csv plot_file.png
 
 Notes on PGPLOT Windows (GrWin)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Building with GrWin + PGPLOT.*  On the Microsoft Windows platform, depending
+on the directory location of the GrWin library (it is different on 32 and
+64 bit versions of Windows), one may need to change the +GRWIN_ROOT+ value
+in the tools own +Makefile+ that is located in +HEDTOOLS/tools+:
+
+[source, bash]
+--------------------------------------------------------------------------------
+# Root directory of the GrWin installation on Windows.
+# NOTE: can differ in 32 and 64 bit distributions!
+GRWIN_ROOT = C:/GrWin/MinGW_gfortra
+--------------------------------------------------------------------------------
 
 It is possible to build the Microsoft Windows executables of the plotting
 utilities on a machine with the GrWin library installed and run on another
