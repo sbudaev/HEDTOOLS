@@ -67,6 +67,9 @@ implicit none
 !          do not edit manually!
 character(len=*), parameter :: SVN_REVISION = "$Revision$"
 
+! The name of the graphics library used for plotting.
+character(len=*), parameter :: GRAPHICS_LIB = "PGPLOT"
+
 ! Set DEBUG mode. Debug mode prints more diagnostics.
 logical, parameter :: IS_DEBUG = .FALSE.
 
@@ -172,7 +175,7 @@ if (IS_DEBUG) print *, "DEBUG: >",command_line_str, "<"
 if (n_cmds==1) then
   write(ERROR_UNIT,*) "ERROR: Required command line arguments not found."
   print *, "-------------------------------------------------"
-  print *, "*** HTINTRPL --- ", SVN_REVISION
+  print *, "*** HTINTRPL --- ", SVN_REVISION, " (", GRAPHICS_LIB, ")"
   print *, ""
   print *, "Produce interpolation plot of data that are provided at the command line."
   print *, "Interpolation is basedon subroutines from in HEDTOOLS, so debug plots can"

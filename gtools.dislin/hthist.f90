@@ -29,6 +29,9 @@ implicit none
 !          do not edit manually!
 character(len=*), parameter :: SVN_REVISION = "$Revision$"
 
+! The name of the graphics library used for plotting.
+character(len=*), parameter :: GRAPHICS_LIB = "DISLIN"
+
 ! Set DEBUG mode. Debug mode prints more diagnostics.
 logical, parameter :: IS_DEBUG = .FALSE.
 
@@ -105,7 +108,7 @@ output_save = DEV_PDF
 if (command_argument_count()==0) then
   write(ERROR_UNIT,*) "ERROR: Required command line arguments not found."
   print *, "-------------------------------------------------"
-  print *, "*** HTHIST --- ", SVN_REVISION
+  print *, "*** HTHIST --- ", SVN_REVISION, " (", GRAPHICS_LIB, ")"
   print *, ""
   print *, "Produce a histogram  of data that are provided at the command line."
   print *, "If the output plot file name is not provided, the plot goes to the "

@@ -57,6 +57,9 @@ implicit none
 !          do not edit manually!
 character(len=*), parameter :: SVN_REVISION = "$Revision$"
 
+! The name of the graphics library used for plotting.
+character(len=*), parameter :: GRAPHICS_LIB = "PGPLOT"
+
 ! Set DEBUG mode. Debug mode prints more diagnostics.
 logical, parameter :: IS_DEBUG = .FALSE.
 
@@ -130,7 +133,7 @@ if (IS_DEBUG) print *, "DEBUG: ", pg_default_name
 if (command_argument_count()==0) then
   write(ERROR_UNIT,*) "ERROR: Required command line arguments not found."
   print *, "-------------------------------------------------"
-  print *, "*** HTSCATTER --- ", SVN_REVISION
+  print *, "*** HTSCATTER --- ", SVN_REVISION, " (", GRAPHICS_LIB, ")"
   print *, ""
   print *, "Produce scatter plot of data that are provided at the command line."
   print *, "If the output plot file name is not provided, the plot goes to the "
