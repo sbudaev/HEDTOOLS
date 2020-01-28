@@ -2710,8 +2710,8 @@ print *, LINSPACE(1.0, 10.0, 10)   ! 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0
 --------------------------------------------------------------------------------
 
 
-Interpolation: LINTERPOL, DDPINTERPOL, INTERP_LINEAR, INTERP_LAGRANGE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Interpolation: LINTERPOL, DDPINTERPOL, INTERP_LINEAR, INTERP_LAGRANGE, CSPLINE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 indexterm:[LINTERPOL]
 indexterm:[interpolation, linear]
@@ -2781,6 +2781,30 @@ print *, LIN_INTERPOL_VECTOR( [1.,2.,3.,4.,5.],                               &
 print *, LAGR_INTERPOL_VECTOR( [1.,2.,3.,4.,5.],                              &
                                [0.1, 0.5, 0.9, 0.95, 0.98 ],                  &
                                [1.25, 1.1, 4.1, 1.9, 1.95, 1.98]  )
+--------------------------------------------------------------------------------
+
+The *CSPLINE* _subroutine_ works similarly to +INTERP_LINEAR+ and
++INTERP_LAGRANGE+ but performs *cubic spline interpolation* under the "not
+a knot" condition. Results from this procedure appear to be the same as in
+the matlab +spline+ function. The procedure is based on original code in
+Slatec from Guide to Available Mathematical Software (GAMS) web site at the
+National Institute of Standards and Technology.
+
+indexterm:[CSPLINE]
+indexterm:[CSPLINE_VECTOR]
+indexterm:[interpolation, spline]
+indexterm:[interpolation, cubic spline]
+
+[source]
+--------------------------------------------------------------------------------
+call CSPLINE ( XDAT, YDAT, XINTERPOL, vector_output )
+--------------------------------------------------------------------------------
+
+There is also a  _function_ that returns a _vector:_ *CSPLINE_VECTOR*.
+
+[source]
+--------------------------------------------------------------------------------
+ploty = CSPLINE_VECTOR( xx, yy, plotx )
 --------------------------------------------------------------------------------
 
 
