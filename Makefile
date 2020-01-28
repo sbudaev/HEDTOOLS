@@ -24,7 +24,13 @@ FC = $(GF_FC)
 TOOLS_LIST := htintrpl htscatter hthist
 
 # Path to binary tools, normally subdirectory
-TOOLS_PATH = tools/
+# Graphic tools go in two versions:
+#  - based on PGPLOT (legacy) in `gtools.pgplot` (supports Unix/Linux
+#    and Windows via GrWin library);
+#  - based on DISLIN (newer) in `gtools.dislin` (supports Unix/Linux
+#    and native Windows).
+# Refer to the specific Makefile in each of these sub-directories.
+TOOLS_PATH = gtools.dislin/
 
 # Path to tests
 TESTS_PATH = tests/
