@@ -189,17 +189,27 @@ end interface ARRAY_QSORT
 
 
 interface CSPLINE                ! Cubic spline interpolation
+
   module procedure spline_r4
   module procedure spline_r8
+
 end interface CSPLINE
 
 
 interface CSPLINE_VECTOR         ! Generic interface to cubic spline
-                                 ! interpolation vector-based wrapper.
+                                 ! interpolation vector-based function.
    module procedure CSPLINE_INTERPOL_VECTOR_R4
    module procedure CSPLINE_INTERPOL_VECTOR_R8
 
 end interface CSPLINE_VECTOR
+
+
+interface CSPLINE_SCALAR         ! Generic interface to scalar function.
+
+   module procedure CSPLINE_INTERPOL_SCALAR_R4
+   module procedure CSPLINE_INTERPOL_SCALAR_R8
+
+end interface CSPLINE_SCALAR
 
 !-------------------------------------------------------------------------------
 
@@ -217,7 +227,9 @@ private :: R8VEC_ASCENDS_STRICTLY, LIN_INTERPOL_VECTOR_R8
 private :: qsort_r4, partition_r4, qsort_r8, partition_r8, qsort_i, partition_i
 
 private :: spline_r4, pchsp_r4, pchdf_r4, pchfe_r4, chfev_r4,                 &
-           spline_r8, pchsp_r8, pchdf_r8, pchfe_r8, chfev_r8
+           spline_r8, pchsp_r8, pchdf_r8, pchfe_r8, chfev_r8,                 &
+           CSPLINE_INTERPOL_VECTOR_R4, CSPLINE_INTERPOL_VECTOR_R8,            &
+           CSPLINE_INTERPOL_SCALAR_R4, CSPLINE_INTERPOL_SCALAR_R8
 
 !-------------------------------------------------------------------------------
 contains  !-----[ SUBROUTINES AND FUNCTIONS FOLLOW ]----------------------------
@@ -7944,10 +7956,65 @@ pure function CSPLINE_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 
 end function CSPLINE_INTERPOL_VECTOR_R8
 
+!-------------------------------------------------------------------------------
 
+pure function CSPLINE_INTERPOL_SCALAR_R4 (xx, yy, xi) result (scalar_output)
+!*******************************************************************************
+! CSPLINE_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      CSPLINE, cubic spline  interpolation subroutine (default
+!      real type version).
+!
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate  to interpolate.
+!
+!*******************************************************************************
 
+  real(kind=SP), dimension(:), intent(in) :: xx
+  real(kind=SP), dimension(:), intent(in) :: yy
+  real(kind=SP), intent(in)               :: xi
 
+  real(kind=SP)                           :: scalar_output
 
+  real(kind=SP), dimension(1) ::   xi_vec1, yi_vec1
+
+  xi_vec1 = xi
+
+  call CSPLINE ( xx, yy, xi_vec1, yi_vec1 )
+
+  scalar_output = yi_vec1(1)
+
+end function CSPLINE_INTERPOL_SCALAR_R4
+
+!-------------------------------------------------------------------------------
+
+pure function CSPLINE_INTERPOL_SCALAR_R8 (xx, yy, xi) result (scalar_output)
+!*******************************************************************************
+! CSPLINE_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
+!      CSPLINE, cubic spline  interpolation subroutine (default
+!      real type version).
+!
+! CALL PARAMETERS: a vector for independent variable, vector for the
+!         dependent variable, vector of the independent values X to
+!         interpolate  to interpolate.
+!
+!*******************************************************************************
+
+  real(kind=DP), dimension(:), intent(in) :: xx
+  real(kind=DP), dimension(:), intent(in) :: yy
+  real(kind=DP), intent(in)               :: xi
+
+  real(kind=DP)                           :: scalar_output
+
+  real(kind=DP), dimension(1) ::   xi_vec1, yi_vec1
+
+  xi_vec1 = xi
+
+  call CSPLINE ( xx, yy, xi_vec1, yi_vec1 )
+
+  scalar_output = yi_vec1(1)
+
+end function CSPLINE_INTERPOL_SCALAR_R8
 
 
 end module BASE_UTILS

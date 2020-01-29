@@ -466,7 +466,11 @@ use BASE_UTILS
 
   call CSPLINE( data_x, data_y, interp_x, interp_y)
   if ( any(interp_y /= interp_y_check) )                                      &
-                                    call fail_test("CSPLINE Failed: kind SP")
+                              call fail_test("CSPLINE Failed: kind SP")
+
+  if ( CSPLINE_SCALAR(data_x, data_y, 4.0_SP) /= interp_y_check(2) )          &
+                              call fail_test("CSPLINE SCALAR Failed: kind SP")
+
 
 end subroutine test_BASE_UTILS_cspline_SP
 
@@ -490,6 +494,9 @@ use BASE_UTILS
   call CSPLINE( data_x, data_y, interp_x, interp_y)
   if ( any(interp_y /= interp_y_check) )                                      &
                                     call fail_test("CSPLINE Failed: kind DP")
+
+  if ( CSPLINE_SCALAR(data_x, data_y, 4.0_DP) /= interp_y_check(2) )          &
+                              call fail_test("CSPLINE SCALAR Failed: kind DP")
 
 end subroutine test_BASE_UTILS_cspline_DP
 
