@@ -5803,7 +5803,7 @@ end subroutine partition_i
 ! obtained from Guide to Available Mathematical Software (GAMS) web site at
 ! the National Institute of Standards and Technology.
 
-  subroutine spline_r4 (x, y, xx, yy, n, nn)
+  pure subroutine spline_r4 (x, y, xx, yy, n, nn)
 
       real(kind=SP), intent(in)  :: x(:), y(:), xx(:)
       real(kind=SP), intent(out) :: yy(:)
@@ -5843,7 +5843,7 @@ end subroutine partition_i
   end subroutine spline_r4
 
 
-  subroutine pchsp_r4(IC,VC,N,X,F,D,INCFD,WK,NWK,IERR)
+  pure subroutine pchsp_r4(IC,VC,N,X,F,D,INCFD,WK,NWK,IERR)
 !***BEGIN PROLOGUE  PCHSP
 !***DATE WRITTEN   820503   (YYMMDD)
 !***REVISION DATE  870707   (YYMMDD)
@@ -6001,9 +6001,10 @@ end subroutine partition_i
 !  DECLARE LOCAL VARIABLES.
 !
       INTEGER :: IBEG, IEND, INDEX, J, NM1
-      REAL(kind=SP) :: G, HALF, ONE, STEMP(3), THREE, TWO, XTEMP(4), ZERO
+      REAL(kind=SP) :: G, STEMP(3), XTEMP(4)
 !
-      DATA  ZERO /0./,  HALF /0.5/,  ONE /1./,  TWO /2./,  THREE /3./
+      real(kind=SP), parameter :: ZERO=0.0_SP, HALF=0.5_SP, ONE=1.0_SP,       &
+                                  TWO=2.0_SP, THREE=3.0_SP
 !
 !  VALIDITY-CHECK ARGUMENTS.
 !
@@ -6050,7 +6051,7 @@ end subroutine partition_i
             IF (J .LT. IBEG)  STEMP(J) = WK(2,INDEX)
    10    CONTINUE
 !                 --------------------------------
-         D(1,1) = PCHDF_R4 (IBEG, XTEMP, STEMP, IERR)
+          call PCHDF_R4 (IBEG, XTEMP, STEMP, IERR, D(1,1))
 !                 --------------------------------
          IF (IERR .NE. 0)  GO TO 5009
          IBEG = 1
@@ -6067,7 +6068,7 @@ end subroutine partition_i
             IF (J .LT. IEND)  STEMP(J) = WK(2,INDEX+1)
    15    CONTINUE
 !                 --------------------------------
-         D(1,N) = PCHDF_R4 (IEND, XTEMP, STEMP, IERR)
+          call PCHDF_R4 (IEND, XTEMP, STEMP, IERR, D(1,N))
 !                 --------------------------------
          IF (IERR .NE. 0)  GO TO 5009
          IEND = 1
@@ -6187,7 +6188,7 @@ end subroutine partition_i
       IERR = -1
 !     CALL XERROR ('PCHSP -- NUMBER OF DATA POINTS LESS THAN TWO'
 !    *           , 44, IERR, 1)
-      write(*,*)'pchsp error: number of data points less than two'
+!     write(*,*)'pchsp error: number of data points less than two'
       RETURN
 !
  5002 CONTINUE
@@ -6195,7 +6196,7 @@ end subroutine partition_i
       IERR = -2
 !     CALL XERROR ('PCHSP -- INCREMENT LESS THAN ONE'
 !    *           , 32, IERR, 1)
-      write(*,*)'pchsp error: increment less than one'
+!     write(*,*)'pchsp error: increment less than one'
       RETURN
 !
  5003 CONTINUE
@@ -6203,7 +6204,7 @@ end subroutine partition_i
       IERR = -3
 !     CALL XERROR ('PCHSP -- X-ARRAY NOT STRICTLY INCREASING'
 !    *           , 40, IERR, 1)
-      write(*,*)'pchsp error: x-array not strictly increasing'
+!     write(*,*)'pchsp error: x-array not strictly increasing'
       RETURN
 !
  5004 CONTINUE
@@ -6211,7 +6212,7 @@ end subroutine partition_i
       IERR = IERR - 3
 !     CALL XERROR ('PCHSP -- IC OUT OF RANGE'
 !    *           , 24, IERR, 1)
-      write(*,*)'pchsp error: ic out of range'
+!     write(*,*)'pchsp error: ic out of range'
       RETURN
 !
  5007 CONTINUE
@@ -6219,7 +6220,7 @@ end subroutine partition_i
       IERR = -7
 !     CALL XERROR ('PCHSP -- WORK ARRAY TOO SMALL'
 !    *           , 29, IERR, 1)
-      write(*,*)'pchsp error: work array too small'
+!     write(*,*)'pchsp error: work array too small'
       RETURN
 !
  5008 CONTINUE
@@ -6229,7 +6230,7 @@ end subroutine partition_i
       IERR = -8
 !     CALL XERROR ('PCHSP -- SINGULAR LINEAR SYSTEM'
 !    *           , 31, IERR, 1)
-      write(*,*)'pchsp error: singular linear system'
+!     write(*,*)'pchsp error: singular linear system'
       RETURN
 !
  5009 CONTINUE
@@ -6238,13 +6239,13 @@ end subroutine partition_i
       IERR = -9
 !     CALL XERROR ('PCHSP -- ERROR RETURN FROM PCHDF'
 !    *           , 32, IERR, 1)
-      write(*,*)'pchsp error: error return from pchdf'
+!     write(*,*)'pchsp error: error return from pchdf'
       RETURN
 !------------- LAST LINE OF PCHSP FOLLOWS ------------------------------
   end subroutine pchsp_r4
 
 
-  real(kind=SP) function pchdf_r4 (K, X, S, IERR)
+  pure subroutine pchdf_r4 (K, X, S, IERR, PCHDF_R4_VAL)
 !***BEGIN PROLOGUE  PCHDF
 !***SUBSIDIARY
 !***PURPOSE  Computes divided differences for PCHCE and PCHSP
@@ -6308,13 +6309,15 @@ end subroutine partition_i
 
       REAL(kind=SP), INTENT(IN)    :: X(K)
       REAL(kind=SP), INTENT(INOUT) :: S(K)
+
+      REAL(kind=SP), intent(out)   :: PCHDF_R4_VAL
 !
 !  DECLARE LOCAL VARIABLES.
 !
       INTEGER  I, J
-      REAL(kind=SP) :: VALUE, ZERO
-      SAVE ZERO
-      DATA  ZERO /0./
+      REAL(kind=SP) :: VALUE
+
+      real(kind=SP), parameter :: ZERO=0.0
 !
 !  CHECK FOR LEGAL VALUE OF K.
 !
@@ -6339,7 +6342,7 @@ end subroutine partition_i
 !  NORMAL RETURN.
 !
       IERR = 0
-      PCHDF_R4 = VALUE
+      PCHDF_R4_VAL = VALUE
       RETURN
 !
 !  ERROR RETURN.
@@ -6348,14 +6351,14 @@ end subroutine partition_i
 !     K.LT.3 RETURN.
       IERR = -1
 !     CALL XERMSG ('SLATEC', 'PCHDF', 'K LESS THAN THREE', IERR, 1)
-      write(*,*)'slatec pchdf error: k less than three'
-      PCHDF_R4 = ZERO
+!     write(*,*)'slatec pchdf error: k less than three'
+      PCHDF_R4_VAL = ZERO
       RETURN
 !------------- LAST LINE OF PCHDF FOLLOWS ------------------------------
-  end function pchdf_r4
+  end subroutine pchdf_r4
 
 
-  subroutine pchfe_r4(N,X,F,D,INCFD,SKIP,NE,XE,FE,IERR)
+  pure subroutine pchfe_r4(N,X,F,D,INCFD,SKIP,NE,XE,FE,IERR)
 !***BEGIN PROLOGUE  PCHFE
 !***DATE WRITTEN   811020   (YYMMDD)
 !***REVISION DATE  870707   (YYMMDD)
@@ -6637,7 +6640,7 @@ end subroutine partition_i
       IERR = -1
 !     CALL XERROR ('PCHFE -- NUMBER OF DATA POINTS LESS THAN TWO'
 !    *           , 44, IERR, 1)
-      write(*,*)'pchfe error: number of data points less than two'
+!     write(*,*)'pchfe error: number of data points less than two'
       RETURN
 !
  5002 CONTINUE
@@ -6645,7 +6648,7 @@ end subroutine partition_i
       IERR = -2
 !     CALL XERROR ('PCHFE -- INCREMENT LESS THAN ONE'
 !    *           , 32, IERR, 1)
-      write(*,*)'pchfe error: increment less than one'
+!     write(*,*)'pchfe error: increment less than one'
       RETURN
 !
  5003 CONTINUE
@@ -6653,7 +6656,7 @@ end subroutine partition_i
       IERR = -3
 !     CALL XERROR ('PCHFE -- X-ARRAY NOT STRICTLY INCREASING'
 !    *           , 40, IERR, 1)
-      write(*,*)'pchfe error: x-array not strictly increasing'
+!     write(*,*)'pchfe error: x-array not strictly increasing'
       RETURN
 !
  5004 CONTINUE
@@ -6661,7 +6664,7 @@ end subroutine partition_i
       IERR = -4
 !     CALL XERROR ('PCHFE -- NUMBER OF EVALUATION POINTS LESS THAN ONE'
 !    *           , 50, IERR, 1)
-      write(*,*)'pchfe error: number of evaluation points less than one'
+!     write(*,*)'pchfe error: number of evaluation points less than one'
       RETURN
 !
  5005 CONTINUE
@@ -6670,13 +6673,13 @@ end subroutine partition_i
       IERR = -5
 !     CALL XERROR ('PCHFE -- ERROR RETURN FROM CHFEV -- FATAL'
 !    *           , 41, IERR, 2)
-      write(*,*)'pchfe error: error return form chfev -- fatal'
+!     write(*,*)'pchfe error: error return form chfev -- fatal'
       RETURN
 !------------- LAST LINE OF PCHFE FOLLOWS ------------------------------
   end subroutine pchfe_r4
 
 
-  subroutine chfev_r4(X1,X2,F1,F2,D1,D2,NE,XE,FE,NEXT,IERR)
+  pure subroutine chfev_r4(X1,X2,F1,F2,D1,D2,NE,XE,FE,NEXT,IERR)
 !***BEGIN PROLOGUE  CHFEV
 !***DATE WRITTEN   811019   (YYMMDD)
 !***REVISION DATE  870707   (YYMMDD)
@@ -6774,8 +6777,9 @@ end subroutine partition_i
 !  DECLARE LOCAL VARIABLES.
 !
       INTEGER  I
-      REAL(kind=SP) :: C2, C3, DEL1, DEL2, DELTA, H, X, XMI, XMA, ZERO
-      DATA  ZERO /0./
+      REAL(kind=SP) :: C2, C3, DEL1, DEL2, DELTA, H, X, XMI, XMA
+
+      real(kind=SP), parameter :: ZERO=0.0_SP
 !
 !  VALIDITY-CHECK ARGUMENTS.
 !
@@ -6824,7 +6828,7 @@ end subroutine partition_i
       IERR = -1
 !     CALL XERROR ('CHFEV -- NUMBER OF EVALUATION POINTS LESS THAN ONE'
 !    *           , 50, IERR, 1)
-      write(*,*)'chfev error: number of evaluation points less than one'
+!     write(*,*)'chfev error: number of evaluation points less than one'
       RETURN
 !
  5002 CONTINUE
@@ -6832,7 +6836,7 @@ end subroutine partition_i
       IERR = -2
 !     CALL XERROR ('CHFEV -- INTERVAL ENDPOINTS EQUAL'
 !    *           , 33, IERR, 1)
-      write(*,*)'chfev error: interval endpoints equal'
+!     write(*,*)'chfev error: interval endpoints equal'
       RETURN
 !------------- LAST LINE OF CHFEV FOLLOWS ------------------------------
   end subroutine chfev_r4
@@ -6850,7 +6854,7 @@ end subroutine partition_i
 ! obtained from Guide to Available Mathematical Software (GAMS) web site at
 ! the National Institute of Standards and Technology.
 
-  subroutine spline_r8 (x, y, xx, yy, n, nn)
+  pure subroutine spline_r8 (x, y, xx, yy, n, nn)
 
       real(kind=DP), intent(in)  :: x(:), y(:), xx(:)
       real(kind=DP), intent(out) :: yy(:)
@@ -6890,7 +6894,7 @@ end subroutine partition_i
   end subroutine spline_r8
 
 
-  subroutine pchsp_r8(IC,VC,N,X,F,D,INCFD,WK,NWK,IERR)
+  pure subroutine pchsp_r8(IC,VC,N,X,F,D,INCFD,WK,NWK,IERR)
 !***BEGIN PROLOGUE  PCHSP
 !***DATE WRITTEN   820503   (YYMMDD)
 !***REVISION DATE  870707   (YYMMDD)
@@ -7048,9 +7052,10 @@ end subroutine partition_i
 !  DECLARE LOCAL VARIABLES.
 !
       INTEGER :: IBEG, IEND, INDEX, J, NM1
-      REAL(kind=DP) :: G, HALF, ONE, STEMP(3), THREE, TWO, XTEMP(4), ZERO
-!
-      DATA  ZERO /0./,  HALF /0.5/,  ONE /1./,  TWO /2./,  THREE /3./
+      REAL(kind=DP) :: G, STEMP(3), XTEMP(4)
+
+      real(kind=DP), parameter :: ZERO=0.0_SP, HALF=0.5_DP, ONE=1.0_DP,       &
+                                  TWO=2.0_DP, THREE=3.0_DP
 !
 !  VALIDITY-CHECK ARGUMENTS.
 !
@@ -7097,7 +7102,7 @@ end subroutine partition_i
             IF (J .LT. IBEG)  STEMP(J) = WK(2,INDEX)
    10    CONTINUE
 !                 --------------------------------
-         D(1,1) = PCHDF_R8 (IBEG, XTEMP, STEMP, IERR)
+          call PCHDF_R8 (IBEG, XTEMP, STEMP, IERR, D(1,1))
 !                 --------------------------------
          IF (IERR .NE. 0)  GO TO 5009
          IBEG = 1
@@ -7114,7 +7119,7 @@ end subroutine partition_i
             IF (J .LT. IEND)  STEMP(J) = WK(2,INDEX+1)
    15    CONTINUE
 !                 --------------------------------
-         D(1,N) = PCHDF_R8 (IEND, XTEMP, STEMP, IERR)
+          call PCHDF_R8 (IEND, XTEMP, STEMP, IERR, D(1,N))
 !                 --------------------------------
          IF (IERR .NE. 0)  GO TO 5009
          IEND = 1
@@ -7234,7 +7239,7 @@ end subroutine partition_i
       IERR = -1
 !     CALL XERROR ('PCHSP -- NUMBER OF DATA POINTS LESS THAN TWO'
 !    *           , 44, IERR, 1)
-      write(*,*)'pchsp error: number of data points less than two'
+!     write(*,*)'pchsp error: number of data points less than two'
       RETURN
 !
  5002 CONTINUE
@@ -7242,7 +7247,7 @@ end subroutine partition_i
       IERR = -2
 !     CALL XERROR ('PCHSP -- INCREMENT LESS THAN ONE'
 !    *           , 32, IERR, 1)
-      write(*,*)'pchsp error: increment less than one'
+!     write(*,*)'pchsp error: increment less than one'
       RETURN
 !
  5003 CONTINUE
@@ -7250,7 +7255,7 @@ end subroutine partition_i
       IERR = -3
 !     CALL XERROR ('PCHSP -- X-ARRAY NOT STRICTLY INCREASING'
 !    *           , 40, IERR, 1)
-      write(*,*)'pchsp error: x-array not strictly increasing'
+!     write(*,*)'pchsp error: x-array not strictly increasing'
       RETURN
 !
  5004 CONTINUE
@@ -7258,7 +7263,7 @@ end subroutine partition_i
       IERR = IERR - 3
 !     CALL XERROR ('PCHSP -- IC OUT OF RANGE'
 !    *           , 24, IERR, 1)
-      write(*,*)'pchsp error: ic out of range'
+!     write(*,*)'pchsp error: ic out of range'
       RETURN
 !
  5007 CONTINUE
@@ -7266,7 +7271,7 @@ end subroutine partition_i
       IERR = -7
 !     CALL XERROR ('PCHSP -- WORK ARRAY TOO SMALL'
 !    *           , 29, IERR, 1)
-      write(*,*)'pchsp error: work array too small'
+!     write(*,*)'pchsp error: work array too small'
       RETURN
 !
  5008 CONTINUE
@@ -7276,7 +7281,7 @@ end subroutine partition_i
       IERR = -8
 !     CALL XERROR ('PCHSP -- SINGULAR LINEAR SYSTEM'
 !    *           , 31, IERR, 1)
-      write(*,*)'pchsp error: singular linear system'
+!     write(*,*)'pchsp error: singular linear system'
       RETURN
 !
  5009 CONTINUE
@@ -7285,13 +7290,13 @@ end subroutine partition_i
       IERR = -9
 !     CALL XERROR ('PCHSP -- ERROR RETURN FROM PCHDF'
 !    *           , 32, IERR, 1)
-      write(*,*)'pchsp error: error return from pchdf'
+!     write(*,*)'pchsp error: error return from pchdf'
       RETURN
 !------------- LAST LINE OF PCHSP FOLLOWS ------------------------------
   end subroutine pchsp_r8
 
 
-  real(kind=DP) function pchdf_r8 (K, X, S, IERR)
+  pure subroutine pchdf_r8 (K, X, S, IERR, PCHDF_R8_VAL)
 !***BEGIN PROLOGUE  PCHDF
 !***SUBSIDIARY
 !***PURPOSE  Computes divided differences for PCHCE and PCHSP
@@ -7355,13 +7360,15 @@ end subroutine partition_i
 
       REAL(kind=DP), INTENT(IN)    :: X(K)
       REAL(kind=DP), INTENT(INOUT) :: S(K)
+
+      real(kind=DP), intent(out)   :: PCHDF_R8_VAL
 !
 !  DECLARE LOCAL VARIABLES.
 !
       INTEGER  I, J
-      REAL(kind=DP) :: VALUE, ZERO
-      SAVE ZERO
-      DATA  ZERO /0./
+      REAL(kind=DP) :: VALUE
+
+      real(kind=DP), parameter :: ZERO=0.0_DP
 !
 !  CHECK FOR LEGAL VALUE OF K.
 !
@@ -7386,7 +7393,7 @@ end subroutine partition_i
 !  NORMAL RETURN.
 !
       IERR = 0
-      PCHDF_R8 = VALUE
+      PCHDF_R8_VAL = VALUE
       RETURN
 !
 !  ERROR RETURN.
@@ -7395,14 +7402,14 @@ end subroutine partition_i
 !     K.LT.3 RETURN.
       IERR = -1
 !     CALL XERMSG ('SLATEC', 'PCHDF', 'K LESS THAN THREE', IERR, 1)
-      write(*,*)'slatec pchdf error: k less than three'
-      PCHDF_R8 = ZERO
+!     write(*,*)'slatec pchdf error: k less than three'
+      PCHDF_R8_VAL = ZERO
       RETURN
 !------------- LAST LINE OF PCHDF FOLLOWS ------------------------------
-  end function pchdf_r8
+  end subroutine pchdf_r8
 
 
-  subroutine pchfe_r8(N,X,F,D,INCFD,SKIP,NE,XE,FE,IERR)
+  pure subroutine pchfe_r8(N,X,F,D,INCFD,SKIP,NE,XE,FE,IERR)
 !***BEGIN PROLOGUE  PCHFE
 !***DATE WRITTEN   811020   (YYMMDD)
 !***REVISION DATE  870707   (YYMMDD)
@@ -7684,7 +7691,7 @@ end subroutine partition_i
       IERR = -1
 !     CALL XERROR ('PCHFE -- NUMBER OF DATA POINTS LESS THAN TWO'
 !    *           , 44, IERR, 1)
-      write(*,*)'pchfe error: number of data points less than two'
+!     write(*,*)'pchfe error: number of data points less than two'
       RETURN
 !
  5002 CONTINUE
@@ -7692,7 +7699,7 @@ end subroutine partition_i
       IERR = -2
 !     CALL XERROR ('PCHFE -- INCREMENT LESS THAN ONE'
 !    *           , 32, IERR, 1)
-      write(*,*)'pchfe error: increment less than one'
+!     write(*,*)'pchfe error: increment less than one'
       RETURN
 !
  5003 CONTINUE
@@ -7700,7 +7707,7 @@ end subroutine partition_i
       IERR = -3
 !     CALL XERROR ('PCHFE -- X-ARRAY NOT STRICTLY INCREASING'
 !    *           , 40, IERR, 1)
-      write(*,*)'pchfe error: x-array not strictly increasing'
+!     write(*,*)'pchfe error: x-array not strictly increasing'
       RETURN
 !
  5004 CONTINUE
@@ -7708,7 +7715,7 @@ end subroutine partition_i
       IERR = -4
 !     CALL XERROR ('PCHFE -- NUMBER OF EVALUATION POINTS LESS THAN ONE'
 !    *           , 50, IERR, 1)
-      write(*,*)'pchfe error: number of evaluation points less than one'
+!     write(*,*)'pchfe error: number of evaluation points less than one'
       RETURN
 !
  5005 CONTINUE
@@ -7717,13 +7724,13 @@ end subroutine partition_i
       IERR = -5
 !     CALL XERROR ('PCHFE -- ERROR RETURN FROM CHFEV -- FATAL'
 !    *           , 41, IERR, 2)
-      write(*,*)'pchfe error: error return form chfev -- fatal'
+!     write(*,*)'pchfe error: error return form chfev -- fatal'
       RETURN
 !------------- LAST LINE OF PCHFE FOLLOWS ------------------------------
   end subroutine pchfe_r8
 
 
-  subroutine chfev_r8(X1,X2,F1,F2,D1,D2,NE,XE,FE,NEXT,IERR)
+  pure subroutine chfev_r8(X1,X2,F1,F2,D1,D2,NE,XE,FE,NEXT,IERR)
 !***BEGIN PROLOGUE  CHFEV
 !***DATE WRITTEN   811019   (YYMMDD)
 !***REVISION DATE  870707   (YYMMDD)
@@ -7821,8 +7828,9 @@ end subroutine partition_i
 !  DECLARE LOCAL VARIABLES.
 !
       INTEGER  I
-      REAL(kind=DP) :: C2, C3, DEL1, DEL2, DELTA, H, X, XMI, XMA, ZERO
-      DATA  ZERO /0./
+      REAL(kind=DP) :: C2, C3, DEL1, DEL2, DELTA, H, X, XMI, XMA
+
+      real(kind=DP), parameter :: ZERO=0.0_DP
 !
 !  VALIDITY-CHECK ARGUMENTS.
 !
@@ -7871,7 +7879,7 @@ end subroutine partition_i
       IERR = -1
 !     CALL XERROR ('CHFEV -- NUMBER OF EVALUATION POINTS LESS THAN ONE'
 !    *           , 50, IERR, 1)
-      write(*,*)'chfev error: number of evaluation points less than one'
+!     write(*,*)'chfev error: number of evaluation points less than one'
       RETURN
 !
  5002 CONTINUE
@@ -7879,7 +7887,7 @@ end subroutine partition_i
       IERR = -2
 !     CALL XERROR ('CHFEV -- INTERVAL ENDPOINTS EQUAL'
 !    *           , 33, IERR, 1)
-      write(*,*)'chfev error: interval endpoints equal'
+!     write(*,*)'chfev error: interval endpoints equal'
       RETURN
 !------------- LAST LINE OF CHFEV FOLLOWS ------------------------------
   end subroutine chfev_r8
