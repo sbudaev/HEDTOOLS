@@ -5224,5 +5224,49 @@ use ISO_C_BINDING
 
 end subroutine FS_CHDIR
 
+!-------------------------------------------------------------------------------
+
+subroutine SET_ENVIRONMENT_VARIABLE(var_name, value, return_code)
+!===============================================================================
+! SET_ENVIRONMENT_VARIABLE
+! PURPOSE: Change an environment variable from withn a Fortran program using
+! POSIX standard C call via the Fortran interface.
+!
+! See C file system interface docs (GNU C):
+!https://www.gnu.org/software/libc/manual/html_node/File-System-Interface.html
+!
+! CALL PARAMETERS:
+!    Character name of the system environment variable.
+!    Character (new) value of the environment variable.
+!    Optional return code that indicates the success/failure of the operation.
+!
+! Author: Walt Brainerd <walt.brainerd@gmail.com>
+! Modified by Sergey Budaev
+!===============================================================================
+
+use ISO_C_BINDING, only: c_int, c_char, c_null_char
+
+   character(len=*), intent(in) :: var_name
+   character(len=*), intent(in) :: value
+   integer, intent(out), optional :: return_code
+
+   integer(kind=c_int) :: rc, return_value, flag
+
+   interface
+      function setenv(varname, value, flag) bind(c) result (r)
+         import :: c_char, c_int
+         character(kind=c_char), dimension(*) :: varname
+         character(kind=c_char), dimension(*) :: value
+         integer(kind=c_int), value :: flag
+      end function setenv
+   end interface
+
+   return_value = setenv(trim(var_name)//c_null_char, &
+                         trim(value)//c_null_char, flag)
+
+   if (present(return_code)) return_code = flag
+
+end subroutine SET_ENVIRONMENT_VARIABLE
+
 
 end module CSV_IO
