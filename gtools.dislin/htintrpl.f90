@@ -53,6 +53,9 @@ character(len=255), dimension(100) :: tmp_array_str, xx_array_str, yy_array_str
 ! Grid values and target interpolation data values
 real, dimension(:), allocatable :: xx, yy, xx_interpolate, yy_interpolate
 
+! Logical flag indicating that only the grid curve should be produced.
+logical :: is_grid_only
+
 !> Plot scale range coincide with grid values.
 real :: min_xx, max_xx
 
@@ -300,6 +303,8 @@ end do
 min_xx = minval(xx)
 max_xx = maxval(xx)
 
+is_grid_only = .FALSE.
+
 ! If there is no interpolation array provided on the command line, allocate
 ! a single-value array slightly outside of the grid xx array range, so it
 ! won't show on the plot.
@@ -307,6 +312,7 @@ if (.not. allocated(xx_interpolate)) then
   allocate(xx_interpolate(1)); allocate(yy_interpolate(1))
   xx_interpolate = max_xx + 0.1 * max_xx
   print *, "WARNING: no interpolation array provided. Grid plot only."
+  is_grid_only = .TRUE.
 end if
 
 plotstep = (max_xx - min_xx) / real(n_steps)
@@ -366,10 +372,13 @@ end if
 
   call qplcrv(plotx, ploty, n_steps, 'FIRST')   ! line of interpolation grid
 
-  !call qplsca(xx, yy, size(xx))    ! dots of interpolation grid (DISABLED)
-
-  ! Plot dots for the target interpolation data.
-  call qplsca(xx_interpolate, yy_interpolate, size(xx_interpolate))
+  if (is_grid_only) then
+    ! Show dots of interpolation grid (normally DISABLED)
+    call qplsca(xx, yy, size(xx))
+  else
+    ! Plot dots for the target interpolation data.
+    call qplsca(xx_interpolate, yy_interpolate, size(xx_interpolate))
+  end if
 
 !end block PLOT_DISLIN
 !-------------------------------------------------------------------------------
