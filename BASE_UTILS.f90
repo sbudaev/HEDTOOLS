@@ -7898,7 +7898,7 @@ end subroutine partition_i
 
 !-------------------------------------------------------------------------------
 
-function CSPLINE_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
+pure function CSPLINE_INTERPOL_VECTOR_R4 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
 ! CSPLINE_INTERPOL_VECTOR_R4: A vector (one-dimensional) wrapper to the
 !      CSPLINE, cubic spline  interpolation subroutine (default
@@ -7922,7 +7922,7 @@ end function CSPLINE_INTERPOL_VECTOR_R4
 
 !-------------------------------------------------------------------------------
 
-function CSPLINE_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
+pure function CSPLINE_INTERPOL_VECTOR_R8 (xx, yy, xi) result (vector_output)
 !*******************************************************************************
 ! CSPLINE_INTERPOL_VECTOR_R8: A vector (one-dimensional) wrapper to the
 !      CSPLINE, cubic spline  interpolation subroutine (default
