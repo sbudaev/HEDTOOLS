@@ -5261,8 +5261,8 @@ use ISO_C_BINDING, only: c_int, c_char, c_null_char
       end function setenv
    end interface
 
-   return_value = setenv(trim(var_name)//c_null_char, &
-                         trim(value)//c_null_char, flag)
+   return_value = setenv( trim(var_name)//c_null_char,                        &
+                          trim(value)//c_null_char, flag )
 
    if (present(return_code)) return_code = flag
 

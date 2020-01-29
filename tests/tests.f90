@@ -118,6 +118,7 @@ use m_tests
 
  print *, "*** Tests started ***"
  call test_CSV_IO()
+ call test_CSV_IO_Posix()
  call test_STRINGS()
  call test_BASE_UTILS_zerofun()
  call test_BASE_UTILS_qsort()
@@ -500,7 +501,42 @@ use BASE_UTILS
 
 end subroutine test_BASE_UTILS_cspline_DP
 
+subroutine test_CSV_IO_Posix
 
+use CSV_IO, only: SET_ENVIRONMENT_VARIABLE
+
+implicit none
+
+logical, parameter :: DO_PRINT = .true.
+
+character(len=*), parameter :: ENV_VAR="XZZ_A"
+character(len=255) :: system_val_old
+character(len=*), parameter :: ENV_VAR_NEW_VAL="new_value"
+character(len=255) :: system_val_new
+
+integer :: ierr
+
+ierr = 0
+
+call get_environment_variable(ENV_VAR, system_val_old)
+
+if (DO_PRINT) print *, "Env. var. '", ENV_VAR, "' = '", trim(system_val_old),"'"
+
+call SET_ENVIRONMENT_VARIABLE(ENV_VAR, ENV_VAR_NEW_VAL)
+
+!print *, ierr
+
+if (DO_PRINT) print *, " - New value set to '", trim(ENV_VAR_NEW_VAL), "'"
+
+call get_environment_variable(ENV_VAR, system_val_new)
+
+if (DO_PRINT) print *, " - Check new value '", trim(system_val_new), "'"
+
+if ( trim(system_val_new) /= trim(ENV_VAR_NEW_VAL) )                          &
+          call fail_test("SET_ENVIRONMENT_VARIABLE value mismatch: " //       &
+                          trim(system_val_old) // "::" // trim(system_val_new))
+
+end subroutine test_CSV_IO_Posix
 
 
 end program tests_hedtools
