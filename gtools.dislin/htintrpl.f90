@@ -368,7 +368,11 @@ end if
 
   call errmod('ALL', 'OFF') ! Disable all messages (goes after disini)
 
-  call titlin( 'Interpolation data (' // trim(ALG_NAME(int_alg)) // ')' , 1 )
+  if (is_grid_only) then
+    call titlin( 'Interpolation grid (' // trim(ALG_NAME(int_alg)) // ')' , 1 )
+  else
+    call titlin( 'Interpolation data (' // trim(ALG_NAME(int_alg)) // ')' , 1 )
+  end if
 
   call qplcrv(plotx, ploty, n_steps, 'FIRST')   ! line of interpolation grid
 
