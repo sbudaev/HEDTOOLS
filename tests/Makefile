@@ -528,7 +528,8 @@ endif
 # Return to default state
 distclean: clean
 	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(MOD_ALL) \
-					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
+					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe \
+					zf_*genmod.f90
 	-$(RM) $(DOXYPATH)
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
