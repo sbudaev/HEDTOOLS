@@ -5123,6 +5123,14 @@ indexterm:[REMOVESP]
 
 This routine removes spaces, tabs, and control characters in string +str+.
 
+Subroutine: OUTSTRIP
+~~~~~~~~~~~~~~~~~~~~
+
++SUBROUTINE OUTSTRIP(str, set)+
+indexterm:[OUTSTRIP]
+
+This subroutine removes all characters in the set +set+ from the string +str+.
+
 Subroutine: VALUE
 ~~~~~~~~~~~~~~~~~
 

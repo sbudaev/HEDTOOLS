@@ -912,9 +912,9 @@ end function IS_NUMERIC
 
 !**********************************************************************
 
-elemental subroutine STRIP(string,set)
+elemental subroutine OUTSTRIP(string,set)
 !*******************************************************************************
-! STRIP
+! OUTSTRIP
 ! PURPOSE: removes (strips) a set of characters from a string
 !
 ! CALL PARAMETERS:
@@ -941,6 +941,6 @@ elemental subroutine STRIP(string,set)
       return
     end if
   end do
-end subroutine STRIP
+end subroutine OUTSTRIP
 
 end module base_strings
