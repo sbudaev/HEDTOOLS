@@ -910,5 +910,37 @@ function IS_NUMERIC(string, include_blank) result (num_flag)
 
 end function IS_NUMERIC
 
+!**********************************************************************
+
+elemental subroutine STRIP(string,set)
+!*******************************************************************************
+! STRIP
+! PURPOSE: removes (strips) a set of characters from a string
+!
+! CALL PARAMETERS:
+!    Character string to be stripped
+!    Character string containing the set of characters to be stripped
+!
+! Author: Rosetta code
+!         https://www.rosettacode.org/wiki/Strip_a_set_of_characters_from_a_string#Fortran
+!*******************************************************************************
+
+  character(len=*), intent(inout) :: string
+  character(len=*), intent(in)    :: set
+  integer                         :: old, new, stride
+
+  old = 1; new = 1
+  do
+    stride = scan( string( old : ), set )
+    if ( stride > 0 ) then
+      string( new : new+stride-2 ) = string( old : old+stride-2 )
+      old = old+stride
+      new = new+stride-1
+    else
+      string( new : ) = string( old : )
+      return
+    end if
+  end do
+end subroutine STRIP
 
 end module base_strings
