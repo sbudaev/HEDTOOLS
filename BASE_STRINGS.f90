@@ -700,11 +700,11 @@ end subroutine writeq_si
 
 !**********************************************************************
 
-function is_letter(ch) result(res)
+pure function is_letter(ch) result(res)
 
 ! Returns .true. if ch is a letter and .false. otherwise
 
-character :: ch
+character, intent(in) :: ch
 logical :: res
 
 select case(ch)
