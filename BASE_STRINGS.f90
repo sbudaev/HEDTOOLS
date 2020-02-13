@@ -719,11 +719,11 @@ end function is_letter
 
 !**********************************************************************
 
-function is_digit(ch) result(res)
+pure function is_digit(ch) result(res)
 
 ! Returns .true. if ch is a digit (0,1,...,9) and .false. otherwise
 
-character :: ch
+character, intent(in) :: ch
 logical :: res
 
 select case(ch)
@@ -849,7 +849,7 @@ end subroutine removebksl
 !**********************************************************************
 !**********************************************************************
 
-function IS_NUMERIC(string, include_blank) result (num_flag)
+pure function IS_NUMERIC(string, include_blank) result (num_flag)
 !*******************************************************************************
 ! IS_NUMERIC
 ! PURPOSE: Checks if a string is a string representation of a number, i.e.
