@@ -2223,30 +2223,30 @@ image:doc/img/aha_modules.svg[width=480,align="left"]
 
 [[AHA_MOD_REF]]
 
-** Module http://ahamodel.uib.no/doxydoc/classcommondata.html[COMMONDATA] Setting
+** Module https://ahamodel.uib.no/doxydoc/namespacecommondata.html[COMMONDATA] Setting
    common parameters for the model.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__genome.html[THE_GENOME]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__genome.html[THE_GENOME]
    Implementation of the genome objects, gene, alleles, chromosomes.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__hormones.html[THE_HORMONES]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__hormones.html[THE_HORMONES]
    Architecture of the hormones and their functions.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__neurobio.html[THE_NEUROBIO]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__neurobio.html[THE_NEUROBIO]
    Implements neurobiological architectures based on sigmoid function,
    decision making and GOS.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__individual.html[THE_INDIVIDUAL]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__individual.html[THE_INDIVIDUAL]
    Implements the individual agent in the final form and the individual-based
    model functions.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__population.html[THE_POPULATION]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__population.html[THE_POPULATION]
    Implements the population(s) of agents.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__environment.html[THE_ENVIRONMENT]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__environment.html[THE_ENVIRONMENT]
    Implements the environment and its variation.
 
-** Module http://ahamodel.uib.no/doxydoc/classthe__evolution.html[THE_EVOLUTION]
+** Module https://ahamodel.uib.no/doxydoc/namespacethe__evolution.html[THE_EVOLUTION]
    Implements the genetic algorithm.
 
 IMPORTANT: Solaris Studio Fortran compiler f95 v. 12.4 does not support all
