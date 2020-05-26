@@ -1,11 +1,6 @@
 AHA! Fortran Modelling Tools Manual
 ===================================
 Sergey Budaev <sergey.budaev@uib.no>
-////////////////////////////////////////////////////////////////////////////////
-Note: asciidoc supports Id: svn tags, asciidoctor does not support them
-      but asciidoctor supports arbitrary revision number or date line
-////////////////////////////////////////////////////////////////////////////////
-//Revision 8465 (2019-06-23)
 $Id$
 :toc:
 :description: Modelling tools and coding style for AHA Model environment.
@@ -17,7 +12,9 @@ $Id$
 
 ////////////////////////////////////////////////////////////////////////////////
 Notes:
-    * Note: asciidoc document, Generate pdf book with
+    * asciidoc supports Id: svn tags, asciidoctor does not support them
+      but asciidoctor supports arbitrary revision number or date line
+    * asciidoc document, Generate pdf book with
       a2x -fpdf BASE_UTILS.adoc
     * manual on asciidoc is available at: http://asciidoc.org/userguide.html
       (within the comment block ///// , so won't render in the final document)
@@ -49,7 +46,19 @@ are designed such that they can be used in many different simulation projects.
 This document describes HEDTOOLS and outlines the software requirements and
 general coding style for the AHA model.
 
+*References*
+
 * The AHA Model web site is https://ahamodel.uib.no[https://ahamodel.uib.no]
+
+* Budaev, S., Jorgensen, C., Mangel, M., Eliassen, S., & Giske, J. (2019).
+  Decision-making from the animal perspective: Bridging ecology and
+  subjective cognition. Frontiers in Ecology and Evolution, 7, 164.
+  https://doi.org/10.3389/fevo.2019.00164[doi:10.3389/fevo.2019.00164]
+
+* Budaev, S., Giske, J., & Eliassen, S. (2018). AHA: A general
+  cognitive architecture for Darwinian agents. Biologically
+  Inspired Cognitive Architectures, 25, 51–57.
+  https://doi.org/10.1016/j.bica.2018.07.009[doi:10.1016/j.bica.2018.07.009]
 
 Document date: {docdate}. Latest PDF version:
 https://ahamodel.uib.no/doc/HEDTOOLS.pdf
@@ -233,12 +242,6 @@ directory (i.e. does not require administrative rights). How to use this program
 for building for the AHA model is <<CODEBLOCKS_USE, described below>>.
 indexterm:[Code::Blocks]
 
-////////////////////////////////////////////////////////////////////////////////
-TODO: CSV editors -- do we need them? or just use Office?:
-http://recsveditor.sourceforge.net/
-https://sourceforge.net/projects/javacsveditor/
-////////////////////////////////////////////////////////////////////////////////
-
 ** *Follow: A logfile reading program* (Optional)
 [[FOLLOW_GET]]
 
@@ -246,11 +249,6 @@ Following a <<TO_LOGGER, logfile>> while executing a program is done trivially
 on Linux: +tail -f some_log_file.txt+. There is a Java GUI program for reading
 log files that works on all major platforms installs by just placing in some
 directory: Follow. Available from http://sourceforge.net/projects/follow/.
-
-////////////////////////////////////////////////////////////////////////////////
-FIRST, WE NEED A BRIEF INTRODUCTION TO THE PROGRAMMING / SOFTWARE TOOLS AND
-GENERAL INTRO ON PROGRAMMING STYLE, INCLUDING OBJECT-ORIENTED FORTRAN FEATURES.
-////////////////////////////////////////////////////////////////////////////////
 
 Coding style: General guidelines and tips
 -----------------------------------------
@@ -966,11 +964,6 @@ some_allele%allele_label_set("SEX_DETERMINATION")
 
 Document code as you write it with Doxygen
 ------------------------------------------
-
-////////////////////////////////////////////////////////////////////////////////
-Local documentation for Doxygen on Linux should be here:
-file:///usr/share/doc/doxygen/html/index.html
-////////////////////////////////////////////////////////////////////////////////
 
 <<DOXY_GET, Doxygen>> is a very useful tool which allows to extract and produce
 documentation from the source code in a highly structured manner. Prior to
@@ -3080,8 +3073,6 @@ Thus, subs ending with *_WRITE* and *_CLOSE* do physical write.
 This module is most suited at this moment for CSV file _output_ rather than
 input.
 
-//Input CSV is to be done later if necessary.
-
 This module widely uses *optional arguments*. They may or may not be present
 in the function/subroutine call. If not all parameters are passed, so called
 _named parameters_ are used. That is, the name of the parameter(s) within the
@@ -5000,16 +4991,6 @@ indexterm:[LOG_SHUTDOWN]
 call LOG_SHUTDOWN ()  ! close logger
 --------------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////////////
-Error trapping modules, not described so far...
-
-Error trapping modules: ERRORS, ASSERT, EXCEPTIONS
---------------------------------------------------
-
-These modules can be used for error trapping and handling. To be done
-////////////////////////////////////////////////////////////////////////////////
-
-
 Module: BASE_STRINGS
 --------------------
 
@@ -6218,10 +6199,6 @@ folder and can be included from their own directory to several Visual
 Studio projects.
 
 image:doc/img/img_doc_ms_studio_solution.png[width=510,align="left"]
-
-////////////////////////////////////////////////////////////////////////////////
-set maximum width for images (whole page width) 510
-////////////////////////////////////////////////////////////////////////////////
 
 Now the code should build successfully (calling the modelling tools code from
 the library) as normal (e.g. *Build -> Build Solution*).
