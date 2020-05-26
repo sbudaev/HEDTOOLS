@@ -5110,7 +5110,12 @@ Subroutine: OUTSTRIP
 +SUBROUTINE OUTSTRIP(str, set)+
 indexterm:[OUTSTRIP]
 
-This subroutine removes all characters in the set +set+ from the string +str+.
+This subroutine removes all characters in the set +set+ from the string +str+:
+
+[source]
+--------------------------------------------------------------------------------
+call OUTSTRIP(name_sys, ":,.:")   ! remove punctuation from name_sys
+--------------------------------------------------------------------------------
 
 Subroutine: VALUE
 ~~~~~~~~~~~~~~~~~
@@ -5246,7 +5251,7 @@ indexterm:[IS_LETTER]
 This function returns the logical value +.TRUE.+ if the input character +ch+ is
 a letter (a–z or A–Z). It returns the value +.FALSE.+ otherwise.
 
-Subroutine: IS_DIGIT
+Function: IS_DIGIT
 ~~~~~~~~~~~~~~~~~~~~
 
 +FUNCTION IS_DIGIT(ch)+
