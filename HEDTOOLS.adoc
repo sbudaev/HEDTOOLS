@@ -6462,7 +6462,7 @@ DISLIN
 
 The *DISLIN* is a powerful cross-platform graphics library that can be called
 from Fortran, C/C++ and other programming languages. For more information refer
-the web page: http://www.dislin.de/[http://www.dislin.de/overview.html].
+the web page: http://www.dislin.de/[http://www.dislin.de/].
 
 DISLIN is developed in the Max Planck Institute for Solar System Research.
 
