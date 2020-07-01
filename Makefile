@@ -404,10 +404,15 @@ inc: $(AUTOGEN_HEADER_RAND)
 # Make PDF (or other::  DOCFMT=xxx) using asciidoc
 doc: $(DOCFIL).$(DOCFMT)
 
+# Make fancy HTML documentation
+webdoc: $(DOCFIL).adoc
+	asciidoc -b html5 -a icons -a toc2 -a theme=flask $(DOCFIL).adoc
+
 # Clean workspace completely - distribution state
 distclean: neat
 	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
-	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb *.zip \
+	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb \
+	       *.zip $(DOCFIL).html \
 	       ?NULL
 	$(MAKE) -C $(TOOLS_PATH) distclean
 	$(MAKE) -C $(TESTS_PATH) distclean
@@ -437,6 +442,7 @@ help:
 	@echo "Autogenerate documentation -- requires the asciidoc tool, output"
 	@echo "format is set by DOCFMT variable, default format is pdf"
 	@echo "    make doc"
+	@echo "    make webdoc"
 	@echo ""
 	@echo "Cleaning:"
 	@echo "    make clean, make cleandata (removes object files but not library),"
