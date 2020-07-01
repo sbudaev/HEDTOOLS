@@ -1194,6 +1194,10 @@ make commits frequently. Also frequently integrate others' changes. Otherwise,
 there is an increasing change to get version conflicts that have to be solved
 manually.
 
+WARNING:   *Never* use the standard tools provided by the operating system
+           (e.g. Windows Explorer) to *delete/copy/move/rename* files managed
+           by Subversion. *Always use the Subversion for all file operations.*
+
 IMPORTANT: Always try to commit some logically integrated piece of code rather
            than do it haphazardly. Write informative commit messages.
            Commit changes frequently.
