@@ -412,7 +412,7 @@ webdoc: $(DOCFIL).adoc
 distclean: neat
 	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb \
-	       *.zip $(DOCFIL).html \
+	       *.zip $(DOCFIL).html *.css \
 	       ?NULL
 	$(MAKE) -C $(TOOLS_PATH) distclean
 	$(MAKE) -C $(TESTS_PATH) distclean
