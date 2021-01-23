@@ -1,6 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
-! $Id$
+! $Id: hthist.f90 9343 2020-01-28 18:58:40Z sbu062 $
 !-------------------------------------------------------------------------------
 ! Produce a histogram of data that are provided at the command line.
 ! If the output plot file name is not provided, the plot goes to the
@@ -55,7 +55,7 @@ implicit none
 
 ! Warning: SVN_REVISION is updated automatically by Subversion at commit.
 !          do not edit manually!
-character(len=*), parameter :: SVN_REVISION = "$Revision$"
+character(len=*), parameter :: SVN_REVISION = "$Revision: 9343 $"
 
 ! The name of the graphics library used for plotting.
 character(len=*), parameter :: GRAPHICS_LIB = "PGPLOT"

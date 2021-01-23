@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id$
-# $HeadURL$
+# $Id: Makefile 10074 2020-12-03 10:42:54Z sbu062 $
+# $HeadURL: https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/gtools.pgplot/Makefile $
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>
@@ -33,9 +33,6 @@ GRAPHLIB = -lpgplot
 # Root directory of the GrWin installation on Windows.
 # NOTE: can differ in 32 and 64 bit distributions!
 GRWIN_ROOT = C:/GrWin/MinGW_gfortran_x6
-
-# Root of the host name to run in HPC cluster / batch mode, not directly
-HOST_HPC_ROOT=fimm
 
 #*******************************************************************************
 # Main building blocks, define the main program source, executable name (-o)
@@ -70,7 +67,7 @@ HEDTOOLS = BASE_UTILS.f90 BASE_STRINGS.f90 BASE_CSV_IO.f90 BASE_LOGGER.f90 \
 HTOOLMOD = base_utils.mod base_strings.mod csv_io.mod logger.mod base_random.mod
 
 # Path to HEDTOOLS and IEEE non-intrinsic libs
-HEDTOOLSDIR =  ../../HEDTOOLS
+HEDTOOLSDIR =  ../
 IEEEPATH = $(HEDTOOLSDIR)/IEEE
 
 #===============================================================================
@@ -393,9 +390,6 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 # This is the search paths for looking for components, separated by blanks
 VPATH = $(HEDTOOLSDIR) $(IEEEPATH)
 
-# Determine if we are running on HPC cluster
-RUNHOST_HPC = $(shell hostname | grep -c $(HOST_HPC_ROOT))
-
 # Determine current SVN version of the code
 SVN_VER = $(shell svn info | grep Revision: | cut -d " " -f 2)
 
@@ -451,7 +445,7 @@ help:
 	@echo "    Call to the shortcuts from the Command Prompt menu under Intel "
 	@echo "    Parallel Studio XE"
 	@echo ------------------------------------------------------------------------
-	@echo PROJECT: Rev: $(SVN_VER), $(PLATFORM_TYPE), HPC \($(HOST_HPC_ROOT)\) $(RUNHOST_HPC)
+	@echo PROJECT: Rev: $(SVN_VER), $(PLATFORM_TYPE)
 	@echo Source: $(SRC) -- $(OUT) -- $(OBJ)
 	@echo ------------------------------------------------------------------------
 
@@ -470,22 +464,8 @@ intel:
 sun:
 	@$(MAKE) -f $(THIS_FILE) FC=f95
 
-# Run through PBS job script on HPC, check if we are on cluster RUNHOST_HPC
-#run: $(OUT) $(JOB) $(SRC)
-run: $(OUT) $(SRC)
-ifeq ($(RUNHOST_HPC),1)
-	qsub $(JOB)
-	@echo "NOTE: fimm job created"
-	@echo "Batch commands:"
-	@echo "  showq -u USER = show user's jobs'"
-	@echo "  qstat = display all jobs"
-	@echo "  qdel jobid = delete job"
-	@echo "  qhold = pause job"
-	@echo "  qrls = resume job"
-	@echo "https://docs.hpc.uib.no/wiki/Job_execution_(Fimm)"
-else
-	@$(MAKE) -f $(THIS_FILE) run_local
-endif
+# Run
+run: run_local
 
 # Note -- this is local start/run on all supported systems
 run_local: $(OUT) $(SRC)

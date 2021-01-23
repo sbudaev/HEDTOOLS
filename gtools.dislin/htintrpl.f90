@@ -1,6 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
-! $Id$
+! $Id: htintrpl.f90 9350 2020-01-29 11:22:46Z sbu062 $
 !-------------------------------------------------------------------------------
 ! Produce interpolation plot of data that are ptovided at the command line
 ! Input: Two arrays for the interpolation grid X, Y, they must be of the same
@@ -34,7 +34,7 @@ implicit none
 
 ! Warning: SVN_REVISION is updated automatically by Subversion at commit.
 !          do not edit manually!
-character(len=*), parameter :: SVN_REVISION = "$Revision$"
+character(len=*), parameter :: SVN_REVISION = "$Revision: 9350 $"
 
 ! The name of the graphics library used for plotting.
 character(len=*), parameter :: GRAPHICS_LIB = "DISLIN"

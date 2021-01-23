@@ -1,7 +1,7 @@
 AHA! Fortran Modelling Tools Manual
 ===================================
 Sergey Budaev <sergey.budaev@uib.no>
-$Id$
+$Id: HEDTOOLS.adoc 9940 2020-10-26 07:48:20Z sbu062 $
 :toc:
 :description: Modelling tools and coding style for AHA Model environment.
 :lang: en
@@ -1606,13 +1606,11 @@ user who did the revision. This is how it will appear in the source code:
 --------------------------------------------------------------------------------
 ! The comment below incorporates SVN revision ID, it should apparently be
 !   inserted into a comment, so does not affect the compiler:
-! $Id$
+! $Id: HEDTOOLS.adoc 9940 2020-10-26 07:48:20Z sbu062 $
 !                                                          other code follows...
 ......
 implicit none
-......
-! Public constants
-integer, public, parameter :: MAX_UNIT=255      ! Maximum unit number (in old
+...
 --------------------------------------------------------------------------------
 
 To set up this tag we just have to issue such command:
@@ -1625,7 +1623,7 @@ svn propset svn:keywords "Id" file_name_to_set_keyword.f90
 and include two strings +$Id anything in between initially $+ in this source
 text to set where the keywords should be placed. Obviously, we have to *commit*
 change to the server after this. From now on, the information will be updated
-automatically between the +$id ...+ and +$+ symbols. So the source code itself
+automatically between the +$Id ...+ and +$+ symbols. So the source code itself
 will have comments indicating the revision number etc. There are many useful
 tags that can be placed in such a way. For example +$Date $Revision $HeadURL
 $LastChangedDate+. If several tags should be placed, one can set up several

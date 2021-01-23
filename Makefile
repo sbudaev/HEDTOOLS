@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id$
+# $Id: Makefile 10075 2020-12-03 12:42:00Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -8,7 +8,8 @@
 #      Also, building shared dll's might be problematic with Intel Fortran on
 #      Windows.
 # Requires the following command line utilities
-#      (may NOT be available on Windows): make, uname, zip, svn
+#      (may NOT be available on Windows): echo, make, uname, zip, svn
+#      tools use also expr, grep
 #-------------------------------------------------------------------------------
 
 # Supported Fortran compiler types
@@ -365,9 +366,13 @@ lib: $(LIB)
 .PHONY: tools
 
 tools:
+ifeq ($(PLATFORM_TYPE),Windows)
+	for %%t in ($(basename $(TOOLS_LIST))) do $(MAKE) -C $(TOOLS_PATH) SRC=%%t.f90 OUT=%%t.exe
+else
 	for tool in $(basename $(TOOLS_LIST)); do \
 		$(MAKE) -C $(TOOLS_PATH) SRC=$$tool.f90 OUT=$$tool.exe; \
 	done
+endif
 
 .PHONY: tests
 tests:
@@ -427,36 +432,36 @@ neat:
 #-------------------------------------------------------------------------------
 .PHONY: help
 help:
-	@echo ""
-	@echo ------------------------------------------------------------------------
-	@echo "Building Model Tools as libratry ------ via $(THIS_FILE)"
-	@echo ------------------------------------------------------------------------
-	@echo "Normal build: make (uses $(FC) by default)"
-	@echo ""
-	@echo "Build the library with Intel Fortran Compiler:"
-	@echo "    make FC=ifort"
-	@echo ""
-	@echo "Build binary (and) plotting tools:"
-	@echo "    make tools"
-	@echo ""
-	@echo "Autogenerate documentation -- requires the asciidoc tool, output"
-	@echo "format is set by DOCFMT variable, default format is pdf"
-	@echo "    make doc"
-	@echo "    make webdoc"
-	@echo ""
-	@echo "Cleaning:"
-	@echo "    make clean, make cleandata (removes object files but not library),"
-	@echo "    make distclean (everything, leaving the distro state!)"
-	@echo ------------------------------------------------------------------------
-	@echo "NOTES:"
-	@echo " 1. Required command line utilities: uname, zip. For Windows available"
-	@echo "     from: http://gnuwin32.sourceforge.net/packages.html"
-	@echo " 2. Intel Fortran compiler under Windows: set up environment for "
-	@echo "    Microsoft Visual Studio 2010 x64 tools before calling make."
-	@echo "    Check the Command Prompt menu under Intel Parallel Studio XE"
-	@echo ------------------------------------------------------------------------
-	@echo Revision: $(SVN_VER), Platform: $(PLATFORM_TYPE)
-	@echo ------------------------------------------------------------------------
+	@$(ECHO) ""
+	@$(ECHO) ------------------------------------------------------------------------
+	@$(ECHO) "Building Model Tools as libratry ------ via $(THIS_FILE)"
+	@$(ECHO) ------------------------------------------------------------------------
+	@$(ECHO) "Normal build: make (uses $(FC) by default)"
+	@$(ECHO) ""
+	@$(ECHO) "Build the library with Intel Fortran Compiler:"
+	@$(ECHO) "    make FC=ifort"
+	@$(ECHO) ""
+	@$(ECHO) "Build binary (and) plotting tools:"
+	@$(ECHO) "    make tools"
+	@$(ECHO) ""
+	@$(ECHO) "Autogenerate documentation -- requires the asciidoc tool, output"
+	@$(ECHO) "format is set by DOCFMT variable, default format is pdf"
+	@$(ECHO) "    make doc"
+	@$(ECHO) "    make webdoc"
+	@$(ECHO) ""
+	@$(ECHO) "Cleaning:"
+	@$(ECHO) "    make clean, make cleandata (removes object files but not library),"
+	@$(ECHO) "    make distclean (everything, leaving the distro state!)"
+	@$(ECHO) ------------------------------------------------------------------------
+	@$(ECHO) "NOTES:"
+	@$(ECHO) " 1. Required command line utilities: echo, make, uname, zip, svn"
+	@$(ECHO) "    For Windows, see http://gnuwin32.sourceforge.net/packages.html"
+	@$(ECHO) " 2. Intel Fortran compiler under Windows: set up environment for "
+	@$(ECHO) "    Microsoft Visual Studio 2010 x64 tools before calling make."
+	@$(ECHO) "    Check the Command Prompt menu under Intel Parallel Studio"
+	@$(ECHO) ------------------------------------------------------------------------
+	@$(ECHO) Revision: $(SVN_VER), Platform: $(PLATFORM_TYPE)
+	@$(ECHO) ------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 
@@ -482,7 +487,7 @@ $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
 $(AUTOGEN_HEADER_RAND): $(BASE_RANDOM.f90) $(THIS_FILE)
 	$(AUTOGEN_COMMENT_RANDOM)
 	$(AUTOGEN_CODE_RANDOM)
-	@echo Generated include: $(AUTOGEN_HEADER_RAND) for $(FC) using $(ECHO)
+	@$(ECHO) Generated include: $(AUTOGEN_HEADER_RAND) for $(FC) using $(ECHO)
 
 # compile modules
 BASE_UTILS.$(OBJEXT): BASE_UTILS.f90

@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id$
+! SVN $Id: BASE_UTILS.f90 9365 2020-01-29 15:20:39Z sbu062 $
 !*******************************************************************************
 ! BASE_UTILS:
 ! PURPOSE: This module provides basic high level utilities that are used in
