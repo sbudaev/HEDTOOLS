@@ -1,7 +1,7 @@
 AHA! Fortran Modelling Tools Manual
 ===================================
 Sergey Budaev <sergey.budaev@uib.no>
-$Id: HEDTOOLS.adoc 9940 2020-10-26 07:48:20Z sbu062 $
+$Id: HEDTOOLS.adoc 14226 2023-06-18 09:33:07Z sbu062 $
 :toc:
 :description: Modelling tools and coding style for AHA Model environment.
 :lang: en
@@ -1606,7 +1606,7 @@ user who did the revision. This is how it will appear in the source code:
 --------------------------------------------------------------------------------
 ! The comment below incorporates SVN revision ID, it should apparently be
 !   inserted into a comment, so does not affect the compiler:
-! $Id: HEDTOOLS.adoc 9940 2020-10-26 07:48:20Z sbu062 $
+! $Id: HEDTOOLS.adoc 14226 2023-06-18 09:33:07Z sbu062 $
 !                                                          other code follows...
 ......
 implicit none
@@ -2419,8 +2419,8 @@ indexterm:[TOSTR]
 indexterm:[STR]
 indexterm:[NUMTOSTR]
 
-Examples:
-^^^^^^^^^
+Basic examples
+^^^^^^^^^^^^^^
 
 Integer:
 
@@ -2450,7 +2450,8 @@ produces >>3.1415926000000001<<
 TOSTR also converts logical type to the "TRUE" or "FALSE" strings and can also
 accept character string as input. In the latest case it just output the input.
 
-*Optional parameters*
+Optional parameters
+^^^^^^^^^^^^^^^^^^^
 
 TOSTR can also accept standard Fortran format string as the second optional
 *string* parameter, for example:
@@ -2467,11 +2468,11 @@ print *, ">>", TOSTR(12,"(i4)"), "<<"
 produces >>  12<<
 --------------------------------------------------------------------------------
 
-With integers, TOSTR can also generate leading zeros, which is useful for
-auto-generating file names or variable names. In such cases, the number of
-leading zeros is determined by the second optional *integer* parameter. This
-integer sets the template for the leading zeros, the maximum string. The
-exact value is unimportant, only the number of digits is used.
+*Lead zeroes.* With integers, TOSTR can also generate leading zeros, which
+is useful for auto-generating file names or variable names. In such cases,
+the number of leading zeros is determined by the second optional *integer*
+parameter. This integer sets the template for the leading zeros, the maximum
+string. The exact value is unimportant, only the number of digits is used.
 
 For example,
 
@@ -2493,7 +2494,27 @@ print *, "File_" // TOSTR(10, 10000) // ".txt"
 produces File_00010.txt
 --------------------------------------------------------------------------------
 
-*Examples of arrays*
+*Verbatim format spaces.*  With scalar integer and real arguments, TOSTR
+can also retain leading spaces, when called with the third logical argument
+`is_clean`, this really makes sense when the format string specifier is used,
+then verbatim format specifier is used for the output .  When `is_clean`
+is set to TRUE or unset (default), the function output string is cleaned of
+blanks, if it is FALSE, no cleanup is done. For example:
+
+[source]
+--------------------------------------------------------------------------------
+">>" // TOSTR( Output_Stats%total_vol_evacuated, "(f10.4)" ) // "<<"
+! This code produces >>1.8169<<
+--------------------------------------------------------------------------------
+
+[source]
+--------------------------------------------------------------------------------
+">>" // TOSTR( Output_Stats%total_vol_evacuated, "(f10.4)", .FALSE. ) // "<<"
+! produces >>    1.8169<< (verbatim format, leading blanks are not deleted)
+--------------------------------------------------------------------------------
+
+Examples of arrays
+^^^^^^^^^^^^^^^^^^
 
 It is possible to convert numeric arrays to their string representation:
 
@@ -3524,6 +3545,18 @@ Append a single string to the current record:
 [source]
 --------------------------------------------------------------------------------
 call CSV_RECORD_APPEND(record_csv, "ROW_NAMES")
+--------------------------------------------------------------------------------
+
+Note that the string value is by default quoted in the output CSV file. To
+avoid quoting, use optional logical parameter `is_quoted` set to `FALSE`. For
+example
+
+[source]
+--------------------------------------------------------------------------------
+! Here a numeric variable ratio is first converted to a formatted string and
+! then appended to a CSV record without quoting. This can be a method to save
+! a numeric value forcing with a specific format.
+call CSV_RECORD_APPEND(record_csv, TOSTR(ratio,FFMT),is_quoted=.FALSE.)
 --------------------------------------------------------------------------------
 
 Append a single value (any of the supported types) to the current record:

@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_UTILS.f90 9365 2020-01-29 15:20:39Z sbu062 $
+! SVN $Id: BASE_UTILS.f90 11520 2021-09-28 09:19:32Z sbu062 $
 !*******************************************************************************
 ! BASE_UTILS:
 ! PURPOSE: This module provides basic high level utilities that are used in
@@ -17,6 +17,9 @@ integer, parameter, private :: QP = selected_real_kind(33, 4931)
 ! Qsort was inserted separately, so here are its own constants.
 integer, parameter, private :: R4 = SP
 integer, parameter, private :: R8 = DP
+
+!> LONG defines big integer
+integer, parameter, private :: LONG = selected_int_kind(16)
 
 ! Module name for the DEBUG LOGGER: every function/sub must also have
 ! the PROCNAME parameter referring to its name. This is done for the Debug
@@ -55,7 +58,8 @@ end interface NUMTOSTR
 interface TOSTR                  ! Generic interface to number-to-string
                                  ! conversion functions. We have two forms:
   module procedure STR_ITOA      ! NUMTOSTR ( number) and TOSTR ( number)
-  module procedure STR_RTOA      ! for convenience, they're identical
+  module procedure STR_ILTOA     ! for convenience, they're identical
+  module procedure STR_RTOA
   module procedure STR_R8TOA
   module procedure STR_R16TOA
   module procedure STR_LTOA
@@ -321,7 +325,7 @@ end function PLATFORM_IS_WINDOWS
 
 !-------------------------------------------------------------------------------
 
-pure function STR_ITOA(i, formatstr) result (ToStrA)
+pure function STR_ITOA(i, formatstr, is_clean) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert INTEGER to a string type.
 ! CALL PARAMETERS: single integer value
@@ -343,6 +347,7 @@ pure function STR_ITOA(i, formatstr) result (ToStrA)
   ! Calling parameters
   integer, intent(in) :: i
   character(len=*), optional, intent(in) :: formatstr
+  logical, optional, intent(in) :: is_clean
 
   ! Local variables
   character(range(i)+2) :: tmpStr
@@ -360,14 +365,80 @@ pure function STR_ITOA(i, formatstr) result (ToStrA)
     ToStrA = trim(tmpStr)
   else
     write(tmpStr,'(i0)') i
-    ToStrA = CLEANUP(tmpStr)        ! see notes on _R and _R8 versions below
+    ! see notes on _R and _R8 versions below
+    if (present(is_clean)) then
+      if (is_clean) then
+        ToStrA = CLEANUP(tmpStr)      ! remove leading/trailing blanks
+      else
+        ToStrA = trim(tmpStr)
+      end if
+    else
+      ToStrA = CLEANUP(tmpStr)        ! remove leading/trailing blanks
+    end if
   end if
 
 end function STR_ITOA
 
 !-------------------------------------------------------------------------------
 
-pure function STR_RTOA(r,formatstr) result (ToStrA)
+pure function STR_ILTOA(i, formatstr, is_clean) result (ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert LONG INTEGER to a string type.
+! CALL PARAMETERS: single integer value
+! EXAMPLE:
+!          Str_NAME = STR_ILTOA(inumber)
+!          Str_HEADER = "MODEL_" // STR_ILTOA(4)
+!*******************************************************************************
+
+! Convert INTEGER to a string type. Trivial:)
+! *** This function requires using mandatory
+! interface. In such a case STR_ILTOA should not
+! be declared separately  (e.g. with variables)
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable  :: ToStrA
+
+  ! Calling parameters
+  integer(LONG), intent(in) :: i
+  character(len=*), optional, intent(in) :: formatstr
+  logical, optional, intent(in) :: is_clean
+
+  ! Local variables
+  character(range(i)+2) :: tmpStr
+  character(len=:), allocatable :: tmpFormat
+
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ILTOA"
+
+  !--------------------------------------------------
+
+  if (present(formatstr))  then
+    tmpFormat=formatstr
+    write(tmpStr, tmpFormat) i
+    ToStrA = trim(tmpStr)
+  else
+    write(tmpStr,'(i0)') i
+    ! see notes on _R and _R8 versions below
+    if (present(is_clean)) then
+      if (is_clean) then
+        ToStrA = CLEANUP(tmpStr)      ! remove leading/trailing blanks
+      else
+        ToStrA = trim(tmpStr)
+      end if
+    else
+      ToStrA = CLEANUP(tmpStr)        ! remove leading/trailing blanks
+    end if
+  end if
+
+end function STR_ILTOA
+
+
+!-------------------------------------------------------------------------------
+
+pure function STR_RTOA(r,formatstr,is_clean) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
 ! CALL PARAMETERS: single real value
@@ -392,6 +463,7 @@ pure function STR_RTOA(r,formatstr) result (ToStrA)
   ! Calling parameters
   real(kind=SP), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
+  logical, optional, intent(in) :: is_clean
 
   ! Local variables
   character(len=24) :: tmpStr ! quick and dirty, with allowance for a big float
@@ -410,7 +482,15 @@ pure function STR_RTOA(r,formatstr) result (ToStrA)
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
 
-  ToStrA = CLEANUP(tmpStr)          ! we have to remove leading/trailing blanks
+  if (present(is_clean)) then
+    if (is_clean) then
+      ToStrA = CLEANUP(tmpStr)      ! remove leading/trailing blanks
+    else
+      ToStrA = trim(tmpStr)
+    end if
+  else
+    ToStrA = CLEANUP(tmpStr)        ! remove leading/trailing blanks
+  end if
   ! Portability note: direct assignment
   !   ToStrA = trim(adjustl(tmpStr))
   ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
@@ -429,7 +509,7 @@ end function STR_RTOA
 
 !-------------------------------------------------------------------------------
 
-pure function STR_R8TOA(r,formatstr) result (ToStrA)
+pure function STR_R8TOA(r,formatstr,is_clean) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
 ! CALL PARAMETERS: single double precision (kind 8) value
@@ -454,6 +534,7 @@ pure function STR_R8TOA(r,formatstr) result (ToStrA)
   ! Calling parameters
   real (kind=DP), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
+  logical, optional, intent(in) :: is_clean
 
   ! Local variables
   character(len=68) :: tmpStr ! quick and dirty, with allowance for a big float
@@ -472,7 +553,15 @@ pure function STR_R8TOA(r,formatstr) result (ToStrA)
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
 
-  ToStrA = CLEANUP(tmpStr)          ! we have to remove leading/trailing blanks
+  if (present(is_clean)) then
+    if (is_clean) then
+      ToStrA = CLEANUP(tmpStr)      ! remove leading/trailing blanks
+    else
+      ToStrA = trim(tmpStr)
+    end if
+  else
+    ToStrA = CLEANUP(tmpStr)        ! remove leading/trailing blanks
+  end if
   ! Portability note: direct assignment
   !   ToStrA = trim(adjustl(tmpStr))
   ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux
@@ -491,7 +580,7 @@ end function STR_R8TOA
 
 !-------------------------------------------------------------------------------
 
-pure function STR_R16TOA(r,formatstr) result (ToStrA)
+pure function STR_R16TOA(r,formatstr,is_clean) result (ToStrA)
 !*******************************************************************************
 ! PURPOSE: Convert REAL to a string type.
 ! CALL PARAMETERS: single double precision (kind 16) value
@@ -516,6 +605,7 @@ pure function STR_R16TOA(r,formatstr) result (ToStrA)
   ! Calling parameters
   real (kind=QP), intent(in) :: r
   character(len=*), optional, intent(in) :: formatstr
+  logical, optional, intent(in) :: is_clean
 
   ! Local variables
   character(len=68) :: tmpStr ! quick and dirty, with allowance for a big float
@@ -534,7 +624,15 @@ pure function STR_R16TOA(r,formatstr) result (ToStrA)
     write(tmpStr,*) r               ! if format isn't provided on call do *
   endif
 
-  ToStrA = CLEANUP(tmpStr)          ! we have to remove leading/trailing blanks
+  if (present(is_clean)) then
+    if (is_clean) then
+      ToStrA = CLEANUP(tmpStr)      ! remove leading/trailing blanks
+    else
+      ToStrA = trim(tmpStr)
+    end if
+  else
+    ToStrA = CLEANUP(tmpStr)        ! remove leading/trailing blanks
+  end if
   ! Portability note: direct assignment
   !   ToStrA = trim(adjustl(tmpStr))
   ! resulted in a magical compiler error on Oracle Solaris Studio (both Linux

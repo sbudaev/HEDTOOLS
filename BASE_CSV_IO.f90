@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_CSV_IO.f90 9370 2020-01-29 22:43:19Z sbu062 $
+! SVN $Id: BASE_CSV_IO.f90 14220 2023-06-18 08:28:31Z sbu062 $
 !*******************************************************************************
 ! CSV_IO
 ! PURPOSE: This module provides high level functions for input and output in
@@ -1485,7 +1485,7 @@ end subroutine CSV_RECORD_APPEND_R8
 
 !-------------------------------------------------------------------------------
 
-pure subroutine CSV_RECORD_APPEND_S (record, avalue)
+pure subroutine CSV_RECORD_APPEND_S (record, avalue, is_quoted)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_R8
 ! PURPOSE: appends a string to a CSV record.
@@ -1523,15 +1523,23 @@ pure subroutine CSV_RECORD_APPEND_S (record, avalue)
   ! Calling parameters
   character (len=*), intent(inout) :: record
   character (len=*), intent(in) :: avalue  ! was s
+  logical, optional, intent(in) :: is_quoted
 
   ! Local variables
   integer :: i
   integer :: s_len
+  logical :: is_quoted_loc
 
   ! Subroutine name for DEBUG LOGGER
   character (len=*), parameter :: PROCNAME = "CSV_RECORD_APPEND_S"
 
   !-----------------------------------------------------------------------------
+
+  if (present(is_quoted)) then
+    is_quoted_loc = is_quoted
+  else
+    is_quoted_loc = .TRUE.
+  end if
 
   ! TODO: Check unallocated/uninitialised records
 
@@ -1542,15 +1550,19 @@ pure subroutine CSV_RECORD_APPEND_S (record, avalue)
     record(i:i) = ','
   end if
 
-  i = i + 1                           ! Prepend a quote
-  record(I:i) = '"'
+  if (is_quoted_loc) then
+    i = i + 1                         ! Prepend a quote
+    record(I:i) = '"'
+  end if
 
   s_len = len_trim(avalue)            ! Write S to RECORD
   record(i+1:i+s_len) = avalue(1:s_len)
   i = i + s_len
 
-  i = i + 1                           ! Postpend a quote
-  record(i:i) = '"'
+  if (is_quoted_loc) then
+    i = i + 1                         ! Postpend a quote
+    record(i:i) = '"'
+  end if
 
 end subroutine CSV_RECORD_APPEND_S
 
@@ -1720,7 +1732,7 @@ end subroutine CSV_RECORD_APPEND_ARRAY_R8
 
 !-------------------------------------------------------------------------------
 
-pure subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
+pure subroutine CSV_RECORD_APPEND_ARRAY_S (record, array, is_quoted)
 !*******************************************************************************
 ! CSV_RECORD_APPEND_ARRAY_S
 ! PURPOSE: appends an array of integers to a CSV record.
@@ -1737,14 +1749,22 @@ pure subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
   ! Calling parameters
   character (len=*), intent(inout) :: record
   character (len=*), dimension(:), intent(in) :: array
+  logical, optional, intent(in) :: is_quoted
 
   ! Local variables
   integer :: i, LBndi, Ubndi
 
   ! Local variables, copies of optionals
   character (len=len(record)) :: record_here
+  logical :: is_quoted_loc
 
   !-----------------------------------------------------------------------------
+
+  if (present(is_quoted)) then
+    is_quoted_loc = is_quoted
+  else
+    is_quoted_loc = .TRUE.
+  end if
 
   LBndi=lbound(array, 1)   ! Determining bounds for out array
   UBndi=ubound(array, 1)
@@ -1752,7 +1772,7 @@ pure subroutine CSV_RECORD_APPEND_ARRAY_S (record, array)
   record_here = record
 
   do i=LBndi, UBndi
-    call CSV_RECORD_APPEND_S(record_here,array(i))
+    call CSV_RECORD_APPEND_S(record_here,array(i),is_quoted_loc)
   end do
 
   record = record_here
@@ -2787,7 +2807,8 @@ pure subroutine CSV_RECORD_APPEND_LST_S (record, &
                                      s61,s62,s63,s64,s65,s66,s67,s68,s69,s70,&
                                      s71,s72,s73,s74,s75,s76,s77,s78,s79,s80,&
                                      s81,s82,s83,s84,s85,s86,s87,s88,s89,s90,&
-                                     s91,s92,s93,s94,s95,s96,s97,s98,s99,s100 )
+                                     s91,s92,s93,s94,s95,s96,s97,s98,s99,s100,&
+                                     is_quoted )
 !*******************************************************************************
 ! CSV_RECORD_APPEND_LST_S
 ! PURPOSE: appends a list of strings to a CSV record.
@@ -2924,124 +2945,132 @@ pure subroutine CSV_RECORD_APPEND_LST_S (record, &
   character (len=*), optional, intent(in) :: s98
   character (len=*), optional, intent(in) :: s99
   character (len=*), optional, intent(in) :: s100
+  logical, optional, intent(in) :: is_quoted
 
   ! Local variables, copies of optionals
   character (len=len(record)) :: record_here
+  logical :: is_quoted_loc
 
   !-----------------------------------------------------------------------------
+
+  if (present(is_quoted)) then
+    is_quoted_loc = is_quoted
+  else
+    is_quoted_loc = .TRUE.
+  end if
 
   record_here = record
 
   call CSV_RECORD_APPEND_S(record_here,   s1)
   call CSV_RECORD_APPEND_S(record_here,   s2)
 
-  if (present(s3))  call CSV_RECORD_APPEND_S(record_here,  s3)
-  if (present(s4))  call CSV_RECORD_APPEND_S(record_here,  s4)
-  if (present(s5))  call CSV_RECORD_APPEND_S(record_here,  s5)
-  if (present(s6))  call CSV_RECORD_APPEND_S(record_here,  s6)
-  if (present(s7))  call CSV_RECORD_APPEND_S(record_here,  s7)
-  if (present(s8))  call CSV_RECORD_APPEND_S(record_here,  s8)
-  if (present(s9))  call CSV_RECORD_APPEND_S(record_here,  s9)
-  if (present(s10)) call CSV_RECORD_APPEND_S(record_here, s10)
+  if (present(s3))  call CSV_RECORD_APPEND_S(record_here,  s3, is_quoted_loc)
+  if (present(s4))  call CSV_RECORD_APPEND_S(record_here,  s4, is_quoted_loc)
+  if (present(s5))  call CSV_RECORD_APPEND_S(record_here,  s5, is_quoted_loc)
+  if (present(s6))  call CSV_RECORD_APPEND_S(record_here,  s6, is_quoted_loc)
+  if (present(s7))  call CSV_RECORD_APPEND_S(record_here,  s7, is_quoted_loc)
+  if (present(s8))  call CSV_RECORD_APPEND_S(record_here,  s8, is_quoted_loc)
+  if (present(s9))  call CSV_RECORD_APPEND_S(record_here,  s9, is_quoted_loc)
+  if (present(s10)) call CSV_RECORD_APPEND_S(record_here, s10, is_quoted_loc)
 
-  if (present(s11)) call CSV_RECORD_APPEND_S(record_here, s11)
-  if (present(s12)) call CSV_RECORD_APPEND_S(record_here, s12)
-  if (present(s13)) call CSV_RECORD_APPEND_S(record_here, s13)
-  if (present(s14)) call CSV_RECORD_APPEND_S(record_here, s14)
-  if (present(s15)) call CSV_RECORD_APPEND_S(record_here, s15)
-  if (present(s16)) call CSV_RECORD_APPEND_S(record_here, s16)
-  if (present(s17)) call CSV_RECORD_APPEND_S(record_here, s17)
-  if (present(s18)) call CSV_RECORD_APPEND_S(record_here, s18)
-  if (present(s19)) call CSV_RECORD_APPEND_S(record_here, s19)
-  if (present(s20)) call CSV_RECORD_APPEND_S(record_here, s20)
+  if (present(s11)) call CSV_RECORD_APPEND_S(record_here, s11, is_quoted_loc)
+  if (present(s12)) call CSV_RECORD_APPEND_S(record_here, s12, is_quoted_loc)
+  if (present(s13)) call CSV_RECORD_APPEND_S(record_here, s13, is_quoted_loc)
+  if (present(s14)) call CSV_RECORD_APPEND_S(record_here, s14, is_quoted_loc)
+  if (present(s15)) call CSV_RECORD_APPEND_S(record_here, s15, is_quoted_loc)
+  if (present(s16)) call CSV_RECORD_APPEND_S(record_here, s16, is_quoted_loc)
+  if (present(s17)) call CSV_RECORD_APPEND_S(record_here, s17, is_quoted_loc)
+  if (present(s18)) call CSV_RECORD_APPEND_S(record_here, s18, is_quoted_loc)
+  if (present(s19)) call CSV_RECORD_APPEND_S(record_here, s19, is_quoted_loc)
+  if (present(s20)) call CSV_RECORD_APPEND_S(record_here, s20, is_quoted_loc)
 
-  if (present(s21)) call CSV_RECORD_APPEND_S(record_here, s21)
-  if (present(s22)) call CSV_RECORD_APPEND_S(record_here, s22)
-  if (present(s23)) call CSV_RECORD_APPEND_S(record_here, s23)
-  if (present(s24)) call CSV_RECORD_APPEND_S(record_here, s24)
-  if (present(s25)) call CSV_RECORD_APPEND_S(record_here, s25)
-  if (present(s26)) call CSV_RECORD_APPEND_S(record_here, s26)
-  if (present(s27)) call CSV_RECORD_APPEND_S(record_here, s27)
-  if (present(s28)) call CSV_RECORD_APPEND_S(record_here, s28)
-  if (present(s29)) call CSV_RECORD_APPEND_S(record_here, s29)
-  if (present(s30)) call CSV_RECORD_APPEND_S(record_here, s30)
+  if (present(s21)) call CSV_RECORD_APPEND_S(record_here, s21, is_quoted_loc)
+  if (present(s22)) call CSV_RECORD_APPEND_S(record_here, s22, is_quoted_loc)
+  if (present(s23)) call CSV_RECORD_APPEND_S(record_here, s23, is_quoted_loc)
+  if (present(s24)) call CSV_RECORD_APPEND_S(record_here, s24, is_quoted_loc)
+  if (present(s25)) call CSV_RECORD_APPEND_S(record_here, s25, is_quoted_loc)
+  if (present(s26)) call CSV_RECORD_APPEND_S(record_here, s26, is_quoted_loc)
+  if (present(s27)) call CSV_RECORD_APPEND_S(record_here, s27, is_quoted_loc)
+  if (present(s28)) call CSV_RECORD_APPEND_S(record_here, s28, is_quoted_loc)
+  if (present(s29)) call CSV_RECORD_APPEND_S(record_here, s29, is_quoted_loc)
+  if (present(s30)) call CSV_RECORD_APPEND_S(record_here, s30, is_quoted_loc)
 
-  if (present(s31)) call CSV_RECORD_APPEND_S(record_here, s31)
-  if (present(s32)) call CSV_RECORD_APPEND_S(record_here, s32)
-  if (present(s33)) call CSV_RECORD_APPEND_S(record_here, s33)
-  if (present(s34)) call CSV_RECORD_APPEND_S(record_here, s34)
-  if (present(s35)) call CSV_RECORD_APPEND_S(record_here, s35)
-  if (present(s36)) call CSV_RECORD_APPEND_S(record_here, s36)
-  if (present(s37)) call CSV_RECORD_APPEND_S(record_here, s37)
-  if (present(s38)) call CSV_RECORD_APPEND_S(record_here, s38)
-  if (present(s39)) call CSV_RECORD_APPEND_S(record_here, s39)
-  if (present(s40)) call CSV_RECORD_APPEND_S(record_here, s40)
+  if (present(s31)) call CSV_RECORD_APPEND_S(record_here, s31, is_quoted_loc)
+  if (present(s32)) call CSV_RECORD_APPEND_S(record_here, s32, is_quoted_loc)
+  if (present(s33)) call CSV_RECORD_APPEND_S(record_here, s33, is_quoted_loc)
+  if (present(s34)) call CSV_RECORD_APPEND_S(record_here, s34, is_quoted_loc)
+  if (present(s35)) call CSV_RECORD_APPEND_S(record_here, s35, is_quoted_loc)
+  if (present(s36)) call CSV_RECORD_APPEND_S(record_here, s36, is_quoted_loc)
+  if (present(s37)) call CSV_RECORD_APPEND_S(record_here, s37, is_quoted_loc)
+  if (present(s38)) call CSV_RECORD_APPEND_S(record_here, s38, is_quoted_loc)
+  if (present(s39)) call CSV_RECORD_APPEND_S(record_here, s39, is_quoted_loc)
+  if (present(s40)) call CSV_RECORD_APPEND_S(record_here, s40, is_quoted_loc)
 
-  if (present(s41)) call CSV_RECORD_APPEND_S(record_here, s41)
-  if (present(s42)) call CSV_RECORD_APPEND_S(record_here, s42)
-  if (present(s43)) call CSV_RECORD_APPEND_S(record_here, s43)
-  if (present(s44)) call CSV_RECORD_APPEND_S(record_here, s44)
-  if (present(s45)) call CSV_RECORD_APPEND_S(record_here, s45)
-  if (present(s46)) call CSV_RECORD_APPEND_S(record_here, s46)
-  if (present(s47)) call CSV_RECORD_APPEND_S(record_here, s47)
-  if (present(s48)) call CSV_RECORD_APPEND_S(record_here, s48)
-  if (present(s49)) call CSV_RECORD_APPEND_S(record_here, s49)
-  if (present(s50)) call CSV_RECORD_APPEND_S(record_here, s50)
+  if (present(s41)) call CSV_RECORD_APPEND_S(record_here, s41, is_quoted_loc)
+  if (present(s42)) call CSV_RECORD_APPEND_S(record_here, s42, is_quoted_loc)
+  if (present(s43)) call CSV_RECORD_APPEND_S(record_here, s43, is_quoted_loc)
+  if (present(s44)) call CSV_RECORD_APPEND_S(record_here, s44, is_quoted_loc)
+  if (present(s45)) call CSV_RECORD_APPEND_S(record_here, s45, is_quoted_loc)
+  if (present(s46)) call CSV_RECORD_APPEND_S(record_here, s46, is_quoted_loc)
+  if (present(s47)) call CSV_RECORD_APPEND_S(record_here, s47, is_quoted_loc)
+  if (present(s48)) call CSV_RECORD_APPEND_S(record_here, s48, is_quoted_loc)
+  if (present(s49)) call CSV_RECORD_APPEND_S(record_here, s49, is_quoted_loc)
+  if (present(s50)) call CSV_RECORD_APPEND_S(record_here, s50, is_quoted_loc)
 
-  if (present(s51)) call CSV_RECORD_APPEND_S(record_here, s51)
-  if (present(s52)) call CSV_RECORD_APPEND_S(record_here, s52)
-  if (present(s53)) call CSV_RECORD_APPEND_S(record_here, s53)
-  if (present(s54)) call CSV_RECORD_APPEND_S(record_here, s54)
-  if (present(s55)) call CSV_RECORD_APPEND_S(record_here, s55)
-  if (present(s56)) call CSV_RECORD_APPEND_S(record_here, s56)
-  if (present(s57)) call CSV_RECORD_APPEND_S(record_here, s57)
-  if (present(s58)) call CSV_RECORD_APPEND_S(record_here, s58)
-  if (present(s59)) call CSV_RECORD_APPEND_S(record_here, s59)
-  if (present(s60)) call CSV_RECORD_APPEND_S(record_here, s60)
+  if (present(s51)) call CSV_RECORD_APPEND_S(record_here, s51, is_quoted_loc)
+  if (present(s52)) call CSV_RECORD_APPEND_S(record_here, s52, is_quoted_loc)
+  if (present(s53)) call CSV_RECORD_APPEND_S(record_here, s53, is_quoted_loc)
+  if (present(s54)) call CSV_RECORD_APPEND_S(record_here, s54, is_quoted_loc)
+  if (present(s55)) call CSV_RECORD_APPEND_S(record_here, s55, is_quoted_loc)
+  if (present(s56)) call CSV_RECORD_APPEND_S(record_here, s56, is_quoted_loc)
+  if (present(s57)) call CSV_RECORD_APPEND_S(record_here, s57, is_quoted_loc)
+  if (present(s58)) call CSV_RECORD_APPEND_S(record_here, s58, is_quoted_loc)
+  if (present(s59)) call CSV_RECORD_APPEND_S(record_here, s59, is_quoted_loc)
+  if (present(s60)) call CSV_RECORD_APPEND_S(record_here, s60, is_quoted_loc)
 
-  if (present(s61)) call CSV_RECORD_APPEND_S(record_here, s61)
-  if (present(s62)) call CSV_RECORD_APPEND_S(record_here, s62)
-  if (present(s63)) call CSV_RECORD_APPEND_S(record_here, s63)
-  if (present(s64)) call CSV_RECORD_APPEND_S(record_here, s64)
-  if (present(s65)) call CSV_RECORD_APPEND_S(record_here, s65)
-  if (present(s66)) call CSV_RECORD_APPEND_S(record_here, s66)
-  if (present(s67)) call CSV_RECORD_APPEND_S(record_here, s67)
-  if (present(s68)) call CSV_RECORD_APPEND_S(record_here, s68)
-  if (present(s69)) call CSV_RECORD_APPEND_S(record_here, s69)
-  if (present(s70)) call CSV_RECORD_APPEND_S(record_here, s70)
+  if (present(s61)) call CSV_RECORD_APPEND_S(record_here, s61, is_quoted_loc)
+  if (present(s62)) call CSV_RECORD_APPEND_S(record_here, s62, is_quoted_loc)
+  if (present(s63)) call CSV_RECORD_APPEND_S(record_here, s63, is_quoted_loc)
+  if (present(s64)) call CSV_RECORD_APPEND_S(record_here, s64, is_quoted_loc)
+  if (present(s65)) call CSV_RECORD_APPEND_S(record_here, s65, is_quoted_loc)
+  if (present(s66)) call CSV_RECORD_APPEND_S(record_here, s66, is_quoted_loc)
+  if (present(s67)) call CSV_RECORD_APPEND_S(record_here, s67, is_quoted_loc)
+  if (present(s68)) call CSV_RECORD_APPEND_S(record_here, s68, is_quoted_loc)
+  if (present(s69)) call CSV_RECORD_APPEND_S(record_here, s69, is_quoted_loc)
+  if (present(s70)) call CSV_RECORD_APPEND_S(record_here, s70, is_quoted_loc)
 
-  if (present(s71)) call CSV_RECORD_APPEND_S(record_here, s71)
-  if (present(s72)) call CSV_RECORD_APPEND_S(record_here, s72)
-  if (present(s73)) call CSV_RECORD_APPEND_S(record_here, s73)
-  if (present(s74)) call CSV_RECORD_APPEND_S(record_here, s74)
-  if (present(s75)) call CSV_RECORD_APPEND_S(record_here, s75)
-  if (present(s76)) call CSV_RECORD_APPEND_S(record_here, s76)
-  if (present(s77)) call CSV_RECORD_APPEND_S(record_here, s77)
-  if (present(s78)) call CSV_RECORD_APPEND_S(record_here, s78)
-  if (present(s79)) call CSV_RECORD_APPEND_S(record_here, s79)
-  if (present(s80)) call CSV_RECORD_APPEND_S(record_here, s80)
+  if (present(s71)) call CSV_RECORD_APPEND_S(record_here, s71, is_quoted_loc)
+  if (present(s72)) call CSV_RECORD_APPEND_S(record_here, s72, is_quoted_loc)
+  if (present(s73)) call CSV_RECORD_APPEND_S(record_here, s73, is_quoted_loc)
+  if (present(s74)) call CSV_RECORD_APPEND_S(record_here, s74, is_quoted_loc)
+  if (present(s75)) call CSV_RECORD_APPEND_S(record_here, s75, is_quoted_loc)
+  if (present(s76)) call CSV_RECORD_APPEND_S(record_here, s76, is_quoted_loc)
+  if (present(s77)) call CSV_RECORD_APPEND_S(record_here, s77, is_quoted_loc)
+  if (present(s78)) call CSV_RECORD_APPEND_S(record_here, s78, is_quoted_loc)
+  if (present(s79)) call CSV_RECORD_APPEND_S(record_here, s79, is_quoted_loc)
+  if (present(s80)) call CSV_RECORD_APPEND_S(record_here, s80, is_quoted_loc)
 
-  if (present(s81)) call CSV_RECORD_APPEND_S(record_here, s81)
-  if (present(s82)) call CSV_RECORD_APPEND_S(record_here, s82)
-  if (present(s83)) call CSV_RECORD_APPEND_S(record_here, s83)
-  if (present(s84)) call CSV_RECORD_APPEND_S(record_here, s84)
-  if (present(s85)) call CSV_RECORD_APPEND_S(record_here, s85)
-  if (present(s86)) call CSV_RECORD_APPEND_S(record_here, s86)
-  if (present(s87)) call CSV_RECORD_APPEND_S(record_here, s87)
-  if (present(s88)) call CSV_RECORD_APPEND_S(record_here, s88)
-  if (present(s89)) call CSV_RECORD_APPEND_S(record_here, s89)
-  if (present(s90)) call CSV_RECORD_APPEND_S(record_here, s90)
+  if (present(s81)) call CSV_RECORD_APPEND_S(record_here, s81, is_quoted_loc)
+  if (present(s82)) call CSV_RECORD_APPEND_S(record_here, s82, is_quoted_loc)
+  if (present(s83)) call CSV_RECORD_APPEND_S(record_here, s83, is_quoted_loc)
+  if (present(s84)) call CSV_RECORD_APPEND_S(record_here, s84, is_quoted_loc)
+  if (present(s85)) call CSV_RECORD_APPEND_S(record_here, s85, is_quoted_loc)
+  if (present(s86)) call CSV_RECORD_APPEND_S(record_here, s86, is_quoted_loc)
+  if (present(s87)) call CSV_RECORD_APPEND_S(record_here, s87, is_quoted_loc)
+  if (present(s88)) call CSV_RECORD_APPEND_S(record_here, s88, is_quoted_loc)
+  if (present(s89)) call CSV_RECORD_APPEND_S(record_here, s89, is_quoted_loc)
+  if (present(s90)) call CSV_RECORD_APPEND_S(record_here, s90, is_quoted_loc)
 
-  if (present(s91)) call CSV_RECORD_APPEND_S(record_here, s91)
-  if (present(s92)) call CSV_RECORD_APPEND_S(record_here, s92)
-  if (present(s93)) call CSV_RECORD_APPEND_S(record_here, s93)
-  if (present(s94)) call CSV_RECORD_APPEND_S(record_here, s94)
-  if (present(s95)) call CSV_RECORD_APPEND_S(record_here, s95)
-  if (present(s96)) call CSV_RECORD_APPEND_S(record_here, s96)
-  if (present(s97)) call CSV_RECORD_APPEND_S(record_here, s97)
-  if (present(s98)) call CSV_RECORD_APPEND_S(record_here, s98)
-  if (present(s99)) call CSV_RECORD_APPEND_S(record_here, s99)
-  if (present(s100)) call CSV_RECORD_APPEND_S(record_here,s100)
+  if (present(s91)) call CSV_RECORD_APPEND_S(record_here, s91, is_quoted_loc)
+  if (present(s92)) call CSV_RECORD_APPEND_S(record_here, s92, is_quoted_loc)
+  if (present(s93)) call CSV_RECORD_APPEND_S(record_here, s93, is_quoted_loc)
+  if (present(s94)) call CSV_RECORD_APPEND_S(record_here, s94, is_quoted_loc)
+  if (present(s95)) call CSV_RECORD_APPEND_S(record_here, s95, is_quoted_loc)
+  if (present(s96)) call CSV_RECORD_APPEND_S(record_here, s96, is_quoted_loc)
+  if (present(s97)) call CSV_RECORD_APPEND_S(record_here, s97, is_quoted_loc)
+  if (present(s98)) call CSV_RECORD_APPEND_S(record_here, s98, is_quoted_loc)
+  if (present(s99)) call CSV_RECORD_APPEND_S(record_here, s99, is_quoted_loc)
+  if (present(s100)) call CSV_RECORD_APPEND_S(record_here,s100,is_quoted_loc)
 
   record = record_here
 
@@ -3107,7 +3136,7 @@ subroutine CSV_MATRIX_WRITE_I4 (matrix, csv_file_name, colnames, csv_file_status
 
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
-  max_size_record = size(matrix, 2) * ( I4_WIDTH(maxval(matrix))+2 )
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(maxval(matrix))+18 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -3217,7 +3246,7 @@ subroutine CSV_MATRIX_WRITE_R4 (matrix, csv_file_name, colnames, csv_file_status
 
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
-  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+14 )
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+28 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -3328,7 +3357,7 @@ subroutine CSV_MATRIX_WRITE_R8 (matrix, csv_file_name, colnames, csv_file_status
 
   ! Assess the maximum size of the whole record in advance, we
   ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
-  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+18 )
+  max_size_record = size(matrix, 2) * ( I4_WIDTH(int(maxval(matrix)))+28 )
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
   if (.not. csv_file_status_here) then
@@ -3444,7 +3473,7 @@ subroutine CSV_MATRIX_WRITE_S (matrix, csv_file_name, colnames, csv_file_status)
     do j=LBndj, UBndj
       max_size_record_count=max_size_record_count+len(matrix(i,j))+1
     end do
-    max_size_record=max(max_size_record,max_size_record_count)
+    max_size_record=max(max_size_record,max_size_record_count) + 64
   end do
 
   call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
@@ -3549,7 +3578,7 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
-    max_size_record = ( I4_WIDTH(maxval(array))+2 )
+    max_size_record = ( I4_WIDTH(maxval(array))+2 ) + 24
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
@@ -3579,7 +3608,7 @@ subroutine CSV_ARRAY_WRITE_I4 (array, csv_file_name, vertical, csv_file_status)
   else ! Write horizontally, i.e. in a single row.
 
     ! now implemented CVS_GUESS_RECORD_LENGTH
-    max_size_record = size(array) * ( I4_WIDTH(maxval(array))+4 )
+    max_size_record = size(array) * ( I4_WIDTH(maxval(array))+28 )
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
@@ -3664,7 +3693,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
-    max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
+    max_size_record = I4_WIDTH(int(maxval(abs(array))))+28
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
@@ -3694,7 +3723,7 @@ subroutine CSV_ARRAY_WRITE_R4 (array, csv_file_name, vertical, csv_file_status)
   else ! Write horizontally, i.e. in a single row.
 
     ! now implemented CVS_GUESS_RECORD_LENGTH
-    max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+14)
+    max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+28)
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
@@ -3779,7 +3808,7 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable, now implemented CVS_GUESS_RECORD_LENGTH
-    max_size_record = I4_WIDTH(int(maxval(abs(array))))+14
+    max_size_record = I4_WIDTH(int(maxval(abs(array))))+28
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
@@ -3809,7 +3838,7 @@ subroutine CSV_ARRAY_WRITE_R8 (array, csv_file_name, vertical, csv_file_status)
   else ! Write horizontally, i.e. in a single row.
 
     ! now implemented CVS_GUESS_RECORD_LENGTH
-    max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+14)
+    max_size_record = size(array) * (I4_WIDTH(int(maxval(abs(array))))+28)
 
     call CSV_FILE_OPEN_WRITE (csv_file_name, funit, csv_file_status_here)
     if (.not. csv_file_status_here) then
@@ -3894,7 +3923,7 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable
-    max_size_record=4
+    max_size_record=28
     do i=LBndi, UBndi
       max_size_record=max(max_size_record, len_trim(array(i))) + 4
     end do
@@ -3928,7 +3957,7 @@ subroutine CSV_ARRAY_WRITE_S (array, csv_file_name, vertical, csv_file_status)
 
     ! Assess the maximum size of the whole record in advance, we
     ! cannot make record allocatable
-    max_size_record=8
+    max_size_record=28
     do i=LBndi, UBndi
       max_size_record = max_size_record + len_trim(array(i)) + 4
     end do
@@ -4746,6 +4775,7 @@ function CSV_MATRIX_READ_R4 (csv_file_name, csv_file_status, &
   end do
 
   if (present(csv_file_status)) csv_file_status = .TRUE.
+  call CSV_FILE_CLOSE(csv_file_unit=file_unit)
   return
 
       ! File error, return after attempting to close straight away.
@@ -4954,6 +4984,7 @@ function CSV_MATRIX_READ_R8 (csv_file_name, csv_file_status, &
   end do
 
   if (present(csv_file_status)) csv_file_status = .TRUE.
+  call CSV_FILE_CLOSE(csv_file_unit=file_unit)
   return
 
       ! File error, return after attempting to close straight away.
