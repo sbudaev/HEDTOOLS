@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_RANDOM.f90 8435 2019-06-14 09:27:43Z sbu062 $
+! SVN $Id: BASE_RANDOM.f90 10665 2021-03-02 07:34:44Z sbu062 $
 !*******************************************************************************
 ! PURPOSE:
 !   Working with random numbers. Init random seed, generate random numbers

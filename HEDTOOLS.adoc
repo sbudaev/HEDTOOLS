@@ -1,7 +1,7 @@
 AHA! Fortran Modelling Tools Manual
 ===================================
 Sergey Budaev <sergey.budaev@uib.no>
-$Id: HEDTOOLS.adoc 14226 2023-06-18 09:33:07Z sbu062 $
+$Id: HEDTOOLS.adoc 16153 2024-07-05 15:26:12Z sbu062 $
 :toc:
 :description: Modelling tools and coding style for AHA Model environment.
 :lang: en
@@ -1606,7 +1606,7 @@ user who did the revision. This is how it will appear in the source code:
 --------------------------------------------------------------------------------
 ! The comment below incorporates SVN revision ID, it should apparently be
 !   inserted into a comment, so does not affect the compiler:
-! $Id: HEDTOOLS.adoc 14226 2023-06-18 09:33:07Z sbu062 $
+! $Id: HEDTOOLS.adoc 16153 2024-07-05 15:26:12Z sbu062 $
 !                                                          other code follows...
 ......
 implicit none
@@ -5228,15 +5228,16 @@ for +ios+ denotes an end of file.
 IMPORTANT: There is a more powerful function +READLINE+ in
            <<TO_CSV_IO, CSV_IO>>.
 
-Subroutine: MATCH
+Function: MATCH
 ~~~~~~~~~~~~~~~~~
 
-+SUBROUTINE MATCH(str, ipos, imatch)+
++FUNCTION MATCH(str, ipos)+
 indexterm:[MATCH]
 
-This routine finds the delimiter in string +str+ that matches the delimiter
-in position +ipos+ of +str+. The argument +imatch+ contains the position of the
-matching delimiter.  Allowable delimiters are (), [], {}, <>.
+This function returns the delimiter in string +str+ that matches the delimiter
+in position +ipos+ of +str+. The output is the position of the matching
+delimiter or -1 in case of error (e.g. no matching delimiter).  Allowable
+delimiters are (), [], {}, <>.
 
 Subroutine: WRITENUM
 ~~~~~~~~~~~~~~~~~~~~

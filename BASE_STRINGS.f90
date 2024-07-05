@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_STRINGS.f90 9466 2020-02-13 21:05:49Z sbu062 $
+! SVN $Id: BASE_STRINGS.f90 16153 2024-07-05 15:26:12Z sbu062 $
 !*******************************************************************************
 ! PURPOSE:
 ! Fortran Character String Utilities
@@ -15,6 +15,8 @@
 !*******************************************************************************
 module base_strings
 
+implicit none
+
 ! Real kinds
 integer, parameter :: kr4=selected_real_kind(6,37)   ! single precision real
 integer, parameter :: kr8=selected_real_kind(15,307) ! double precision real
@@ -29,33 +31,34 @@ integer, parameter :: kc8 = kr8                      ! double precision complex
 
 
 private :: kr4,kr8,ki4,ki8,kc4,kc8
-private :: value_dr,value_sr,value_di,value_si
-private :: write_dr,write_sr,write_di,write_si
-private :: writeq_dr,writeq_sr,writeq_di,writeq_si
 
-interface value  ! Generic operator for converting a number string to a
+private :: VALUE_DR,VALUE_SR,VALUE_DI,VALUE_SI
+private :: WRITE_DR,WRITE_SR,WRITE_DI,WRITE_SI
+private :: WRITEQ_DR,WRITEQ_SR,WRITEQ_DI,WRITEQ_SI
+
+interface VALUE  ! Generic operator for converting a number string to a
                  ! number. Calling syntax is 'call value(numstring,number,ios)'
                  ! where 'numstring' is a number string and 'number' is a
                  ! real number or an integer (single or double precision).
-   module procedure value_dr
-   module procedure value_sr
-   module procedure value_di
-   module procedure value_si
+   module procedure VALUE_DR
+   module procedure VALUE_SR
+   module procedure VALUE_DI
+   module procedure VALUE_SI
 end interface
 
-interface writenum  ! Generic  interface for writing a number to a string. The
+interface WRITENUM  ! Generic  interface for writing a number to a string. The
                     ! number is left justified in the string. The calling syntax
                     ! is 'call writenum(number,string,format)' where 'number' is
                     ! a real number or an integer, 'string' is a character string
                     ! containing the result, and 'format' is the format desired,
                     ! e.g., 'e15.6' or 'i5'.
-   module procedure write_dr
-   module procedure write_sr
-   module procedure write_di
-   module procedure write_si
+   module procedure WRITE_DR
+   module procedure WRITE_SR
+   module procedure WRITE_DI
+   module procedure WRITE_SI
 end interface
 
-interface writeq  ! Generic interface equating a name to a numerical value. The
+interface WRITEQ  ! Generic interface equating a name to a numerical value. The
                   ! calling syntax is 'call writeq(unit,name,value,format)' where
                   ! unit is the integer output unit number, 'name' is the variable
                   ! name, 'value' is the real or integer value of the variable,
@@ -74,21 +77,24 @@ contains
 
 !**********************************************************************
 
-subroutine parse(str,delims,args,nargs)
+pure subroutine PARSE(str_in,delims,args,nargs)
 
 ! Parses the string 'str' into arguments args(1), ..., args(nargs) based on
 ! the delimiters contained in the string 'delims'. Preceding a delimiter in
 ! 'str' by a backslash (\) makes this particular instance not a delimiter.
 ! The integer output variable nargs contains the number of arguments found.
 
-character(len=*) :: str,delims
-character(len=len_trim(str)) :: strsav
-character(len=*),dimension(:) :: args
+character(len=*), intent(in)                  :: str_in
+character(len=*), intent(in)                  :: delims
+character(len=*), dimension(:), intent(inout) :: args
 
-integer(ki4) :: nargs, i, k, lenstr, na
+integer(ki4), intent(out) :: nargs
+character(len=:), allocatable :: str
+integer(ki4) :: i, k, lenstr, na
 
-strsav=str
-call compact(str)
+str=str_in
+
+call COMPACT(str)
 na=size(args)
 do i=1,na
   args(i)=' '
@@ -101,29 +107,28 @@ k=0
 do
    if(len_trim(str) == 0) exit
    nargs=nargs+1
-   call split(str,delims,args(nargs))
+   call SPLIT(str,delims,args(nargs))
    call removebksl(args(nargs))
 end do
-str=strsav
 
-end subroutine parse
+end subroutine PARSE
 
 !**********************************************************************
 
-subroutine compact(str)
+elemental subroutine COMPACT(str)
 
 ! Converts multiple spaces and tabs to single spaces; deletes control characters;
 ! removes initial spaces.
 
-character(len=*):: str
-character(len=1):: ch
-character(len=len_trim(str)):: outstr
+character(len=*), intent(inout):: str
 
+character(len=1) :: ch
+character(len=:), allocatable :: outstr
 integer(ki4) :: i, k, ich, isp, lenstr
 
 str=adjustl(str)
 lenstr=len_trim(str)
-outstr=' '
+outstr=repeat(' ', len_trim(str))
 isp=0
 k=0
 
@@ -151,23 +156,24 @@ end do
 
 str=adjustl(outstr)
 
-end subroutine compact
+end subroutine COMPACT
 
 !**********************************************************************
 
-subroutine removesp(str)
+elemental subroutine REMOVESP(str)
 
 ! Removes spaces, tabs, and control characters in string str
 
-character(len=*):: str
+character(len=*), intent(inout):: str
+
 character(len=1):: ch
-character(len=len_trim(str))::outstr
+character(len=:), allocatable ::outstr
 
 integer(ki4) :: i, k, ich, lenstr
 
 str=adjustl(str)
 lenstr=len_trim(str)
-outstr=' '
+outstr=repeat(' ', len_trim(str))
 k=0
 
 do i=1,lenstr
@@ -184,19 +190,22 @@ end do
 
 str=adjustl(outstr)
 
-end subroutine removesp
+end subroutine REMOVESP
 
 !**********************************************************************
 
-subroutine value_dr(str,rnum,ios)
+pure subroutine VALUE_DR(str_in,rnum,ios)
 
 ! Converts number string to a double precision real number
 
-character(len=*)::str
-real(kr8)::rnum
-integer :: ios
+character(len=*), intent(in) :: str_in
+real(kr8), intent(out)       :: rnum
+integer, intent(out)         :: ios
 
+character(len=:), allocatable :: str
 integer(ki4) :: ipos, ilen
+
+str=str_in
 
 ilen=len_trim(str)
 ipos=scan(str,'Ee')
@@ -206,19 +215,22 @@ if(.not.is_digit(str(ilen:ilen)) .and. ipos/=0) then
 end if
 read(str,*,iostat=ios) rnum
 
-end subroutine value_dr
+end subroutine VALUE_DR
 
 !**********************************************************************
 
-subroutine value_sr(str,rnum,ios)
+pure subroutine VALUE_SR(str_in,rnum,ios)
 
 ! Converts number string to a single precision real number
 
-character(len=*)::str
-real(kr4) :: rnum
-real(kr8) :: rnumd
+character(len=*), intent(in) :: str_in
+real(kr4), intent(out)       :: rnum
+integer(ki4), intent(out)    :: ios
 
-integer(ki4) :: ios
+real(kr8) :: rnumd
+character(len=:), allocatable :: str
+
+str=str_in
 
 call value_dr(str,rnumd,ios)
 if( abs(rnumd) > huge(rnum) ) then
@@ -228,62 +240,69 @@ end if
 if( abs(rnumd) < tiny(rnum) ) rnum=0.0_kr4
 rnum=rnumd
 
-end subroutine value_sr
+end subroutine VALUE_SR
 
 !**********************************************************************
 
-subroutine value_di(str,inum,ios)
+pure subroutine VALUE_DI(str_in,inum,ios)
 
 ! Converts number string to a double precision integer value
 
-character(len=*)::str
-integer(ki8) :: inum
+character(len=*), intent(in) ::str_in
+integer(ki8), intent(out)    :: inum
+integer(ki4), intent(out)    :: ios
+
 real(kr8) :: rnum
+character(len=:), allocatable :: str
 
-integer(ki4) :: ios
+str=str_in
 
-call value_dr(str,rnum,ios)
+call VALUE_DR(str,rnum,ios)
 if(abs(rnum)>huge(inum)) then
   ios=15
   return
 end if
 inum=nint(rnum,ki8)
 
-end subroutine value_di
+end subroutine VALUE_DI
 
 !**********************************************************************
 
-subroutine value_si(str,inum,ios)
+pure subroutine VALUE_SI(str_in,inum,ios)
 
 ! Converts number string to a single precision integer value
 
-character(len=*)::str
-integer(ki4) :: inum
+character(len=*), intent(in) :: str_in
+integer(ki4), intent(out)    :: inum
+integer(ki4), intent(out)    :: ios
+
 real(kr8) :: rnum
+character(len=:), allocatable :: str
 
-integer(ki4) :: ios
+str=str_in
 
-call value_dr(str,rnum,ios)
+call VALUE_DR(str,rnum,ios)
 if(abs(rnum)>huge(inum)) then
   ios=15
   return
 end if
 inum=nint(rnum,ki4)
 
-end subroutine value_si
+end subroutine VALUE_SI
 
 !**********************************************************************
 
-subroutine shiftstr(str,n)
+elemental subroutine SHIFTSTR(str,n)
 
 ! Shifts characters in in the string 'str' n positions (positive values
 ! denote a right shift and negative values denote a left shift). Characters
 ! that are shifted off the end are lost. Positions opened up by the shift
 ! are replaced by spaces.
 
-character(len=*):: str
+character(len=*), intent(inout) :: str
+integer(ki4), intent(in)        :: n
 
-integer(ki4) :: n, nabs, lenstr
+integer(ki4) :: nabs, lenstr
 
 lenstr=len(str)
 nabs=iabs(n)
@@ -295,21 +314,24 @@ if(n<0) str=str(nabs+1:)//repeat(' ',nabs)  ! shift left
 if(n>0) str=repeat(' ',nabs)//str(:lenstr-nabs)  ! shift right
 return
 
-end subroutine shiftstr
+end subroutine SHIFTSTR
 
 !**********************************************************************
 
-subroutine insertstr(str,strins,loc)
+elemental subroutine INSERTSTR(str,strins,loc)
 
 ! Inserts the string 'strins' into the string 'str' at position 'loc'.
 ! Characters in 'str' starting at position 'loc' are shifted right to
 ! make room for the inserted string. Trailing spaces of 'strins' are
 ! removed prior to insertion
 
-character(len=*):: str,strins
+character(len=*), intent(inout) :: str
+character(len=*), intent(in)    :: strins
+integer(ki4), intent(in)        :: loc 
+
 character(len=len(str))::tempstr
 
-integer(ki4) :: loc, lenstrins
+integer(ki4) :: lenstrins
 
 lenstrins=len_trim(strins)
 tempstr=str(loc:)
@@ -318,17 +340,18 @@ tempstr(1:lenstrins)=strins(1:lenstrins)
 str(loc:)=tempstr
 return
 
-end subroutine insertstr
+end subroutine INSERTSTR
 
 !**********************************************************************
 
-subroutine delsubstr(str,substr)
+elemental subroutine DELSUBSTR(str,substr)
 
 ! Deletes first occurrence of substring 'substr' from string 'str' and
 ! shifts characters left to fill hole. Trailing spaces or blanks are
 ! not considered part of 'substr'.
 
-character(len=*):: str,substr
+character(len=*), intent(inout) :: str
+character(len=*), intent(in)    :: substr
 
 integer(ki4) :: ipos, lensubstr
 
@@ -342,16 +365,17 @@ else
 end if
 return
 
-end subroutine delsubstr
+end subroutine DELSUBSTR
 
 !**********************************************************************
 
-subroutine delall(str,substr)
+elemental subroutine DELALL(str,substr)
 
 ! Deletes all occurrences of substring 'substr' from string 'str' and
 ! shifts characters left to fill holes.
 
-character(len=*):: str,substr
+character(len=*), intent(inout) :: str
+character(len=*), intent(in)    :: substr
 
 integer(ki4) :: ipos, lensubstr
 
@@ -367,22 +391,23 @@ do
 end do
 return
 
-end subroutine delall
+end subroutine DELALL
 
 !**********************************************************************
 
-function uppercase(str) result(ucstr)
+pure function UPPERCASE(str) result(ucstr)
 
 ! convert string to upper case
 
-character (len=*):: str
-character (len=len_trim(str)):: ucstr
+character (len=*), intent(in) :: str
+character (len=:), allocatable :: ucstr
 
 integer(ki4) :: i, iqc, iav, iquote, ioffset, ilen
 
 ilen=len_trim(str)
 ioffset=iachar('A')-iachar('a')
 iquote=0
+ucstr=repeat(' ', len_trim(str))
 ucstr=str
 do i=1,ilen
   iav=iachar(str(i:i))
@@ -404,22 +429,23 @@ do i=1,ilen
 end do
 return
 
-end function uppercase
+end function UPPERCASE
 
 !**********************************************************************
 
-function lowercase(str) result(lcstr)
+pure function LOWERCASE(str) result(lcstr)
 
 ! convert string to lower case
 
-character (len=*):: str
-character (len=len_trim(str)):: lcstr
+character (len=*), intent(in) :: str
+character (len=:), allocatable :: lcstr
 
 integer(ki4) :: iqc, iav, i, iquote, ioffset, ilen
 
 ilen=len_trim(str)
 ioffset=iachar('A')-iachar('a')
 iquote=0
+lcstr=repeat(' ', len_trim(str))
 lcstr=str
 do i=1,ilen
   iav=iachar(str(i:i))
@@ -441,11 +467,11 @@ do i=1,ilen
 end do
 return
 
-end function lowercase
+end function LOWERCASE
 
 !**********************************************************************
 
-subroutine getfline(nunitr,line,ios)
+impure subroutine GETFLINE(nunitr,line,ios)
 
 ! Reads line from unit=nunitr, ignoring blank lines
 ! and deleting comments beginning with an exclamation point(!)
@@ -454,9 +480,11 @@ subroutine getfline(nunitr,line,ios)
 !       changed to avoid name conflicts, requiring
 !       use  CSV_IO, READLINE_LN => READLINE
 
-character (len=*):: line
+integer(ki4), intent(in)       :: nunitr
+character (len=*), intent(out) :: line
+integer(ki4), intent(out)      :: ios
 
-integer(ki4) :: nunitr, ios, ipos
+integer(ki4) :: ipos
 
 do
   read(nunitr,'(a)', iostat=ios) line      ! read input line
@@ -469,19 +497,24 @@ do
 end do
 return
 
-end subroutine getfline
+end subroutine GETFLINE
 
 !**********************************************************************
 
-subroutine match(str,ipos,imatch)
+pure function MATCH(str, ipos) result (imatch)
 
 ! Sets imatch to the position in string of the delimiter matching the delimiter
 ! in position ipos. Allowable delimiters are (), [], {}, <>.
+! err is optional error code:
+!   1 = not a valid delimiter
+!   2 = has no matching delimiter 
 
-character(len=*) :: str
+character(len=*), intent(in)        :: str
+integer(ki4), intent(in)            :: ipos
+integer(ki4)                        :: imatch
+
 character :: delim1,delim2,ch
-
-integer(ki4) :: i, isum, inc, istart, iend, idelim2, lenstr, imatch, ipos
+integer(ki4) :: i, isum, inc, istart, iend, idelim2, lenstr
 
 lenstr=len_trim(str)
 delim1=str(ipos:ipos)
@@ -507,11 +540,13 @@ select case(delim1)
       iend=1
       inc=-1
    case default
-      write(*,*) delim1,' is not a valid delimiter'
+      imatch=-1
+      !write(*,*) delim1,' is not a valid delimiter'
       return
 end select
 if(istart < 1 .or. istart > lenstr) then
-   write(*,*) delim1,' has no matching delimiter'
+   imatch=-1
+   !write(*,*) delim1,' has no matching delimiter'
    return
 end if
 delim2=achar(idelim2) ! matching delimiter
@@ -525,71 +560,77 @@ do i=istart,iend,inc
    if(isum == 0) exit
 end do
 if(isum /= 0) then
-   write(*,*) delim1,' has no matching delimiter'
+   imatch=-1  
+   !write(*,*) delim1,' has no matching delimiter'
    return
 end if
 imatch=i
 
-return
-
-end subroutine match
+end function MATCH
 
 !**********************************************************************
 
-subroutine write_dr(rnum,str,fmt)
+pure subroutine WRITE_DR(rnum,str,fmt)
 
 ! Writes double precision real number rnum to string str using format fmt
 
-real(kr8) :: rnum
-character(len=*) :: str,fmt
+real(kr8), intent(in)         :: rnum
+character(len=*), intent(out) :: str
+character(len=*), intent(in)  :: fmt
 character(len=80) :: formt
 
 formt='('//trim(fmt)//')'
 write(str,formt) rnum
 str=adjustl(str)
 
-end subroutine write_dr
+end subroutine WRITE_DR
 
 !***********************************************************************
 
-subroutine write_sr(rnum,str,fmt)
+pure subroutine WRITE_SR(rnum,str,fmt)
 
 ! Writes single precision real number rnum to string str using format fmt
 
-real(kr4) :: rnum
-character(len=*) :: str,fmt
+real(kr4), intent(in)         :: rnum
+character(len=*), intent(out) :: str
+character(len=*), intent(in)  :: fmt
+
 character(len=80) :: formt
 
 formt='('//trim(fmt)//')'
 write(str,formt) rnum
 str=adjustl(str)
 
-end subroutine write_sr
+end subroutine WRITE_SR
 
 !***********************************************************************
 
-subroutine write_di(inum,str,fmt)
+pure subroutine WRITE_DI(inum,str,fmt)
 
 ! Writes double precision integer inum to string str using format fmt
 
-integer(ki8) :: inum
-character(len=*) :: str,fmt
+integer(ki8), intent(in)      :: inum
+character(len=*), intent(out) :: str
+character(len=*), intent(in)  :: fmt
+
 character(len=80) :: formt
 
 formt='('//trim(fmt)//')'
 write(str,formt) inum
 str=adjustl(str)
 
-end subroutine write_di
+end subroutine WRITE_DI
 
 !***********************************************************************
 
-subroutine write_si(inum,str,fmt)
+pure subroutine write_si(inum,str,fmt)
 
 ! Writes single precision integer inum to string str using format fmt
 
-integer(ki4) :: inum
-character(len=*) :: str,fmt
+integer(ki4), intent(in)      :: inum
+character(len=*), intent(out) :: str
+character(len=*), intent(in)  :: fmt
+
 character(len=80) :: formt
 
 formt='('//trim(fmt)//')'
@@ -600,12 +641,12 @@ end subroutine write_si
 
 !***********************************************************************
 
-subroutine trimzero(str)
+elemental subroutine TRIMZERO(str)
 
 ! Deletes nonsignificant trailing zeroes from number string str. If number
 ! string ends in a decimal point, one trailing zero is added.
 
-character(len=*) :: str
+character(len=*), intent(inout) :: str
 character :: ch
 character(len=10) :: exp
 
@@ -630,77 +671,85 @@ do i=lstr,1,-1
 end do
 if(ipos>0) str=trim(str)//trim(exp)
 
-end subroutine trimzero
+end subroutine TRIMZERO
 
 !**********************************************************************
 
-subroutine writeq_dr(unit,namestr,value,fmt)
+impure subroutine WRITEQ_DR(unit,namestr,value,fmt)
 
 ! Writes a string of the form <name> = value to unit
 
-real(kr8) :: value
-integer :: unit
-character(len=*) :: namestr,fmt
+integer, intent(in)          :: unit
+character(len=*), intent(in) :: namestr
+real(kr8),intent(in)         :: value
+character(len=*), intent(in) :: fmt
+
 character(len=32) :: tempstr
 
 call writenum(value,tempstr,fmt)
 call trimzero(tempstr)
 write(unit,*) trim(namestr)//' = '//trim(tempstr)
 
-end subroutine writeq_dr
+end subroutine WRITEQ_DR
 
 !**********************************************************************
 
-subroutine writeq_sr(unit,namestr,value,fmt)
+impure subroutine WRITEQ_SR(unit,namestr,value,fmt)
 
 ! Writes a string of the form <name> = value to unit
 
-real(kr4) :: value
-integer :: unit
-character(len=*) :: namestr,fmt
+integer, intent(in)          :: unit
+character(len=*), intent(in) :: namestr
+real(kr4), intent(in)        :: value
+character(len=*), intent(in) :: fmt
+
 character(len=32) :: tempstr
 
 call writenum(value,tempstr,fmt)
 call trimzero(tempstr)
 write(unit,*) trim(namestr)//' = '//trim(tempstr)
 
-end subroutine writeq_sr
+end subroutine WRITEQ_SR
 
 !**********************************************************************
 
-subroutine writeq_di(unit,namestr,ivalue,fmt)
+impure subroutine WRITEQ_DI(unit,namestr,ivalue,fmt)
 
 ! Writes a string of the form <name> = ivalue to unit
 
-integer(ki8) :: ivalue
-integer :: unit
-character(len=*) :: namestr,fmt
+integer, intent(in)          :: unit
+character(len=*), intent(in) :: namestr
+integer(ki8), intent(in)     :: ivalue
+character(len=*), intent(in) :: fmt
+
+character(len=32) :: tempstr
+
+call writenum(ivalue,tempstr,fmt)
+call trimzero(tempstr)
+write(unit,*) trim(namestr)//' = '//trim(tempstr)
+
+end subroutine WRITEQ_DI
+
+!**********************************************************************
+
+impure subroutine WRITEQ_SI(unit,namestr,ivalue,fmt)
+
+! Writes a string of the form <name> = ivalue to unit
+integer, intent(in)          :: unit
+character(len=*), intent(in) :: namestr
+integer(ki4), intent(in)     :: ivalue
+character(len=*), intent(in) :: fmt
+
 character(len=32) :: tempstr
 call writenum(ivalue,tempstr,fmt)
 call trimzero(tempstr)
 write(unit,*) trim(namestr)//' = '//trim(tempstr)
 
-end subroutine writeq_di
+end subroutine WRITEQ_SI
 
 !**********************************************************************
 
-subroutine writeq_si(unit,namestr,ivalue,fmt)
-
-! Writes a string of the form <name> = ivalue to unit
-
-integer(ki4) :: ivalue
-integer :: unit
-character(len=*) :: namestr,fmt
-character(len=32) :: tempstr
-call writenum(ivalue,tempstr,fmt)
-call trimzero(tempstr)
-write(unit,*) trim(namestr)//' = '//trim(tempstr)
-
-end subroutine writeq_si
-
-!**********************************************************************
-
-pure function is_letter(ch) result(res)
+elemental function IS_LETTER(ch) result(res)
 
 ! Returns .true. if ch is a letter and .false. otherwise
 
@@ -715,11 +764,11 @@ case default
 end select
 return
 
-end function is_letter
+end function IS_LETTER
 
 !**********************************************************************
 
-pure function is_digit(ch) result(res)
+elemental function IS_DIGIT(ch) result(res)
 
 ! Returns .true. if ch is a digit (0,1,...,9) and .false. otherwise
 
@@ -734,11 +783,11 @@ case default
 end select
 return
 
-end function is_digit
+end function IS_DIGIT
 
 !**********************************************************************
 
-subroutine split(str,delims,before,sep)
+pure subroutine SPLIT(str,delims,before,sep)
 
 ! Routine finds the first instance of a character from 'delims' in the
 ! the string 'str'. The characters before the found delimiter are
@@ -748,16 +797,19 @@ subroutine split(str,delims,before,sep)
 ! character if it is preceded by a backslash (\). If the backslash
 ! character is desired in 'str', then precede it with another backslash.
 
-character(len=*) :: str,delims,before
-character,optional :: sep
+character(len=*),   intent(inout) :: str
+character(len=*),   intent(in)    :: delims
+character(len=*),   intent(out)   :: before
+character,optional, intent(out)   :: sep
+
 logical :: pres
 character :: ch,cha
-
+	
 integer(ki4) :: i, k, ipos, iposa, ibsl, lenstr
 
 pres=present(sep)
 str=adjustl(str)
-call compact(str)
+call COMPACT(str)
 lenstr=len_trim(str)
 if(lenstr == 0) return        ! string str is empty
 k=0
@@ -804,24 +856,25 @@ if(i >= lenstr) str=''
 str=adjustl(str)              ! remove initial spaces
 return
 
-end subroutine split
+end subroutine SPLIT
 
 !**********************************************************************
 
-subroutine removebksl(str)
+elemental subroutine REMOVEBKSL(str)
 
 ! Removes backslash (\) characters. Double backslashes (\\) are replaced
 ! by a single backslash.
 
-character(len=*):: str
-character(len=1):: ch
-character(len=len_trim(str))::outstr
+character(len=*), intent(inout):: str
+
+character(len=1) :: ch
+character(len=:), allocatable ::outstr
 
 integer(ki4) :: i, k, ibsl, lenstr
 
 str=adjustl(str)
 lenstr=len_trim(str)
-outstr=' '
+outstr=repeat(' ', len_trim(str))
 k=0
 ibsl=0                        ! backslash initially inactive
 
@@ -843,13 +896,13 @@ end do
 
 str=adjustl(outstr)
 
-end subroutine removebksl
+end subroutine REMOVEBKSL
 
 !**********************************************************************
 !**********************************************************************
 !**********************************************************************
 
-pure function IS_NUMERIC(string, include_blank) result (num_flag)
+elemental function IS_NUMERIC(string, include_blank) result (num_flag)
 !*******************************************************************************
 ! IS_NUMERIC
 ! PURPOSE: Checks if a string is a string representation of a number, i.e.
