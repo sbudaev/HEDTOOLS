@@ -289,22 +289,22 @@ subroutine test_STRINGS
   ! Test MATCH(), only the first substring is deleted
   !              1234567890123-5-789012345678-0-23456789012345678901234
   test_str_01 = "Test a string {a small string} brackets close at 15-30"
-  call MATCH(test_str_01, 15, imatch)
+  imatch = MATCH(test_str_01, 15)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH {}")
 
   test_str_01 = "Test a string <a small string> brackets close at 15-30"
-  call MATCH(test_str_01, 15, imatch)
+  imatch = MATCH(test_str_01, 15)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH <>")
 
   test_str_01 = "Test a string (a small string) brackets close at 15-30"
-  call MATCH(test_str_01, 15, imatch)
+  imatch = MATCH(test_str_01, 15)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH ()")
 
   test_str_01 = "Test a string [a small string] brackets close at 15-30"
-  call MATCH(test_str_01, 15, imatch)
+  imatch = MATCH(test_str_01, 15)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH []")
 
-  call MATCH("Test a string [a small string] with square brackets", 15, imatch)
+  imatch = MATCH("Test a string [a small string] with square brackets", 15)
   if ( .not. imatch == 30 ) call fail_test("Error in MATCH [] inline")
 
   ! Test TRIMZERO
