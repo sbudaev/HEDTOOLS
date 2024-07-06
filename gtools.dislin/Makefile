@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 10074 2020-12-03 10:42:54Z sbu062 $
-# $HeadURL: https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/gtools.dislin/Makefile $
+# $Id: Makefile 16158 2024-07-06 08:45:57Z sbu062 $
+# $HeadURL: https://tegsvn.uib.no/svn/tegsvn/tags/HEDTOOLS/1.6/gtools.dislin/Makefile $
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>
@@ -195,7 +195,7 @@ ifdef ComSpec
 	IS_WINDOWS=1
 	WHICH_CMD=where
 	NULLDEV=":NULL"
-	ECHO := "$(shell $(WHICH_CMD) echo.exe)"
+	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
 	RM := $(WINRM)
 	MV := move
 else

@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 10075 2020-12-03 12:42:00Z sbu062 $
+# $Id: Makefile 16158 2024-07-06 08:45:57Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -93,7 +93,7 @@ ifdef ComSpec
 	NULLDEV=":NULL"
 	RM := $(WINRM)
 	MV := move
-	ECHO := "$(shell $(WHICH_CMD) echo.exe)"
+	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
 	UNAME := uname
 	ASCDOC := a2x
 	PLATFORM = windows_$(PROCESSOR_ARCHITECTURE)

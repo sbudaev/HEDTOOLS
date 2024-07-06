@@ -174,7 +174,7 @@ ifdef ComSpec
 	WHICH_CMD=where
 	NULLDEV=":NULL"
 	GF_FFLAGS += -Wl,--subsystem,console -mwindows
-	ECHO := "$(shell $(WHICH_CMD) echo.exe)"
+	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
 	RM := $(WINRM)
 	MV := move
 else
