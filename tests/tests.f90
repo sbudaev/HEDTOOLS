@@ -123,6 +123,9 @@ use m_tests
  call test_BASE_UTILS_qsort()
  call test_BASE_UTILS_cspline_SP()
  call test_BASE_UTILS_cspline_DP()
+ call test_BASE_UTILS_solve_line_SP()
+ call test_BASE_UTILS_solve_line_DP()
+ call test_BASE_RANDOM_RNORM_DP()
  print *, "*** Tests completed ***"
 
 contains
@@ -183,7 +186,7 @@ subroutine test_STRINGS
   integer :: n_parts, inumber, ierr
   real(SP) :: rnumber
   character(len=*), parameter :: TESTNAME="test_STRINGS", DELIMS=",:;"
-  integer :: ipos, imatch
+  integer :: imatch
   character :: char
 
   print *, "Test: ", TESTNAME
@@ -500,7 +503,113 @@ use BASE_UTILS
 
 end subroutine test_BASE_UTILS_cspline_DP
 
+subroutine test_BASE_UTILS_solve_line_SP
 
+use BASE_UTILS
+
+  real(SP) :: k,  b,  x1,  x2,  y1,  y2
+  real(SP) :: ks, bs, x1s, x2s, y1s, y2s
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_solve_line_SP"
+  real(SP), parameter :: eps_s = 1.0e-6_SP
+  real(DP), parameter :: eps_d = 1.0e-6_DP
+
+  print *, "Test: ", TESTNAME
+
+  k = 2.2_SP
+  b = 14.5_SP
+
+  x1 = 1.0_SP
+  y1 = k * x1 + b
+
+  x2 = 14.0_SP
+  y2 = k * x2 + b
+
+  x1s = x1
+  y1s = y1
+  
+  x2s = x2
+  y2s = y2
+ 
+  call SOLVE_LINE(ks, bs, x1s, y1s, x2s, y2s)
+
+  if ( abs (k - ks) > eps_s  ) call fail_test("SOLVE_LINE failed, SP")
+  if ( abs (b - bs) > eps_s  ) call fail_test("SOLVE_LINE failed, SP")
+
+end subroutine test_BASE_UTILS_solve_line_SP
+
+subroutine test_BASE_UTILS_solve_line_DP
+
+use BASE_UTILS
+
+  real(DP) :: k,  b,  x1,  x2,  y1,  y2
+  real(DP) :: ks, bs, x1s, x2s, y1s, y2s
+  character(len=*), parameter :: TESTNAME="test_BASE_UTILS_solve_line_DP"
+  real(SP), parameter :: eps_s = 1.0e-6_SP
+  real(DP), parameter :: eps_d = 1.0e-6_DP
+
+  print *, "Test: ", TESTNAME
+
+  k = 22.2_DP
+  b = 64.5_DP
+
+  x1 = 1.0_DP
+  y1 = k * x1 + b
+
+  x2 = 14.0_DP
+  y2 = k * x2 + b
+
+  x1s = x1
+  y1s = y1
+  
+  x2s = x2
+  y2s = y2
+ 
+  call SOLVE_LINE(ks, bs, x1s, y1s, x2s, y2s)
+
+  if ( abs (k - ks) > eps_d  ) call fail_test("SOLVE_LINE failed, DP")
+  if ( abs (b - bs) > eps_d  ) call fail_test("SOLVE_LINE failed, DP")
+
+end subroutine test_BASE_UTILS_solve_line_DP
+
+subroutine test_BASE_RANDOM_RNORM_DP
+
+use BASE_RANDOM
+
+  character(len=*), parameter :: TESTNAME="ttest_BASE_RANDOM_RNORM_DP"
+
+  real(DP), allocatable, dimension(:) :: X
+  real(SP), parameter :: eps_s = 0.1_SP
+  real(DP), parameter :: eps_d = 0.1_DP
+
+ integer :: i
+
+  print *, "Test: ", TESTNAME
+
+  allocate(X(100))
+
+  do i=1, size(X)
+    X(i) = RNORM()
+  end do
+  
+  ! print *, 'Mean:', sum(X)/size(X)
+
+  ! Check X in R
+  ! z <- read.csv('rnorm_output.csv')
+  ! head(z)
+  ! mean(z$RNORM)
+  ! sd(z$RNORM)
+  open(100, file="rnorm_output.csv", status="new", action="write")
+  
+  write(100, *) 'RNORM'
+
+  do i=1, size(X)
+    write(100, *) X(i)
+  end do
+  
+  if ( abs (sum(X)/size(X) - 0.0_DP) > eps_d  ) call fail_test("RNORM mean failed, DP")
+
+
+end subroutine test_BASE_RANDOM_RNORM_DP
 
 
 end program tests_hedtools

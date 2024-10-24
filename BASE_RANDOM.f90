@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_RANDOM.f90 10665 2021-03-02 07:34:44Z sbu062 $
+! SVN $Id: BASE_RANDOM.f90 16206 2024-08-07 09:04:14Z sbu062 $
 !*******************************************************************************
 ! PURPOSE:
 !   Working with random numbers. Init random seed, generate random numbers
@@ -53,8 +53,8 @@ interface RNORM_R8      ! Gaussian normals, dbl prec.
   module procedure RNORM_RENORMALISED_R8
 end interface RNORM_R8
 
-interface RNORM         ! We can use RNORM as an alias to RNORM_R4 (R8 not
-  module procedure RNORM_VAL_R4           ! thoroughly tested)
+interface RNORM
+  module procedure RNORM_VAL_R8
   module procedure RNORM_RENORMALISED_R4  ! but renormalised versions can be
   module procedure RNORM_RENORMALISED_R8  ! any supported precision.
 end interface RNORM

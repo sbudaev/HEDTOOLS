@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_UTILS.f90 11520 2021-09-28 09:19:32Z sbu062 $
+! SVN $Id: BASE_UTILS.f90 16278 2024-09-04 17:05:59Z sbu062 $
 !*******************************************************************************
 ! BASE_UTILS:
 ! PURPOSE: This module provides basic high level utilities that are used in
@@ -66,6 +66,7 @@ interface TOSTR                  ! Generic interface to number-to-string
   module procedure STR_ATOA
 
   module procedure STR_ARRAY_ITOA
+  module procedure STR_ARRAY_ILTOA
   module procedure STR_ARRAY_RTOA
   module procedure STR_ARRAY_R8TOA
   module procedure STR_ARRAY_R16TOA
@@ -84,6 +85,7 @@ interface STR                    ! An "alias" to TOSTR
   module procedure STR_ATOA
 
   module procedure STR_ARRAY_ITOA
+  module procedure STR_ARRAY_ILTOA
   module procedure STR_ARRAY_RTOA
   module procedure STR_ARRAY_R8TOA
   module procedure STR_ARRAY_LTOA
@@ -214,6 +216,14 @@ interface CSPLINE_SCALAR         ! Generic interface to scalar function.
    module procedure CSPLINE_INTERPOL_SCALAR_R8
 
 end interface CSPLINE_SCALAR
+
+interface SOLVE_LINE
+
+   module procedure SOLVE_LINE_R4
+   module procedure SOLVE_LINE_R8
+
+end interface SOLVE_LINE
+
 
 !-------------------------------------------------------------------------------
 
@@ -754,6 +764,50 @@ pure function STR_ARRAY_ITOA (r,formatstr) result(ToStrA)
   ToStrA = tmpStr
 
 end function STR_ARRAY_ITOA
+
+!-------------------------------------------------------------------------------
+
+pure function STR_ARRAY_ILTOA (r,formatstr) result(ToStrA)
+!*******************************************************************************
+! PURPOSE: Convert integer array to a string type.
+! CALL PARAMETERS: integer array
+!                  optional format string
+! EXAMPLE:
+!          Str_NAME = "N=" // STR_ARRAY_ITOA(iNum)
+!*******************************************************************************
+
+  implicit none
+
+  ! Function value
+  character(len=:), allocatable :: ToStrA
+
+  ! Calling parameters
+  integer(LONG), dimension(:), intent(in) :: r
+  character(len=*), optional, intent(in) :: formatstr
+
+  ! Local variables
+  character (len=:), allocatable :: tmpStr
+  integer(LONG) :: i
+
+  ! Subroutine name for DEBUG LOGGER
+  character (len=*), parameter :: PROCNAME = "STR_ARRAY_ITOA"
+
+  !-----------------------------------------------------------------------------
+
+  tmpStr=""
+
+  do i=lbound(r,1), ubound(r,1)
+    if (present(formatstr)) then
+      tmpStr=tmpStr // " " // STR_ILTOA(r(i), formatstr)
+    else
+      tmpStr = tmpStr // " " // STR_ILTOA(r(i))
+    end if
+  end do
+
+
+  ToStrA = tmpStr
+
+end function STR_ARRAY_ILTOA
 
 !-------------------------------------------------------------------------------
 
@@ -8114,5 +8168,54 @@ pure function CSPLINE_INTERPOL_SCALAR_R8 (xx, yy, xi) result (scalar_output)
 
 end function CSPLINE_INTERPOL_SCALAR_R8
 
+!-------------------------------------------------------------------------------
+
+pure subroutine SOLVE_LINE_R4(k, b, x_min, y_min, x_max, y_max)
+!*******************************************************************************
+! Simple solver for xy-linear equation
+!
+! Given the x_min, x_max and y_min y_max,
+!   determine the coefficients for the linear
+!   equation k and b
+! y_max +       *
+!       |     * .    y = k x + b
+!       |   *   .        ?     ?
+!       | *     .
+! y_min +-------+
+!     x_min   x_max
+!*******************************************************************************
+
+  real(kind=SP), intent(out) :: k,b
+  real(kind=SP), intent(in)  :: x_min, y_min, x_max, y_max
+
+  k = (y_min - y_max) / (x_min-x_max)
+  b = -1 * (x_max*y_min - x_min*y_max) / ( x_min - x_max )
+
+end subroutine SOLVE_LINE_R4
+
+!-------------------------------------------------------------------------------
+
+pure subroutine SOLVE_LINE_R8(k, b, x_min, y_min, x_max, y_max)
+!*******************************************************************************
+! Simple solver for xy-linear equation
+!
+! Given the x_min, x_max and y_min y_max,
+!   determine the coefficients for the linear
+!   equation k and b
+! y_max +       *
+!       |     * .    y = k x + b
+!       |   *   .        ?     ?
+!       | *     .
+! y_min +-------+
+!     x_min   x_max
+!*******************************************************************************
+
+  real(kind=DP), intent(out) :: k,b
+  real(kind=DP), intent(in)  :: x_min, y_min, x_max, y_max
+
+  k = (y_min - y_max) / (x_min-x_max)
+  b = -1 * (x_max*y_min - x_min*y_max) / ( x_min - x_max )
+
+end subroutine SOLVE_LINE_R8
 
 end module BASE_UTILS
