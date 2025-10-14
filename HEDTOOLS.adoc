@@ -1,7 +1,7 @@
 AHA! Fortran Modelling Tools Manual
 ===================================
 Sergey Budaev <sergey.budaev@uib.no>
-$Id: HEDTOOLS.adoc 16153 2024-07-05 15:26:12Z sbu062 $
+$Id: HEDTOOLS.adoc 19412 2025-10-14 06:39:16Z sbu062 $
 :toc:
 :description: Modelling tools and coding style for AHA Model environment.
 :lang: en
@@ -1606,7 +1606,7 @@ user who did the revision. This is how it will appear in the source code:
 --------------------------------------------------------------------------------
 ! The comment below incorporates SVN revision ID, it should apparently be
 !   inserted into a comment, so does not affect the compiler:
-! $Id: HEDTOOLS.adoc 16153 2024-07-05 15:26:12Z sbu062 $
+! $Id: HEDTOOLS.adoc 19412 2025-10-14 06:39:16Z sbu062 $
 !                                                          other code follows...
 ......
 implicit none
@@ -3201,7 +3201,67 @@ if (.not. csv_written_ok) goto 1000 ! handle possible CSV error
 
 indexterm:[csv_file]
 
-Although, there is a wrapper for saving the whole chunk of the data at once.
+The code below illustrates how the whole process
+
+[source]
+--------------------------------------------------------------------------------
+use CSV_IO
+use BASE_UTILS, only : TOSTR
+
+integer :: i, j, num
+
+! This c_file defines file handle for CSV
+type(csv_file) :: c_file
+
+! WARNING: the record string variable cannot be allocatable
+character(255) :: c_record
+
+num = 0
+
+! File handle must at least define the file name
+c_file%name = "test_2.csv"
+
+call CSV_OPEN_WRITE(c_file) 
+
+! Create and write the varable names
+c_record=""
+do i = 1, 5
+  call CSV_RECORD_APPEND(c_record, "VAR_" // TOSTR(i))
+end do
+call CSV_RECORD_WRITE(c_record, c_file)
+
+! Write rows
+do i =1, 10
+  c_record = ""
+  ! Write columns within each row
+  do j = 1, 5
+    ! we output values of num
+    num = num + 1
+    call CSV_RECORD_APPEND(c_record, num) 
+  end do
+  call CSV_RECORD_WRITE(c_record, c_file)
+end do
+
+call CSV_CLOSE(c_file)
+--------------------------------------------------------------------------------
+
+This results in the following data file output:
+
+--------------------------------------------------------------------------------
+"VAR_1","VAR_2","VAR_3","VAR_4","VAR_5"
+1,2,3,4,5
+6,7,8,9,10
+11,12,13,14,15
+16,17,18,19,20
+21,22,23,24,25
+26,27,28,29,30
+31,32,33,34,35
+36,37,38,39,40
+41,42,43,44,45
+46,47,48,49,50
+--------------------------------------------------------------------------------
+
+Additionally, there is a wrapper for saving the whole chunk of the data at once.
 A whole array or matrix (2-dimensional table) can be exported to CSV
 in a single command:
 

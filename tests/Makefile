@@ -15,6 +15,9 @@ GF_FC = gfortran
 IF_FC = ifort
 SF_FC = f95
 
+# Default is DEBUG
+DEBUG = YES
+
 # Choose the default compiler type
 FC = $(GF_FC)
 
@@ -396,7 +399,18 @@ SVN_VER = $(shell svn info --show-item last-changed-revision)
 #*******************************************************************************
 
 # Default build target = executable
-all: exec
+all: run
+
+# Test shared library
+shared_tests:
+	$(MAKE) -C .. shared
+	$(FC) $(FFLAGS) -I ../ -c $(SRC)
+	$(MV) ../lib_hedutils.so .	
+	$(FC) $(FFLAGS) -o $(OUT) tests.o lib_hedutils.so
+	@$(ECHO) -------------------------------------------------------------------
+	@$(ECHO) RUN TEST with  LD_LIBRARY_PATH set to local
+	@$(ECHO) -------------------------------------------------------------------
+	$(MAKE) -f $(THIS_FILE) run_only LD_LIBRARY_PATH=.
 
 .PHONY: tests
 tests: run
@@ -426,6 +440,8 @@ help:
 	@$(ECHO) ""
 	@$(ECHO) "Main (re)build (for different compiler type targets):"
 	@$(ECHO) "    make gnu, make intel, make sun"
+	@$(ECHO) ""
+	@$(ECHO) "Main build with HEDTOOLS as shared library: make shared_tests"
 	@$(ECHO) ""
 	@$(ECHO) "Compile HEDTOOLS modelling tools: make tools"
 	@$(ECHO) ""
@@ -475,7 +491,19 @@ run: run_local
 # Note -- this is local start/run on all supported systems
 run_local: $(OUT) $(SRC)
 	$(info ********************************************************************)
-	$(info *** Executing model $(OUT) now)
+	$(info *** Executing model $(OUT) now                                      )
+	$(info Check output and files and then issue 'make clean'                  ) 
+	$(info ********************************************************************)
+ifeq ($(IS_WINDOWS),1)
+	$(OUT)
+else
+	./$(OUT)
+endif
+
+run_only:
+	$(info ********************************************************************)
+	$(info *** Executing model $(OUT) now                                      )
+	$(info Check output and files and then issue 'make clean'                  ) 
 	$(info ********************************************************************)
 ifeq ($(IS_WINDOWS),1)
 	$(OUT)
@@ -505,7 +533,7 @@ endif
 # Return to default state
 distclean: clean
 	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(MOD_ALL) \
-					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe \
+					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.so *.obj *.exe *.pdb \
 					zf_*genmod.f90
 	-$(RM) $(DOXYPATH)
 

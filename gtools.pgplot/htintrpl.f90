@@ -1,6 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
-! $Id: htintrpl.f90 9343 2020-01-28 18:58:40Z sbu062 $
+! $Id: htintrpl.f90 19116 2025-08-26 11:07:53Z sbu062 $
 !-------------------------------------------------------------------------------
 ! Produce interpolation plot of data that are ptovided at the command line
 ! Input: Two arrays for the interpolation grid X, Y, they must be of the same
@@ -65,7 +65,7 @@ implicit none
 
 ! Warning: SVN_REVISION is updated automatically by Subversion at commit.
 !          do not edit manually!
-character(len=*), parameter :: SVN_REVISION = "$Revision: 9343 $"
+character(len=*), parameter :: SVN_REVISION = "$Revision: 19116 $"
 
 ! The name of the graphics library used for plotting.
 character(len=*), parameter :: GRAPHICS_LIB = "PGPLOT"
@@ -74,8 +74,8 @@ character(len=*), parameter :: GRAPHICS_LIB = "PGPLOT"
 logical, parameter :: IS_DEBUG = .FALSE.
 
 ! Command line arguments, whole line.
-character(len=255*3) :: command_line_str !> Note: allocatable doesn't work
-character(len=255), dimension(10) :: command_str
+character(len=255*6) :: command_line_str !> Note: allocatable doesn't work
+character(len=255*2), dimension(10) :: command_str
 integer :: n_cmds, n_sub, err_flag, n_xx, n_yy
 
 ! String array for xx grid array
@@ -233,7 +233,7 @@ do i=2, n_cmds
         n_yy = n_sub
         allocate(yy(n_yy))
       else
-       write(ERROR_UNIT,*) "ERROR: unequal size grid arrays."
+       write(ERROR_UNIT,*) "ERROR: unequal size grid arrays [", n_xx, n_sub,"]"
        stop EXIT_CODE_ERROR
       end if
       do j=1, n_yy

@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 16158 2024-07-06 08:45:57Z sbu062 $
+# $Id: Makefile 19439 2025-10-14 17:31:42Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -10,11 +10,19 @@
 # Requires the following command line utilities
 #      (may NOT be available on Windows): echo, make, uname, zip, svn
 #      tools use also expr, grep
+#
+# Notes on Oracle/Sun Fortran f95
+#     If Oracle Developer Studio is installed (on modern Linux) along with
+#     gfortran, f95 may conflict between the two compilers. Then, set specific
+#     PATH to basic bin's and the Oracle Developer Studio bin, e.g.
+#       export PATH=$HOME/bin/developerstudio12.6/bin:/usr/bin:/bin
+#       make FC=f95
 #-------------------------------------------------------------------------------
 
 # Supported Fortran compiler types
 GF_FC = gfortran
 IF_FC = ifort
+XF_FC = ifx
 SF_FC = f95
 
 # Choose the compiler type
@@ -43,6 +51,7 @@ TESTS_PATH = tests/
 # However, if Cygwin is used, this native file removal command may not call
 # with a "command not found" error. In such a case, use the Unix 'rm' tool
 # provided by Cygwin.
+#WINRM = del /Q /F
 WINRM := rm -fr
 
 #===============================================================================
@@ -93,6 +102,9 @@ ifdef ComSpec
 	NULLDEV=":NULL"
 	RM := $(WINRM)
 	MV := move
+	CP := copy
+	MKDIR := mkdir
+	RMDIR := rmdir /s /q
 	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
 	UNAME := uname
 	ASCDOC := a2x
@@ -104,6 +116,9 @@ else
 	NULLDEV="/dev/null"
 	RM := rm -f
 	MV := mv -f
+	CP := cp
+	MKDIR := mkdir
+	RMDIR := rmdir
 	ECHO := echo
 	UNAME := uname
 	ASCDOC := a2x
@@ -127,10 +142,17 @@ else
 	CCMD=-c
 endif
 
+ifeq ($(PLATFORM_TYPE)$(FC),Windowsifx)
+	OBJEXT=obj
+	LIBEXT=lib
+	DIBEXT=dll
+	CCMD=/c
+endif
+
 # Check if certain required executables exist and are callable in path. This is
 # important on the Windows platform because such GNU command line utilities as
 # uname and zip are not installed by default.
-REQUIRED_EXECS = svn $(UNAME) zip $(ASCDOC) ifort f95 gfortran
+REQUIRED_EXECS = svn $(UNAME) zip $(ASCDOC) pdftk ifx ifort f95 gfortran
 K := $(foreach exec,$(REQUIRED_EXECS),\
 	$(if $(shell $(WHICH_CMD) $(exec) ),check executables,\
 	$(warning ************ $(exec) unavailable in PATH ************)))
@@ -149,7 +171,7 @@ MOD = base_utils.mod  base_strings.mod csv_io.mod  logger.mod base_random.mod
 
 DOC = HEDTOOLS.adoc
 
-LIBNAME = lib_hedutils
+LIBNAME = hedtools
 LIB = $(LIBNAME).$(LIBEXT)
 DIB = $(LIBNAME).$(DIBEXT)
 
@@ -189,11 +211,27 @@ IF_FFLAGS_WINDOWS = /c /O3 /Qparallel $(IF_STATIC_WINDOWS)
 IF_STLIBBLD_WINDOWS = lib /out:$(LIB) $(OBJ)
 IF_DYLIBBLD_WINDOWS = $(FC) /dll $(IF_FFLAGS_WINDOWS)
 
+# Options for new Intel Fortran ifx
+XF_STATIC = -static
+XF_TRAPS =-fpe3
+XF_RCHECKS = -warn -check bounds,pointers,format,uninit
+XF_FFLAGS = -O3 -fp-model fast -xHost
+XF_STLIBBLD = ar cr $(LIB) $(OBJ)
+XF_DYLIBBLD = $(FC) -O3 -parallel -fpic $(XF_TRAPS) -shared -o $(DIB)
+
+# Options for new Intel Fortran on Wondows ifx
+XF_STATIC_WINDOWS = /static
+XF_TRAPS_WINDOWS =/fpe:3
+XF_RCHECKS_WINDOWS = /warn /check bounds,pointers,format,uninit
+XF_FFLAGS_WINDOWS = /Ot /fp:fast /QxHost
+XF_STLIBBLD_WINDOWS = lib /out:$(LIB) $(OBJ)
+XF_DYLIBBLD_WINDOWS = $(FC) /dll $(XF_FFLAGS_WINDOWS)
+
 # Options for Sun/Oracle Solaris Studio
 SF_STATIC = –Bstatic –dn
 SF_TRAPS = -ftrap=%none
 SF_RCHECKS = –C
-SF_FFLAGS = -fast -autopar -depend=yes -pic $(SF_STATIC) $(SF_TRAPS) $(SF_RCHECKS)
+SF_FFLAGS = -fast -autopar -xcache=generic -depend=yes -pic $(SF_STATIC) $(SF_TRAPS) $(SF_RCHECKS)
 SF_STLIBBLD = ar cr $(LIB) $(OBJ)
 SF_DYLIBBLD = $(FC) -fast -autopar -depend=yes -pic $(SF_TRAPS) -G -o $(DIB)
 # -fast = O5
@@ -221,6 +259,18 @@ ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
 	DYLIBBLD = $(IF_DYLIBBLD_WINDOWS)
 endif
 
+ifeq ($(FC),$(XF_FC))
+	FFLAGS = $(XF_FFLAGS)
+	STLIBBLD = $(XF_STLIBBLD)
+	DYLIBBLD = $(XF_DYLIBBLD)
+endif
+
+ifeq ($(PLATFORM_TYPE)$(FC),Windowsifx)
+	FFLAGS = $(XF_FFLAGS_WINDOWS)
+	STLIBBLD = $(XF_STLIBBLD_WINDOWS)
+	DYLIBBLD = $(XF_DYLIBBLD_WINDOWS)
+endif
+
 ifeq ($(FC),$(SF_FC))
 	FFLAGS = $(SF_FFLAGS)
 	STLIBBLD = $(SF_STLIBBLD)
@@ -233,6 +283,8 @@ ifdef DEBUG
 	IF_FFLAGS = -O0 -g -debug all -fpe0 -traceback $(IF_RCHECKS)
 	IF_FFLAGS_WINDOWS = /c /Zi /Od /debug:full /fpe:0 /traceback
 	#$(IF_RCHECKS_WINDOWS)
+  XF_FFLAGS = -debug all -O0 -g -fstack-protector -traceback ${XF_RCHECKS}
+  XF_FFLAGS_WINDOWS = /Od /debug:full /traceback ${XF_RCHECKS_WINDOWS}
 	SF_FFLAGS = -O0 -g -ftrap=%all $(SF_RCHECKS)
 endif
 
@@ -255,7 +307,8 @@ VPATH = $(DOCDIR)
 
 #-------------------------------------------------------------------------------
 # Zipfile distro to be generated
-ZIPFILE = LIBHEDUTILS_$(PLATFORM)_$(FC)_rev$(SVN_VER).zip
+ZIPFILE = LIBHEDTOOLS_$(PLATFORM)_$(FC)_rev$(SVN_VER).zip
+DDISTRO = libhedtools_$(PLATFORM)_$(FC)_rev$(SVN_VER)
 
 # Autogenerated README.txt for static library ZIP AUTOGEN_README
 AUTOGEN_README_FILE = Readme.txt
@@ -352,6 +405,10 @@ ifeq ($(FC),$(IF_FC))
 	AUTOGEN_CODE_RANDOM=$(AUTOGEN_CODE_IF)
 endif
 
+ifeq ($(FC),$(XF_FC))
+	AUTOGEN_CODE_RANDOM=$(AUTOGEN_CODE_IF)
+endif
+
 ifeq ($(FC),$(SF_FC))
 	AUTOGEN_CODE_RANDOM=$(AUTOGEN_CODE_SF)
 endif
@@ -409,22 +466,34 @@ inc: $(AUTOGEN_HEADER_RAND)
 # Make PDF (or other::  DOCFMT=xxx) using asciidoc
 doc: $(DOCFIL).$(DOCFMT)
 
+# Book is the PDF manual with title page
+book:
+	$(ASCDOC) -fpdf $(DOC)
+	pdftk $(DOCDIR)pg_cover/cover_page.pdf $(DOCFIL).pdf cat output $(DOCDIR)$(DOCFIL).pdf
+	-$(RM) $(DOCFIL).pdf
+
 # Make fancy HTML documentation
 webdoc: $(DOCFIL).adoc
 	asciidoc -b html5 -a icons -a toc2 -a theme=flask $(DOCFIL).adoc
 
 # Clean workspace completely - distribution state
-distclean: neat
+distclean: neat cleandistro
 	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
 	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb \
 	       *.zip $(DOCFIL).html *.css *.xml \
 	       ?NULL
+	-$(RM) $(DOCFIL).pdf
 	$(MAKE) -C $(TOOLS_PATH) distclean
 	$(MAKE) -C $(TESTS_PATH) distclean
 
 # We don't clean .mod files as they are necessary for building with .so
 clean: neat
 	-$(RM) *.o *.obj
+
+cleandistro: neat
+	-$(RM) $(DDISTRO)/*.*
+	-$(RMDIR) $(DDISTRO)
+	-$(RM) $(ZIPFILE)
 
 neat:
 	-$(RM) $(TMPFILES) *conflict*  .syncthing* *.orig
@@ -448,6 +517,7 @@ help:
 	@$(ECHO) "format is set by DOCFMT variable, default format is pdf"
 	@$(ECHO) "    make doc"
 	@$(ECHO) "    make webdoc"
+	@$(ECHO) "    make book"
 	@$(ECHO) ""
 	@$(ECHO) "Cleaning:"
 	@$(ECHO) "    make clean, make cleandata (removes object files but not library),"
@@ -469,13 +539,40 @@ $(LIB): $(OBJ)
 	@$(MAKE) -f $(THIS_FILE) inc
 	$(STLIBBLD)
 	$(AUTOGEN_README_LIB)
+	-$(MKDIR) $(DDISTRO) 
+	-$(CP)  *.mod  $(DDISTRO)
+	-$(CP)  $(LIB) $(DDISTRO)
+	-$(CP)  $(AUTOGEN_README_FILE) $(DDISTRO)
+ifdef ZIPDISTRO
 	zip $(ZIPFILE) $(MOD) $(LIB) $(AUTOGEN_README_FILE)
+endif
+
 
 $(DIB): $(SRC)
 	@$(MAKE) -f $(THIS_FILE) inc
+ifeq ($(PLATFORM_TYPE)$(FC),Windowsifx)
+	@$(MAKE) -f $(THIS_FILE) objects
+	$(DYLIBBLD) $(OBJ) -o $@
+else
 	$(DYLIBBLD) $(SRC)
+endif
 	$(AUTOGEN_README_DIB)
+	-$(MKDIR) $(DDISTRO) 
+	-$(CP)  *.mod  $(DDISTRO)
+	-$(CP)  $(DIB) $(DDISTRO)
+	-$(CP)  $(AUTOGEN_README_FILE) $(DDISTRO)
+ifdef ZIPDISTRO
 	zip $(ZIPFILE) $(MOD) $(DIB) $(AUTOGEN_README_FILE)
+endif
+
+zip: $(LIB)
+	zip $(ZIPFILE) $(MOD) $(LIB) $(AUTOGEN_README_FILE)
+
+# make object files
+objects: ${OBJ}
+
+%.${OBJEXT}: %.f90
+	$(FC) $(FFLAGS) -c -o $@ $^
 
 $(DOCFIL).$(DOCFMT): $(DOCFIL).adoc
 	$(ASCDOC) -f$(DOCFMT) $(DOC)

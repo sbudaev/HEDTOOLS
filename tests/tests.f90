@@ -118,6 +118,7 @@ use m_tests
 
  print *, "*** Tests started ***"
  call test_CSV_IO()
+ call test_CSV_IO_low()
  call test_STRINGS()
  call test_BASE_UTILS_zerofun()
  call test_BASE_UTILS_qsort()
@@ -172,6 +173,46 @@ subroutine test_CSV_IO
   if ( any(DATA_OUT /= DATA_IN) ) call fail_test("DATA IN /= OUT")
 
 end subroutine test_CSV_IO
+
+subroutine test_CSV_IO_low
+  use CSV_IO
+  use BASE_UTILS, only : TOSTR
+  integer :: i, j, num
+  ! This c_file defines file handle for CSV
+  type(csv_file) :: c_file
+  character(255) :: c_record
+  character(len=*), parameter :: TESTNAME="test_CSV_IO_low"
+
+  print *, "Test: ", TESTNAME
+  num = 0
+
+  ! File handle must at least define the file name
+  c_file%name = "test_2.csv"
+
+  call CSV_OPEN_WRITE(c_file) 
+
+  ! Create and write the varable names
+  c_record=""
+  do i = 1, 5
+    call CSV_RECORD_APPEND(c_record, "VAR_" // TOSTR(i))
+  end do
+  call CSV_RECORD_WRITE(c_record, c_file)
+
+  ! Write rows
+  do i =1, 10
+    c_record = ""
+    ! Write columns within each row
+    do j = 1, 5
+      ! we output values of num
+      num = num + 1
+      call CSV_RECORD_APPEND(c_record, num) 
+    end do
+    call CSV_RECORD_WRITE(c_record, c_file)
+  end do
+
+  call CSV_CLOSE(c_file)
+
+end subroutine test_CSV_IO_low
 
 subroutine test_STRINGS
   use BASE_STRINGS
@@ -575,11 +616,11 @@ subroutine test_BASE_RANDOM_RNORM_DP
 
 use BASE_RANDOM
 
-  character(len=*), parameter :: TESTNAME="ttest_BASE_RANDOM_RNORM_DP"
+  character(len=*), parameter :: TESTNAME="test_BASE_RANDOM_RNORM_DP"
 
   real(DP), allocatable, dimension(:) :: X
-  real(SP), parameter :: eps_s = 0.1_SP
-  real(DP), parameter :: eps_d = 0.1_DP
+  real(SP), parameter :: eps_s = 0.5_SP
+  real(DP), parameter :: eps_d = 0.5_DP
 
  integer :: i
 

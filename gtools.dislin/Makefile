@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 16158 2024-07-06 08:45:57Z sbu062 $
-# $HeadURL: https://tegsvn.uib.no/svn/tegsvn/tags/HEDTOOLS/1.6/gtools.dislin/Makefile $
+# $Id: Makefile 16157 2024-07-06 08:43:06Z sbu062 $
+# $HeadURL: https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/gtools.dislin/Makefile $
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>

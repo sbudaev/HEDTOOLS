@@ -1,5 +1,5 @@
 !*******************************************************************************
-! SVN $Id: BASE_STRINGS.f90 16153 2024-07-05 15:26:12Z sbu062 $
+! SVN $Id: BASE_STRINGS.f90 19436 2025-10-14 17:10:13Z sbu062 $
 !*******************************************************************************
 ! PURPOSE:
 ! Fortran Character String Utilities
@@ -108,7 +108,7 @@ do
    if(len_trim(str) == 0) exit
    nargs=nargs+1
    call SPLIT(str,delims,args(nargs))
-   call removebksl(args(nargs))
+   call REMOVEBKSL(args(nargs))
 end do
 
 end subroutine PARSE
@@ -471,7 +471,7 @@ end function LOWERCASE
 
 !**********************************************************************
 
-impure subroutine GETFLINE(nunitr,line,ios)
+subroutine GETFLINE(nunitr,line,ios)
 
 ! Reads line from unit=nunitr, ignoring blank lines
 ! and deleting comments beginning with an exclamation point(!)
@@ -675,7 +675,7 @@ end subroutine TRIMZERO
 
 !**********************************************************************
 
-impure subroutine WRITEQ_DR(unit,namestr,value,fmt)
+subroutine WRITEQ_DR(unit,namestr,value,fmt)
 
 ! Writes a string of the form <name> = value to unit
 
@@ -694,7 +694,7 @@ end subroutine WRITEQ_DR
 
 !**********************************************************************
 
-impure subroutine WRITEQ_SR(unit,namestr,value,fmt)
+subroutine WRITEQ_SR(unit,namestr,value,fmt)
 
 ! Writes a string of the form <name> = value to unit
 
@@ -713,7 +713,7 @@ end subroutine WRITEQ_SR
 
 !**********************************************************************
 
-impure subroutine WRITEQ_DI(unit,namestr,ivalue,fmt)
+subroutine WRITEQ_DI(unit,namestr,ivalue,fmt)
 
 ! Writes a string of the form <name> = ivalue to unit
 
@@ -732,7 +732,7 @@ end subroutine WRITEQ_DI
 
 !**********************************************************************
 
-impure subroutine WRITEQ_SI(unit,namestr,ivalue,fmt)
+subroutine WRITEQ_SI(unit,namestr,ivalue,fmt)
 
 ! Writes a string of the form <name> = ivalue to unit
 integer, intent(in)          :: unit

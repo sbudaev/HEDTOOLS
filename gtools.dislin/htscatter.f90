@@ -1,6 +1,6 @@
 !-------------------------------------------------------------------------------
 ! SVN version info:
-! $Id: htscatter.f90 9343 2020-01-28 18:58:40Z sbu062 $
+! $Id: htscatter.f90 18415 2025-04-29 17:54:48Z sbu062 $
 !-------------------------------------------------------------------------------
 ! Produce scatter plot of data that are provided at the command line.
 ! If the output plot file name is not provided, the plot goes to the
@@ -29,7 +29,7 @@ implicit none
 
 ! Warning: SVN_REVISION is updated automatically by Subversion at commit.
 !          do not edit manually!
-character(len=*), parameter :: SVN_REVISION = "$Revision: 9343 $"
+character(len=*), parameter :: SVN_REVISION = "$Revision: 18415 $"
 
 ! The name of the graphics library used for plotting.
 character(len=*), parameter :: GRAPHICS_LIB = "DISLIN"
@@ -231,7 +231,7 @@ end subroutine error_csv
 function graphics_is_available() result (is_available)
   logical :: is_available
   character(len=255) :: t_string
-  integer, parameter :: DISP_MIN_LIMIT = 4 ! for :0.0 is 4
+  integer, parameter :: DISP_MIN_LIMIT = 2 ! for :0 is 4
 
   !> - If the program is running under Windows, it should be TRUE.
   if ( PLATFORM_IS_WINDOWS() ) then
