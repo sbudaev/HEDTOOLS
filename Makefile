@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 19439 2025-10-14 17:31:42Z sbu062 $
+# $Id: Makefile 19442 2025-10-14 19:15:37Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -245,36 +245,42 @@ ifeq ($(FC),$(GF_FC))
 	FFLAGS = $(GF_FFLAGS)
 	STLIBBLD =  $(GF_STLIBBLD)
 	DYLIBBLD =  $(GF_DYLIBBLD)
+	FCVER = $(shell $(FC) --version)
 endif
 
 ifeq ($(FC),$(IF_FC))
 	FFLAGS = $(IF_FFLAGS)
 	STLIBBLD = $(IF_STLIBBLD)
 	DYLIBBLD = $(IF_DYLIBBLD)
+	FCVER = $(shell $(FC) --version)
 endif
 
 ifeq ($(PLATFORM_TYPE)$(FC),Windowsifort)
 	FFLAGS = $(IF_FFLAGS_WINDOWS)
 	STLIBBLD = $(IF_STLIBBLD_WINDOWS)
 	DYLIBBLD = $(IF_DYLIBBLD_WINDOWS)
+	FCVER = $(shell $(FC) 2>&1)
 endif
 
 ifeq ($(FC),$(XF_FC))
 	FFLAGS = $(XF_FFLAGS)
 	STLIBBLD = $(XF_STLIBBLD)
 	DYLIBBLD = $(XF_DYLIBBLD)
+	FCVER = $(shell $(FC) --version)
 endif
 
 ifeq ($(PLATFORM_TYPE)$(FC),Windowsifx)
 	FFLAGS = $(XF_FFLAGS_WINDOWS)
 	STLIBBLD = $(XF_STLIBBLD_WINDOWS)
 	DYLIBBLD = $(XF_DYLIBBLD_WINDOWS)
+	FCVER = $(shell $(FC) --version)
 endif
 
 ifeq ($(FC),$(SF_FC))
 	FFLAGS = $(SF_FFLAGS)
 	STLIBBLD = $(SF_STLIBBLD)
 	DYLIBBLD = $(SF_DYLIBBLD)
+	FCVER = $(shell $(FC) -V 2>&1)
 endif
 
 # DEBUG turns off all optimisations and keeps debug symbols.
@@ -321,6 +327,10 @@ define AUTOGEN_README_LIB
 	$(shell $(ECHO) "" >> $(AUTOGEN_README_FILE))
 	$(shell $(ECHO) "    $(FC) file.f90 $(LIB)" >> $(AUTOGEN_README_FILE))
 	$(shell $(ECHO) "" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "Fortran compiler information" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "$(FCVER)" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "" >> $(AUTOGEN_README_FILE))
 	$(shell $(ECHO) "IMPORTANT: Use exactly the same platform and compiler that" >> $(AUTOGEN_README_FILE))
 	$(shell $(ECHO) "           was used to generate the static library!" >> $(AUTOGEN_README_FILE))
 endef
@@ -339,6 +349,10 @@ define AUTOGEN_README_DIB
 	$(shell $(ECHO) "   ifort Windows produces both .dll and .lib files" >> $(AUTOGEN_README_FILE))
 	$(shell $(ECHO) "   .lib file should be used for building: " >> $(AUTOGEN_README_FILE))
 	$(shell $(ECHO) "    $(FC) file.f90 $(LIB)" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "Fortran compiler information" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "" >> $(AUTOGEN_README_FILE))
+	$(shell $(ECHO) "$(FCVER)" >> $(AUTOGEN_README_FILE))
 endef
 
 
