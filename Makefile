@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 19458 2025-10-16 20:03:43Z sbu062 $
+# $Id: Makefile 19460 2025-10-16 20:19:20Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -496,7 +496,7 @@ webdoc: $(DOCFIL).adoc
 distclean: neat cleandistro
 	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT)
 	-$(RM) $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb 
-	-$(RM) *.zip $(DOCFIL).html *.css *.xml ?NULL
+	-$(RM) *.zip $(DOCFIL).html *.css *.xml
 	-$(RM) $(DOCFIL).pdf
 	-$(RM) *NULL
 	$(MAKE) -C $(TOOLS_PATH) distclean
