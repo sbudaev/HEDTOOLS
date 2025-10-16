@@ -78,6 +78,7 @@ IEEEPATH = $(HEDTOOLSDIR)/IEEE
 # with a "command not found" error. In such a case, use the Unix 'rm' tool
 # provided by Cygwin.
 WINRM := rm -fr
+#WINRM := del
 
 #*******************************************************************************
 # Define compiler options
@@ -177,7 +178,8 @@ ifdef ComSpec
 	WHICH_CMD=where
 	NULLDEV=":NULL"
 	GF_FFLAGS += -Wl,--subsystem,console -mwindows
-	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
+	#ECHO := "$(firstword $(shell $(WHICH_CMD) echo))"
+	ECHO := echo
 	RM := $(WINRM)
 	MV := move
 else
@@ -536,6 +538,7 @@ distclean: clean
 					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.so *.obj *.exe *.pdb \
 					zf_*genmod.f90
 	-$(RM) $(DOXYPATH)
+	-$(RM) *NULL
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
 clean: neat

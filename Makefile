@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 19456 2025-10-16 16:59:25Z sbu062 $
+# $Id: Makefile 19458 2025-10-16 20:03:43Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -498,6 +498,7 @@ distclean: neat cleandistro
 	-$(RM) $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb 
 	-$(RM) *.zip $(DOCFIL).html *.css *.xml ?NULL
 	-$(RM) $(DOCFIL).pdf
+	-$(RM) *NULL
 	$(MAKE) -C $(TOOLS_PATH) distclean
 	$(MAKE) -C $(TESTS_PATH) distclean
 

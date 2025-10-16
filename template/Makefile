@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 4793 2017-08-05 04:57:01Z sbu062 $
+# $Id: Makefile 19458 2025-10-16 20:03:43Z sbu062 $
 # Build model automatically generating include files for PRNG and IEEE
 # author Sergey Budaev <sbudaev@gmail.com>
 #-------------------------------------------------------------------------------
@@ -600,6 +600,7 @@ distclean: clean cleandata
 	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(MOD_ALL) \
 					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.pdb
 	-$(RM) $(DOXYPATH)
+	-$(RM) *NULL
 
 # Clean obj etc for new build of the model, but we don't clean HEDTOOLS and
 # any .mod files.

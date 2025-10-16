@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 16157 2024-07-06 08:43:06Z sbu062 $
+# $Id: Makefile 19458 2025-10-16 20:03:43Z sbu062 $
 # $HeadURL: https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/gtools.dislin/Makefile $
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
@@ -195,7 +195,8 @@ ifdef ComSpec
 	IS_WINDOWS=1
 	WHICH_CMD=where
 	NULLDEV=":NULL"
-	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
+	#ECHO := "$(firstword $(shell $(WHICH_CMD) echo))"
+	ECHO := echo
 	RM := $(WINRM)
 	MV := move
 else
@@ -551,6 +552,7 @@ distclean: clean
 	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(MOD_ALL) \
 					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
 	-$(RM) $(DOXYPATH)
+	-$(RM) *NULL
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
 clean: neat

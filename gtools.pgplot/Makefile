@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 10074 2020-12-03 10:42:54Z sbu062 $
+# $Id: Makefile 19458 2025-10-16 20:03:43Z sbu062 $
 # $HeadURL: https://tegsvn.uib.no/svn/tegsvn/branches/budaev/HEDTOOLS/gtools.pgplot/Makefile $
 #-------------------------------------------------------------------------------
 # Build model automatically generating include files for PRNG and IEEE
@@ -502,6 +502,7 @@ distclean: clean
 	-$(RM) $(AUTOGEN_HEADER_RAND) $(AUTOGEN_HEADER_IEEE) $(HTOOLOBJ) $(MOD_ALL) \
 					$(IEEEOBJ) $(IEEEMOD) gmon.out *.mod *.log *.o *.obj *.exe
 	-$(RM) $(DOXYPATH)
+	-$(RM) *NULL
 
 # Clean obj etc for new build, but we don't clean HEDTOOLS' .mod files
 clean: neat
