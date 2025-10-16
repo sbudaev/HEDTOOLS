@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # SVN version info:
-# $Id: Makefile 19442 2025-10-14 19:15:37Z sbu062 $
+# $Id: Makefile 19456 2025-10-16 16:59:25Z sbu062 $
 #-------------------------------------------------------------------------------
 # Build Modelling tools as a static and shared libraries, produce doc file (pdf)
 # Note that linking the model code with shared libraries does not look like a
@@ -102,11 +102,13 @@ ifdef ComSpec
 	NULLDEV=":NULL"
 	RM := $(WINRM)
 	MV := move
-	CP := copy
+	#CP := copy
+	CP := cp
 	MKDIR := mkdir
 	RMDIR := rmdir /s /q
-	ECHO := "$(firstword $(shell $(WHICH_CMD) echo.exe))"
-	UNAME := uname
+	#ECHO := "$(firstword $(shell $(WHICH_CMD) echo))"
+	ECHO := echo
+	UNAME := ver
 	ASCDOC := a2x
 	PLATFORM = windows_$(PROCESSOR_ARCHITECTURE)
 else
@@ -492,10 +494,9 @@ webdoc: $(DOCFIL).adoc
 
 # Clean workspace completely - distribution state
 distclean: neat cleandistro
-	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT) \
-	       $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb \
-	       *.zip $(DOCFIL).html *.css *.xml \
-	       ?NULL
+	-$(RM) *.o *.obj $(MOD) *.lib *.a *.dll *.so $(DOCDIR)/$(DOCFIL).$(DOCFMT)
+	-$(RM) $(ZIPFILE) $(AUTOGEN_README_FILE) $(AUTOGEN_HEADER_RAND) *.pdb 
+	-$(RM) *.zip $(DOCFIL).html *.css *.xml ?NULL
 	-$(RM) $(DOCFIL).pdf
 	$(MAKE) -C $(TOOLS_PATH) distclean
 	$(MAKE) -C $(TESTS_PATH) distclean
